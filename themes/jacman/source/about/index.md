@@ -4,6 +4,7 @@ categories:
 - about
 tags: 
 - about
+mathjax: true
 description: about
 ---
 
