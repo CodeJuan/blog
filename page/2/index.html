@@ -81,79 +81,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/hexo/2015/01/12/jenkins/" title="用jenkins监控程序内存CPU" itemprop="url">用jenkins监控程序内存CPU</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
-		
-  <p class="article-time">
-    <time datetime="2015-01-12T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
-<p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
-<p>大概原理：写个脚本</p>
-<ol>
-<li>取得构建包列表。下载没有测试过的最新的包。</li>
-<li>读配置文件，获取测试用例，期望运行时间，期望内存峰值及均值。</li>
-<li>自动运行程序，每1s采样一次进程内存大小，记录在日志里。</li>
-<li>当程序结束时，计算运行时间间隔，与期望值比较，如果超出，则红。</li>
-<li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
-</ol>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/hexo/2015/01/12/jenkins/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/hexo/categories/code/">code</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/hexo/tags/CPU/">CPU</a><a href="/hexo/tags/jenkins/">jenkins</a><a href="/hexo/tags/memory/">memory</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/hexo/2015/01/12/jenkins/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/hexo/2014/12/27/understand_code/" title="understand your code" itemprop="url">understand your code</a>
   </h1>
   <p class="article-author">By
@@ -198,6 +125,81 @@
 	
 	  	<span></span>
 		<a href="/hexo/2014/12/27/understand_code/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2014/12/24/CreateUTproject/" title="一键式给VC工程创建UT工程" itemprop="url">一键式给VC工程创建UT工程</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2014-12-24T15:30:09.000Z" itemprop="datePublished"> 发表于 2014-12-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
+<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
+<ol>
+<li>把某工程的vcxproj及filter拷贝到UT目录</li>
+<li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
+<li>additional path加入gtest和gmock的头文件及lib</li>
+<li>def也要改成相对路径</li>
+<li>additional Include path 要加上原有工程的路径</li>
+<li>application type 改为 exe</li>
+<li>link-system-subsystem改为console</li>
+<li>gtest gmock的runtime lib都改为/mdd</li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2014/12/24/CreateUTproject/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/UT/">UT</a><a href="/hexo/tags/automation/">automation</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2014/12/24/CreateUTproject/#disqus_thread" class="comments-count-link">Comments</a>
 	
 </div>
 

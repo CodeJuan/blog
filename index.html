@@ -81,81 +81,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/hexo/2015/12/24/CreateUTproject/" title="一键式给VC工程创建UT工程" itemprop="url">一键式给VC工程创建UT工程</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
-		
-  <p class="article-time">
-    <time datetime="2015-12-24T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-12-24</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
-<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
-<ol>
-<li>把某工程的vcxproj及filter拷贝到UT目录</li>
-<li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
-<li>additional path加入gtest和gmock的头文件及lib</li>
-<li>def也要改成相对路径</li>
-<li>additional Include path 要加上原有工程的路径</li>
-<li>application type 改为 exe</li>
-<li>link-system-subsystem改为console</li>
-<li>gtest gmock的runtime lib都改为/mdd</li>
-</ol>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/hexo/2015/12/24/CreateUTproject/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/hexo/categories/code/">code</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/hexo/tags/UT/">UT</a><a href="/hexo/tags/automation/">automation</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/hexo/2015/12/24/CreateUTproject/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/hexo/2015/06/13/Premature_Optimization/" title="身边的过早优化事件" itemprop="url">身边的过早优化事件</a>
   </h1>
   <p class="article-author">By
@@ -508,47 +433,18 @@
     <div class="article-content">
         
         <h1 id="安装">安装</h1><ol>
-<li><p><a href="http://cran.r-project.org/mirrors.html" target="_blank" rel="external">mirriors</a></p>
+<li><p><a href="http://cran.r-project.org/mirrors.html">mirriors</a></p>
 </li>
-<li><p>select China， <a href="http://mirror.bjtu.edu.cn/cran" target="_blank" rel="external">bjtu</a></p>
+<li><p>select China， <a href="http://mirror.bjtu.edu.cn/cran">bjtu</a></p>
 </li>
-<li><p><a href="http://mirror.bjtu.edu.cn/cran/sources.html" target="_blank" rel="external">resouce</a> , current version is <a href="http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz" target="_blank" rel="external">R-3.1.2</a></p>
-</li>
-<li><p>extract,    <code>sudo tar xf r-3.1.2.tar.gz -C extract/</code></p>
-</li>
-<li><p>view the build document,<code>vim INSTALL</code></p>
-</li>
-<li><p><code>./configure</code>,  <em>error: No F77 compiler found</em>。<a href="http://laymantech.blogbus.com/logs/80761679.html" target="_blank" rel="external">学自这里http://laymantech.blogbus.com/logs/80761679.html</a></p>
-<p>  会产生错误：configure: error: No F77 compiler found</p>
-<p>  R语言需要fortran compiler，也就是说， 在上面尝试寻找了若干种Fortran 编译器未果之后，提示你没有安装任何一种可以使用的fortran 77 编译器。随便装个gfortran就行了。</p>
-<p>  $ sudo apt-get install gfortran</p>
-<p>  再次运行./configure</p>
-<p>  $ ./configure</p>
-<p>  会产生错误：configure: error: con—with-readline=yes (default) and headers/libs are not available</p>
-<p>  首先检查是否安装readline.</p>
-<p>  $ sudo apt-get install readline-common</p>
-<p>  $ ./configure —with-readline=no</p>
-<p>  会出现错误：configure: error: —with-x=yes (default) and X11 headers/libs are no t available</p>
-<p>  $ ./configure —with-x=no —with-readline=no</p>
-<p>  配置通过，但是会产生如下warning：</p>
-<p>  configure: WARNING: you cannot build DVI versions of the R manuals</p>
-<p>  configure: WARNING: you cannot build DVI versions of all the help pages</p>
-<p>  configure: WARNING: you cannot build info or HTML versions of the R manuals</p>
-<p>  configure: WARNING: you cannot build PDF versions of the R manuals</p>
-<p>  configure: WARNING: you cannot build PDF versions of all the help pages</p>
-<p>  这是缺少生成相应格式manuals的插件，如果有需要可以依次安装。</p>
+<li><p><a href="http://mirror.bjtu.edu.cn/cran/sources.html">resouce</a> , current version is <a href="http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz">R-3.1.2</a></p>
 </li>
 </ol>
-<ol>
-<li>sudo make，安装完毕。</li>
-</ol>
-<h1 id="简单试用">简单试用</h1><h3 id=""> </h3><p>cd 到bin，sudo ./R，进入R控制台<br>按照<a href="http://developer.51cto.com/art/201305/393121.htm试用一下" target="_blank" rel="external">http://developer.51cto.com/art/201305/393121.htm试用一下</a><br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install.packages(<span class="string">'quantmod'</span>) <span class="preprocessor"># 安装quantmod包 ，</span></span><br></pre></td></tr></table></figure></p>
-<p>会提示选择哪个镜像，19号beijing离我最近，于是输入19</p>
-<p>q()是退出</p>
-
         
         
         <p class="article-more-link">
+          
+            <a href="/hexo/2015/03/04/learning_rlang/#more">Read More</a>
           
        </p>
     </div>
@@ -796,6 +692,79 @@
 	
 	  	<span></span>
 		<a href="/hexo/2015/01/15/fragment/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/01/12/jenkins/" title="用jenkins监控程序内存CPU" itemprop="url">用jenkins监控程序内存CPU</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-12T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-12</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
+<p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
+<p>大概原理：写个脚本</p>
+<ol>
+<li>取得构建包列表。下载没有测试过的最新的包。</li>
+<li>读配置文件，获取测试用例，期望运行时间，期望内存峰值及均值。</li>
+<li>自动运行程序，每1s采样一次进程内存大小，记录在日志里。</li>
+<li>当程序结束时，计算运行时间间隔，与期望值比较，如果超出，则红。</li>
+<li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/01/12/jenkins/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/CPU/">CPU</a><a href="/hexo/tags/jenkins/">jenkins</a><a href="/hexo/tags/memory/">memory</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/01/12/jenkins/#disqus_thread" class="comments-count-link">Comments</a>
 	
 </div>
 
