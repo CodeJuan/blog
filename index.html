@@ -81,6 +81,81 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/hexo/2015/12/24/CreateUTproject/" title="一键式给VC工程创建UT工程" itemprop="url">一键式给VC工程创建UT工程</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-24T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-12-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
+<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
+<ol>
+<li>把某工程的vcxproj及filter拷贝到UT目录</li>
+<li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
+<li>additional path加入gtest和gmock的头文件及lib</li>
+<li>def也要改成相对路径</li>
+<li>additional Include path 要加上原有工程的路径</li>
+<li>application type 改为 exe</li>
+<li>link-system-subsystem改为console</li>
+<li>gtest gmock的runtime lib都改为/mdd</li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/12/24/CreateUTproject/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/UT/">UT</a><a href="/hexo/tags/automation/">automation</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/12/24/CreateUTproject/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/hexo/2015/06/13/Premature_Optimization/" title="身边的过早优化事件" itemprop="url">身边的过早优化事件</a>
   </h1>
   <p class="article-author">By
@@ -114,7 +189,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/hexo/tags/优化/">优化</a>
+  <span></span> <a href="/hexo/tags/optimize/">optimize</a><a href="/hexo/tags/profiler/">profiler</a>
   </div>
 
 </div>
@@ -145,28 +220,331 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/hexo/2013/12/24/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+      <a href="/hexo/2015/06/11/career_of_programmer/" title="读程序员职业规划书有感" itemprop="url">读程序员职业规划书有感</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
 		
   <p class="article-time">
-    <time datetime="2013-12-24T15:30:09.000Z" itemprop="datePublished"> 发表于 2013-12-24</time>
+    <time datetime="2015-06-11T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-06-11</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <h2 id="前言">前言</h2><p><img src="http://img4.douban.com/lpic/s28065947.jpg" alt=""></p>
+<p>最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。<br>恰巧得到<a href="http://weibo.com/easy">@Easy</a>兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/06/11/career_of_programmer/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/career/">career</a><a href="/hexo/tags/programmer/">programmer</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/06/11/career_of_programmer/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/04/15/auto_analyze_dump/" title="自动调用windbg分析dump" itemprop="url">自动调用windbg分析dump</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-15T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-04-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="前言">前言</h2><p>最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入<code>!analyze -v</code>就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。</p>
+<p>老夫一怒之下，就开始反思。是我的文档写的不够清晰？还是操作太繁琐了？其实都不是，说白了就是现在的年轻人都太懒了。</p>
+<p>竟然都这么懒惰，那么我只好想出个更简便的方法来分析dump，一键式傻瓜操作，这样应该可以了吧。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/04/15/auto_analyze_dump/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/dump/">dump</a><a href="/hexo/tags/powershell/">powershell</a><a href="/hexo/tags/windbg/">windbg</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/04/15/auto_analyze_dump/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/03/27/gprof_sprof_perf/" title="Linux C++性能调优笔记" itemprop="url">Linux C++性能调优笔记</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-27T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-03-27</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="前言">前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
+<p>此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。</p>
+<p>每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/03/27/gprof_sprof_perf/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/C/">C++</a><a href="/hexo/tags/linux/">linux</a><a href="/hexo/tags/optimization/">optimization</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/03/27/gprof_sprof_perf/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/03/10/mark2html/" title="pandoc---markdown转换利器" itemprop="url">pandoc---markdown转换利器</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-10T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-03-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="背景">背景</h1><p>项目要发布一堆开发文档，并支持快速更新。经过我的不断安利，领导同意用markdown（<em>感觉好有成就感啊</em>）。<br>经过一番探索，决定采用<a href="http://johnmacfarlane.net/pandoc/index.html">pandoc</a>，因为功能真的很强大，请看官网介绍</p>
+<blockquote>
+<p>If you need to convert files from one markup format into another, pandoc is your swiss-army knife. Pandoc can convert documents in markdown, reStructuredText, textile, HTML, DocBook, LaTeX, MediaWiki markup, TWiki markup, OPML, Emacs Org-Mode, Txt2Tags, Microsoft Word docx, EPUB, or Haddock markup to</p>
+<pre><code>-<span class="ruby"> <span class="constant">HTML</span> <span class="symbol">formats:</span> <span class="constant">XHTML</span>, <span class="constant">HTML5</span>, <span class="keyword">and</span> <span class="constant">HTML</span> slide shows using <span class="constant">Slidy</span>, reveal.js, <span class="constant">Slideous</span>, <span class="constant">S5</span>, <span class="keyword">or</span> <span class="constant">DZSlides</span>.
+</span>-<span class="ruby"> <span class="constant">Word</span> processor <span class="symbol">formats:</span> <span class="constant">Microsoft</span> <span class="constant">Word</span> docx, <span class="constant">OpenOffice</span>/<span class="constant">LibreOffice</span> <span class="constant">ODT</span>, <span class="constant">OpenDocument</span> <span class="constant">XML</span>
+</span>-<span class="ruby"> <span class="constant">Ebooks</span><span class="symbol">:</span> <span class="constant">EPUB</span> version <span class="number">2</span> <span class="keyword">or</span> <span class="number">3</span>, <span class="constant">FictionBook2</span>
+</span>-<span class="ruby"> <span class="constant">Documentation</span> <span class="symbol">formats:</span> <span class="constant">DocBook</span>, <span class="constant">GNU</span> <span class="constant">TexInfo</span>, <span class="constant">Groff</span> man pages, <span class="constant">Haddock</span> markup
+</span>-<span class="ruby"> <span class="constant">Page</span> layout <span class="symbol">formats:</span> <span class="constant">InDesign</span> <span class="constant">ICML</span>
+</span>-<span class="ruby"> <span class="constant">Outline</span> <span class="symbol">formats:</span> <span class="constant">OPML</span>
+</span>-<span class="ruby"> <span class="constant">TeX</span> <span class="symbol">formats:</span> <span class="constant">LaTeX</span>, <span class="constant">ConTeXt</span>, <span class="constant">LaTeX</span> <span class="constant">Beamer</span> slides
+</span>-<span class="ruby"> <span class="constant">PDF</span> via <span class="constant">LaTeX</span>
+</span>-<span class="ruby"> <span class="constant">Lightweight</span> markup <span class="symbol">formats:</span> <span class="constant">Markdown</span>, reStructuredText, <span class="constant">AsciiDoc</span>, <span class="constant">MediaWiki</span> markup, <span class="constant">DokuWiki</span> markup, <span class="constant">Emacs</span> <span class="constant">Org</span>-<span class="constant">Mode</span>, <span class="constant">Textile</span>
+</span>-<span class="ruby"> <span class="constant">Custom</span> <span class="symbol">formats:</span> custom writers can be written <span class="keyword">in</span> lua.</span>
+</code></pre></blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/03/10/mark2html/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/html/">html</a><a href="/hexo/tags/pandoc/">pandoc</a><a href="/hexo/tags/slide/">slide</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/03/10/mark2html/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/03/04/learning_rlang/" title="学习R语言" itemprop="url">学习R语言</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-04T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-03-04</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="安装">安装</h1><ol>
+<li><p><a href="http://cran.r-project.org/mirrors.html" target="_blank" rel="external">mirriors</a></p>
+</li>
+<li><p>select China， <a href="http://mirror.bjtu.edu.cn/cran" target="_blank" rel="external">bjtu</a></p>
+</li>
+<li><p><a href="http://mirror.bjtu.edu.cn/cran/sources.html" target="_blank" rel="external">resouce</a> , current version is <a href="http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz" target="_blank" rel="external">R-3.1.2</a></p>
+</li>
+<li><p>extract,    <code>sudo tar xf r-3.1.2.tar.gz -C extract/</code></p>
+</li>
+<li><p>view the build document,<code>vim INSTALL</code></p>
+</li>
+<li><p><code>./configure</code>,  <em>error: No F77 compiler found</em>。<a href="http://laymantech.blogbus.com/logs/80761679.html" target="_blank" rel="external">学自这里http://laymantech.blogbus.com/logs/80761679.html</a></p>
+<p>  会产生错误：configure: error: No F77 compiler found</p>
+<p>  R语言需要fortran compiler，也就是说， 在上面尝试寻找了若干种Fortran 编译器未果之后，提示你没有安装任何一种可以使用的fortran 77 编译器。随便装个gfortran就行了。</p>
+<p>  $ sudo apt-get install gfortran</p>
+<p>  再次运行./configure</p>
+<p>  $ ./configure</p>
+<p>  会产生错误：configure: error: con—with-readline=yes (default) and headers/libs are not available</p>
+<p>  首先检查是否安装readline.</p>
+<p>  $ sudo apt-get install readline-common</p>
+<p>  $ ./configure —with-readline=no</p>
+<p>  会出现错误：configure: error: —with-x=yes (default) and X11 headers/libs are no t available</p>
+<p>  $ ./configure —with-x=no —with-readline=no</p>
+<p>  配置通过，但是会产生如下warning：</p>
+<p>  configure: WARNING: you cannot build DVI versions of the R manuals</p>
+<p>  configure: WARNING: you cannot build DVI versions of all the help pages</p>
+<p>  configure: WARNING: you cannot build info or HTML versions of the R manuals</p>
+<p>  configure: WARNING: you cannot build PDF versions of the R manuals</p>
+<p>  configure: WARNING: you cannot build PDF versions of all the help pages</p>
+<p>  这是缺少生成相应格式manuals的插件，如果有需要可以依次安装。</p>
+</li>
+</ol>
+<ol>
+<li>sudo make，安装完毕。</li>
+</ol>
+<h1 id="简单试用">简单试用</h1><h3 id=""> </h3><p>cd 到bin，sudo ./R，进入R控制台<br>按照<a href="http://developer.51cto.com/art/201305/393121.htm试用一下" target="_blank" rel="external">http://developer.51cto.com/art/201305/393121.htm试用一下</a><br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install.packages(<span class="string">'quantmod'</span>) <span class="preprocessor"># 安装quantmod包 ，</span></span><br></pre></td></tr></table></figure></p>
+<p>会提示选择哪个镜像，19号beijing离我最近，于是输入19</p>
+<p>q()是退出</p>
 
         
         
@@ -179,13 +557,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/hexo/categories/hello/">hello</a>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/hexo/tags/hello/">hello</a>
+  <span></span> <a href="/hexo/tags/R/">R</a>
   </div>
 
 </div>
@@ -196,7 +574,228 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/hexo/2013/12/24/hello-world/#disqus_thread" class="comments-count-link">Comments</a>
+		<a href="/hexo/2015/03/04/learning_rlang/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/01/31/netcn_zblog/" title="万网免费主机搭博客" itemprop="url">万网免费主机搭博客</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-31T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-31</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>最近万网搞活动，域名29，虚拟主机免费，有小朋友动了建博客的念头，于是申请好了域名、虚拟主机。但是不知道后续该如何处理，乐于助人的我自然是要帮他一把的。</p>
+<h2 id="选框架">选框架</h2><p>小朋友选的是windows主机，简单搜索了一下，zblog貌似不错，好吧，就选它了，官网链接<a href="http://www.zblogcn.com/">http://www.zblogcn.com/</a>，下载ASP版<a href="http://www.zblogcn.com/zblog/">http://www.zblogcn.com/zblog/</a>，当前最新版的Z-Blog 2.2 Prism Build 140101。</p>
+<p>解压后会看到一个release文件夹，由于后续要将release文件夹里的文件放在主机根目录，所以还要再压缩一次，格式还必须是rar，如下图所示<br><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/zblog/zlog_rar.png" alt=""></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/01/31/netcn_zblog/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/virtual/">virtual</a><a href="/hexo/tags/zblog/">zblog</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/01/31/netcn_zblog/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/01/18/debugdiag/" title="DebugDiag使用指南" itemprop="url">DebugDiag使用指南</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-18T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="DebugDiag使用指南">DebugDiag使用指南</h1><h2 id="Foreword">Foreword</h2><p>一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。<br>恰好找到了<code>DebugDiag</code>，据说很简单，微软原文如下：</p>
+<blockquote>
+<p>The right debugging tool can dramatically simplify the isolation of these problem s and the provision of solutions. There are several types of these issues for which the Debug Diagnostic Tool  is a better choice than other debugging tools</p>
+<p>Using the Windows core debuggers (Windbg.exe or Cdb.exe) for post-mortem analysis is a time consuming process and requires many debugging skills.</p>
+</blockquote>
+<p>试用之后，果然比较简单，功能也很强大。这么个挺好用的工具，还是值得安利一下的。鉴于帮助文档大多是英文版，我就顺手把<code>How to Use the Debug Diagnostic Tool (DebugDiag) to Debug User Mode Processes</code>翻译一下。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/01/18/debugdiag/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/debug/">debug</a><a href="/hexo/tags/debugdiag/">debugdiag</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/01/18/debugdiag/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/01/15/fragment/" title="真的是内存碎片吗" itemprop="url">真的是内存碎片吗</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-15T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><table>
+<thead>
+<tr>
+<th>配置</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统</td>
+<td>win32</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>E5505</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>4G</td>
+</tr>
+</tbody>
+</table>
+<p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/hexo/2015/01/15/fragment/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/fragment/">fragment</a><a href="/hexo/tags/memory/">memory</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/hexo/2015/01/15/fragment/#disqus_thread" class="comments-count-link">Comments</a>
 	
 </div>
 
@@ -211,6 +810,10 @@
 
 
 
+  <nav id="page-nav" class="clearfix">
+    <span class="page-number current">1</span><a class="page-number" href="/hexo/page/2/">2</a><a class="extend next" rel="next" href="/hexo/page/2/">Next<span></span></a>
+  </nav>
+
 </div>
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
@@ -224,11 +827,15 @@
 		<ul>
 		
 		  
-			<li><a href="/hexo/categories/code/" title="code">code<sup>1</sup></a></li>
+			<li><a href="/hexo/categories/code/" title="code">code<sup>18</sup></a></li>
 		  
 		
 		  
 			<li><a href="/hexo/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/hexo/categories/生活/" title="生活">生活<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -241,11 +848,83 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/hexo/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/memory/" title="memory">memory<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/UT/" title="UT">UT<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/understand/" title="understand">understand<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/virtual/" title="virtual">virtual<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/zblog/" title="zblog">zblog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/科普/" title="科普">科普<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/pandoc/" title="pandoc">pandoc<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/html/" title="html">html<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/slide/" title="slide">slide<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/R/" title="R">R<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/jenkins/" title="jenkins">jenkins<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/hexo/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/优化/" title="优化">优化<sup>1</sup></a></li>
+				<li><a href="/hexo/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
 			
 		
 		</ul>

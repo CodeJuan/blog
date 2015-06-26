@@ -1,0 +1,684 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>真的是内存碎片吗 | Continuous Learning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="CodeJuan">
+    
+
+    
+    <meta name="description" content="背景
+
+
+配置
+参数
+
+
+
+
+系统
+win32
+
+
+CPU
+E5505
+
+
+内存
+4G
+
+
+
+某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（打开3G开关后就会是3G，但是不建议打开）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？真的是内存碎片造">
+<meta property="og:type" content="article">
+<meta property="og:title" content="真的是内存碎片吗">
+<meta property="og:url" content="http://codejuan.github.io/hexo/2015/01/15/fragment/index.html">
+<meta property="og:site_name" content="Continuous Learning">
+<meta property="og:description" content="背景
+
+
+配置
+参数
+
+
+
+
+系统
+win32
+
+
+CPU
+E5505
+
+
+内存
+4G
+
+
+
+某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（打开3G开关后就会是3G，但是不建议打开）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？真的是内存碎片造">
+<meta property="og:updated_time" content="2015-06-26T12:43:24.890Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="真的是内存碎片吗">
+<meta name="twitter:description" content="背景
+
+
+配置
+参数
+
+
+
+
+系统
+win32
+
+
+CPU
+E5505
+
+
+内存
+4G
+
+
+
+某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（打开3G开关后就会是3G，但是不建议打开）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？真的是内存碎片造">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/hexo/img/favicon.png">
+    
+    
+    <link rel="apple-touch-icon" href="/hexo/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/hexo/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/hexo/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/hexo/"><img src="/hexo/img/avatar.jpg" alt="Continuous Learning" title="Continuous Learning"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/hexo/" title="Continuous Learning">Continuous Learning</a></h1>
+				<h2 class="blog-motto">浮云一别后，流水十年间</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/hexo/">Home</a></li>
+					
+						<li><a href="/hexo/archives">Archives</a></li>
+					
+						<li><a href="/hexo/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:codejuan.github.io/hexo">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2015/01/15/fragment/" title="真的是内存碎片吗" itemprop="url">真的是内存碎片吗</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-15T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调查"><span class="toc-number">2.</span> <span class="toc-text">调查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash_1_:_vector-push_back"><span class="toc-number">2.1.</span> <span class="toc-text">Crash 1 : vector.push_back</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash_12:_CString-AppendFormat"><span class="toc-number">2.2.</span> <span class="toc-text">Crash 12: CString.AppendFormat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单分析"><span class="toc-number">3.</span> <span class="toc-text">简单分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初步解决方法"><span class="toc-number">4.</span> <span class="toc-text">初步解决方法</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="背景">背景</h2><table>
+<thead>
+<tr>
+<th>配置</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统</td>
+<td>win32</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>E5505</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>4G</td>
+</tr>
+</tbody>
+</table>
+<p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>
+<a id="more"></a>
+<h2 id="调查">调查</h2><p>运行两次，在不同的地方crash，抓到两个dump，用windbg简单分析一下。</p>
+<h3 id="Crash_1_:_vector-push_back">Crash 1 : vector.push_back</h3><p>异常链:  <code>push_back -&gt; allovator -&gt; new -&gt; MemoryException</code>。说明是在<code>push_back</code>申请内存时抛出的内存异常。简单回忆一下vector的内存分配机制，vector是连续存储的容器，它在新插入一个元素的时候，如果发现当前持有的<em>内存</em>放不下，那么就会再申请一块更大的内存（内存分配策略有差异，可以简单视为两倍），然后将旧内存中的元素复制到新内存中，并释放旧内存中的元素，再插入新的元素。<br>由此猜测，push_back时vector里是不是有很多元素，使得此次会申请很大的一块连续内存，而系统没有合适的内存空间，然后申请失败抛出异常呢？<br>查看代码，并询问开发小伙，得知crash时vector中元素个数不多，push_back时申请的不会是一块很大的连续内存，难道是真的是传说中的碎片？</p>
+<h3 id="Crash_12:_CString-AppendFormat">Crash 12: CString.AppendFormat</h3><p>异常链:  <code>AppendFormat -&gt; PrepareWrite -&gt; Reallocate -&gt; MemoryException</code>。<br>有<code>allocate</code>的字样，看起来又像是在申请内存。查看一下微软CString的源码，在preparewrite函数中实现了这么一个内存算法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//凭印象写的，领会精神</span></span><br><span class="line">PrepareWrite()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (current_len &lt; <span class="number">1</span>G)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//小于1G，每次都是申请1.5倍</span></span><br><span class="line">		new_len = current_len * <span class="number">1.5</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//大于1G，每次加1M</span></span><br><span class="line">		new_len = current_len + <span class="number">1</span>M;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PrepareWrite()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (current_len &lt; <span class="number">1</span>G)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//小于1G，每次都是申请1.5倍</span></span><br><span class="line">		new_len = current_len * <span class="number">1.5</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//大于1G，每次加1M</span></span><br><span class="line">		new_len = current_len + <span class="number">1</span>M;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看了当前string的长度，几百几千个字符而已，也就只申请几K内存。只是申请这么小的内存，怎么也申请失败了？</p>
+<h2 id="简单分析">简单分析</h2><p>查了下微软的一些文档</p>
+<blockquote>
+<p>.Net application, 32-bit process, 32-bit OS, 800-1200 MB</p>
+</blockquote>
+<p>微软说32位.Net程序内存在800M-1200M的时候，可能会出现out of memory的异常。</p>
+<blockquote>
+<p>High memory usage or memory leak can cause virtual memory usage in a process to keep growing over time and prevent it from ever returning to normal usage levels. The process can then run out of memory and this can cause it to terminate unexpectedly. During these out-of-memory instances, the virtual memory may fall below 1 Gb, instead of the 2 Gb allowed to Win 32 processes. This problem is sometimes caused by high memory fragmentation.</p>
+</blockquote>
+<p>微软建议虽然win32进程可以用2G，但最好是低于1G，否则可能会许多奇怪问题，有时就是内存碎片引起的。</p>
+<p>如此，可能真的是碎片引起的。</p>
+<h2 id="初步解决方法">初步解决方法</h2><p>将前面的内存降下去，就能顺利申请到内存，正常运行。但还是不能确定真的是内存碎片引起的。<br>As a modern OS, the strategy of memory allocation so sucks? I don’t think so. The  failure of memory allocattion caused by fragment. And The fragment should be caused by memory leak..</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/fragment/">fragment</a><a href="/hexo/tags/memory/">memory</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://codejuan.github.io/hexo/2015/01/15/fragment/" data-title="真的是内存碎片吗 | Continuous Learning" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/hexo/2015/01/18/debugdiag/" title="DebugDiag使用指南">
+  <strong>上一篇：</strong><br/>
+  <span>
+  DebugDiag使用指南</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/hexo/2015/01/12/jenkins/"  title="用jenkins监控程序内存CPU">
+ <strong>下一篇：</strong><br/> 
+ <span>用jenkins监控程序内存CPU
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调查"><span class="toc-number">2.</span> <span class="toc-text">调查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash_1_:_vector-push_back"><span class="toc-number">2.1.</span> <span class="toc-text">Crash 1 : vector.push_back</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash_12:_CString-AppendFormat"><span class="toc-number">2.2.</span> <span class="toc-text">Crash 12: CString.AppendFormat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单分析"><span class="toc-number">3.</span> <span class="toc-text">简单分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初步解决方法"><span class="toc-number">4.</span> <span class="toc-text">初步解决方法</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/hexo/categories/code/" title="code">code<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/hexo/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/hexo/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/hexo/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/memory/" title="memory">memory<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/UT/" title="UT">UT<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/understand/" title="understand">understand<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/virtual/" title="virtual">virtual<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/zblog/" title="zblog">zblog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/科普/" title="科普">科普<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/pandoc/" title="pandoc">pandoc<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/html/" title="html">html<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/slide/" title="slide">slide<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/R/" title="R">R<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/jenkins/" title="jenkins">jenkins<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/hello/" title="hello">hello<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://decbug.com" target="_blank" title="我的jekyll博客">decbug</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I wanna be a good developer <br/>
+			I try to create software products that make people&#39;s lives easier</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/codejuan" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/2763396" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/hexo/about" target="_blank" title="CodeJuan">CodeJuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/hexo/js/jquery-2.0.3.min.js"></script>
+<script src="/hexo/js/jquery.imagesloaded.min.js"></script>
+<script src="/hexo/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'codejuan';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/hexo/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/hexo/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-57346409-1', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/hexo/img/scrollup.png"/></a>
+	</div>
+	<script src="/hexo/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

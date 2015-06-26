@@ -1,0 +1,640 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>VLD集成到CI自动化检测内存泄露 | Continuous Learning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="CodeJuan">
+    
+
+    
+    <meta name="description" content="VLD简介
+Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. 
+
+windows下VC常用开源内存泄露检测工具，代码在codeplex
+原理代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VLD集成到CI自动化检测内存泄露">
+<meta property="og:url" content="http://codejuan.github.io/hexo/2014/12/01/Vld2CI/index.html">
+<meta property="og:site_name" content="Continuous Learning">
+<meta property="og:description" content="VLD简介
+Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. 
+
+windows下VC常用开源内存泄露检测工具，代码在codeplex
+原理代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接">
+<meta property="og:updated_time" content="2015-06-26T12:28:58.921Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VLD集成到CI自动化检测内存泄露">
+<meta name="twitter:description" content="VLD简介
+Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. 
+
+windows下VC常用开源内存泄露检测工具，代码在codeplex
+原理代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/hexo/img/favicon.png">
+    
+    
+    <link rel="apple-touch-icon" href="/hexo/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/hexo/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/hexo/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/hexo/"><img src="/hexo/img/avatar.jpg" alt="Continuous Learning" title="Continuous Learning"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/hexo/" title="Continuous Learning">Continuous Learning</a></h1>
+				<h2 class="blog-motto">浮云一别后，流水十年间</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/hexo/">Home</a></li>
+					
+						<li><a href="/hexo/archives">Archives</a></li>
+					
+						<li><a href="/hexo/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:codejuan.github.io/hexo">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2014/12/01/Vld2CI/" title="VLD集成到CI自动化检测内存泄露" itemprop="url">VLD集成到CI自动化检测内存泄露</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-30T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-12-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#VLD简介"><span class="toc-number">1.</span> <span class="toc-text">VLD简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单用法"><span class="toc-number">1.2.</span> <span class="toc-text">简单用法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#集成到CI"><span class="toc-number">2.</span> <span class="toc-text">集成到CI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-h"><span class="toc-number">2.1.</span> <span class="toc-text">vld.h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-lib"><span class="toc-number">2.2.</span> <span class="toc-text">vld.lib</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dll"><span class="toc-number">2.3.</span> <span class="toc-text">dll</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-ini"><span class="toc-number">2.4.</span> <span class="toc-text">vld.ini</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新代码"><span class="toc-number">2.5.</span> <span class="toc-text">更新代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改stdafx-h"><span class="toc-number">2.6.</span> <span class="toc-text">修改stdafx.h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#build"><span class="toc-number">2.7.</span> <span class="toc-text">build</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-number">2.8.</span> <span class="toc-text">运行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#加入到自动化测试套餐"><span class="toc-number">3.</span> <span class="toc-text">加入到自动化测试套餐</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PS"><span class="toc-number">4.</span> <span class="toc-text">PS</span></a></li></ol>
+		
+		</div>
+		
+		<h1 id="VLD简介">VLD简介</h1><blockquote>
+<p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
+</blockquote>
+<p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/" target="_blank" rel="external">codeplex</a></p>
+<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
+<a id="more"></a>
+<h2 id="简单用法">简单用法</h2><ol>
+<li>下载及安装，假设安装在<code>VldPath</code></li>
+<li>配置VC的include路径：右键-属性-directory-include directory，增加<code>VldPath\include</code></li>
+<li>配置lib路径：右键-属性-directory-lib directory，，增加<code>VldPath\lib\win32</code>，如果是x64的系统，那么选择win64即可。</li>
+<li>根据需要配置vld.ini</li>
+<li>声明</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">define</span> VLD_FORCE_ENABLE    <span class="comment">//2.3版本之后，支持release下检测内存泄露</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "vld.h"</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>构建，运行，就会生成report。</li>
+</ol>
+<h1 id="集成到CI">集成到CI</h1><p>其实就是用脚本来实现上面的步骤，由于项目暂时不允许上传lib和dll到svn，只能通过迂回的方法来实现。</p>
+<h2 id="vld-h">vld.h</h2><p>项目中有一个专门的目录存放开源代码的头文件，此时正好派上用场</p>
+<pre><code class="bat"><span class="keyword">copy</span> /y vld.h <span class="envvar">%CODE_HOME%</span>\opensrc\include\
+:: /y表示默认覆盖同名文件
+<span class="keyword">copy</span> /y vld_def.h <span class="envvar">%CODE_HOME%</span>\opensrc\include\
+</code></pre>
+<h2 id="vld-lib">vld.lib</h2><p>同样也有个存放开源代码lib的目录</p>
+<pre><code class="bat"><span class="keyword">copy</span> /y vld.lib <span class="envvar">%CODE_HOME%</span>\opensrc\lib\
+</code></pre>
+<h2 id="dll">dll</h2><p>将vld_x86.dll拷贝到bin目录</p>
+<pre><code class="bat"><span class="keyword">copy</span> /y vld_x86.dll <span class="envvar">%CODE_HOME%</span>\bin\
+</code></pre>
+<h2 id="vld-ini">vld.ini</h2><p>将AggregateDuplicates设置为yes，表示将引起泄露同一行代码合并到一块。<br>将ReportFile设置为.\leak_report.txt，表示将结果输出到leak_report.txt中<br>再将ini拷贝到bin</p>
+<pre><code class="bat"><span class="keyword">copy</span> /y vld.ini <span class="envvar">%CODE_HOME%</span>\bin\
+</code></pre>
+<h2 id="更新代码">更新代码</h2><p>svn revert -R .<br>svn update .</p>
+<h2 id="修改stdafx-h">修改stdafx.h</h2><p>由于stdafx.h会被预编译，只要在其包含vld.h，那么整个工程都会处于vld的监控之下。</p>
+<pre><code class="bat">:: 家里没有windows的系统，凭记忆写的，可能会有点小纰漏
+<span class="flow">FOR</span> /F "delims=" <span class="envvar">%%i</span> <span class="flow">IN</span>('<span class="built_in">dir</span> /b /s stdafx.h') <span class="flow">DO</span>(
+    <span class="keyword">echo</span> //&gt;&gt;"<span class="envvar">%%i</span>"
+    <span class="keyword">echo</span> #define VLD_FORCE_ENABLE&gt;&gt;"<span class="envvar">%%i</span>"
+    <span class="keyword">echo</span> #include "vld.h"&gt;&gt;"<span class="envvar">%%i</span>"
+)
+</code></pre>
+<h2 id="build">build</h2><pre><code class="bat"><span class="flow">FOR</span> /F "delims=" <span class="envvar">%%i</span> <span class="flow">IN</span>('<span class="built_in">dir</span> /b /s *.sln') <span class="flow">DO</span>(
+    msbuild.exe "<span class="envvar">%%i</span>" /p:Configuration=Release /t:rebuild
+)
+</code></pre>
+<h2 id="运行">运行</h2><p>提示0xC0150002，无法正确启动程序，这是因为缺少manifest，还需要把vld目录下的microsoft.dtfw.dhl.manifest拷贝到bin目录</p>
+<pre><code class="bat"><span class="keyword">copy</span> /y microsoft.dtfw.dhl.manifest <span class="envvar">%CODE_HOME%</span>\bin\
+</code></pre>
+<p>在运行目录生成了一个leak_report.txt，如果有泄露，则会有一行提示<code>WARNING:Visual Leak Detector detected memory leaks!</code>，并指出引起内存泄露的代码。<br>只要检测report就能知道是否有泄露。</p>
+<h1 id="加入到自动化测试套餐">加入到自动化测试套餐</h1><p>将脚本调试好，自动构建出检测内存泄露的版本，然后运行自动化测试，最后检测leak_report的内容，如有泄露则告警。</p>
+<h1 id="PS">PS</h1><p>家里没有windows系统，有些命令记不清了，不知有没有写错。领会精神，不要在意这些细节。<br>囧rz</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/ContinuousIntegration/">ContinuousIntegration</a><a href="/hexo/tags/MemoryLeak/">MemoryLeak</a><a href="/hexo/tags/VLD/">VLD</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://codejuan.github.io/hexo/2014/12/01/Vld2CI/" data-title="VLD集成到CI自动化检测内存泄露 | Continuous Learning" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/hexo/2014/12/27/understand_code/" title="understand your code">
+  <strong>上一篇：</strong><br/>
+  <span>
+  understand your code</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/hexo/2014/11/29/gtest_gmock/"  title="学习gtest&amp;gmock">
+ <strong>下一篇：</strong><br/> 
+ <span>学习gtest&amp;gmock
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#VLD简介"><span class="toc-number">1.</span> <span class="toc-text">VLD简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单用法"><span class="toc-number">1.2.</span> <span class="toc-text">简单用法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#集成到CI"><span class="toc-number">2.</span> <span class="toc-text">集成到CI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-h"><span class="toc-number">2.1.</span> <span class="toc-text">vld.h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-lib"><span class="toc-number">2.2.</span> <span class="toc-text">vld.lib</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dll"><span class="toc-number">2.3.</span> <span class="toc-text">dll</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-ini"><span class="toc-number">2.4.</span> <span class="toc-text">vld.ini</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新代码"><span class="toc-number">2.5.</span> <span class="toc-text">更新代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改stdafx-h"><span class="toc-number">2.6.</span> <span class="toc-text">修改stdafx.h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#build"><span class="toc-number">2.7.</span> <span class="toc-text">build</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-number">2.8.</span> <span class="toc-text">运行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#加入到自动化测试套餐"><span class="toc-number">3.</span> <span class="toc-text">加入到自动化测试套餐</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PS"><span class="toc-number">4.</span> <span class="toc-text">PS</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/hexo/categories/code/" title="code">code<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/hexo/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/hexo/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/hexo/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/memory/" title="memory">memory<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/UT/" title="UT">UT<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/understand/" title="understand">understand<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/virtual/" title="virtual">virtual<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/zblog/" title="zblog">zblog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/科普/" title="科普">科普<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/pandoc/" title="pandoc">pandoc<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/html/" title="html">html<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/slide/" title="slide">slide<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/R/" title="R">R<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/jenkins/" title="jenkins">jenkins<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/hello/" title="hello">hello<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://decbug.com" target="_blank" title="我的jekyll博客">decbug</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I wanna be a good developer <br/>
+			I try to create software products that make people&#39;s lives easier</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/codejuan" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/2763396" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/hexo/about" target="_blank" title="CodeJuan">CodeJuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/hexo/js/jquery-2.0.3.min.js"></script>
+<script src="/hexo/js/jquery.imagesloaded.min.js"></script>
+<script src="/hexo/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'codejuan';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/hexo/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/hexo/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-57346409-1', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/hexo/img/scrollup.png"/></a>
+	</div>
+	<script src="/hexo/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

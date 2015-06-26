@@ -1,0 +1,622 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>比较WinPE文件(忽略时间戳) | Continuous Learning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="CodeJuan">
+    
+
+    
+    <meta name="description" content="背景项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="比较WinPE文件(忽略时间戳)">
+<meta property="og:url" content="http://codejuan.github.io/hexo/2014/11/19/CompareWinPE/index.html">
+<meta property="og:site_name" content="Continuous Learning">
+<meta property="og:description" content="背景项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是">
+<meta property="og:updated_time" content="2015-06-26T12:11:39.656Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="比较WinPE文件(忽略时间戳)">
+<meta name="twitter:description" content="背景项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/hexo/img/favicon.png">
+    
+    
+    <link rel="apple-touch-icon" href="/hexo/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/hexo/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/hexo/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/hexo/"><img src="/hexo/img/avatar.jpg" alt="Continuous Learning" title="Continuous Learning"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/hexo/" title="Continuous Learning">Continuous Learning</a></h1>
+				<h2 class="blog-motto">浮云一别后，流水十年间</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/hexo/">Home</a></li>
+					
+						<li><a href="/hexo/archives">Archives</a></li>
+					
+						<li><a href="/hexo/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:codejuan.github.io/hexo">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hexo/2014/11/19/CompareWinPE/" title="比较WinPE文件(忽略时间戳)" itemprop="url">比较WinPE文件(忽略时间戳)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-11-19</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过程"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#去除TimeStamp"><span class="toc-number">3.</span> <span class="toc-text">去除TimeStamp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BinDiff"><span class="toc-number">3.1.</span> <span class="toc-text">BinDiff</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dumpbin_/rawdata"><span class="toc-number">3.2.</span> <span class="toc-text">dumpbin /rawdata</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dumpbin_/disasm"><span class="toc-number">3.3.</span> <span class="toc-text">dumpbin /disasm</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后续"><span class="toc-number">4.</span> <span class="toc-text">后续</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="背景">背景</h2><p>项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。<br>因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是有几个字节不相同。于是向我求助。</p>
+<h2 id="过程">过程</h2><p>我曾看过windows的PE文件结构，依稀记得里边会有几个字节存放TimeStamp和CheckSum，所以会有这么几个字节的差异。为避免误人子弟，特找来微软的定义看看：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _IMAGE_NT_HEADERS &#123;  </span><br><span class="line">    DWORD Signature;  </span><br><span class="line">    IMAGE_FILE_HEADER FileHeader;  </span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 OptionalHeader;  </span><br><span class="line">&#125; IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>其中FileHeader的定义是，第三个变量就是时间戳，表示文件的创建时间。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _IMAGE_FILE_HEADER &#123;  </span><br><span class="line">    WORD    Machine;  </span><br><span class="line">    WORD    NumberOfSections;  </span><br><span class="line">    DWORD   timeDateStamp;  <span class="comment">//timeDateStamp</span></span><br><span class="line">    DWORD   PointerToSymbolTable;  </span><br><span class="line">    DWORD   NumberOfSymbols;  </span><br><span class="line">    WORD    SizeOfOptionalHeader;  </span><br><span class="line">    WORD    Characteristics;  </span><br><span class="line">&#125; IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;</span><br></pre></td></tr></table></figure>
+<p>再来看看所谓的可选头OptionalHeader，其实一点都不可选，里边藏了好多东西，其中的CheckSum也会导致DLL差异。  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _IMAGE_OPTIONAL_HEADER &#123;  </span><br><span class="line">    WORD    Magic;     </span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    DWORD   CheckSum;  <span class="comment">//CheckSum</span></span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];  </span><br><span class="line">&#125; IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;</span><br></pre></td></tr></table></figure>
+<h2 id="去除TimeStamp">去除TimeStamp</h2><p>既然时间戳确实存在，那么只能想办法在比较的时候忽略时间戳，或是在比较之前去除之。秉承一贯不重复造轮子的作风，先google一下是否有解决方案。</p>
+<h3 id="BinDiff">BinDiff</h3><p>微软大力推荐的BinDiff，可惜找了一大圈都没找到下载源，网上另有说法是BinDiff属于商用软件，license很贵。只能放弃，另寻他法。</p>
+<h3 id="dumpbin_/rawdata">dumpbin /rawdata</h3><p>VS2010自带了将PE文件导出的工具Dumpbin，据说可以将PE文件导出来。需要注意的是，不能直接在<code>CMD里输入dumpbin</code>，会提示找不到某个DLL，必须在开始菜单-VS2010-Tools-prompt里打开。区别在于tools里会先调用一个bat环境变量。<br>用法</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dumpbin /rawdata <span class="number">1</span>.dll <span class="number">1</span>.txt</span><br><span class="line">dumpbin /rawdata <span class="number">2</span>.dll <span class="number">2</span>.txt</span><br></pre></td></tr></table></figure>
+<p>用BeyondCompare比较1.txt和2.txt，发现差异还是在TimeStamp处，看来此法不通。</p>
+<h3 id="dumpbin_/disasm">dumpbin /disasm</h3><p>查看dumpbin命令</p>
+<blockquote>
+<pre><code>/ALL  
+  /ARCHIVEMEMBERS  
+  /CLRHEADER  
+  /DEPENDENTS  
+  /DIRECTIVES  
+  /DISASM[:{BYTES|<span class="string">NOBYTES}]  
+  /ERRORREPORT:{NONE</span>|<span class="string">PROMPT</span>|<span class="string">QUEUE</span>|<span class="string">SEND}  
+  /EXPORTS  
+  /FPO  
+  /HEADERS  
+  /IMPORTS[:文件名]  
+  /LINENUMBERS  
+  /LINKERMEMBER[:{1</span>|<span class="string">2}]  
+  /LOADCONFIG  
+  /OUT:文件名  
+  /PDATA  
+  /PDBPATH[:VERBOSE]  
+  /RANGE:vaMin[,vaMax]  
+  /RAWDATA[:{NONE</span>|<span class="string">1</span>|<span class="string">2</span>|<span class="string">4</span>|<span class="string">8}[,#]]  
+  /RELOCATIONS  
+  /SECTION:名称  
+  /SUMMARY  
+  /SYMBOLS  
+  /TLS  
+  /UNWINDINFO   </span>
+</code></pre></blockquote>
+<p>其中有个disasm，看着像反汇编。如果能把PE反汇编出来，应该就能把TimeStamp去掉。</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dumpbin /disasm <span class="number">1</span>.dll <span class="number">1</span>.txt</span><br><span class="line">dumpbin /disasm <span class="number">2</span>.dll <span class="number">2</span>.txt</span><br></pre></td></tr></table></figure>
+<p>比较1.txt和2.txt果然一致。</p>
+<h2 id="后续">后续</h2><p>需要写一个bat，输入参数为两个文件夹的路径，将这两个文件夹内的PE文件都反汇编出来，然后一一进行比较，输出有差异的文件名。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/hexo/tags/WinPE/">WinPE</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://codejuan.github.io/hexo/2014/11/19/CompareWinPE/" data-title="比较WinPE文件(忽略时间戳) | Continuous Learning" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/hexo/2014/11/26/test_gcc_gdb/" title="学习GCC &amp; GDB">
+  <strong>上一篇：</strong><br/>
+  <span>
+  学习GCC &amp; GDB</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/hexo/2014/05/06/optimize/"  title="优化草稿">
+ <strong>下一篇：</strong><br/> 
+ <span>优化草稿
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过程"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#去除TimeStamp"><span class="toc-number">3.</span> <span class="toc-text">去除TimeStamp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BinDiff"><span class="toc-number">3.1.</span> <span class="toc-text">BinDiff</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dumpbin_/rawdata"><span class="toc-number">3.2.</span> <span class="toc-text">dumpbin /rawdata</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dumpbin_/disasm"><span class="toc-number">3.3.</span> <span class="toc-text">dumpbin /disasm</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后续"><span class="toc-number">4.</span> <span class="toc-text">后续</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/hexo/categories/code/" title="code">code<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/hexo/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/hexo/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/hexo/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/memory/" title="memory">memory<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/UT/" title="UT">UT<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/understand/" title="understand">understand<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/virtual/" title="virtual">virtual<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/zblog/" title="zblog">zblog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/科普/" title="科普">科普<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/pandoc/" title="pandoc">pandoc<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/html/" title="html">html<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/slide/" title="slide">slide<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/R/" title="R">R<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/jenkins/" title="jenkins">jenkins<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/hello/" title="hello">hello<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/hexo/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://decbug.com" target="_blank" title="我的jekyll博客">decbug</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I wanna be a good developer <br/>
+			I try to create software products that make people&#39;s lives easier</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/codejuan" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/2763396" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/hexo/about" target="_blank" title="CodeJuan">CodeJuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/hexo/js/jquery-2.0.3.min.js"></script>
+<script src="/hexo/js/jquery.imagesloaded.min.js"></script>
+<script src="/hexo/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'codejuan';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/hexo/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/hexo/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-57346409-1', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/hexo/img/scrollup.png"/></a>
+	</div>
+	<script src="/hexo/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
