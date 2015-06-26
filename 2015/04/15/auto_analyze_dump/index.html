@@ -16,7 +16,7 @@
 竟然都这么懒惰，那么我只好想出个更简便的方法来分析dump，一键式傻">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自动调用windbg分析dump">
-<meta property="og:url" content="http://codejuan.github.io/hexo/2015/04/15/auto_analyze_dump/index.html">
+<meta property="og:url" content="http://codejuan.github.io/blog/2015/04/15/auto_analyze_dump/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="前言最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入!analyze -v就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。
 老夫一怒之下，就开始反思。是我的文档写的不够清晰？还是操作太繁琐了？其实都不是，说白了就是现在的年轻人都太懒了。
@@ -32,13 +32,13 @@
     <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
     
     
-    <link rel="icon" href="/hexo/img/favicon.png">
+    <link rel="icon" href="/blog/img/favicon.png">
     
     
-    <link rel="apple-touch-icon" href="/hexo/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/hexo/img/jacman.jpg">
+    <link rel="apple-touch-icon" href="/blog/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/blog/img/jacman.jpg">
     
-    <link rel="stylesheet" href="/hexo/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/blog/css/style.css" type="text/css">
 </head>
 
   <body>
@@ -47,11 +47,11 @@
 <div>
 		
 			<div id="imglogo">
-				<a href="/hexo/"><img src="/hexo/img/avatar.jpg" alt="Continuous Learning" title="Continuous Learning"/></a>
+				<a href="/blog/"><img src="/blog/img/avatar.jpg" alt="Continuous Learning" title="Continuous Learning"/></a>
 			</div>
 			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/hexo/" title="Continuous Learning">Continuous Learning</a></h1>
+				<h1 class="site-name"><a href="/blog/" title="Continuous Learning">Continuous Learning</a></h1>
 				<h2 class="blog-motto">浮云一别后，流水十年间</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -60,18 +60,18 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/hexo/">Home</a></li>
+						<li><a href="/blog/">Home</a></li>
 					
-						<li><a href="/hexo/archives">Archives</a></li>
+						<li><a href="/blog/archives">Archives</a></li>
 					
-						<li><a href="/hexo/about">About</a></li>
+						<li><a href="/blog/about">About</a></li>
 					
 					<li>
  					
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
 						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
-						<input type="hidden" name="q" value="site:codejuan.github.io/hexo">
+						<input type="hidden" name="q" value="site:codejuan.github.io/blog">
 					</form>
 					
 					</li>
@@ -86,11 +86,11 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/hexo/2015/04/15/auto_analyze_dump/" title="自动调用windbg分析dump" itemprop="url">自动调用windbg分析dump</a>
+      <a href="/blog/2015/04/15/auto_analyze_dump/" title="自动调用windbg分析dump" itemprop="url">自动调用windbg分析dump</a>
   </h1>
   <p class="article-author">By
        
-		<a href="/hexo/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		<a href="/blog/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
 		
   <p class="article-time">
     <time datetime="2015-04-15T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-04-15</time>
@@ -142,13 +142,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/hexo/categories/code/">code</a>
+  <a class="article-category-link" href="/blog/categories/code/">code</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/hexo/tags/dump/">dump</a><a href="/hexo/tags/powershell/">powershell</a><a href="/hexo/tags/windbg/">windbg</a>
+  <span></span> <a href="/blog/tags/dump/">dump</a><a href="/blog/tags/powershell/">powershell</a><a href="/blog/tags/windbg/">windbg</a>
   </div>
 
 </div>
@@ -157,7 +157,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://codejuan.github.io/hexo/2015/04/15/auto_analyze_dump/" data-title="自动调用windbg分析dump | Continuous Learning" data-tsina="null" class="share clearfix">
+	  <div data-url="http://codejuan.github.io/blog/2015/04/15/auto_analyze_dump/" data-title="自动调用windbg分析dump | Continuous Learning" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -171,7 +171,7 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/hexo/2015/06/11/career_of_programmer/" title="读程序员职业规划书有感">
+ <a href="/blog/2015/06/11/career_of_programmer/" title="读程序员职业规划书有感">
   <strong>上一篇：</strong><br/>
   <span>
   读程序员职业规划书有感</span>
@@ -180,7 +180,7 @@
 
 
 <div class="next">
-<a href="/hexo/2015/03/27/gprof_sprof_perf/"  title="Linux C++性能调优笔记">
+<a href="/blog/2015/03/27/gprof_sprof_perf/"  title="Linux C++性能调优笔记">
  <strong>下一篇：</strong><br/> 
  <span>Linux C++性能调优笔记
 </span>
@@ -217,15 +217,15 @@
 		<ul>
 		
 		  
-			<li><a href="/hexo/categories/code/" title="code">code<sup>18</sup></a></li>
+			<li><a href="/blog/categories/code/" title="code">code<sup>18</sup></a></li>
 		  
 		
 		  
-			<li><a href="/hexo/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+			<li><a href="/blog/categories/hello/" title="hello">hello<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/hexo/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+			<li><a href="/blog/categories/生活/" title="生活">生活<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -238,83 +238,83 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/hexo/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
+				<li><a href="/blog/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/memory/" title="memory">memory<sup>2</sup></a></li>
+				<li><a href="/blog/tags/memory/" title="memory">memory<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/UT/" title="UT">UT<sup>2</sup></a></li>
+				<li><a href="/blog/tags/UT/" title="UT">UT<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/blog/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
+				<li><a href="/blog/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/understand/" title="understand">understand<sup>1</sup></a></li>
+				<li><a href="/blog/tags/understand/" title="understand">understand<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/virtual/" title="virtual">virtual<sup>1</sup></a></li>
+				<li><a href="/blog/tags/virtual/" title="virtual">virtual<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/zblog/" title="zblog">zblog<sup>1</sup></a></li>
+				<li><a href="/blog/tags/zblog/" title="zblog">zblog<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/科普/" title="科普">科普<sup>1</sup></a></li>
+				<li><a href="/blog/tags/科普/" title="科普">科普<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/pandoc/" title="pandoc">pandoc<sup>1</sup></a></li>
+				<li><a href="/blog/tags/pandoc/" title="pandoc">pandoc<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/html/" title="html">html<sup>1</sup></a></li>
+				<li><a href="/blog/tags/html/" title="html">html<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/slide/" title="slide">slide<sup>1</sup></a></li>
+				<li><a href="/blog/tags/slide/" title="slide">slide<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/R/" title="R">R<sup>1</sup></a></li>
+				<li><a href="/blog/tags/R/" title="R">R<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/jenkins/" title="jenkins">jenkins<sup>1</sup></a></li>
+				<li><a href="/blog/tags/jenkins/" title="jenkins">jenkins<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
+				<li><a href="/blog/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
+				<li><a href="/blog/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/hello/" title="hello">hello<sup>1</sup></a></li>
+				<li><a href="/blog/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
+				<li><a href="/blog/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+				<li><a href="/blog/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/hexo/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
+				<li><a href="/blog/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -379,15 +379,15 @@
 		<p class="copyright">
 		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
 		
-		<a href="/hexo/about" target="_blank" title="CodeJuan">CodeJuan</a>
+		<a href="/blog/about" target="_blank" title="CodeJuan">CodeJuan</a>
 		
 		
 		</p>
 </div>
 </footer>
-    <script src="/hexo/js/jquery-2.0.3.min.js"></script>
-<script src="/hexo/js/jquery.imagesloaded.min.js"></script>
-<script src="/hexo/js/gallery.js"></script>
+    <script src="/blog/js/jquery-2.0.3.min.js"></script>
+<script src="/blog/js/jquery.imagesloaded.min.js"></script>
+<script src="/blog/js/gallery.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){ 
@@ -520,8 +520,8 @@ var disqus_shortname = 'codejuan';
 
 
 
-<link rel="stylesheet" href="/hexo/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/hexo/fancybox/jquery.fancybox.pack.js"></script>
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){ 
   $('.article-content').each(function(i){
@@ -563,9 +563,9 @@ ga('send', 'pageview');
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/hexo/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/blog/img/scrollup.png"/></a>
 	</div>
-	<script src="/hexo/js/totop.js"></script>
+	<script src="/blog/js/totop.js"></script>
 
 <!-- Totop End -->
 
