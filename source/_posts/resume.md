@@ -13,7 +13,7 @@ description:
 
 mail:			[xh@decbug.com](mailto:xh@decbug.com)
 
-blog:			[decbug.com](http://www.decbug.com)
+blog:			[decbug.com/blog](http://www.decbug.com/blog)
 
 github:			[codejuan](http://github.com/codejuan)
 

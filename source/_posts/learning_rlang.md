@@ -18,6 +18,8 @@ description:
 
 3. [resouce](http://mirror.bjtu.edu.cn/cran/sources.html) , current version is [R-3.1.2](http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz)
 
+<!--more-->
+
 4. extract,    `sudo tar xf r-3.1.2.tar.gz -C extract/`
 
 5. view the build document,`vim INSTALL`
