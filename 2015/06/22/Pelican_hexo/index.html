@@ -4,28 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>读程序员职业规划书有感 | Continuous Learning</title>
+    <title>hexo and pelican | Continuous Learning</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="CodeJuan">
     
 
     
-    <meta name="description" content="前言
-最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。恰巧得到@Easy兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。">
+    <meta name="description" content="用pelican或hexo建一个漂亮的博客">
 <meta property="og:type" content="article">
-<meta property="og:title" content="读程序员职业规划书有感">
-<meta property="og:url" content="http://codejuan.github.io/blog/2015/06/11/career_of_programmer/index.html">
+<meta property="og:title" content="hexo and pelican">
+<meta property="og:url" content="http://codejuan.github.io/blog/2015/06/22/Pelican_hexo/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="前言
-最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。恰巧得到@Easy兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。">
-<meta property="og:image" content="http://img4.douban.com/lpic/s28065947.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/8cad9f13gw1es42gkkwvjj20gk090mxi.jpg">
-<meta property="og:updated_time" content="2015-06-26T12:41:06.968Z">
+<meta property="og:description" content="用pelican或hexo建一个漂亮的博客">
+<meta property="og:updated_time" content="2015-07-03T12:43:39.531Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="读程序员职业规划书有感">
-<meta name="twitter:description" content="前言
-最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。恰巧得到@Easy兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。">
+<meta name="twitter:title" content="hexo and pelican">
+<meta name="twitter:description" content="用pelican或hexo建一个漂亮的博客">
 
     
     <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
@@ -85,14 +80,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/blog/2015/06/11/career_of_programmer/" title="读程序员职业规划书有感" itemprop="url">读程序员职业规划书有感</a>
+      <a href="/blog/2015/06/22/Pelican_hexo/" title="hexo and pelican" itemprop="url">hexo and pelican</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/blog/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-11T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-06-11</time>
+    <time datetime="2015-06-21T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-22</time>
     
   </p>
 </header>
@@ -101,31 +96,22 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#跳槽"><span class="toc-number">2.</span> <span class="toc-text">跳槽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#秀出自己的肌肉"><span class="toc-number">3.</span> <span class="toc-text">秀出自己的肌肉</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#install"><span class="toc-number">1.</span> <span class="toc-text">install</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python_2-7"><span class="toc-number">1.1.</span> <span class="toc-text">python 2.7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#easy_install"><span class="toc-number">1.2.</span> <span class="toc-text">easy_install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pip"><span class="toc-number">1.3.</span> <span class="toc-text">pip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#make"><span class="toc-number">1.4.</span> <span class="toc-text">make</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pelican"><span class="toc-number">1.5.</span> <span class="toc-text">pelican</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#markdown"><span class="toc-number">1.6.</span> <span class="toc-text">markdown</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#quick-start"><span class="toc-number">1.7.</span> <span class="toc-text">quick-start</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#run"><span class="toc-number">1.8.</span> <span class="toc-text">run</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#themes"><span class="toc-number">1.9.</span> <span class="toc-text">themes</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hexo"><span class="toc-number"></span> <span class="toc-text">hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#install-1"><span class="toc-number">1.</span> <span class="toc-text">install</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#theme"><span class="toc-number">2.</span> <span class="toc-text">theme</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="前言">前言</h2><p><img src="http://img4.douban.com/lpic/s28065947.jpg" alt=""></p>
-<p>最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。<br>恰巧得到<a href="http://weibo.com/easy" target="_blank" rel="external">@Easy</a>兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。</p>
-<a id="more"></a>
-<h2 id="跳槽">跳槽</h2><blockquote>
-<p>不要因为“现在很差”而跳槽，要为“未来更好”而跳槽</p>
-</blockquote>
-<p>就我个人而言，每次跳槽都是一次很艰难的决定，因为有得必有失。有时候是为了更多的金钱放弃现在轻松不加班的工作；有时候是为了get新技能而放弃现在丰厚的薪水。但无论如何，我们的得到的都比失去的多，也就是<code>我现在的决定让我的未来更好</code>，也许这个<code>好</code>需要很长一段时间才能体现出来。</p>
-<p>现在的工作各方面都挺好，可是对于我个人的技术能力提升的空间已经不大。作为想努力成为大牛的人，我期望能补齐我的短板，丰富我的技能树。也就是说想要一份更有挑战的工作，薪水不要比现在差就好。</p>
-<h2 id="秀出自己的肌肉">秀出自己的肌肉</h2><p>虽然周围的朋友都决定我水平还行，可我还是觉得自己比较菜，越学习，就觉得自己越菜，我经常说自己还是菜鸟，要学的东西还很多<br><img src="http://ww3.sinaimg.cn/large/8cad9f13gw1es42gkkwvjj20gk090mxi.jpg" alt=""></p>
-<p>然而在求职的时候，却容不得半点谦虚，要把自己的能力都展现出来，才能让雇主给出合适的薪水。像我们猿类都比较低调，陌生人比较难发现我们的亮点。这时候就需要<code>构建个人品牌</code>，把自己的优势都展示出来。只是空口无凭，雇主如何才能相信你？<br>这个时候就需要博客，博客是最好的简历，曾做过什么，解决过什么，玩过什么，学了什么，都可以通通记录下来。</p>
-<ul>
-<li>自己可以常常回顾，温故知新；</li>
-<li>可以把自己的能力，经验以及业余时间的研究都展示出来；</li>
-<li>锻炼自己的写作沟通能力，<a href="http://www.shubhro.com/2014/12/27/software-engineers-should-write/" target="_blank" rel="external">程序员也要多写作</a>；</li>
-<li>晚上下班还愿意做总结的人，技术一般不会太差；</li>
-<li>也许我的博客能帮到别人呢？我经常拜读大牛们博客，有时真的大有收获。虽然我水平离大牛很远，但我解决的问题可能别人也会遇到，看我的博客之后就能少走点弯路。</li>
-</ul>
-<h2 id="总结">总结</h2><p>工作不是一件容易的事，跳槽则更难。每一个决定都可能影响未来几年的职业生涯，我们无法预见未来，我们只能把握当下，努力提升自己的能力，总归是不差的。</p>
-<blockquote>
-<p>当你的能力足够强，必然会有一份满意的工作，区别只是在哪家公司干而已</p>
-</blockquote>
+		<p>用pelican或hexo建一个漂亮的博客<br><a id="more"></a></p>
+<h2 id="install">install</h2><h3 id="python_2-7">python 2.7</h3><p><a href="https://www.python.org/downloads/release/python-2710/" target="_blank" rel="external">https://www.python.org/downloads/release/python-2710/</a></p>
+<h3 id="easy_install">easy_install</h3><p><a href="https://pypi.python.org/pypi/setuptools" target="_blank" rel="external">https://pypi.python.org/pypi/setuptools</a><br><a href="https://bootstrap.pypa.io/ez_setup.py" target="_blank" rel="external">https://bootstrap.pypa.io/ez_setup.py</a><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\Python27\python.exe ez_setup.py</span><br></pre></td></tr></table></figure></p>
+<h3 id="pip">pip</h3><p>easy_install pip 提示找不到命令<br>设置环境变量 E:\Python27;E:\Python27\Scripts<br>其实新版的python都自带了pip，无需安装</p>
+<h3 id="make">make</h3><p><a href="http://pan.baidu.com/s/1hqzJBBe" target="_blank" rel="external">http://pan.baidu.com/s/1hqzJBBe</a><br>解压到python目录</p>
+<h3 id="pelican">pelican</h3><p>pip install pelican</p>
+<h3 id="markdown">markdown</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install markdown</span><br></pre></td></tr></table></figure>
+<h3 id="quick-start">quick-start</h3><p><a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="external">https://en.wikipedia.org/wiki/List_of_tz_database_time_zones</a><br>timezone Asia/Shanghai</p>
+<h3 id="run">run</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pelican content&#10;cd ~/projects/yoursite/output&#10;python -m pelican.server</span><br></pre></td></tr></table></figure>
+<h3 id="themes">themes</h3><p>下载themes<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pelican theme -i &#34;&#20320;&#21916;&#27426;&#30340;&#20027;&#39064;&#34;</span><br></pre></td></tr></table></figure></p>
+<h1 id="hexo">hexo</h1><h2 id="install-1">install</h2><p><a href="https://nodejs.org/dist/v0.12.5/node-v0.12.5-x86.msi" target="_blank" rel="external">download</a><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo&#10;mkdir blog&#10;cd blog&#10;hexo init&#10;npm install&#10;hexo generate&#10;hexo server</span><br></pre></td></tr></table></figure></p>
+<h2 id="theme">theme</h2><p>clone theme to folder <code>themes</code><br>_config.yml theme: jacman</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -139,7 +125,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/blog/tags/career/">career</a><a href="/blog/tags/programmer/">programmer</a>
+  <span></span> <a href="/blog/tags/blog/">blog</a>
   </div>
 
 </div>
@@ -148,7 +134,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://codejuan.github.io/blog/2015/06/11/career_of_programmer/" data-title="读程序员职业规划书有感 | Continuous Learning" data-tsina="null" class="share clearfix">
+	  <div data-url="http://codejuan.github.io/blog/2015/06/22/Pelican_hexo/" data-title="hexo and pelican | Continuous Learning" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -161,19 +147,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/blog/2015/06/13/Premature_Optimization/" title="身边的过早优化事件">
-  <strong>上一篇：</strong><br/>
-  <span>
-  身边的过早优化事件</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/blog/2015/04/15/auto_analyze_dump/"  title="自动调用windbg分析dump">
+<a href="/blog/2015/06/13/Premature_Optimization/"  title="身边的过早优化事件">
  <strong>下一篇：</strong><br/> 
- <span>自动调用windbg分析dump
+ <span>身边的过早优化事件
 </span>
 </a>
 </div>
@@ -194,7 +172,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#跳槽"><span class="toc-number">2.</span> <span class="toc-text">跳槽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#秀出自己的肌肉"><span class="toc-number">3.</span> <span class="toc-text">秀出自己的肌肉</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#install"><span class="toc-number">1.</span> <span class="toc-text">install</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python_2-7"><span class="toc-number">1.1.</span> <span class="toc-text">python 2.7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#easy_install"><span class="toc-number">1.2.</span> <span class="toc-text">easy_install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pip"><span class="toc-number">1.3.</span> <span class="toc-text">pip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#make"><span class="toc-number">1.4.</span> <span class="toc-text">make</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pelican"><span class="toc-number">1.5.</span> <span class="toc-text">pelican</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#markdown"><span class="toc-number">1.6.</span> <span class="toc-text">markdown</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#quick-start"><span class="toc-number">1.7.</span> <span class="toc-text">quick-start</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#run"><span class="toc-number">1.8.</span> <span class="toc-text">run</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#themes"><span class="toc-number">1.9.</span> <span class="toc-text">themes</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hexo"><span class="toc-number"></span> <span class="toc-text">hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#install-1"><span class="toc-number">1.</span> <span class="toc-text">install</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#theme"><span class="toc-number">2.</span> <span class="toc-text">theme</span></a></li></ol>
  
   </div>
 

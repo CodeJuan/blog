@@ -81,6 +81,70 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/blog/2015/06/22/Pelican_hexo/" title="hexo and pelican" itemprop="url">hexo and pelican</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blog/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-21T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-22</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>用pelican或hexo建一个漂亮的博客<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/blog/2015/06/22/Pelican_hexo/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blog/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blog/tags/blog/">blog</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/blog/2015/06/22/Pelican_hexo/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/blog/2015/06/13/Premature_Optimization/" title="身边的过早优化事件" itemprop="url">身边的过早优化事件</a>
   </h1>
   <p class="article-author">By
@@ -705,82 +769,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/blog/2015/01/12/jenkins/" title="用jenkins监控程序内存CPU" itemprop="url">用jenkins监控程序内存CPU</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/blog/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
-		
-  <p class="article-time">
-    <time datetime="2015-01-12T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
-<p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
-<p>大概原理：写个脚本</p>
-<ol>
-<li>取得构建包列表。下载没有测试过的最新的包。</li>
-<li>读配置文件，获取测试用例，期望运行时间，期望内存峰值及均值。</li>
-<li>自动运行程序，每1s采样一次进程内存大小，记录在日志里。</li>
-<li>当程序结束时，计算运行时间间隔，与期望值比较，如果超出，则红。</li>
-<li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
-</ol>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/blog/2015/01/12/jenkins/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/blog/categories/code/">code</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/blog/tags/CPU/">CPU</a><a href="/blog/tags/jenkins/">jenkins</a><a href="/blog/tags/memory/">memory</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/blog/2015/01/12/jenkins/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="extend next" rel="next" href="/blog/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="page-number" href="/blog/page/3/">3</a><a class="extend next" rel="next" href="/blog/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -796,7 +787,7 @@
 		<ul>
 		
 		  
-			<li><a href="/blog/categories/code/" title="code">code<sup>18</sup></a></li>
+			<li><a href="/blog/categories/code/" title="code">code<sup>19</sup></a></li>
 		  
 		
 		  
@@ -817,10 +808,6 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/blog/tags/UT/" title="UT">UT<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/blog/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
 			
 		
@@ -829,7 +816,11 @@
 			
 		
 			
-				<li><a href="/blog/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
+				<li><a href="/blog/tags/UT/" title="UT">UT<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/blog/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
 			
 		
 			
@@ -889,11 +880,11 @@
 			
 		
 			
-				<li><a href="/blog/tags/understand/" title="understand">understand<sup>1</sup></a></li>
+				<li><a href="/blog/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/blog/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/blog/tags/understand/" title="understand">understand<sup>1</sup></a></li>
 			
 		
 		</ul>
