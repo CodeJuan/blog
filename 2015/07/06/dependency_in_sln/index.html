@@ -1,0 +1,606 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>自动生成sln中各project依赖图 | Continuous Learning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="CodeJuan">
+    
+
+    
+    <meta name="description" content="前言为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。
+写好的代码放在https://github.com/CodeJuan/dependency_in_sln，使用方法也很简单。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动生成sln中各project依赖图">
+<meta property="og:url" content="http://blog.decbug.com/2015/07/06/dependency_in_sln/index.html">
+<meta property="og:site_name" content="Continuous Learning">
+<meta property="og:description" content="前言为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。
+写好的代码放在https://github.com/CodeJuan/dependency_in_sln，使用方法也很简单。">
+<meta property="og:image" content="https://github.com/CodeJuan/dependency_in_sln/raw/master/gtest.sln.png">
+<meta property="og:updated_time" content="2015-07-07T23:56:48.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自动生成sln中各project依赖图">
+<meta name="twitter:description" content="前言为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。
+写好的代码放在https://github.com/CodeJuan/dependency_in_sln，使用方法也很简单。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/avatar.jpg" alt="Continuous Learning" title="Continuous Learning"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Continuous Learning">Continuous Learning</a></h1>
+				<h2 class="blog-motto">浮云一别后，流水十年间</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:blog.decbug.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/06/dependency_in_sln/" title="自动生成sln中各project依赖图" itemprop="url">自动生成sln中各project依赖图</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-05T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-07-06</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思考"><span class="toc-number">2.</span> <span class="toc-text">思考</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#采用的技术"><span class="toc-number">2.1.</span> <span class="toc-text">采用的技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#步骤"><span class="toc-number">2.2.</span> <span class="toc-text">步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实施"><span class="toc-number">3.</span> <span class="toc-text">实施</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sln规律"><span class="toc-number">3.1.</span> <span class="toc-text">sln规律</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码"><span class="toc-number">3.2.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生成的dot"><span class="toc-number">3.3.</span> <span class="toc-text">生成的dot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#demo"><span class="toc-number">3.4.</span> <span class="toc-text">demo</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h1 id="前言">前言</h1><p>为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。</p>
+<p>写好的代码放在<a href="https://github.com/CodeJuan/dependency_in_sln" target="_blank" rel="external">https://github.com/CodeJuan/dependency_in_sln</a>，使用方法也很简单。</p>
+<a id="more"></a>
+<h1 id="思考">思考</h1><h2 id="采用的技术">采用的技术</h2><blockquote>
+<p><code>Graphviz</code> is open source graph visualization software. Graph visualization is a way of representing structural information as diagrams of abstract graphs and networks. It has important applications in networking, bioinformatics,  software engineering, database and web design, machine learning, and in visual interfaces for other technical domains.</p>
+<p><code>DOT</code> is a plain text graph description language. It is a simple way of describing graphs that both humans and computer programs can use.</p>
+</blockquote>
+<p>graphviz是画图神器，dot可以描述图，二者结合，就能画出各种神奇的图片</p>
+<h2 id="步骤">步骤</h2><ol>
+<li>解析sln，得出各工程的依赖关系</li>
+<li>依据第1步的依赖关系生成dot文件</li>
+<li>graphviz调用第2步的dot文件，生成图片</li>
+</ol>
+<h1 id="实施">实施</h1><h2 id="sln规律">sln规律</h2><p>先看一段例子<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Project("&#123;8BC9CEB8-8B4A-<span class="number">11D0-8D11</span>-00A0C91BC942&#125;") = "gtest_unittest", "gtest_unittest.vcxproj", "&#123;4D9FDFB5-986A-<span class="number">4139-823</span>C-F4EE0ED481A1&#125;"</span><br><span class="line">	ProjectSection(ProjectDependencies) = postProject</span><br><span class="line">		&#123;<span class="number">24848551</span>-EF4F-<span class="number">47E8-9A9</span>D-EA4D49BC3ECA&#125; = &#123;<span class="number">24848551</span>-EF4F-<span class="number">47E8-9A9</span>D-EA4D49BC3ECA&#125;</span><br><span class="line">		&#123;C<span class="number">8F6C172-56</span>F2-4E76-B5FA-C<span class="number">3B423B31</span>BE7&#125; = &#123;C<span class="number">8F6C172-56</span>F2-4E76-B5FA-C<span class="number">3B423B31</span>BE7&#125;</span><br><span class="line">	EndProjectSection</span><br><span class="line">EndProject</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>project的开头</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Project</span>(<span class="string">"&#123;8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942&#125;"</span>) = <span class="string">"gtest_unittest"</span>, <span class="string">"gtest_unittest.vcxproj"</span>, <span class="string">"&#123;4D9FDFB5-986A-4139-823C-F4EE0ED481A1&#125;"</span> # 格式是<span class="keyword">Project</span>(<span class="string">"&#123;sln guid&#125;"</span>) = <span class="string">"project name"</span>, <span class="string">"relative path"</span>, <span class="string">"&#123;project guid&#125;"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>project的结尾</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EndProject</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>依赖关系</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ProjectSection(ProjectDependencies) = postProject # 依赖了哪些工程的开头</span><br><span class="line">&#123;<span class="number">24848551</span>-EF4F-<span class="number">47E8-9A9</span>D-EA4D49BC3ECA&#125; = &#123;<span class="number">24848551</span>-EF4F-<span class="number">47E8-9A9</span>D-EA4D49BC3ECA&#125; #依赖工程的guid</span><br><span class="line">EndProjectSection # 依赖描述结尾</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>发现这样的规律，就能够很方便的解析了</p>
+<h2 id="代码">代码</h2><p>由于是在windows上面解析，有同事不会用shell，于是只好用powershell重写一遍</p>
+<p>遍历sln的每一行，进行分析，并写入dot<br><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$line</span> <span class="operator">-like</span> <span class="string">"Project(`"&#123;*"</span>) <span class="comment">#如果匹配到了project开头</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$array</span> = <span class="variable">$line</span>.split(<span class="string">"`""</span>);</span><br><span class="line">    <span class="variable">$name</span> = <span class="variable">$array</span>[<span class="number">3</span>]</span><br><span class="line">    <span class="variable">$id</span> = <span class="variable">$array</span>[<span class="number">7</span>]</span><br><span class="line">    <span class="variable">$script:prj_name_list</span> += <span class="variable">$name</span></span><br><span class="line">    <span class="variable">$script:prj_id_list</span> += <span class="variable">$id</span></span><br><span class="line">    append <span class="string">"<span class="variable">$name</span>[shape=box,fontname=consolas];"</span> <span class="comment"># 在dot写入这个project的描述</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$line</span> <span class="operator">-like</span> <span class="string">"*ProjectSection(*"</span>)</span><br><span class="line">   &#123;</span><br><span class="line">       <span class="variable">$name</span> = <span class="variable">$script:prj_name_list</span>[<span class="variable">$script:prj_name_list</span>.length - <span class="number">1</span>]</span><br><span class="line">       append <span class="string">"<span class="variable">$name</span>-&gt;&#123;"</span> <span class="comment"># 匹配到依赖了哪些工程的开头，开始写入依赖关系</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$line</span> <span class="operator">-like</span> <span class="string">"*EndProjectSection*"</span>)</span><br><span class="line">   &#123;</span><br><span class="line">       append <span class="string">"&#125;;"</span> <span class="comment"># 匹配到了依赖描述结尾，写入&#125;;，完成了这个project的依赖描述</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$line</span> <span class="operator">-like</span> <span class="string">"*&#123;*&#125; = &#123;*&#125;*"</span>) <span class="comment"># 通过大括号识别是否是工程依赖</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$right</span> = <span class="variable">$line</span>.lastindexof(<span class="string">"&#125;"</span>)</span><br><span class="line">    <span class="variable">$left</span> = <span class="variable">$line</span>.lastindexof(<span class="string">"&#123;"</span>)</span><br><span class="line">    <span class="variable">$dep_id</span> = <span class="variable">$line</span>.substring(<span class="variable">$left</span>+<span class="number">1</span>, <span class="variable">$right</span>-<span class="variable">$left</span>-<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> <span class="operator">-lt</span> <span class="variable">$script:prj_id_list_query</span>.length; <span class="variable">$i</span>++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$cur_id</span> = <span class="variable">$script:prj_id_list_query</span>[<span class="variable">$i</span>]</span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$dep_id</span> <span class="operator">-like</span> <span class="string">"<span class="variable">$cur_id</span>"</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$dep_name</span> = <span class="variable">$script:prj_name_list_query</span>[<span class="variable">$i</span>]</span><br><span class="line">            append <span class="string">"<span class="variable">$dep_name</span>;"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="生成的dot">生成的dot</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">digraph G &#123;&#10;rankdir=BT;&#10;gtest[shape=box,fontname=consolas];&#10;gtest_main[shape=box,fontname=consolas];&#10;gtest_unittest[shape=box,fontname=consolas];&#10;gtest_unittest-&#62;&#123;&#10;gtest_prod_test;&#10;gtest;&#10;&#125;;&#10;gtest_prod_test[shape=box,fontname=consolas];&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="demo">demo</h2><p><img src="https://github.com/CodeJuan/dependency_in_sln/raw/master/gtest.sln.png" alt=""></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/dependency/">dependency</a><a href="/tags/dot/">dot</a><a href="/tags/graphviz/">graphviz</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://blog.decbug.com/2015/07/06/dependency_in_sln/" data-title="自动生成sln中各project依赖图 | Continuous Learning" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/22/Pelican_hexo/"  title="hexo and pelican">
+ <strong>下一篇：</strong><br/> 
+ <span>hexo and pelican
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思考"><span class="toc-number">2.</span> <span class="toc-text">思考</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#采用的技术"><span class="toc-number">2.1.</span> <span class="toc-text">采用的技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#步骤"><span class="toc-number">2.2.</span> <span class="toc-text">步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实施"><span class="toc-number">3.</span> <span class="toc-text">实施</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sln规律"><span class="toc-number">3.1.</span> <span class="toc-text">sln规律</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码"><span class="toc-number">3.2.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生成的dot"><span class="toc-number">3.3.</span> <span class="toc-text">生成的dot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#demo"><span class="toc-number">3.4.</span> <span class="toc-text">demo</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/code/" title="code">code<sup>20</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/memory/" title="memory">memory<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UT/" title="UT">UT<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/WinPE/" title="WinPE">WinPE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/virtual/" title="virtual">virtual<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zblog/" title="zblog">zblog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/科普/" title="科普">科普<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/pandoc/" title="pandoc">pandoc<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/html/" title="html">html<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/slide/" title="slide">slide<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/R/" title="R">R<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jenkins/" title="jenkins">jenkins<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://decbug.com" target="_blank" title="我的jekyll博客">decbug</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I wanna be a good developer <br/>
+			I try to create software products that make people&#39;s lives easier</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/codejuan" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/2763396" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="CodeJuan">CodeJuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'codejuan';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-57346409-1', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

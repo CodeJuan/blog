@@ -81,6 +81,92 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/01/15/fragment/" title="真的是内存碎片吗" itemprop="url">真的是内存碎片吗</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-15T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><table>
+<thead>
+<tr>
+<th>配置</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统</td>
+<td>win32</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>E5505</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>4G</td>
+</tr>
+</tbody>
+</table>
+<p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/15/fragment/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/fragment/">fragment</a><a href="/tags/memory/">memory</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/01/15/fragment/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/01/12/jenkins/" title="用jenkins监控程序内存CPU" itemprop="url">用jenkins监控程序内存CPU</a>
   </h1>
   <p class="article-author">By
@@ -689,73 +775,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/01/01/resume/" title="不是简历，只是个人简介" itemprop="url">不是简历，只是个人简介</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
-		
-  <p class="article-time">
-    <time datetime="2013-12-31T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-01-01</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="联系方式">联系方式</h1><p>mail:            <a href="mailto:xh@decbug.com">xh@decbug.com</a></p>
-<p>blog:            <a href="http://www.decbug.com/blog">decbug.com/blog</a></p>
-<p>github:            <a href="http://github.com/codejuan">codejuan</a></p>
-<p>stackoverflow:    <a href="http://stackoverflow.com/users/2763396/codejuan">codejuan</a></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2014/01/01/resume/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/生活/">生活</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/我的信息/">我的信息</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/01/01/resume/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -774,7 +793,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/code/" title="code">code<sup>19</sup></a></li>
+			<li><a href="/categories/code/" title="code">code<sup>20</sup></a></li>
 		  
 		
 		  
@@ -807,7 +826,7 @@
 			
 		
 			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
 			
 		
 			
@@ -871,7 +890,7 @@
 			
 		
 			
-				<li><a href="/tags/understand/" title="understand">understand<sup>1</sup></a></li>
+				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
 			
 		
 		</ul>
