@@ -1,7 +1,7 @@
 title: Hello World
 date: 2013-12-24 23:30:09
 categories:
-- hello
+- code
 tags: 
 - hello
 mathjax: true
