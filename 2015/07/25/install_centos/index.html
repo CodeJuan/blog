@@ -4,32 +4,41 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>不是简历，只是个人简介 | Continuous Learning</title>
+    <title>在家里玩分布式(1)install centos | Continuous Learning</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="CodeJuan">
     
 
     
-    <meta name="description" content="联系方式mail:            xh@decbug.com
-blog:            decbug.com/blog
-github:            codejuan
-stackoverflow:    codejuan">
+    <meta name="description" content="扯淡自己在家玩，买了一堆二手配件，整了4个台式机，打算
+- 弄个scrapy爬数据
+- 存到分布式内存数据库(redis吧)
+- 再存到分布式文件系统(打算用fastdfs)
+- 同时用storm流计算，弄个什么东西挖掘一下
+- 最后用PHP展示
+也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="不是简历，只是个人简介">
-<meta property="og:url" content="http://blog.decbug.com/2014/01/01/resume/index.html">
+<meta property="og:title" content="在家里玩分布式(1)install centos">
+<meta property="og:url" content="http://blog.decbug.com/2015/07/25/install_centos/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="联系方式mail:            xh@decbug.com
-blog:            decbug.com/blog
-github:            codejuan
-stackoverflow:    codejuan">
-<meta property="og:updated_time" content="2015-07-26T06:56:49.566Z">
+<meta property="og:description" content="扯淡自己在家玩，买了一堆二手配件，整了4个台式机，打算
+- 弄个scrapy爬数据
+- 存到分布式内存数据库(redis吧)
+- 再存到分布式文件系统(打算用fastdfs)
+- 同时用storm流计算，弄个什么东西挖掘一下
+- 最后用PHP展示
+也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。">
+<meta property="og:updated_time" content="2015-07-26T07:43:29.542Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="不是简历，只是个人简介">
-<meta name="twitter:description" content="联系方式mail:            xh@decbug.com
-blog:            decbug.com/blog
-github:            codejuan
-stackoverflow:    codejuan">
+<meta name="twitter:title" content="在家里玩分布式(1)install centos">
+<meta name="twitter:description" content="扯淡自己在家玩，买了一堆二手配件，整了4个台式机，打算
+- 弄个scrapy爬数据
+- 存到分布式内存数据库(redis吧)
+- 再存到分布式文件系统(打算用fastdfs)
+- 同时用storm流计算，弄个什么东西挖掘一下
+- 最后用PHP展示
+也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。">
 
     
     <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
@@ -89,14 +98,14 @@ stackoverflow:    codejuan">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/01/01/resume/" title="不是简历，只是个人简介" itemprop="url">不是简历，只是个人简介</a>
+      <a href="/2015/07/25/install_centos/" title="在家里玩分布式(1)install centos" itemprop="url">在家里玩分布式(1)install centos</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
 		
   <p class="article-time">
-    <time datetime="2013-12-31T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-01-01</time>
+    <time datetime="2015-07-24T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-07-25</time>
     
   </p>
 </header>
@@ -105,61 +114,38 @@ stackoverflow:    codejuan">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#联系方式"><span class="toc-number">1.</span> <span class="toc-text">联系方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#技能"><span class="toc-number">2.</span> <span class="toc-text">技能</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#工作经历"><span class="toc-number">3.</span> <span class="toc-text">工作经历</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GD"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">GD</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ZTE"><span class="toc-number">3.0.0.2.</span> <span class="toc-text">ZTE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#samsung"><span class="toc-number">3.0.0.3.</span> <span class="toc-text">samsung</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#huawei"><span class="toc-number">3.0.0.4.</span> <span class="toc-text">huawei</span></a></li></ol></li></ol></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#扯淡"><span class="toc-number">1.</span> <span class="toc-text">扯淡</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#centos"><span class="toc-number">2.</span> <span class="toc-text">centos</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载iso"><span class="toc-number">2.1.</span> <span class="toc-text">下载iso</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区"><span class="toc-number">2.2.</span> <span class="toc-text">分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预装软件"><span class="toc-number">2.3.</span> <span class="toc-text">预装软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置自动登录"><span class="toc-number">2.4.</span> <span class="toc-text">设置自动登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动网络"><span class="toc-number">2.5.</span> <span class="toc-text">启动网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装启动SSH"><span class="toc-number">2.6.</span> <span class="toc-text">安装启动SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由器设置固定IP"><span class="toc-number">2.7.</span> <span class="toc-text">路由器设置固定IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装vim_git"><span class="toc-number">2.8.</span> <span class="toc-text">安装vim git</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#装爬虫"><span class="toc-number">3.</span> <span class="toc-text">装爬虫</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#装pip"><span class="toc-number">3.1.</span> <span class="toc-text">装pip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#装scrapy"><span class="toc-number">3.2.</span> <span class="toc-text">装scrapy</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h1 id="联系方式">联系方式</h1><p>mail:            <a href="mailto:xh@decbug.com" target="_blank" rel="external">xh@decbug.com</a></p>
-<p>blog:            <a href="http://www.decbug.com/blog" target="_blank" rel="external">decbug.com/blog</a></p>
-<p>github:            <a href="http://github.com/codejuan" target="_blank" rel="external">codejuan</a></p>
-<p>stackoverflow:    <a href="http://stackoverflow.com/users/2763396/codejuan" target="_blank" rel="external">codejuan</a></p>
+		<h1 id="扯淡">扯淡</h1><p>自己在家玩，买了一堆二手配件，整了4个台式机，打算</p>
+<pre><code>-<span class="ruby"> 弄个scrapy爬数据
+</span>-<span class="ruby"> 存到分布式内存数据库(redis吧)
+</span>-<span class="ruby"> 再存到分布式文件系统(打算用fastdfs)
+</span>-<span class="ruby"> 同时用storm流计算，弄个什么东西挖掘一下
+</span>-<span class="ruby"> 最后用<span class="constant">PHP</span>展示</span>
+</code></pre><p>也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。</p>
 <a id="more"></a>
-<h1 id="技能">技能</h1><p>入门级全栈</p>
+<h1 id="centos">centos</h1><h2 id="下载iso">下载iso</h2><p><a href="http://www.centos.org/download/" target="_blank" rel="external">http://www.centos.org/download/</a></p>
 <ul>
-<li><p>C++        :star::star::star::star:</p>
-</li>
-<li><p>JAVA        :star::star:</p>
-</li>
-<li><p>C#        :star::star::star:</p>
-</li>
-<li><p>frontend    :star:</p>
-</li>
-<li><p>batch        :star::star:</p>
-</li>
-<li><p>shell        :star::star:</p>
-</li>
-<li><p>powershell :star::star::star:</p>
-</li>
-<li><p>python    :star::star:</p>
-</li>
-<li><p>svn git</p>
-</li>
-<li><p>unit test</p>
-</li>
-<li><p>automation</p>
-</li>
-<li><p>debug        :star::star::star::star:</p>
-</li>
-<li><p>获取知识    :star::star::star::star:用谷歌</p>
-</li>
-<li><p>解决问题    :star::star::star::star:</p>
-</li>
-<li><p>英语        :star::star::star:阅读毫无压力(刷quora，stackoverflow)，技术方面的交谈</p>
-</li>
+<li>minimal: The aim of this image is to install a very basic CentOS system, with the minimum of packages needed to have a functional system</li>
+<li>dvd: 一般选择这个<br>下载x86_64</li>
 </ul>
-<h1 id="工作经历">工作经历</h1><h4 id="GD">GD</h4><ul>
-<li>由维修工转职为程序员，用过VB，C++，C#，奠定了啥都会一点的基础</li>
-<li>兼职过IT，会组装电脑，维修电脑，搭建局域网</li>
+<h2 id="分区">分区</h2><p>/、/boot、/home、swap 就够了</p>
+<h2 id="预装软件">预装软件</h2><p>选择开发者模式，可以把python jdk都装上</p>
+<h2 id="设置自动登录">设置自动登录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/gdm/custom.conf</span><br></pre></td></tr></table></figure>
+<p>写上<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">[daemon]</span></span><br><span class="line"><span class="setting">AutomaticLoginEnable=<span class="value"><span class="keyword">true</span></span></span></span><br><span class="line"><span class="setting">AutomaticLogin=<span class="value">你的用户名</span></span></span><br></pre></td></tr></table></figure></p>
+<h2 id="启动网络">启动网络</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ntsysv</span><br><span class="line"><span class="comment"># TAB切换到OK</span></span><br></pre></td></tr></table></figure>
+<p>修改<code>/etc/sysconfig/network-scripts/ifcfg-enp2s0</code>,设置为<code>onboot=yes</code></p>
+<h2 id="安装启动SSH">安装启动SSH</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install ssh&#10;service sshd start&#10;chkconfig sshd on</span><br></pre></td></tr></table></figure>
+<h2 id="路由器设置固定IP">路由器设置固定IP</h2><ul>
+<li>查看每台机器的MAC ifconfig</li>
+<li>进入路由器管理页面，DHCP - 静态地址分配 - 绑定MAC和IP</li>
 </ul>
-<h4 id="ZTE">ZTE</h4><ul>
-<li>开发手机检测系统</li>
-<li>收获信心，学渣竟然能教同龄名校硕士干活。开始抛弃百度，拥抱谷歌，向真正程序员迈进。</li>
-</ul>
-<h4 id="samsung">samsung</h4><ul>
-<li>接触前端/数据库等等，丰富技能树</li>
-<li>敢于开口说英语</li>
-</ul>
-<h4 id="huawei">huawei</h4><p>持续集成，开源，性能优化。有兴趣可以看我的内网博客及内网git</p>
+<h2 id="安装vim_git">安装vim git</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install vim&#10;yum -y install git</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/CodeJuan/config.git</span><br><span class="line">cp config/.vimrc ~/</span><br><span class="line">cat config/.gitconfig &gt;&gt; ~/.gitconfig</span><br></pre></td></tr></table></figure>
+<h1 id="装爬虫">装爬虫</h1><h2 id="装pip">装pip</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate  https://github.com/pypa/pip/archive/<span class="number">7.1</span>.<span class="number">0</span>.tar.gz</span><br><span class="line">tar zvxf <span class="number">7.1</span>.<span class="number">0</span>.tar.gz    <span class="comment">#解压文件</span></span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">0</span></span><br><span class="line">sudo python setup.py install</span><br></pre></td></tr></table></figure>
+<h2 id="装scrapy">装scrapy</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install scrapy</span><br></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -167,13 +153,13 @@ stackoverflow:    codejuan">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/生活/">生活</a>
+  <a class="article-category-link" href="/categories/code/">code</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/我的信息/">我的信息</a>
+  <span></span> <a href="/tags/system/">system</a>
   </div>
 
 </div>
@@ -182,7 +168,7 @@ stackoverflow:    codejuan">
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.decbug.com/2014/01/01/resume/" data-title="不是简历，只是个人简介 | Continuous Learning" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.decbug.com/2015/07/25/install_centos/" data-title="在家里玩分布式(1)install centos | Continuous Learning" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -195,19 +181,11 @@ stackoverflow:    codejuan">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/04/06/memory/" title="内存基础知识">
-  <strong>上一篇：</strong><br/>
-  <span>
-  内存基础知识</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2013/12/24/hello-world/"  title="Hello World">
+<a href="/2015/07/06/dependency_in_sln/"  title="自动生成sln中各project依赖图">
  <strong>下一篇：</strong><br/> 
- <span>Hello World
+ <span>自动生成sln中各project依赖图
 </span>
 </a>
 </div>
@@ -228,7 +206,7 @@ stackoverflow:    codejuan">
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#联系方式"><span class="toc-number">1.</span> <span class="toc-text">联系方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#技能"><span class="toc-number">2.</span> <span class="toc-text">技能</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#工作经历"><span class="toc-number">3.</span> <span class="toc-text">工作经历</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GD"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">GD</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ZTE"><span class="toc-number">3.0.0.2.</span> <span class="toc-text">ZTE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#samsung"><span class="toc-number">3.0.0.3.</span> <span class="toc-text">samsung</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#huawei"><span class="toc-number">3.0.0.4.</span> <span class="toc-text">huawei</span></a></li></ol></li></ol></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#扯淡"><span class="toc-number">1.</span> <span class="toc-text">扯淡</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#centos"><span class="toc-number">2.</span> <span class="toc-text">centos</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载iso"><span class="toc-number">2.1.</span> <span class="toc-text">下载iso</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区"><span class="toc-number">2.2.</span> <span class="toc-text">分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预装软件"><span class="toc-number">2.3.</span> <span class="toc-text">预装软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置自动登录"><span class="toc-number">2.4.</span> <span class="toc-text">设置自动登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动网络"><span class="toc-number">2.5.</span> <span class="toc-text">启动网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装启动SSH"><span class="toc-number">2.6.</span> <span class="toc-text">安装启动SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由器设置固定IP"><span class="toc-number">2.7.</span> <span class="toc-text">路由器设置固定IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装vim_git"><span class="toc-number">2.8.</span> <span class="toc-text">安装vim git</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#装爬虫"><span class="toc-number">3.</span> <span class="toc-text">装爬虫</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#装pip"><span class="toc-number">3.1.</span> <span class="toc-text">装pip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#装scrapy"><span class="toc-number">3.2.</span> <span class="toc-text">装scrapy</span></a></li></ol></li></ol>
  
   </div>
 

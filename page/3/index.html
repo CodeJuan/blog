@@ -81,6 +81,71 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2014/04/06/memory/" title="内存基础知识" itemprop="url">内存基础知识</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2014-04-05T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-04-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="当前问题">当前问题</h3><p>目前有一个日志分析程序，随着数据的膨胀，工具的运行性能越来越差，甚至运行过程中出现申请不到内存的情况。在任务管理器里可以看到，还有足够的内存，可是却申请不到。由于程序在运行过程中，有许多次new/delete的操作，据此推测是有太多的内存碎片，导致无法申请到足够大的连续内存。 </p>
+<h3 id="基础知识">基础知识</h3><p>new/delete做了什么？有哪些开销<br>slab<br>锁-查找空闲-找到合适大小连续的-分配-解锁。delete相反</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2014/04/06/memory/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/科普/">科普</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/04/06/memory/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2014/01/01/resume/" title="不是简历，只是个人简介" itemprop="url">不是简历，只是个人简介</a>
   </h1>
   <p class="article-author">By
@@ -182,7 +247,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/hello/">hello</a>
+  <a class="article-category-link" href="/categories/code/">code</a>
 </div>
 
 
@@ -231,11 +296,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/code/" title="code">code<sup>20</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+			<li><a href="/categories/code/" title="code">code<sup>22</sup></a></li>
 		  
 		
 		  
@@ -320,15 +381,15 @@
 			
 		
 			
+				<li><a href="/tags/system/" title="system">system<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
 			
 		
 		</ul>

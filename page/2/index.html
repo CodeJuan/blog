@@ -81,6 +81,75 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/01/18/debugdiag/" title="DebugDiag使用指南" itemprop="url">DebugDiag使用指南</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-01-18T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="DebugDiag使用指南">DebugDiag使用指南</h1><h2 id="Foreword">Foreword</h2><p>一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。<br>恰好找到了<code>DebugDiag</code>，据说很简单，微软原文如下：</p>
+<blockquote>
+<p>The right debugging tool can dramatically simplify the isolation of these problem s and the provision of solutions. There are several types of these issues for which the Debug Diagnostic Tool  is a better choice than other debugging tools</p>
+<p>Using the Windows core debuggers (Windbg.exe or Cdb.exe) for post-mortem analysis is a time consuming process and requires many debugging skills.</p>
+</blockquote>
+<p>试用之后，果然比较简单，功能也很强大。这么个挺好用的工具，还是值得安利一下的。鉴于帮助文档大多是英文版，我就顺手把<code>How to Use the Debug Diagnostic Tool (DebugDiag) to Debug User Mode Processes</code>翻译一下。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/01/18/debugdiag/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/debug/">debug</a><a href="/tags/debugdiag/">debugdiag</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/01/18/debugdiag/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/01/15/fragment/" title="真的是内存碎片吗" itemprop="url">真的是内存碎片吗</a>
   </h1>
   <p class="article-author">By
@@ -710,71 +779,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/04/06/memory/" title="内存基础知识" itemprop="url">内存基础知识</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
-		
-  <p class="article-time">
-    <time datetime="2014-04-05T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-04-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h3 id="当前问题">当前问题</h3><p>目前有一个日志分析程序，随着数据的膨胀，工具的运行性能越来越差，甚至运行过程中出现申请不到内存的情况。在任务管理器里可以看到，还有足够的内存，可是却申请不到。由于程序在运行过程中，有许多次new/delete的操作，据此推测是有太多的内存碎片，导致无法申请到足够大的连续内存。 </p>
-<h3 id="基础知识">基础知识</h3><p>new/delete做了什么？有哪些开销<br>slab<br>锁-查找空闲-找到合适大小连续的-分配-解锁。delete相反</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2014/04/06/memory/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/code/">code</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/科普/">科普</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/04/06/memory/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -793,11 +797,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/code/" title="code">code<sup>20</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+			<li><a href="/categories/code/" title="code">code<sup>22</sup></a></li>
 		  
 		
 		  
@@ -882,15 +882,15 @@
 			
 		
 			
+				<li><a href="/tags/system/" title="system">system<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
 			
 		
 		</ul>
