@@ -22,7 +22,8 @@ description:
 <!--more-->
 
 # 使用方法
-代码已经写好，先说怎么用
+代码已经写好，放在[https://github.com/CodeJuan/pe_dependency](https://github.com/CodeJuan/pe_dependency)
+先说怎么用
 1. 安装graphviz2.38[http://www.graphviz.org/Download_windows.php](http://www.graphviz.org/Download_windows.php)到D盘program files
 2. 安装VS2010到到D盘program files
 ```batch
