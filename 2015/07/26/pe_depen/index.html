@@ -4,41 +4,39 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>在家里玩分布式(1)install centos | Continuous Learning</title>
+    <title>自动生成软件中模块依赖图 | Continuous Learning</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="CodeJuan">
     
 
     
-    <meta name="description" content="扯淡自己在家玩，买了一堆二手配件，整了4个台式机，打算
-- 弄个scrapy爬数据
-- 存到分布式内存数据库(redis吧)
-- 再存到分布式文件系统(打算用fastdfs)
-- 同时用storm流计算，弄个什么东西挖掘一下
-- 最后用PHP展示
-也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。">
+    <meta name="description" content="前言上回实现了自动生成sln中各project依赖图，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。
+思路
+获取该软件目录下所有模块(exe和dll)
+通过vs自带的dumpbin命令得到每个模块文件的依赖
+画出graphviz的dot脚本
+graphviz绘图">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在家里玩分布式(1)install centos">
-<meta property="og:url" content="http://blog.decbug.com/2015/07/25/install_centos/index.html">
+<meta property="og:title" content="自动生成软件中模块依赖图">
+<meta property="og:url" content="http://blog.decbug.com/2015/07/26/pe_depen/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="扯淡自己在家玩，买了一堆二手配件，整了4个台式机，打算
-- 弄个scrapy爬数据
-- 存到分布式内存数据库(redis吧)
-- 再存到分布式文件系统(打算用fastdfs)
-- 同时用storm流计算，弄个什么东西挖掘一下
-- 最后用PHP展示
-也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。">
-<meta property="og:updated_time" content="2015-07-26T07:43:29.542Z">
+<meta property="og:description" content="前言上回实现了自动生成sln中各project依赖图，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。
+思路
+获取该软件目录下所有模块(exe和dll)
+通过vs自带的dumpbin命令得到每个模块文件的依赖
+画出graphviz的dot脚本
+graphviz绘图">
+<meta property="og:image" content="https://github.com/CodeJuan/pe_dependency/raw/master/dependency_graph11.png">
+<meta property="og:updated_time" content="2015-07-26T11:45:01.720Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="在家里玩分布式(1)install centos">
-<meta name="twitter:description" content="扯淡自己在家玩，买了一堆二手配件，整了4个台式机，打算
-- 弄个scrapy爬数据
-- 存到分布式内存数据库(redis吧)
-- 再存到分布式文件系统(打算用fastdfs)
-- 同时用storm流计算，弄个什么东西挖掘一下
-- 最后用PHP展示
-也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。">
+<meta name="twitter:title" content="自动生成软件中模块依赖图">
+<meta name="twitter:description" content="前言上回实现了自动生成sln中各project依赖图，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。
+思路
+获取该软件目录下所有模块(exe和dll)
+通过vs自带的dumpbin命令得到每个模块文件的依赖
+画出graphviz的dot脚本
+graphviz绘图">
 
     
     <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
@@ -98,14 +96,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/25/install_centos/" title="在家里玩分布式(1)install centos" itemprop="url">在家里玩分布式(1)install centos</a>
+      <a href="/2015/07/26/pe_depen/" title="自动生成软件中模块依赖图" itemprop="url">自动生成软件中模块依赖图</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-24T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-07-25</time>
+    <time datetime="2015-07-25T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-07-26</time>
     
   </p>
 </header>
@@ -114,38 +112,35 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#扯淡"><span class="toc-number">1.</span> <span class="toc-text">扯淡</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#centos"><span class="toc-number">2.</span> <span class="toc-text">centos</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载iso"><span class="toc-number">2.1.</span> <span class="toc-text">下载iso</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区"><span class="toc-number">2.2.</span> <span class="toc-text">分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预装软件"><span class="toc-number">2.3.</span> <span class="toc-text">预装软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置自动登录"><span class="toc-number">2.4.</span> <span class="toc-text">设置自动登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动网络"><span class="toc-number">2.5.</span> <span class="toc-text">启动网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装启动SSH"><span class="toc-number">2.6.</span> <span class="toc-text">安装启动SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由器设置固定IP"><span class="toc-number">2.7.</span> <span class="toc-text">路由器设置固定IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装vim_git"><span class="toc-number">2.8.</span> <span class="toc-text">安装vim git</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#装爬虫"><span class="toc-number">3.</span> <span class="toc-text">装爬虫</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#装pip"><span class="toc-number">3.1.</span> <span class="toc-text">装pip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#装scrapy"><span class="toc-number">3.2.</span> <span class="toc-text">装scrapy</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用方法"><span class="toc-number">3.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">4.</span> <span class="toc-text">代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#获取目录下所有PE"><span class="toc-number">4.1.</span> <span class="toc-text">获取目录下所有PE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拷贝mspdb100-dll"><span class="toc-number">4.2.</span> <span class="toc-text">拷贝mspdb100.dll</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#graphviz画图"><span class="toc-number">4.3.</span> <span class="toc-text">graphviz画图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过dumpbin获取依赖"><span class="toc-number">4.4.</span> <span class="toc-text">通过dumpbin获取依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#把依赖关系写入dot"><span class="toc-number">4.5.</span> <span class="toc-text">把依赖关系写入dot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#graphviz画图-1"><span class="toc-number">4.6.</span> <span class="toc-text">graphviz画图</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图"><span class="toc-number">5.</span> <span class="toc-text">效果图</span></a></li></ol>
 		
 		</div>
 		
-		<h1 id="扯淡">扯淡</h1><p>自己在家玩，买了一堆二手配件，整了4个台式机，打算</p>
-<pre><code>-<span class="ruby"> 弄个scrapy爬数据
-</span>-<span class="ruby"> 存到分布式内存数据库(redis吧)
-</span>-<span class="ruby"> 再存到分布式文件系统(打算用fastdfs)
-</span>-<span class="ruby"> 同时用storm流计算，弄个什么东西挖掘一下
-</span>-<span class="ruby"> 最后用<span class="constant">PHP</span>展示</span>
-</code></pre><p>也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。</p>
+		<h1 id="前言">前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
+<h1 id="思路">思路</h1><ol>
+<li>获取该软件目录下所有模块(exe和dll)</li>
+<li>通过vs自带的dumpbin命令得到每个模块文件的依赖</li>
+<li>画出graphviz的dot脚本</li>
+<li>graphviz绘图</li>
+</ol>
 <a id="more"></a>
-<h1 id="centos">centos</h1><h2 id="下载iso">下载iso</h2><p><a href="http://www.centos.org/download/" target="_blank" rel="external">http://www.centos.org/download/</a></p>
-<ul>
-<li>minimal: The aim of this image is to install a very basic CentOS system, with the minimum of packages needed to have a functional system</li>
-<li>dvd: 一般选择这个<br>下载x86_64</li>
-</ul>
-<h2 id="分区">分区</h2><p>/、/boot、/home、swap 就够了</p>
-<h2 id="预装软件">预装软件</h2><p>选择开发者模式，可以把python jdk都装上</p>
-<h2 id="设置自动登录">设置自动登录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/gdm/custom.conf</span><br></pre></td></tr></table></figure>
-<p>写上<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">[daemon]</span></span><br><span class="line"><span class="setting">AutomaticLoginEnable=<span class="value"><span class="keyword">true</span></span></span></span><br><span class="line"><span class="setting">AutomaticLogin=<span class="value">你的用户名</span></span></span><br></pre></td></tr></table></figure></p>
-<h2 id="启动网络">启动网络</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ntsysv</span><br><span class="line"><span class="comment"># TAB切换到OK</span></span><br></pre></td></tr></table></figure>
-<p>修改<code>/etc/sysconfig/network-scripts/ifcfg-enp2s0</code>,设置为<code>onboot=yes</code></p>
-<h2 id="安装启动SSH">安装启动SSH</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install ssh&#10;service sshd start&#10;chkconfig sshd on</span><br></pre></td></tr></table></figure>
-<h2 id="路由器设置固定IP">路由器设置固定IP</h2><ul>
-<li>查看每台机器的MAC ifconfig</li>
-<li>进入路由器管理页面，DHCP - 静态地址分配 - 绑定MAC和IP</li>
-</ul>
-<h2 id="安装vim_git">安装vim git</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install vim&#10;yum -y install git</span><br></pre></td></tr></table></figure>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/CodeJuan/config.git</span><br><span class="line">cp config/.vimrc ~/</span><br><span class="line">cat config/.gitconfig &gt;&gt; ~/.gitconfig</span><br></pre></td></tr></table></figure>
-<h1 id="装爬虫">装爬虫</h1><h2 id="装pip">装pip</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate  https://github.com/pypa/pip/archive/<span class="number">7.1</span>.<span class="number">0</span>.tar.gz</span><br><span class="line">tar zvxf <span class="number">7.1</span>.<span class="number">0</span>.tar.gz    <span class="comment">#解压文件</span></span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">0</span></span><br><span class="line">sudo python setup.py install</span><br></pre></td></tr></table></figure>
-<h2 id="装scrapy">装scrapy</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install scrapy</span><br></pre></td></tr></table></figure>
+<h1 id="使用方法">使用方法</h1><p>代码已经写好，先说怎么用</p>
+<ol>
+<li>安装graphviz2.38<a href="http://www.graphviz.org/Download_windows.php" target="_blank" rel="external">http://www.graphviz.org/Download_windows.php</a>到D盘program files</li>
+<li>安装VS2010到到D盘program files<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell dependency.ps1 -sw_path &#34;&#36719;&#20214;&#30340;&#36335;&#24452;&#34;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>比如说我要分析腾讯TM，那么<code>powershell dependency.ps1 -sw_path &quot;D:\Program Files\Tencent\TM&quot;</code>就OK啦</p>
+<h1 id="代码">代码</h1><h2 id="获取目录下所有PE">获取目录下所有PE</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$get_pe_cmd</span> = <span class="string">"dir /S /B /a-d-h-s `"<span class="variable">$sw_path</span>`" | findstr /I `".dll .exe`" &gt; files.txt"</span></span><br><span class="line">cmd /c <span class="string">"<span class="variable">$get_pe_cmd</span>"</span></span><br></pre></td></tr></table></figure>
+<p>其中<code>findstr /I</code>表示忽略大小写</p>
+<h2 id="拷贝mspdb100-dll">拷贝mspdb100.dll</h2><p>由于无法直接调用vs2010 command prompt，所以没有设置环境变量，在使用dumpbin的时候会提示缺少<code>mspdb100.dll</code>，这就需要把<code>mspdb100.dll</code>拷贝到dumpbin.exe所在的<code>vc_bin</code>目录下<br><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$vs_path</span>=<span class="string">"D:\Program Files\Microsoft Visual Studio 10.0"</span></span><br><span class="line"><span class="built_in">copy-item</span> <span class="string">"<span class="variable">$vs_path</span>\Common7\IDE\mspdb100.dll"</span> <span class="string">"<span class="variable">$vc_bin</span>"</span> -Force</span><br></pre></td></tr></table></figure></p>
+<p>我的测试机是<code>x86 32位</code>，如果路径有变化，修改<code>$vs_path</code>即可</p>
+<h2 id="graphviz画图">graphviz画图</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$graph_dot</span>=<span class="string">"D:\Program Files\Graphviz2.38\bin\dot.exe"</span></span><br><span class="line"><span class="variable">$draw</span> = <span class="string">"`"<span class="variable">$graph_dot</span>`"  -Tpng graph.txt &gt; graph.png"</span> </span><br><span class="line">cmd /c <span class="string">"<span class="variable">$draw</span>"</span></span><br></pre></td></tr></table></figure>
+<p>我的graphviz装在D盘，如果有变化，修改<code>$graph_dot</code>即可</p>
+<h2 id="通过dumpbin获取依赖">通过dumpbin获取依赖</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$dump_cmd</span> = <span class="string">"`"<span class="variable">$dumpbin</span>`" /dependents `"<span class="variable">$line</span>`" | findstr /I .dll | findstr /I /vi `"dump of file`" &gt; <span class="variable">$deptxt</span>"</span></span><br><span class="line">cmd /c <span class="string">"`"<span class="variable">$dump_cmd</span>`""</span></span><br></pre></td></tr></table></figure>
+<h2 id="把依赖关系写入dot">把依赖关系写入dot</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">append <span class="string">"`"<span class="variable">$pename</span>`"[shape=box,fontname=consolas];"</span></span><br><span class="line">append <span class="string">"`"<span class="variable">$pename</span>`"-&gt;&#123;"</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$bFound</span> <span class="operator">-eq</span> <span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">    append <span class="string">"`"<span class="variable">$depen</span>`";"</span></span><br><span class="line">&#125;</span><br><span class="line">append <span class="string">"&#125;;"</span></span><br></pre></td></tr></table></figure>
+<h2 id="graphviz画图-1">graphviz画图</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$draw</span> = <span class="string">"`"<span class="variable">$graph_dot</span>`" <span class="variable">$graphtxt</span> -Tpng  &gt; dependency_graph.png"</span> </span><br><span class="line"><span class="built_in">write-host</span> <span class="variable">$draw</span></span><br><span class="line">cmd /c <span class="string">"<span class="variable">$draw</span>"</span></span><br><span class="line"></span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+<h1 id="效果图">效果图</h1><p>分析了一下腾讯TM<br><img src="https://github.com/CodeJuan/pe_dependency/raw/master/dependency_graph11.png" alt=""></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -159,7 +154,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/system/">system</a>
+  <span></span> <a href="/tags/module-dependency-graphviz/">module,dependency,graphviz</a>
   </div>
 
 </div>
@@ -168,7 +163,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.decbug.com/2015/07/25/install_centos/" data-title="在家里玩分布式(1)install centos | Continuous Learning" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.decbug.com/2015/07/26/pe_depen/" data-title="自动生成软件中模块依赖图 | Continuous Learning" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -181,19 +176,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/26/pe_depen/" title="自动生成软件中模块依赖图">
-  <strong>上一篇：</strong><br/>
-  <span>
-  自动生成软件中模块依赖图</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/06/dependency_in_sln/"  title="自动生成sln中各project依赖图">
+<a href="/2015/07/25/install_centos/"  title="在家里玩分布式(1)install centos">
  <strong>下一篇：</strong><br/> 
- <span>自动生成sln中各project依赖图
+ <span>在家里玩分布式(1)install centos
 </span>
 </a>
 </div>
@@ -214,7 +201,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#扯淡"><span class="toc-number">1.</span> <span class="toc-text">扯淡</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#centos"><span class="toc-number">2.</span> <span class="toc-text">centos</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载iso"><span class="toc-number">2.1.</span> <span class="toc-text">下载iso</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区"><span class="toc-number">2.2.</span> <span class="toc-text">分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预装软件"><span class="toc-number">2.3.</span> <span class="toc-text">预装软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置自动登录"><span class="toc-number">2.4.</span> <span class="toc-text">设置自动登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动网络"><span class="toc-number">2.5.</span> <span class="toc-text">启动网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装启动SSH"><span class="toc-number">2.6.</span> <span class="toc-text">安装启动SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由器设置固定IP"><span class="toc-number">2.7.</span> <span class="toc-text">路由器设置固定IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装vim_git"><span class="toc-number">2.8.</span> <span class="toc-text">安装vim git</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#装爬虫"><span class="toc-number">3.</span> <span class="toc-text">装爬虫</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#装pip"><span class="toc-number">3.1.</span> <span class="toc-text">装pip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#装scrapy"><span class="toc-number">3.2.</span> <span class="toc-text">装scrapy</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用方法"><span class="toc-number">3.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">4.</span> <span class="toc-text">代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#获取目录下所有PE"><span class="toc-number">4.1.</span> <span class="toc-text">获取目录下所有PE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拷贝mspdb100-dll"><span class="toc-number">4.2.</span> <span class="toc-text">拷贝mspdb100.dll</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#graphviz画图"><span class="toc-number">4.3.</span> <span class="toc-text">graphviz画图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过dumpbin获取依赖"><span class="toc-number">4.4.</span> <span class="toc-text">通过dumpbin获取依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#把依赖关系写入dot"><span class="toc-number">4.5.</span> <span class="toc-text">把依赖关系写入dot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#graphviz画图-1"><span class="toc-number">4.6.</span> <span class="toc-text">graphviz画图</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图"><span class="toc-number">5.</span> <span class="toc-text">效果图</span></a></li></ol>
  
   </div>
 

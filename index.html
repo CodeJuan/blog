@@ -81,6 +81,76 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/07/26/pe_depen/" title="自动生成软件中模块依赖图" itemprop="url">自动生成软件中模块依赖图</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-25T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-07-26</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="前言">前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
+<h1 id="思路">思路</h1><ol>
+<li>获取该软件目录下所有模块(exe和dll)</li>
+<li>通过vs自带的dumpbin命令得到每个模块文件的依赖</li>
+<li>画出graphviz的dot脚本</li>
+<li>graphviz绘图</li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/26/pe_depen/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/module-dependency-graphviz/">module,dependency,graphviz</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/26/pe_depen/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/07/25/install_centos/" title="在家里玩分布式(1)install centos" itemprop="url">在家里玩分布式(1)install centos</a>
   </h1>
   <p class="article-author">By
@@ -683,72 +753,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/01/31/netcn_zblog/" title="万网免费主机搭博客" itemprop="url">万网免费主机搭博客</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
-		
-  <p class="article-time">
-    <time datetime="2015-01-31T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-31</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>最近万网搞活动，域名29，虚拟主机免费，有小朋友动了建博客的念头，于是申请好了域名、虚拟主机。但是不知道后续该如何处理，乐于助人的我自然是要帮他一把的。</p>
-<h2 id="选框架">选框架</h2><p>小朋友选的是windows主机，简单搜索了一下，zblog貌似不错，好吧，就选它了，官网链接<a href="http://www.zblogcn.com/">http://www.zblogcn.com/</a>，下载ASP版<a href="http://www.zblogcn.com/zblog/">http://www.zblogcn.com/zblog/</a>，当前最新版的Z-Blog 2.2 Prism Build 140101。</p>
-<p>解压后会看到一个release文件夹，由于后续要将release文件夹里的文件放在主机根目录，所以还要再压缩一次，格式还必须是rar，如下图所示<br><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/zblog/zlog_rar.png" alt=""></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/01/31/netcn_zblog/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/code/">code</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/virtual/">virtual</a><a href="/tags/zblog/">zblog</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/01/31/netcn_zblog/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -767,7 +771,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/code/" title="code">code<sup>22</sup></a></li>
+			<li><a href="/categories/code/" title="code">code<sup>23</sup></a></li>
 		  
 		
 		  
@@ -796,7 +800,7 @@
 			
 		
 			
-				<li><a href="/tags/GMOCK/" title="GMOCK">GMOCK<sup>1</sup></a></li>
+				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
 			
 		
 			
@@ -805,6 +809,10 @@
 		
 			
 				<li><a href="/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/module-dependency-graphviz/" title="module,dependency,graphviz">module,dependency,graphviz<sup>1</sup></a></li>
 			
 		
 			
@@ -857,10 +865,6 @@
 		
 			
 				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 		</ul>
