@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/about/index.html</loc>
+    <lastmod>2015-08-03T14:15:38.073Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/07/26/pe_depen/</loc>
     <lastmod>2015-07-26T11:49:23.180Z</lastmod>
   </url>
@@ -9,11 +14,6 @@
   <url>
     <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
     <lastmod>2015-07-26T07:43:29.542Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.decbug.com/about/index.html</loc>
-    <lastmod>2015-07-26T07:14:45.722Z</lastmod>
   </url>
   
   <url>
