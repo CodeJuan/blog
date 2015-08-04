@@ -23,7 +23,7 @@ gcc -E  test.c -o test.i 中间文件gcc -S test.i -o test.s  ASMgcc -c test.s -
 GCC从代码到可执行文件，会经历四个阶段，对应的命令是
 
 gcc -E  test.c -o test.i 中间文件gcc -S test.i -o test.s  ASMgcc -c test.s -o test.o  OBJgcc test.o -o test       可执行文件">
-<meta property="og:updated_time" content="2015-07-26T06:56:49.566Z">
+<meta property="og:updated_time" content="2015-08-04T14:28:02.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习GCC & GDB">
 <meta name="twitter:description" content="前言工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。
@@ -122,6 +122,8 @@ gcc -E  test.c -o test.i 中间文件gcc -S test.i -o test.s  ASMgcc -c test.s -
 <h3 id="GDB">GDB</h3><p>回忆一下GDB的常用命令吧<code>l, b, r, watch, bt, n, step</code><br>从<a href="http://coolshell.cn/" target="_blank" rel="external">陈皓巨巨</a>那A了段教程<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line">     </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> n)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum=<span class="number">0</span>,i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum+=i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">long</span> result = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>; i&lt;=<span class="number">100</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        result += i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"result[1-100] = %d /n"</span>, result );</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"result[1-250] = %d /n"</span>, func(<span class="number">250</span>) );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">gcc -g -o <span class="built_in">test</span> test.c 	<span class="comment">#-g表示gdb</span></span><br><span class="line">gdb ./<span class="built_in">test</span> 				<span class="comment">#用gdb打开</span></span><br><span class="line">l 						<span class="comment">#显示代码</span></span><br><span class="line">b linenum				<span class="comment">#给指定行号价断点 bp</span></span><br><span class="line">b <span class="keyword">function</span>_name			<span class="comment">#给函数加断点</span></span><br><span class="line">i b						<span class="comment">#info breakpoint显示断点，类似于windbg的bl</span></span><br><span class="line">r						<span class="comment">#run</span></span><br><span class="line">n						<span class="comment">#next</span></span><br><span class="line">p var_name				<span class="comment">#显示变量的值</span></span><br><span class="line">step					<span class="comment">#下一行</span></span><br><span class="line">info locals				<span class="comment">#显示local</span></span><br><span class="line">watch i					<span class="comment">#watch某变量</span></span><br><span class="line">d <span class="number">1</span>						<span class="comment">#delete breakpoint 1</span></span><br><span class="line">c						<span class="comment">#continue</span></span><br><span class="line">q						<span class="comment">#quit</span></span><br></pre></td></tr></table></figure>
 <h3 id="conclusion">conclusion</h3><p>还是要得写几段代码玩呃，拳不离手，曲不离口。。。。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -221,6 +223,14 @@ gcc -E  test.c -o test.i 中间文件gcc -S test.i -o test.s  ASMgcc -c test.s -
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/dependency/" title="dependency">dependency<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/graphviz/" title="graphviz">graphviz<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
 			
 		
@@ -233,23 +243,23 @@ gcc -E  test.c -o test.i 中间文件gcc -S test.i -o test.s  ASMgcc -c test.s -
 			
 		
 			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/module-dependency-graphviz/" title="module,dependency,graphviz">module,dependency,graphviz<sup>1</sup></a></li>
+				<li><a href="/tags/module/" title="module">module<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/WinPE/" title="WinPE">WinPE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 			
@@ -285,19 +295,11 @@ gcc -E  test.c -o test.i 中间文件gcc -S test.i -o test.s  ASMgcc -c test.s -
 			
 		
 			
-				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/system/" title="system">system<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 		</ul>

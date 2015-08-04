@@ -20,7 +20,7 @@
 <meta property="og:description" content="前言为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。
 写好的代码放在https://github.com/CodeJuan/dependency_in_sln，使用方法也很简单。">
 <meta property="og:image" content="https://github.com/CodeJuan/dependency_in_sln/raw/master/gtest.sln.png">
-<meta property="og:updated_time" content="2015-07-26T06:56:49.566Z">
+<meta property="og:updated_time" content="2015-08-04T14:28:02.431Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自动生成sln中各project依赖图">
 <meta name="twitter:description" content="前言为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。
@@ -137,6 +137,8 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$line</span> <span class="operator">-like</span> <span class="string">"*&#123;*&#125; = &#123;*&#125;*"</span>) <span class="comment"># 通过大括号识别是否是工程依赖</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$right</span> = <span class="variable">$line</span>.lastindexof(<span class="string">"&#125;"</span>)</span><br><span class="line">    <span class="variable">$left</span> = <span class="variable">$line</span>.lastindexof(<span class="string">"&#123;"</span>)</span><br><span class="line">    <span class="variable">$dep_id</span> = <span class="variable">$line</span>.substring(<span class="variable">$left</span>+<span class="number">1</span>, <span class="variable">$right</span>-<span class="variable">$left</span>-<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> <span class="operator">-lt</span> <span class="variable">$script:prj_id_list_query</span>.length; <span class="variable">$i</span>++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$cur_id</span> = <span class="variable">$script:prj_id_list_query</span>[<span class="variable">$i</span>]</span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$dep_id</span> <span class="operator">-like</span> <span class="string">"<span class="variable">$cur_id</span>"</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$dep_name</span> = <span class="variable">$script:prj_name_list_query</span>[<span class="variable">$i</span>]</span><br><span class="line">            append <span class="string">"<span class="variable">$dep_name</span>;"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="生成的dot">生成的dot</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">digraph G &#123;&#10;rankdir=BT;&#10;gtest[shape=box,fontname=consolas];&#10;gtest_main[shape=box,fontname=consolas];&#10;gtest_unittest[shape=box,fontname=consolas];&#10;gtest_unittest-&#62;&#123;&#10;gtest_prod_test;&#10;gtest;&#10;&#125;;&#10;gtest_prod_test[shape=box,fontname=consolas];&#10;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="demo">demo</h2><p><img src="https://github.com/CodeJuan/dependency_in_sln/raw/master/gtest.sln.png" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -236,6 +238,14 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/dependency/" title="dependency">dependency<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/graphviz/" title="graphviz">graphviz<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
 			
 		
@@ -248,23 +258,23 @@
 			
 		
 			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/module-dependency-graphviz/" title="module,dependency,graphviz">module,dependency,graphviz<sup>1</sup></a></li>
+				<li><a href="/tags/module/" title="module">module<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/WinPE/" title="WinPE">WinPE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 			
@@ -300,19 +310,11 @@
 			
 		
 			
-				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/system/" title="system">system<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 		</ul>

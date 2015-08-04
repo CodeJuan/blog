@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="当前问题目前有一个日志分析程序，随着数据的膨胀，工具的运行性能越来越差，甚至运行过程中出现申请不到内存的情况。在任务管理器里可以看到，还有足够的内存，可是却申请不到。由于程序在运行过程中，有许多次new/delete的操作，据此推测是有太多的内存碎片，导致无法申请到足够大的连续内存。 
 基础知识new/delete做了什么？有哪些开销slab锁-查找空闲-找到合适大小连续的-分配-解锁。delet">
-<meta property="og:updated_time" content="2015-07-26T06:56:49.566Z">
+<meta property="og:updated_time" content="2015-08-04T14:28:02.463Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存基础知识">
 <meta name="twitter:description" content="当前问题目前有一个日志分析程序，随着数据的膨胀，工具的运行性能越来越差，甚至运行过程中出现申请不到内存的情况。在任务管理器里可以看到，还有足够的内存，可是却申请不到。由于程序在运行过程中，有许多次new/delete的操作，据此推测是有太多的内存碎片，导致无法申请到足够大的连续内存。 
@@ -129,6 +129,8 @@
 <p>Tactics to prevent memory fragmentation in C++ work by allocating objects from different areas according to their size and/or their expected lifetime. So if you’re going to create a lot of objects and destroy them all together later, allocate them from a memory pool. Any other allocations you do in between them won’t be from the pool, hence won’t be located in between them in memory, so memory will not be fragmented as a result.</p>
 <p>Generally you don’t need to worry about it much, unless your program is long-running and does a lot of allocation and freeing. It’s when you have mixtures of short-lived and long-lived objects that you’re most at risk, but even then malloc will do its best to help. Basically, ignore it until your program has allocation failures or unexpectedly causes the system to run low on memory (catch this in testing, for preference!).</p>
 <p>The standard libraries are no worse than anything else that allocates memory, and standard containers all have an Alloc template parameter which you could use to fine-tune their allocation strategy if absolutely necessary.</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -228,6 +230,14 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/dependency/" title="dependency">dependency<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/graphviz/" title="graphviz">graphviz<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
 			
 		
@@ -240,23 +250,23 @@
 			
 		
 			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/module-dependency-graphviz/" title="module,dependency,graphviz">module,dependency,graphviz<sup>1</sup></a></li>
+				<li><a href="/tags/module/" title="module">module<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/WinPE/" title="WinPE">WinPE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 			
@@ -292,19 +302,11 @@
 			
 		
 			
-				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/system/" title="system">system<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 		</ul>

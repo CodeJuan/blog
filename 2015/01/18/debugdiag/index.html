@@ -21,7 +21,7 @@ The right debugging tool can dramatically simplify the isolation of these proble
 <meta property="og:description" content="DebugDiag使用指南Foreword一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。恰好找到了DebugDiag，据说很简单，微软原文如下：
 
 The right debugging tool can dramatically simplify the isolation of these problem s a">
-<meta property="og:updated_time" content="2015-07-26T06:56:49.566Z">
+<meta property="og:updated_time" content="2015-08-04T14:28:02.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DebugDiag使用指南">
 <meta name="twitter:description" content="DebugDiag使用指南Foreword一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。恰好找到了DebugDiag，据说很简单，微软原文如下：
@@ -119,6 +119,8 @@ The right debugging tool can dramatically simplify the isolation of these proble
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "lib.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;unistd.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;vector&gt;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> A::work(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">	<span class="keyword">while</span>(a &lt; <span class="number">10</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		b += a;</span><br><span class="line">		++a;</span><br><span class="line">		v.push_back(a);</span><br><span class="line">		sleep(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"work"</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ll : libso</span><br><span class="line">	g++ -L ./ -Wall -o test main.cpp -llib</span><br><span class="line"></span><br><span class="line">libso : libo</span><br><span class="line">	g++ -shared -o liblib.so liblib.o</span><br><span class="line"></span><br><span class="line">libo : lib.cpp</span><br><span class="line">	g++ -Wall -Werror -fpic -c lib.cpp -o liblib.o</span><br><span class="line"></span><br><span class="line"><span class="title">clean:</span></span><br><span class="line">	rm -f test</span><br><span class="line"></span><br><span class="line"><span class="comment"># export LD_LIBRARY_PATH=/home/username/foo:$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#set the environment variable LD_PROFILE to the name of the shared obj</span></span><br><span class="line"><span class="built_in">export</span> LD_PROFILE=my_obj</span><br><span class="line"><span class="comment">#run your application</span></span><br><span class="line">my_app</span><br><span class="line"><span class="comment">#this should create a file /var/tmp/my_sobj.profile</span></span><br><span class="line"><span class="comment">#now run sprof</span></span><br><span class="line">sprof my_sobj my_sobj.profile</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -218,6 +220,14 @@ The right debugging tool can dramatically simplify the isolation of these proble
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/dependency/" title="dependency">dependency<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/graphviz/" title="graphviz">graphviz<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
 			
 		
@@ -230,23 +240,23 @@ The right debugging tool can dramatically simplify the isolation of these proble
 			
 		
 			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/module-dependency-graphviz/" title="module,dependency,graphviz">module,dependency,graphviz<sup>1</sup></a></li>
+				<li><a href="/tags/module/" title="module">module<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/WinPE/" title="WinPE">WinPE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 			
@@ -282,19 +292,11 @@ The right debugging tool can dramatically simplify the isolation of these proble
 			
 		
 			
-				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/system/" title="system">system<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 		</ul>

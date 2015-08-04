@@ -21,7 +21,7 @@
 <meta property="og:description" content="UT单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。
 所以，作为码农，必须掌握单元测试的方法，并将UT集成到本地构建及CI服务器上，这样无论是新开发，还是维护重构等等，都能对我们的改动进行检测，及时反馈。
 以前用过JUnit和CppUnit，已不太适合当前开发。很多同僚都推荐gtest，我自然不能错过。">
-<meta property="og:updated_time" content="2015-07-26T06:56:49.566Z">
+<meta property="og:updated_time" content="2015-08-04T14:28:02.423Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习gtest&gmock">
 <meta name="twitter:description" content="UT单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。
@@ -121,6 +121,8 @@
 <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Running main() from gtest_main.cc</span><br><span class="line">[==========] Running <span class="number">6</span> tests from <span class="number">2</span> test cases.</span><br><span class="line">[----------] Global test environment <span class="keyword">set</span>-up.</span><br><span class="line">[----------] <span class="number">3</span> tests from FactorialTest</span><br><span class="line">[ RUN      ] FactorialTest.Negative</span><br><span class="line">[       OK ] FactorialTest.Negative (<span class="number">0</span> ms)</span><br><span class="line">[ RUN      ] FactorialTest.Zero</span><br><span class="line">[       OK ] FactorialTest.Zero (<span class="number">0</span> ms)</span><br><span class="line">[ RUN      ] FactorialTest.Positive</span><br><span class="line">[       OK ] FactorialTest.Positive (<span class="number">0</span> ms)</span><br><span class="line">[----------] <span class="number">3</span> tests from FactorialTest (<span class="number">0</span> ms total)</span><br></pre></td></tr></table></figure>
 <p>接下来就是怎么链接到我们的工程，makefile如下:</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">PPFLAGS</span> += -isystem <span class="variable">$(GTEST_DIR)</span>/include </span><br><span class="line"><span class="constant">CXXFLAGS</span> += -g -Wall -Wextra -pthread </span><br><span class="line"><span class="constant">TESTS</span> = test </span><br><span class="line"></span><br><span class="line"><span class="comment">#将gtest加入到include</span></span><br><span class="line"><span class="constant">GTEST_HEADERS</span> = ../include</span><br><span class="line"><span class="comment">#引入静态库</span></span><br><span class="line"><span class="constant">LIB_DIR</span> = ../lib/gtest_main.a</span><br><span class="line">test :   </span><br><span class="line">	g++ <span class="variable">$(CPPFLAGS)</span> <span class="variable">$(CXXFLAGS)</span> -lpthread -I <span class="variable">$(GTEST_HEADERS)</span> <span class="variable">$(LIB_DIR)</span> test.cpp   -o test </span><br><span class="line">clean : </span><br><span class="line">	rm -f test</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -220,6 +222,14 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/dependency/" title="dependency">dependency<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/graphviz/" title="graphviz">graphviz<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
 			
 		
@@ -232,23 +242,23 @@
 			
 		
 			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/module-dependency-graphviz/" title="module,dependency,graphviz">module,dependency,graphviz<sup>1</sup></a></li>
+				<li><a href="/tags/module/" title="module">module<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/WinPE/" title="WinPE">WinPE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 			
@@ -284,19 +294,11 @@
 			
 		
 			
-				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/system/" title="system">system<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 		</ul>

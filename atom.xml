@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-07-26T11:49:23.180Z</updated>
+  <updated>2015-08-04T14:30:22.579Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.decbug.com/2015/07/26/pe_depen/"/>
     <id>http://blog.decbug.com/2015/07/26/pe_depen/</id>
     <published>2015-07-25T16:00:00.000Z</published>
-    <updated>2015-07-26T11:49:23.180Z</updated>
+    <updated>2015-08-04T14:30:22.579Z</updated>
     <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
 <h1 id="思路">思路</h1><ol>
 <li>获取该软件目录下所有模块(exe和dll)</li>
@@ -46,6 +46,8 @@
 <h2 id="把依赖关系写入dot">把依赖关系写入dot</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">append <span class="string">"`"<span class="variable">$pename</span>`"[shape=box,fontname=consolas];"</span></span><br><span class="line">append <span class="string">"`"<span class="variable">$pename</span>`"-&gt;&#123;"</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$bFound</span> <span class="operator">-eq</span> <span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">    append <span class="string">"`"<span class="variable">$depen</span>`";"</span></span><br><span class="line">&#125;</span><br><span class="line">append <span class="string">"&#125;;"</span></span><br></pre></td></tr></table></figure>
 <h2 id="graphviz画图-1">graphviz画图</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$draw</span> = <span class="string">"`"<span class="variable">$graph_dot</span>`" <span class="variable">$graphtxt</span> -Tpng  &gt; dependency_graph.png"</span> </span><br><span class="line"><span class="built_in">write-host</span> <span class="variable">$draw</span></span><br><span class="line">cmd /c <span class="string">"<span class="variable">$draw</span>"</span></span><br><span class="line"></span><br><span class="line">`</span><br></pre></td></tr></table></figure>
 <h1 id="效果图">效果图</h1><p>分析了一下腾讯TM<br><img src="https://github.com/CodeJuan/pe_dependency/raw/master/dependency_graph11.png" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="前言">前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
@@ -58,7 +60,11 @@
     
     </summary>
     
-      <category term="module,dependency,graphviz" scheme="http://blog.decbug.com/tags/module-dependency-graphviz/"/>
+      <category term="dependency" scheme="http://blog.decbug.com/tags/dependency/"/>
+    
+      <category term="graphviz" scheme="http://blog.decbug.com/tags/graphviz/"/>
+    
+      <category term="module" scheme="http://blog.decbug.com/tags/module/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -69,7 +75,7 @@
     <link href="http://blog.decbug.com/2015/07/25/install_centos/"/>
     <id>http://blog.decbug.com/2015/07/25/install_centos/</id>
     <published>2015-07-24T16:00:00.000Z</published>
-    <updated>2015-07-26T07:43:29.542Z</updated>
+    <updated>2015-08-04T14:28:02.455Z</updated>
     <content type="html"><![CDATA[<h1 id="扯淡">扯淡</h1><p>自己在家玩，买了一堆二手配件，整了4个台式机，打算</p>
 <pre><code>-<span class="ruby"> 弄个scrapy爬数据
 </span>-<span class="ruby"> 存到分布式内存数据库(redis吧)
@@ -98,6 +104,8 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/CodeJuan/config.git</span><br><span class="line">cp config/.vimrc ~/</span><br><span class="line">cat config/.gitconfig &gt;&gt; ~/.gitconfig</span><br></pre></td></tr></table></figure>
 <h1 id="装爬虫">装爬虫</h1><h2 id="装pip">装pip</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate  https://github.com/pypa/pip/archive/<span class="number">7.1</span>.<span class="number">0</span>.tar.gz</span><br><span class="line">tar zvxf <span class="number">7.1</span>.<span class="number">0</span>.tar.gz    <span class="comment">#解压文件</span></span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">0</span></span><br><span class="line">sudo python setup.py install</span><br></pre></td></tr></table></figure>
 <h2 id="装scrapy">装scrapy</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install scrapy</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="扯淡">扯淡</h1><p>自己在家玩，买了一堆二手配件，整了4个台式机，打算</p>
@@ -121,7 +129,7 @@
     <link href="http://blog.decbug.com/2015/07/06/dependency_in_sln/"/>
     <id>http://blog.decbug.com/2015/07/06/dependency_in_sln/</id>
     <published>2015-07-05T16:00:00.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.431Z</updated>
     <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。</p>
 <p>写好的代码放在<a href="https://github.com/CodeJuan/dependency_in_sln" target="_blank" rel="external">https://github.com/CodeJuan/dependency_in_sln</a>，使用方法也很简单。</p>
 <a id="more"></a>
@@ -155,6 +163,8 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$line</span> <span class="operator">-like</span> <span class="string">"*&#123;*&#125; = &#123;*&#125;*"</span>) <span class="comment"># 通过大括号识别是否是工程依赖</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$right</span> = <span class="variable">$line</span>.lastindexof(<span class="string">"&#125;"</span>)</span><br><span class="line">    <span class="variable">$left</span> = <span class="variable">$line</span>.lastindexof(<span class="string">"&#123;"</span>)</span><br><span class="line">    <span class="variable">$dep_id</span> = <span class="variable">$line</span>.substring(<span class="variable">$left</span>+<span class="number">1</span>, <span class="variable">$right</span>-<span class="variable">$left</span>-<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> <span class="operator">-lt</span> <span class="variable">$script:prj_id_list_query</span>.length; <span class="variable">$i</span>++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$cur_id</span> = <span class="variable">$script:prj_id_list_query</span>[<span class="variable">$i</span>]</span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$dep_id</span> <span class="operator">-like</span> <span class="string">"<span class="variable">$cur_id</span>"</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$dep_name</span> = <span class="variable">$script:prj_name_list_query</span>[<span class="variable">$i</span>]</span><br><span class="line">            append <span class="string">"<span class="variable">$dep_name</span>;"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="生成的dot">生成的dot</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">digraph G &#123;&#10;rankdir=BT;&#10;gtest[shape=box,fontname=consolas];&#10;gtest_main[shape=box,fontname=consolas];&#10;gtest_unittest[shape=box,fontname=consolas];&#10;gtest_unittest-&#62;&#123;&#10;gtest_prod_test;&#10;gtest;&#10;&#125;;&#10;gtest_prod_test[shape=box,fontname=consolas];&#10;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="demo">demo</h2><p><img src="https://github.com/CodeJuan/dependency_in_sln/raw/master/gtest.sln.png" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="前言">前言</h1><p>为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。</p>
@@ -177,7 +187,7 @@
     <link href="http://blog.decbug.com/2015/06/22/Pelican_hexo/"/>
     <id>http://blog.decbug.com/2015/06/22/Pelican_hexo/</id>
     <published>2015-06-21T16:00:00.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.463Z</updated>
     <content type="html"><![CDATA[<p>用pelican或hexo建一个漂亮的博客<br><a id="more"></a></p>
 <h2 id="install">install</h2><h3 id="python_2-7">python 2.7</h3><p><a href="https://www.python.org/downloads/release/python-2710/" target="_blank" rel="external">https://www.python.org/downloads/release/python-2710/</a></p>
 <h3 id="easy_install">easy_install</h3><p><a href="https://pypi.python.org/pypi/setuptools" target="_blank" rel="external">https://pypi.python.org/pypi/setuptools</a><br><a href="https://bootstrap.pypa.io/ez_setup.py" target="_blank" rel="external">https://bootstrap.pypa.io/ez_setup.py</a><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\Python27\python.exe ez_setup.py</span><br></pre></td></tr></table></figure></p>
@@ -190,6 +200,8 @@
 <h3 id="themes">themes</h3><p>下载themes<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pelican theme -i &#34;&#20320;&#21916;&#27426;&#30340;&#20027;&#39064;&#34;</span><br></pre></td></tr></table></figure></p>
 <h1 id="hexo">hexo</h1><h2 id="install-1">install</h2><p><a href="https://nodejs.org/dist/v0.12.5/node-v0.12.5-x86.msi" target="_blank" rel="external">download</a><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo&#10;mkdir blog&#10;cd blog&#10;hexo init&#10;npm install&#10;hexo generate&#10;hexo server</span><br></pre></td></tr></table></figure></p>
 <h2 id="theme">theme</h2><p>clone theme to folder <code>themes</code><br>_config.yml theme: jacman</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[用pelican或hexo建一个漂亮的博客]]>
@@ -207,7 +219,7 @@
     <link href="http://blog.decbug.com/2015/06/13/Premature_Optimization/"/>
     <id>http://blog.decbug.com/2015/06/13/Premature_Optimization/</id>
     <published>2015-06-13T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.435Z</updated>
     <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>组里小伙要对他们的代码进行优化，分析之后，觉得没有什么拖慢性能的代码，于是决定多开几个线程。我得知之后，与他进行了一番对话，终于说服了他在动手优化之前进行充分测量，找出瓶颈再有针对性的优化。</p>
 <a id="more"></a>
 <ul>
@@ -247,6 +259,8 @@
 <li>一直以来，这个小伙都比较傲娇，都不怎么听周围的人的意见，也不怎么听我的（后来才知道，因为之前有人谣传我是91年的，而他是89年的，所以他觉得我比较菜。。。。。）自从这件事之后，他对我的态度明显好多了。码农圈子还是要用技术说话啊，吹的天花乱坠都没用。</li>
 <li>和别人沟通（也许可以算是辩论）的时候，一定面带微笑，降低语速，摆事实讲道理表明自己的意见。越是意见不一致，就越需要控制语气。舒适的对话，是达成共识的基础。</li>
 </ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="背景">背景</h2><p>组里小伙要对他们的代码进行优化，分析之后，觉得没有什么拖慢性能的代码，于是决定多开几个线程。我得知之后，与他进行了一番对话，终于说服了他在动手优化之前进行充分测量，找出瓶颈再有针对性的优化。</p>]]>
@@ -266,7 +280,7 @@
     <link href="http://blog.decbug.com/2015/06/11/career_of_programmer/"/>
     <id>http://blog.decbug.com/2015/06/11/career_of_programmer/</id>
     <published>2015-06-11T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.483Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2><p><img src="http://img4.douban.com/lpic/s28065947.jpg" alt=""></p>
 <p>最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。<br>恰巧得到<a href="http://weibo.com/easy" target="_blank" rel="external">@Easy</a>兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。</p>
 <a id="more"></a>
@@ -288,6 +302,8 @@
 <blockquote>
 <p>当你的能力足够强，必然会有一份满意的工作，区别只是在哪家公司干而已</p>
 </blockquote>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="前言">前言</h2><p><img src="http://img4.douban.com/lpic/s28065947.jpg" alt=""></p>
@@ -308,7 +324,7 @@
     <link href="http://blog.decbug.com/2015/04/15/auto_analyze_dump/"/>
     <id>http://blog.decbug.com/2015/04/15/auto_analyze_dump/</id>
     <published>2015-04-15T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.471Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入<code>!analyze -v</code>就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。</p>
 <p>老夫一怒之下，就开始反思。是我的文档写的不够清晰？还是操作太繁琐了？其实都不是，说白了就是现在的年轻人都太懒了。</p>
 <p>竟然都这么懒惰，那么我只好想出个更简便的方法来分析dump，一键式傻瓜操作，这样应该可以了吧。</p>
@@ -338,6 +354,8 @@
 <h2 id="效果">效果</h2><p>每人每天分析3次dump，每次敲命令+拷贝log需要花1~3分钟的时间，团队里共有150个开发，一天就能节省150人<em>3次</em>2分钟=900分钟。</p>
 <p>很可观的收益啊，不由得老怀大慰。</p>
 <p>程序员就是要从机械繁琐的工作中超脱出来，投入到更有意义的事情上去。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="前言">前言</h2><p>最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入<code>!analyze -v</code>就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。</p>
@@ -361,7 +379,7 @@
     <link href="http://blog.decbug.com/2015/03/27/gprof_sprof_perf/"/>
     <id>http://blog.decbug.com/2015/03/27/gprof_sprof_perf/</id>
     <published>2015-03-27T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.447Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
 <p>此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。</p>
 <p>每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。</p>
@@ -416,6 +434,8 @@
 </ol>
 <h4 id="运行，然后分析结果">运行，然后分析结果</h4><p>用 pprof —text (PATH OF TESTER) (CPUPROFILER执行的log)，得到文本格式的分析，包括每个函数的时间占有比例</p>
 <p>用 pprof —callgrind可以生成图形化，很炫目。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="前言">前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
@@ -439,7 +459,7 @@
     <link href="http://blog.decbug.com/2015/03/10/mark2html/"/>
     <id>http://blog.decbug.com/2015/03/10/mark2html/</id>
     <published>2015-03-10T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.427Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>项目要发布一堆开发文档，并支持快速更新。经过我的不断安利，领导同意用markdown（<em>感觉好有成就感啊</em>）。<br>经过一番探索，决定采用<a href="http://johnmacfarlane.net/pandoc/index.html" target="_blank" rel="external">pandoc</a>，因为功能真的很强大，请看官网介绍</p>
 <blockquote>
 <p>If you need to convert files from one markup format into another, pandoc is your swiss-army knife. Pandoc can convert documents in markdown, reStructuredText, textile, HTML, DocBook, LaTeX, MediaWiki markup, TWiki markup, OPML, Emacs Org-Mode, Txt2Tags, Microsoft Word docx, EPUB, or Haddock markup to</p>
@@ -499,6 +519,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 </ol>
 <p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/pandoc/css_new.png" alt="修改后的效果"></p>
 <h2 id="详情请查看">　详情请查看</h2><p><a href="https://github.com/CodeJuan/pandoc/blob/master/style.css" target="_blank" rel="external">css提交记录</a></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="背景">背景</h1><p>项目要发布一堆开发文档，并支持快速更新。经过我的不断安利，领导同意用markdown（<em>感觉好有成就感啊</em>）。<br>经过一番探索，决定采用<a href="http://johnmacfarlane.net/pandoc/index.html">pandoc</a>，因为功能真的很强大，请看官网介绍</p>
@@ -533,7 +555,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2015/03/04/learning_rlang/"/>
     <id>http://blog.decbug.com/2015/03/04/learning_rlang/</id>
     <published>2015-03-04T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.471Z</updated>
     <content type="html"><![CDATA[<h1 id="安装">安装</h1><ol>
 <li><p><a href="http://cran.r-project.org/mirrors.html" target="_blank" rel="external">mirriors</a></p>
 </li>
@@ -575,6 +597,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <h1 id="简单试用">简单试用</h1><h3 id=""> </h3><p>cd 到bin，sudo ./R，进入R控制台<br>按照<a href="http://developer.51cto.com/art/201305/393121.htm试用一下" target="_blank" rel="external">http://developer.51cto.com/art/201305/393121.htm试用一下</a><br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install.packages(<span class="string">'quantmod'</span>) <span class="preprocessor"># 安装quantmod包 ，</span></span><br></pre></td></tr></table></figure></p>
 <p>会提示选择哪个镜像，19号beijing离我最近，于是输入19</p>
 <p>q()是退出</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="安装">安装</h1><ol>
@@ -599,7 +623,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2015/01/31/netcn_zblog/"/>
     <id>http://blog.decbug.com/2015/01/31/netcn_zblog/</id>
     <published>2015-01-31T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.451Z</updated>
     <content type="html"><![CDATA[<p>最近万网搞活动，域名29，虚拟主机免费，有小朋友动了建博客的念头，于是申请好了域名、虚拟主机。但是不知道后续该如何处理，乐于助人的我自然是要帮他一把的。</p>
 <h2 id="选框架">选框架</h2><p>小朋友选的是windows主机，简单搜索了一下，zblog貌似不错，好吧，就选它了，官网链接<a href="http://www.zblogcn.com/" target="_blank" rel="external">http://www.zblogcn.com/</a>，下载ASP版<a href="http://www.zblogcn.com/zblog/" target="_blank" rel="external">http://www.zblogcn.com/zblog/</a>，当前最新版的Z-Blog 2.2 Prism Build 140101。</p>
 <p>解压后会看到一个release文件夹，由于后续要将release文件夹里的文件放在主机根目录，所以还要再压缩一次，格式还必须是rar，如下图所示<br><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/zblog/zlog_rar.png" alt=""></p>
@@ -611,6 +635,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <h2 id="安装ZBLOG">安装ZBLOG</h2><p>打开<a href="http://你的域名/zb_install/default.asp(`万网的免费主机要备案，如果不备案，此时的网址就输入临时域名即可，临时域名还是在站点信息查询`)。" target="_blank" rel="external">http://你的域名/zb_install/default.asp(`万网的免费主机要备案，如果不备案，此时的网址就输入临时域名即可，临时域名还是在站点信息查询`)。</a></p>
 <h2 id="效果图">效果图</h2><p>一路next，完成。效果如图</p>
 <p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/zblog/blog.png" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>最近万网搞活动，域名29，虚拟主机免费，有小朋友动了建博客的念头，于是申请好了域名、虚拟主机。但是不知道后续该如何处理，乐于助人的我自然是要帮他一把的。</p>
@@ -632,7 +658,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2015/01/18/debugdiag/"/>
     <id>http://blog.decbug.com/2015/01/18/debugdiag/</id>
     <published>2015-01-18T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.487Z</updated>
     <content type="html"><![CDATA[<h1 id="DebugDiag使用指南">DebugDiag使用指南</h1><h2 id="Foreword">Foreword</h2><p>一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。<br>恰好找到了<code>DebugDiag</code>，据说很简单，微软原文如下：</p>
 <blockquote>
 <p>The right debugging tool can dramatically simplify the isolation of these problem s and the provision of solutions. There are several types of these issues for which the Debug Diagnostic Tool  is a better choice than other debugging tools</p>
@@ -646,6 +672,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "lib.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;unistd.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;vector&gt;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> A::work(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">	<span class="keyword">while</span>(a &lt; <span class="number">10</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		b += a;</span><br><span class="line">		++a;</span><br><span class="line">		v.push_back(a);</span><br><span class="line">		sleep(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"work"</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ll : libso</span><br><span class="line">	g++ -L ./ -Wall -o test main.cpp -llib</span><br><span class="line"></span><br><span class="line">libso : libo</span><br><span class="line">	g++ -shared -o liblib.so liblib.o</span><br><span class="line"></span><br><span class="line">libo : lib.cpp</span><br><span class="line">	g++ -Wall -Werror -fpic -c lib.cpp -o liblib.o</span><br><span class="line"></span><br><span class="line"><span class="title">clean:</span></span><br><span class="line">	rm -f test</span><br><span class="line"></span><br><span class="line"><span class="comment"># export LD_LIBRARY_PATH=/home/username/foo:$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#set the environment variable LD_PROFILE to the name of the shared obj</span></span><br><span class="line"><span class="built_in">export</span> LD_PROFILE=my_obj</span><br><span class="line"><span class="comment">#run your application</span></span><br><span class="line">my_app</span><br><span class="line"><span class="comment">#this should create a file /var/tmp/my_sobj.profile</span></span><br><span class="line"><span class="comment">#now run sprof</span></span><br><span class="line">sprof my_sobj my_sobj.profile</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="DebugDiag使用指南">DebugDiag使用指南</h1><h2 id="Foreword">Foreword</h2><p>一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。<br>恰好找到了<code>DebugDiag</code>，据说很简单，微软原文如下：</p>
@@ -670,7 +698,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2015/01/15/fragment/"/>
     <id>http://blog.decbug.com/2015/01/15/fragment/</id>
     <published>2015-01-15T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.479Z</updated>
     <content type="html"><![CDATA[<h2 id="背景">背景</h2><table>
 <thead>
 <tr>
@@ -712,6 +740,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <p>微软建议虽然win32进程可以用2G，但最好是低于1G，否则可能会许多奇怪问题，有时就是内存碎片引起的。</p>
 <p>如此，可能真的是碎片引起的。</p>
 <h2 id="初步解决方法">初步解决方法</h2><p>将前面的内存降下去，就能顺利申请到内存，正常运行。但还是不能确定真的是内存碎片引起的。<br>As a modern OS, the strategy of memory allocation so sucks? I don’t think so. The  failure of memory allocattion caused by fragment. And The fragment should be caused by memory leak..</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="背景">背景</h2><table>
@@ -753,7 +783,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2015/01/12/jenkins/"/>
     <id>http://blog.decbug.com/2015/01/12/jenkins/</id>
     <published>2015-01-12T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.455Z</updated>
     <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
 <p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
 <p>大概原理：写个脚本</p>
@@ -780,6 +810,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <li>在表格左上角找到Lastest Release，点击<a href="http://updates.jenkins-ci.org/download/plugins/build-pipeline-plugin/" target="_blank" rel="external">archives</a>，下载你喜欢的版本即可。</li>
 </ul>
 <p>未完待续</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
@@ -810,8 +842,10 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2014/12/27/understand_code/"/>
     <id>http://blog.decbug.com/2014/12/27/understand_code/</id>
     <published>2014-12-27T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.475Z</updated>
     <content type="html"><![CDATA[<h2 id="代码可视化">代码可视化</h2><p><a href="https://scitools.com/" target="_blank" rel="external">understand</a>，一款很强大的软件，支持C++/JAVA/VHDL等等十几种语言，可以生成依赖图，类图，调用图，控制流图。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="代码可视化">代码可视化</h2><p><a href="https://scitools.com/" target="_blank" rel="external">understand</a>，一款很强大的软件，支持C++/JAVA/VHDL等等十几种语言，可以]]>
@@ -830,7 +864,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2014/12/24/CreateUTproject/"/>
     <id>http://blog.decbug.com/2014/12/24/CreateUTproject/</id>
     <published>2014-12-24T15:30:09.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.431Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
 <h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
 <ol>
@@ -854,6 +888,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <span class="variable">$xmldata</span>.save(<span class="variable">$path</span>.fullname)
 </code></pre>
 <h2 id="conclusion">conclusion</h2><p>花了半天的时间把创建方法及脚本写好，省去N个人的重复劳动。通过脚本实现，还不容易出错。<br>YEAH!!</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
@@ -884,7 +920,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2014/12/01/Vld2CI/"/>
     <id>http://blog.decbug.com/2014/12/01/Vld2CI/</id>
     <published>2014-11-30T16:00:00.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.459Z</updated>
     <content type="html"><![CDATA[<h1 id="VLD简介">VLD简介</h1><blockquote>
 <p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
 </blockquote>
@@ -936,6 +972,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <p>在运行目录生成了一个leak_report.txt，如果有泄露，则会有一行提示<code>WARNING:Visual Leak Detector detected memory leaks!</code>，并指出引起内存泄露的代码。<br>只要检测report就能知道是否有泄露。</p>
 <h1 id="加入到自动化测试套餐">加入到自动化测试套餐</h1><p>将脚本调试好，自动构建出检测内存泄露的版本，然后运行自动化测试，最后检测leak_report的内容，如有泄露则告警。</p>
 <h1 id="PS">PS</h1><p>家里没有windows系统，有些命令记不清了，不知有没有写错。领会精神，不要在意这些细节。<br>囧rz</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="VLD简介">VLD简介</h1><blockquote>
@@ -961,7 +999,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2014/11/29/gtest_gmock/"/>
     <id>http://blog.decbug.com/2014/11/29/gtest_gmock/</id>
     <published>2014-11-28T16:00:00.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.423Z</updated>
     <content type="html"><![CDATA[<h3 id="UT">UT</h3><p>单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。</p>
 <p>所以，作为码农，必须掌握单元测试的方法，并将UT集成到本地构建及CI服务器上，这样无论是新开发，还是维护重构等等，都能对我们的改动进行检测，及时反馈。</p>
 <p>以前用过JUnit和CppUnit，已不太适合当前开发。很多同僚都推荐gtest，我自然不能错过。</p>
@@ -977,6 +1015,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Running main() from gtest_main.cc</span><br><span class="line">[==========] Running <span class="number">6</span> tests from <span class="number">2</span> test cases.</span><br><span class="line">[----------] Global test environment <span class="keyword">set</span>-up.</span><br><span class="line">[----------] <span class="number">3</span> tests from FactorialTest</span><br><span class="line">[ RUN      ] FactorialTest.Negative</span><br><span class="line">[       OK ] FactorialTest.Negative (<span class="number">0</span> ms)</span><br><span class="line">[ RUN      ] FactorialTest.Zero</span><br><span class="line">[       OK ] FactorialTest.Zero (<span class="number">0</span> ms)</span><br><span class="line">[ RUN      ] FactorialTest.Positive</span><br><span class="line">[       OK ] FactorialTest.Positive (<span class="number">0</span> ms)</span><br><span class="line">[----------] <span class="number">3</span> tests from FactorialTest (<span class="number">0</span> ms total)</span><br></pre></td></tr></table></figure>
 <p>接下来就是怎么链接到我们的工程，makefile如下:</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">PPFLAGS</span> += -isystem <span class="variable">$(GTEST_DIR)</span>/include </span><br><span class="line"><span class="constant">CXXFLAGS</span> += -g -Wall -Wextra -pthread </span><br><span class="line"><span class="constant">TESTS</span> = test </span><br><span class="line"></span><br><span class="line"><span class="comment">#将gtest加入到include</span></span><br><span class="line"><span class="constant">GTEST_HEADERS</span> = ../include</span><br><span class="line"><span class="comment">#引入静态库</span></span><br><span class="line"><span class="constant">LIB_DIR</span> = ../lib/gtest_main.a</span><br><span class="line">test :   </span><br><span class="line">	g++ <span class="variable">$(CPPFLAGS)</span> <span class="variable">$(CXXFLAGS)</span> -lpthread -I <span class="variable">$(GTEST_HEADERS)</span> <span class="variable">$(LIB_DIR)</span> test.cpp   -o test </span><br><span class="line">clean : </span><br><span class="line">	rm -f test</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h3 id="UT">UT</h3><p>单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。</p>
@@ -1000,7 +1040,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2014/11/26/test_gcc_gdb/"/>
     <id>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</id>
     <published>2014-11-25T16:00:00.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.475Z</updated>
     <content type="html"><![CDATA[<h3 id="前言">前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
 <h3 id="GCC">GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
 <blockquote>
@@ -1014,6 +1054,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <h3 id="GDB">GDB</h3><p>回忆一下GDB的常用命令吧<code>l, b, r, watch, bt, n, step</code><br>从<a href="http://coolshell.cn/" target="_blank" rel="external">陈皓巨巨</a>那A了段教程<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line">     </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> n)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum=<span class="number">0</span>,i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum+=i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">long</span> result = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>; i&lt;=<span class="number">100</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        result += i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"result[1-100] = %d /n"</span>, result );</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"result[1-250] = %d /n"</span>, func(<span class="number">250</span>) );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">gcc -g -o <span class="built_in">test</span> test.c 	<span class="comment">#-g表示gdb</span></span><br><span class="line">gdb ./<span class="built_in">test</span> 				<span class="comment">#用gdb打开</span></span><br><span class="line">l 						<span class="comment">#显示代码</span></span><br><span class="line">b linenum				<span class="comment">#给指定行号价断点 bp</span></span><br><span class="line">b <span class="keyword">function</span>_name			<span class="comment">#给函数加断点</span></span><br><span class="line">i b						<span class="comment">#info breakpoint显示断点，类似于windbg的bl</span></span><br><span class="line">r						<span class="comment">#run</span></span><br><span class="line">n						<span class="comment">#next</span></span><br><span class="line">p var_name				<span class="comment">#显示变量的值</span></span><br><span class="line">step					<span class="comment">#下一行</span></span><br><span class="line">info locals				<span class="comment">#显示local</span></span><br><span class="line">watch i					<span class="comment">#watch某变量</span></span><br><span class="line">d <span class="number">1</span>						<span class="comment">#delete breakpoint 1</span></span><br><span class="line">c						<span class="comment">#continue</span></span><br><span class="line">q						<span class="comment">#quit</span></span><br></pre></td></tr></table></figure>
 <h3 id="conclusion">conclusion</h3><p>还是要得写几段代码玩呃，拳不离手，曲不离口。。。。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h3 id="前言">前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
@@ -1037,7 +1079,7 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
     <link href="http://blog.decbug.com/2014/11/19/CompareWinPE/"/>
     <id>http://blog.decbug.com/2014/11/19/CompareWinPE/</id>
     <published>2014-11-18T16:00:00.000Z</published>
-    <updated>2015-07-26T06:56:49.566Z</updated>
+    <updated>2015-08-04T14:28:02.483Z</updated>
     <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。<br>因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是有几个字节不相同。于是向我求助。</p>
 <h2 id="过程">过程</h2><p>我曾看过windows的PE文件结构，依稀记得里边会有几个字节存放TimeStamp和CheckSum，所以会有这么几个字节的差异。为避免误人子弟，特找来微软的定义看看：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _IMAGE_NT_HEADERS &#123;  </span><br><span class="line">    DWORD Signature;  </span><br><span class="line">    IMAGE_FILE_HEADER FileHeader;  </span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 OptionalHeader;  </span><br><span class="line">&#125; IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32;</span><br></pre></td></tr></table></figure>
@@ -1083,6 +1125,8 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
 <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dumpbin /disasm <span class="number">1</span>.dll <span class="number">1</span>.txt</span><br><span class="line">dumpbin /disasm <span class="number">2</span>.dll <span class="number">2</span>.txt</span><br></pre></td></tr></table></figure>
 <p>比较1.txt和2.txt果然一致。</p>
 <h2 id="后续">后续</h2><p>需要写一个bat，输入参数为两个文件夹的路径，将这两个文件夹内的PE文件都反汇编出来，然后一一进行比较，输出有差异的文件名。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="背景">背景</h2><p>项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。<br>因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是有几个字节不相同。于是向我求助。</p>

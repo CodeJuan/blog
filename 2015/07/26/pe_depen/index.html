@@ -28,7 +28,7 @@ graphviz绘图">
 画出graphviz的dot脚本
 graphviz绘图">
 <meta property="og:image" content="https://github.com/CodeJuan/pe_dependency/raw/master/dependency_graph11.png">
-<meta property="og:updated_time" content="2015-07-26T11:49:23.180Z">
+<meta property="og:updated_time" content="2015-08-04T14:30:22.579Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自动生成软件中模块依赖图">
 <meta name="twitter:description" content="前言上回实现了自动生成sln中各project依赖图，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。
@@ -141,6 +141,8 @@ graphviz绘图">
 <h2 id="把依赖关系写入dot">把依赖关系写入dot</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">append <span class="string">"`"<span class="variable">$pename</span>`"[shape=box,fontname=consolas];"</span></span><br><span class="line">append <span class="string">"`"<span class="variable">$pename</span>`"-&gt;&#123;"</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$bFound</span> <span class="operator">-eq</span> <span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">    append <span class="string">"`"<span class="variable">$depen</span>`";"</span></span><br><span class="line">&#125;</span><br><span class="line">append <span class="string">"&#125;;"</span></span><br></pre></td></tr></table></figure>
 <h2 id="graphviz画图-1">graphviz画图</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$draw</span> = <span class="string">"`"<span class="variable">$graph_dot</span>`" <span class="variable">$graphtxt</span> -Tpng  &gt; dependency_graph.png"</span> </span><br><span class="line"><span class="built_in">write-host</span> <span class="variable">$draw</span></span><br><span class="line">cmd /c <span class="string">"<span class="variable">$draw</span>"</span></span><br><span class="line"></span><br><span class="line">`</span><br></pre></td></tr></table></figure>
 <h1 id="效果图">效果图</h1><p>分析了一下腾讯TM<br><img src="https://github.com/CodeJuan/pe_dependency/raw/master/dependency_graph11.png" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -154,7 +156,7 @@ graphviz绘图">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/module-dependency-graphviz/">module,dependency,graphviz</a>
+  <span></span> <a href="/tags/dependency/">dependency</a><a href="/tags/graphviz/">graphviz</a><a href="/tags/module/">module</a>
   </div>
 
 </div>
@@ -232,6 +234,14 @@ graphviz绘图">
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/dependency/" title="dependency">dependency<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/graphviz/" title="graphviz">graphviz<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/optimize/" title="optimize">optimize<sup>2</sup></a></li>
 			
 		
@@ -244,23 +254,23 @@ graphviz绘图">
 			
 		
 			
-				<li><a href="/tags/GTEST/" title="GTEST">GTEST<sup>1</sup></a></li>
+				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/我的信息/" title="我的信息">我的信息<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/module-dependency-graphviz/" title="module,dependency,graphviz">module,dependency,graphviz<sup>1</sup></a></li>
+				<li><a href="/tags/module/" title="module">module<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/WinPE/" title="WinPE">WinPE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/GCC/" title="GCC">GCC<sup>1</sup></a></li>
 			
 		
 			
@@ -296,19 +306,11 @@ graphviz绘图">
 			
 		
 			
-				<li><a href="/tags/scitools/" title="scitools">scitools<sup>1</sup></a></li>
+				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/system/" title="system">system<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
 			
 		
 		</ul>
