@@ -76,3 +76,11 @@ install.packages('quantmod') # 安装quantmod包 ，
 会提示选择哪个镜像，19号beijing离我最近，于是输入19
 
 q()是退出
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

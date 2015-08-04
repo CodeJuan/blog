@@ -109,3 +109,11 @@ dumpbin /disasm 2.dll 2.txt
 ## 后续
 需要写一个bat，输入参数为两个文件夹的路径，将这两个文件夹内的PE文件都反汇编出来，然后一一进行比较，输出有差异的文件名。
 
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

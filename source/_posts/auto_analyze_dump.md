@@ -82,3 +82,10 @@ start-process windbg.exe -z "dump file 路径"
 很可观的收益啊，不由得老怀大慰。
 
 程序员就是要从机械繁琐的工作中超脱出来，投入到更有意义的事情上去。
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

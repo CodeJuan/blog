@@ -113,3 +113,11 @@ html.bat "input_file_name" "output_name"
 ##　详情请查看
 [css提交记录](https://github.com/CodeJuan/pandoc/blob/master/style.css)
 
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

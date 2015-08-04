@@ -4,7 +4,9 @@ date: 2015-07-26 00:00:00
 categories:
 - code
 tags: 
-- [module,dependency,graphviz]
+- module
+- dependency
+- graphviz
 mathjax: true
 description: 
 ---
@@ -84,3 +86,11 @@ cmd /c "$draw"
 # 效果图
 分析了一下腾讯TM
 ![](https://github.com/CodeJuan/pe_dependency/raw/master/dependency_graph11.png)
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

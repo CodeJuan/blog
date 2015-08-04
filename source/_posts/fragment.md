@@ -101,3 +101,11 @@ PrepareWrite()
 
 将前面的内存降下去，就能顺利申请到内存，正常运行。但还是不能确定真的是内存碎片引起的。
 As a modern OS, the strategy of memory allocation so sucks? I don't think so. The  failure of memory allocattion caused by fragment. And The fragment should be caused by memory leak..
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

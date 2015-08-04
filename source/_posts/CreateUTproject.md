@@ -51,3 +51,11 @@ $xmldata.save($path.fullname)
 
 花了半天的时间把创建方法及脚本写好，省去N个人的重复劳动。通过脚本实现，还不容易出错。
 YEAH!!
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

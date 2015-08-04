@@ -106,3 +106,11 @@ copy /y microsoft.dtfw.dhl.manifest %CODE_HOME%\bin\
 # PS
 家里没有windows系统，有些命令记不清了，不知有没有写错。领会精神，不要在意这些细节。
 囧rz
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

@@ -78,3 +78,11 @@ q						#quit
 
 ### conclusion
 还是要得写几段代码玩呃，拳不离手，曲不离口。。。。
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

@@ -49,3 +49,11 @@ Tactics to prevent memory fragmentation in C++ work by allocating objects from d
 Generally you don’t need to worry about it much, unless your program is long-running and does a lot of allocation and freeing. It’s when you have mixtures of short-lived and long-lived objects that you’re most at risk, but even then malloc will do its best to help. Basically, ignore it until your program has allocation failures or unexpectedly causes the system to run low on memory (catch this in testing, for preference!).
 
 The standard libraries are no worse than anything else that allocates memory, and standard containers all have an Alloc template parameter which you could use to fine-tune their allocation strategy if absolutely necessary.
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

@@ -132,3 +132,10 @@ gtest_prod_test[shape=box,fontname=consolas];
 
 ## demo
 ![](https://github.com/CodeJuan/dependency_in_sln/raw/master/gtest.sln.png)
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

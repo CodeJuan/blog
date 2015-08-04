@@ -63,3 +63,11 @@ test :
 clean : 
 	rm -f test
 ```
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+

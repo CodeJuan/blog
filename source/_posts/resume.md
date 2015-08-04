@@ -74,3 +74,11 @@ stackoverflow:	[codejuan](http://stackoverflow.com/users/2763396/codejuan)
 
 #### huawei
 持续集成，开源，性能优化。有兴趣可以看我的内网博客及内网git
+
+
+-----------------------
+
+`本博客欢迎转发,但请保留原作者信息`
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+
