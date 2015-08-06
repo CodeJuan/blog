@@ -81,6 +81,72 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/06/handle_leak/" title="抄代码引发的句柄泄漏" itemprop="url">抄代码引发的句柄泄漏</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-05T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="背景">背景</h1><h2 id="现象">现象</h2><p>主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。<br>网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。</p>
+<p>心急的朋友可以直接看原理:<a href="https://github.com/CodeJuan/HandleLeak">https://github.com/CodeJuan/HandleLeak</a></p>
+<p>不着急的朋友可以慢慢看定位过程</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/08/06/handle_leak/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/C/">C++</a><a href="/tags/leak/">leak</a><a href="/tags/windows/">windows</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/06/handle_leak/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/07/26/pe_depen/" title="自动生成软件中模块依赖图" itemprop="url">自动生成软件中模块依赖图</a>
   </h1>
   <p class="article-author">By
@@ -682,77 +748,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/04/learning_rlang/" title="学习R语言" itemprop="url">学习R语言</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-04T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-03-04</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="安装">安装</h1><ol>
-<li><p><a href="http://cran.r-project.org/mirrors.html">mirriors</a></p>
-</li>
-<li><p>select China， <a href="http://mirror.bjtu.edu.cn/cran">bjtu</a></p>
-</li>
-<li><p><a href="http://mirror.bjtu.edu.cn/cran/sources.html">resouce</a> , current version is <a href="http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz">R-3.1.2</a></p>
-</li>
-</ol>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/03/04/learning_rlang/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/code/">code</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/R/">R</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/03/04/learning_rlang/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -771,7 +766,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/code/" title="code">code<sup>23</sup></a></li>
+			<li><a href="/categories/code/" title="code">code<sup>24</sup></a></li>
 		  
 		
 		  
@@ -804,15 +799,15 @@
 			
 		
 			
+				<li><a href="/tags/C/" title="C++">C++<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/UT/" title="UT">UT<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/hello/" title="hello">hello<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/module/" title="module">module<sup>1</sup></a></li>
+				<li><a href="/tags/leak/" title="leak">leak<sup>1</sup></a></li>
 			
 		
 			

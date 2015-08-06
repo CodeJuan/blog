@@ -4,35 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>VLD集成到CI自动化检测内存泄露 | Continuous Learning</title>
+    <title>抄代码引发的句柄泄漏 | Continuous Learning</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="CodeJuan">
     
 
     
-    <meta name="description" content="VLD简介
-Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. 
-
-windows下VC常用开源内存泄露检测工具，代码在codeplex
-原理代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接">
+    <meta name="description" content="背景现象主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。
+心急的朋友可以直接看原理:https://github.com/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="VLD集成到CI自动化检测内存泄露">
-<meta property="og:url" content="http://blog.decbug.com/2014/12/01/Vld2CI/index.html">
+<meta property="og:title" content="抄代码引发的句柄泄漏">
+<meta property="og:url" content="http://blog.decbug.com/2015/08/06/handle_leak/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="VLD简介
-Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. 
-
-windows下VC常用开源内存泄露检测工具，代码在codeplex
-原理代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.459Z">
+<meta property="og:description" content="背景现象主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。
+心急的朋友可以直接看原理:https://github.com/">
+<meta property="og:updated_time" content="2015-08-06T23:50:00.409Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="VLD集成到CI自动化检测内存泄露">
-<meta name="twitter:description" content="VLD简介
-Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. 
-
-windows下VC常用开源内存泄露检测工具，代码在codeplex
-原理代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接">
+<meta name="twitter:title" content="抄代码引发的句柄泄漏">
+<meta name="twitter:description" content="背景现象主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。
+心急的朋友可以直接看原理:https://github.com/">
 
     
     <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
@@ -92,14 +83,14 @@ windows下VC常用开源内存泄露检测工具，代码在codeplex
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/01/Vld2CI/" title="VLD集成到CI自动化检测内存泄露" itemprop="url">VLD集成到CI自动化检测内存泄露</a>
+      <a href="/2015/08/06/handle_leak/" title="抄代码引发的句柄泄漏" itemprop="url">抄代码引发的句柄泄漏</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
 		
   <p class="article-time">
-    <time datetime="2014-11-30T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-12-01</time>
+    <time datetime="2015-08-05T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-06</time>
     
   </p>
 </header>
@@ -108,61 +99,19 @@ windows下VC常用开源内存泄露检测工具，代码在codeplex
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#VLD简介"><span class="toc-number">1.</span> <span class="toc-text">VLD简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单用法"><span class="toc-number">1.2.</span> <span class="toc-text">简单用法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#集成到CI"><span class="toc-number">2.</span> <span class="toc-text">集成到CI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-h"><span class="toc-number">2.1.</span> <span class="toc-text">vld.h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-lib"><span class="toc-number">2.2.</span> <span class="toc-text">vld.lib</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dll"><span class="toc-number">2.3.</span> <span class="toc-text">dll</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-ini"><span class="toc-number">2.4.</span> <span class="toc-text">vld.ini</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新代码"><span class="toc-number">2.5.</span> <span class="toc-text">更新代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改stdafx-h"><span class="toc-number">2.6.</span> <span class="toc-text">修改stdafx.h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#build"><span class="toc-number">2.7.</span> <span class="toc-text">build</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-number">2.8.</span> <span class="toc-text">运行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#加入到自动化测试套餐"><span class="toc-number">3.</span> <span class="toc-text">加入到自动化测试套餐</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PS"><span class="toc-number">4.</span> <span class="toc-text">PS</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#现象"><span class="toc-number">1.1.</span> <span class="toc-text">现象</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#结论"><span class="toc-number">2.</span> <span class="toc-text">结论</span></a></li></ol>
 		
 		</div>
 		
-		<h1 id="VLD简介">VLD简介</h1><blockquote>
-<p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
-</blockquote>
-<p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/" target="_blank" rel="external">codeplex</a></p>
-<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
+		<h1 id="背景">背景</h1><h2 id="现象">现象</h2><p>主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。<br>网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。</p>
+<p>心急的朋友可以直接看原理:<a href="https://github.com/CodeJuan/HandleLeak" target="_blank" rel="external">https://github.com/CodeJuan/HandleLeak</a></p>
+<p>不着急的朋友可以慢慢看定位过程</p>
 <a id="more"></a>
-<h2 id="简单用法">简单用法</h2><ol>
-<li>下载及安装，假设安装在<code>VldPath</code></li>
-<li>配置VC的include路径：右键-属性-directory-include directory，增加<code>VldPath\include</code></li>
-<li>配置lib路径：右键-属性-directory-lib directory，，增加<code>VldPath\lib\win32</code>，如果是x64的系统，那么选择win64即可。</li>
-<li>根据需要配置vld.ini</li>
-<li>声明</li>
+<h1 id="结论">结论</h1><ol>
+<li>抄代码一定要小心谨慎，需要仔细阅读官方说明，把参数的意义都理解清楚</li>
+<li>仅仅跑起来，凑合着用是不够的，需要做一做压力测试</li>
+<li>这次看句柄的方式比较落伍，需要整理一下如何用windbg查句柄泄漏的方法，下一篇就写这个吧。</li>
 </ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">define</span> VLD_FORCE_ENABLE    <span class="comment">//2.3版本之后，支持release下检测内存泄露</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "vld.h"</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>构建，运行，就会生成report。</li>
-</ol>
-<h1 id="集成到CI">集成到CI</h1><p>其实就是用脚本来实现上面的步骤，由于项目暂时不允许上传lib和dll到svn，只能通过迂回的方法来实现。</p>
-<h2 id="vld-h">vld.h</h2><p>项目中有一个专门的目录存放开源代码的头文件，此时正好派上用场</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y vld.h <span class="envvar">%CODE_HOME%</span>\opensrc\include\
-:: /y表示默认覆盖同名文件
-<span class="keyword">copy</span> /y vld_def.h <span class="envvar">%CODE_HOME%</span>\opensrc\include\
-</code></pre>
-<h2 id="vld-lib">vld.lib</h2><p>同样也有个存放开源代码lib的目录</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y vld.lib <span class="envvar">%CODE_HOME%</span>\opensrc\lib\
-</code></pre>
-<h2 id="dll">dll</h2><p>将vld_x86.dll拷贝到bin目录</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y vld_x86.dll <span class="envvar">%CODE_HOME%</span>\bin\
-</code></pre>
-<h2 id="vld-ini">vld.ini</h2><p>将AggregateDuplicates设置为yes，表示将引起泄露同一行代码合并到一块。<br>将ReportFile设置为.\leak_report.txt，表示将结果输出到leak_report.txt中<br>再将ini拷贝到bin</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y vld.ini <span class="envvar">%CODE_HOME%</span>\bin\
-</code></pre>
-<h2 id="更新代码">更新代码</h2><p>svn revert -R .<br>svn update .</p>
-<h2 id="修改stdafx-h">修改stdafx.h</h2><p>由于stdafx.h会被预编译，只要在其包含vld.h，那么整个工程都会处于vld的监控之下。</p>
-<pre><code class="bat">:: 家里没有windows的系统，凭记忆写的，可能会有点小纰漏
-<span class="flow">FOR</span> /F "delims=" <span class="envvar">%%i</span> <span class="flow">IN</span>('<span class="built_in">dir</span> /b /s stdafx.h') <span class="flow">DO</span>(
-    <span class="keyword">echo</span> //&gt;&gt;"<span class="envvar">%%i</span>"
-    <span class="keyword">echo</span> #define VLD_FORCE_ENABLE&gt;&gt;"<span class="envvar">%%i</span>"
-    <span class="keyword">echo</span> #include "vld.h"&gt;&gt;"<span class="envvar">%%i</span>"
-)
-</code></pre>
-<h2 id="build">build</h2><pre><code class="bat"><span class="flow">FOR</span> /F "delims=" <span class="envvar">%%i</span> <span class="flow">IN</span>('<span class="built_in">dir</span> /b /s *.sln') <span class="flow">DO</span>(
-    msbuild.exe "<span class="envvar">%%i</span>" /p:Configuration=Release /t:rebuild
-)
-</code></pre>
-<h2 id="运行">运行</h2><p>提示0xC0150002，无法正确启动程序，这是因为缺少manifest，还需要把vld目录下的microsoft.dtfw.dhl.manifest拷贝到bin目录</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y microsoft.dtfw.dhl.manifest <span class="envvar">%CODE_HOME%</span>\bin\
-</code></pre>
-<p>在运行目录生成了一个leak_report.txt，如果有泄露，则会有一行提示<code>WARNING:Visual Leak Detector detected memory leaks!</code>，并指出引起内存泄露的代码。<br>只要检测report就能知道是否有泄露。</p>
-<h1 id="加入到自动化测试套餐">加入到自动化测试套餐</h1><p>将脚本调试好，自动构建出检测内存泄露的版本，然后运行自动化测试，最后检测leak_report的内容，如有泄露则告警。</p>
-<h1 id="PS">PS</h1><p>家里没有windows系统，有些命令记不清了，不知有没有写错。领会精神，不要在意这些细节。<br>囧rz</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
   
@@ -178,7 +127,7 @@ windows下VC常用开源内存泄露检测工具，代码在codeplex
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/ContinuousIntegration/">ContinuousIntegration</a><a href="/tags/MemoryLeak/">MemoryLeak</a><a href="/tags/VLD/">VLD</a>
+  <span></span> <a href="/tags/C/">C++</a><a href="/tags/leak/">leak</a><a href="/tags/windows/">windows</a>
   </div>
 
 </div>
@@ -187,7 +136,7 @@ windows下VC常用开源内存泄露检测工具，代码在codeplex
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.decbug.com/2014/12/01/Vld2CI/" data-title="VLD集成到CI自动化检测内存泄露 | Continuous Learning" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.decbug.com/2015/08/06/handle_leak/" data-title="抄代码引发的句柄泄漏 | Continuous Learning" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -200,19 +149,11 @@ windows下VC常用开源内存泄露检测工具，代码在codeplex
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/12/24/CreateUTproject/" title="一键式给VC工程创建UT工程">
-  <strong>上一篇：</strong><br/>
-  <span>
-  一键式给VC工程创建UT工程</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/11/29/gtest_gmock/"  title="学习gtest&amp;gmock">
+<a href="/2015/07/26/pe_depen/"  title="自动生成软件中模块依赖图">
  <strong>下一篇：</strong><br/> 
- <span>学习gtest&amp;gmock
+ <span>自动生成软件中模块依赖图
 </span>
 </a>
 </div>
@@ -233,7 +174,7 @@ windows下VC常用开源内存泄露检测工具，代码在codeplex
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#VLD简介"><span class="toc-number">1.</span> <span class="toc-text">VLD简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单用法"><span class="toc-number">1.2.</span> <span class="toc-text">简单用法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#集成到CI"><span class="toc-number">2.</span> <span class="toc-text">集成到CI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-h"><span class="toc-number">2.1.</span> <span class="toc-text">vld.h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-lib"><span class="toc-number">2.2.</span> <span class="toc-text">vld.lib</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dll"><span class="toc-number">2.3.</span> <span class="toc-text">dll</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vld-ini"><span class="toc-number">2.4.</span> <span class="toc-text">vld.ini</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新代码"><span class="toc-number">2.5.</span> <span class="toc-text">更新代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改stdafx-h"><span class="toc-number">2.6.</span> <span class="toc-text">修改stdafx.h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#build"><span class="toc-number">2.7.</span> <span class="toc-text">build</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-number">2.8.</span> <span class="toc-text">运行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#加入到自动化测试套餐"><span class="toc-number">3.</span> <span class="toc-text">加入到自动化测试套餐</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PS"><span class="toc-number">4.</span> <span class="toc-text">PS</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#现象"><span class="toc-number">1.1.</span> <span class="toc-text">现象</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#结论"><span class="toc-number">2.</span> <span class="toc-text">结论</span></a></li></ol>
  
   </div>
 
