@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-08-06T23:50:00.409Z</updated>
+  <updated>2015-08-07T00:19:26.493Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,16 +20,50 @@
     <link href="http://blog.decbug.com/2015/08/06/handle_leak/"/>
     <id>http://blog.decbug.com/2015/08/06/handle_leak/</id>
     <published>2015-08-05T16:00:00.000Z</published>
-    <updated>2015-08-06T23:50:00.409Z</updated>
+    <updated>2015-08-07T00:19:26.493Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><h2 id="现象">现象</h2><p>主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。<br>网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。</p>
 <p>心急的朋友可以直接看原理:<a href="https://github.com/CodeJuan/HandleLeak" target="_blank" rel="external">https://github.com/CodeJuan/HandleLeak</a></p>
 <p>不着急的朋友可以慢慢看定位过程</p>
 <a id="more"></a>
-<h1 id="结论">结论</h1><ol>
+<h1 id="过程">过程</h1><h2 id="句柄泄漏">句柄泄漏</h2><p>鉴于内存及硬盘都充足，那么猜测可能算句柄泄漏。先简单说下句柄泄漏的概念：</p>
+<ul>
+<li>句柄，可以简单理解为某个资源的名字。</li>
+<li>泄漏，跟内存泄漏一个泄漏，用了忘记释放，导致可用资源越来越少。</li>
+<li>A handle leak is a type of software bug that occurs when a computer program asks for a handle to a resource but does not free the handle when it is no longer used. If this occurs frequently or repeatedly over an extended period of time, a large number of handles may be marked in-use and thus unavailable, causing performance problems or a crash.</li>
+</ul>
+<h2 id="验证泄漏">验证泄漏</h2><p>把有问题的代码抠出来，写一个demo，循环跑。观察句柄情况。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">    SHELLEXECUTEINFO ShExecInfo = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    ShExecInfo.cbSize = <span class="keyword">sizeof</span>(SHELLEXECUTEINFO);</span><br><span class="line">    ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;</span><br><span class="line">    ShExecInfo.hwnd = NULL;</span><br><span class="line">    ShExecInfo.lpVerb = _T(<span class="string">"open"</span>);</span><br><span class="line">    ShExecInfo.lpFile = _T(<span class="string">"cmd"</span>);</span><br><span class="line">    ShExecInfo.lpParameters = _T(<span class="string">"/c echo 111"</span>);</span><br><span class="line">    ShExecInfo.lpDirectory = NULL;</span><br><span class="line">    ShExecInfo.nShow = SW_HIDE;</span><br><span class="line">    ShExecInfo.hInstApp = NULL;</span><br><span class="line"></span><br><span class="line">    ShellExecuteEx(&amp;ShExecInfo);</span><br><span class="line"></span><br><span class="line">    WaitForSingleObject(ShExecInfo.hProcess,INFINITE); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看任务管理器中性能页显示的总句柄数，果然是不停在上涨，说明猜测成立</p>
+<h2 id="7z泄漏？">7z泄漏？</h2><p>猜测可能算7z自身有泄漏，然而很快又否决了。<br>就像内存泄漏一样，当进程结束的时候，所有资源都会被系统回收，不会继续作恶下去。</p>
+<blockquote>
+<p>When the program terminates, all its open handles are closed<br>Yes, a “memory leak” is simply memory that a process no longer has a reference to, and thus can no longer free. The OS still keeps track of all the memory allocated to a process, and will free it when that process terminates.</p>
+</blockquote>
+<p>说明只是我们自己的主进程有泄漏</p>
+<h2 id="查看主进程句柄">查看主进程句柄</h2><p>通过任务管理器查看进程的句柄数，方法<code>选项-查看列-选中句柄计数</code></p>
+<p>句柄情况如图所示</p>
+<p>运行一段时间后400+句柄</p>
+<p><img src="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak1.JPG" alt=""></p>
+<p>再过一段时间1000+句柄</p>
+<p><img src="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak2.JPG" alt=""></p>
+<p>接下来2000+句柄</p>
+<p><img src="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak3.JPG" alt=""></p>
+<p>看来真的是泄漏了</p>
+<h2 id="查看代码">查看代码</h2><p>看一下<code>SHELLEXECUTEINFOW</code>的定义<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _SHELLEXECUTEINFOW</span><br><span class="line">&#123;</span><br><span class="line">    DWORD cbSize;               <span class="comment">// in, required, sizeof of this structure</span></span><br><span class="line">    ULONG fMask;                <span class="comment">// in, SEE_MASK_<span class="doctag"><span class="keyword">XXX</span></span> values</span></span><br><span class="line">    HWND hwnd;                  <span class="comment">// in, optional</span></span><br><span class="line">    LPCWSTR  lpVerb;            <span class="comment">// in, optional when unspecified the default verb is choosen</span></span><br><span class="line">    LPCWSTR  lpFile;            <span class="comment">// in, either this value or lpIDList must be specified</span></span><br><span class="line">    LPCWSTR  lpParameters;      <span class="comment">// in, optional</span></span><br><span class="line">    LPCWSTR  lpDirectory;       <span class="comment">// in, optional</span></span><br><span class="line">    <span class="keyword">int</span> nShow;                  <span class="comment">// in, required</span></span><br><span class="line">    HINSTANCE hInstApp;         <span class="comment">// out when SEE_MASK_NOCLOSEPROCESS is specified</span></span><br><span class="line">    <span class="keyword">void</span> *lpIDList;             <span class="comment">// in, valid when SEE_MASK_IDLIST is specified, PCIDLIST_ABSOLUTE, for use with SEE_MASK_IDLIST &amp; SEE_MASK_INVOKEIDLIST</span></span><br><span class="line">    LPCWSTR  lpClass;           <span class="comment">// in, valid when SEE_MASK_CLASSNAME is specified</span></span><br><span class="line">    HKEY hkeyClass;             <span class="comment">// in, valid when SEE_MASK_CLASSKEY is specified</span></span><br><span class="line">    DWORD dwHotKey;             <span class="comment">// in, valid when SEE_MASK_HOTKEY is specified</span></span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    &#123;</span><br><span class="line">        HANDLE hIcon;           <span class="comment">// not used</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">if</span> (NTDDI_VERSION &gt;= NTDDI_WIN2K)</span></span><br><span class="line">        HANDLE hMonitor;        <span class="comment">// in, valid when SEE_MASK_HMONITOR specified</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span> <span class="comment">// (NTDDI_VERSION &gt;= NTDDI_WIN2K)</span></span></span><br><span class="line">    &#125; DUMMYUNIONNAME;</span><br><span class="line">    HANDLE hProcess;            <span class="comment">// out, valid when SEE_MASK_NOCLOSEPROCESS specified</span></span><br><span class="line">&#125; SHELLEXECUTEINFOW, *LPSHELLEXECUTEINFOW;</span><br></pre></td></tr></table></figure></p>
+<p>注意看<code>HANDLE hProcess;// out, valid when SEE_MASK_NOCLOSEPROCESS specified</code></p>
+<p>也就是说，如果指定了<code>SEE_MASK_NOCLOSEPROCESS</code>，<code>hProcess</code>就是返回的句柄。如果不关闭，就会造成句柄泄漏。</p>
+<p>我们的代码为了等待进程结束，设置了<code>SEE_MASK_NOCLOSEPROCESS</code>，然后WaitForSingleObject(<code>ShExecInfo.hProcess</code>,INFINITE); </p>
+<p>然后又没有关闭<code>ShExecInfo.hProcess</code>，导致句柄不断上涨</p>
+<h2 id="CloseHandle">CloseHandle</h2><p>加上<code>CloseHandle</code>之后<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CloseHandle(ShExecInfo.hProcess);</span><br></pre></td></tr></table></figure></p>
+<p>句柄始终保持在100左右</p>
+<p><img src="https://github.com/CodeJuan/HandleLeak/raw/master/pic/CloseHandle.JPG" alt=""></p>
+<p>修改正式代码，运行50万次依旧稳定，问题解决。</p>
+<h1 id="结论">结论</h1><p>询问组内同事，说这段代码是从CSDN上抄来的，没有深入了解代码的意思，没有注意到<code>SEE_MASK_NOCLOSEPROCESS</code>。</p>
+<ol>
 <li>抄代码一定要小心谨慎，需要仔细阅读官方说明，把参数的意义都理解清楚</li>
 <li>仅仅跑起来，凑合着用是不够的，需要做一做压力测试</li>
 <li>这次看句柄的方式比较落伍，需要整理一下如何用windbg查句柄泄漏的方法，下一篇就写这个吧。</li>
 </ol>
+<h1 id="参考">参考</h1><p><a href="https://en.wikipedia.org/wiki/Handle_leak" target="_blank" rel="external">HandleLeak</a><br><a href="http://blogs.technet.com/b/markrussinovich/archive/2009/09/29/3283844.aspx" target="_blank" rel="external">Pushing the Limits of Windows: Handles</a><br><a href="http://stackoverflow.com/questions/2975831/is-leaked-memory-freed-up-when-the-program-exits" target="_blank" rel="external">Is leaked memory freed up when the program exits?</a></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
@@ -42,9 +76,11 @@
     
       <category term="C++" scheme="http://blog.decbug.com/tags/C/"/>
     
+      <category term="handle" scheme="http://blog.decbug.com/tags/handle/"/>
+    
       <category term="leak" scheme="http://blog.decbug.com/tags/leak/"/>
     
-      <category term="windows" scheme="http://blog.decbug.com/tags/windows/"/>
+      <category term="process" scheme="http://blog.decbug.com/tags/process/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
