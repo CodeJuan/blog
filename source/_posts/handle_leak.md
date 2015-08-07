@@ -5,7 +5,8 @@ categories:
 - code
 tags: 
 - leak
-- windows
+- handle
+- process
 - C++
 mathjax: true
 description: 
