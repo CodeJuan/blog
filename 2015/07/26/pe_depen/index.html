@@ -28,7 +28,7 @@ graphviz绘图">
 画出graphviz的dot脚本
 graphviz绘图">
 <meta property="og:image" content="https://github.com/CodeJuan/pe_dependency/raw/master/dependency_graph11.png">
-<meta property="og:updated_time" content="2015-08-04T14:30:22.579Z">
+<meta property="og:updated_time" content="2015-08-13T14:39:31.945Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自动生成软件中模块依赖图">
 <meta name="twitter:description" content="前言上回实现了自动生成sln中各project依赖图，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。
@@ -75,6 +75,10 @@ graphviz绘图">
 						<li><a href="/archives">Archives</a></li>
 					
 						<li><a href="/about">About</a></li>
+					
+						<li><a href="/book">Book</a></li>
+					
+						<li><a href="/test">Test</a></li>
 					
 					<li>
  					
@@ -127,10 +131,10 @@ graphviz绘图">
 <h1 id="使用方法">使用方法</h1><p>代码已经写好，放在<a href="https://github.com/CodeJuan/pe_dependency" target="_blank" rel="external">https://github.com/CodeJuan/pe_dependency</a><br>先说怎么用</p>
 <ol>
 <li>安装graphviz2.38<a href="http://www.graphviz.org/Download_windows.php" target="_blank" rel="external">http://www.graphviz.org/Download_windows.php</a>到D盘program files</li>
-<li>安装VS2010到到D盘program files<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell dependency.ps1 -sw_path &#34;&#36719;&#20214;&#30340;&#36335;&#24452;&#34;</span><br></pre></td></tr></table></figure>
+<li>安装VS2010到到D盘program files<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell .\dependency.ps1 -sw_path &#34;&#36719;&#20214;&#30340;&#36335;&#24452;&#34;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>比如说我要分析腾讯TM，那么<code>powershell dependency.ps1 -sw_path &quot;D:\Program Files\Tencent\TM&quot;</code>就OK啦</p>
+<p>比如说我要分析腾讯TM，那么<code>powershell .\dependency.ps1 -sw_path &quot;D:\Program Files\Tencent\TM&quot;</code>就OK啦</p>
 <h1 id="代码">代码</h1><h2 id="获取目录下所有PE">获取目录下所有PE</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$get_pe_cmd</span> = <span class="string">"dir /S /B /a-d-h-s `"<span class="variable">$sw_path</span>`" | findstr /I `".dll .exe`" &gt; files.txt"</span></span><br><span class="line">cmd /c <span class="string">"<span class="variable">$get_pe_cmd</span>"</span></span><br></pre></td></tr></table></figure>
 <p>其中<code>findstr /I</code>表示忽略大小写</p>
 <h2 id="拷贝mspdb100-dll">拷贝mspdb100.dll</h2><p>由于无法直接调用vs2010 command prompt，所以没有设置环境变量，在使用dumpbin的时候会提示缺少<code>mspdb100.dll</code>，这就需要把<code>mspdb100.dll</code>拷贝到dumpbin.exe所在的<code>vc_bin</code>目录下<br><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$vs_path</span>=<span class="string">"D:\Program Files\Microsoft Visual Studio 10.0"</span></span><br><span class="line"><span class="built_in">copy-item</span> <span class="string">"<span class="variable">$vs_path</span>\Common7\IDE\mspdb100.dll"</span> <span class="string">"<span class="variable">$vc_bin</span>"</span> -Force</span><br></pre></td></tr></table></figure></p>

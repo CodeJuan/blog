@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/book/index.html</loc>
+    <lastmod>2015-08-13T14:48:29.605Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/2015/07/26/pe_depen/</loc>
+    <lastmod>2015-08-13T14:39:31.945Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/test/index.html</loc>
+    <lastmod>2015-08-13T14:34:20.905Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/08/06/handle_leak/</loc>
     <lastmod>2015-08-07T00:19:26.493Z</lastmod>
   </url>
@@ -9,11 +24,6 @@
   <url>
     <loc>http://blog.decbug.com/about/index.html</loc>
     <lastmod>2015-08-06T23:57:01.165Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.decbug.com/2015/07/26/pe_depen/</loc>
-    <lastmod>2015-08-04T14:30:22.579Z</lastmod>
   </url>
   
   <url>
@@ -62,12 +72,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
+    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
+    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
@@ -77,12 +87,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
+    <loc>http://blog.decbug.com/2015/01/12/jenkins/</loc>
     <lastmod>2015-08-04T14:28:02.455Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/01/12/jenkins/</loc>
+    <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
     <lastmod>2015-08-04T14:28:02.455Z</lastmod>
   </url>
   
