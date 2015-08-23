@@ -4,7 +4,7 @@
 ## 2015
 书名  | 状态 
 ---------|----------
-持续交付 |aa 
-Content Cell  | Content Cell
+持续交付|done 
+Linux命令行与shell编程大全| doing
 
 
