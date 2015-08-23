@@ -85,6 +85,85 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/23/fake_unit_test/" title="指标下的单元测试" itemprop="url">指标下的单元测试</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="前言">前言</h1><blockquote>
+<p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
+</blockquote>
+<p>距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？<br>半年前我的猜测是<code>为了提高覆盖率，写一堆无效代码</code>，然而实际情况却比这更糟糕。</p>
+<ul>
+<li>有人的测试函数的末尾始终是<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPECT_EQ(TRUE=TRUE)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样每个用例都是绿的</p>
+<ul>
+<li>还有人这么写<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//init module</span></span><br><span class="line"><span class="comment">//run module</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>测试的是整个模块的输入输出，这样可以保证覆盖率</p>
+<p>领导看到用例一片绿，覆盖率90%，觉得我们的代码质量很高。</p>
+<p>然而，这并没有什么卵用！！！<br>这真的没有什么卵用！<br>这真的没有什么卵用！<br>这真的没有什么卵用！</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/08/23/fake_unit_test/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/indicator/">indicator</a><a href="/tags/unit-test/">unit_test</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/23/fake_unit_test/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/06/handle_leak/" title="抄代码引发的句柄泄漏" itemprop="url">抄代码引发的句柄泄漏</a>
   </h1>
   <p class="article-author">By
@@ -675,83 +754,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/10/mark2html/" title="pandoc---markdown转换利器" itemprop="url">pandoc---markdown转换利器</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-10T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-03-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="背景">背景</h1><p>项目要发布一堆开发文档，并支持快速更新。经过我的不断安利，领导同意用markdown（<em>感觉好有成就感啊</em>）。<br>经过一番探索，决定采用<a href="http://johnmacfarlane.net/pandoc/index.html">pandoc</a>，因为功能真的很强大，请看官网介绍</p>
-<blockquote>
-<p>If you need to convert files from one markup format into another, pandoc is your swiss-army knife. Pandoc can convert documents in markdown, reStructuredText, textile, HTML, DocBook, LaTeX, MediaWiki markup, TWiki markup, OPML, Emacs Org-Mode, Txt2Tags, Microsoft Word docx, EPUB, or Haddock markup to</p>
-<pre><code>-<span class="ruby"> <span class="constant">HTML</span> <span class="symbol">formats:</span> <span class="constant">XHTML</span>, <span class="constant">HTML5</span>, <span class="keyword">and</span> <span class="constant">HTML</span> slide shows using <span class="constant">Slidy</span>, reveal.js, <span class="constant">Slideous</span>, <span class="constant">S5</span>, <span class="keyword">or</span> <span class="constant">DZSlides</span>.
-</span>-<span class="ruby"> <span class="constant">Word</span> processor <span class="symbol">formats:</span> <span class="constant">Microsoft</span> <span class="constant">Word</span> docx, <span class="constant">OpenOffice</span>/<span class="constant">LibreOffice</span> <span class="constant">ODT</span>, <span class="constant">OpenDocument</span> <span class="constant">XML</span>
-</span>-<span class="ruby"> <span class="constant">Ebooks</span><span class="symbol">:</span> <span class="constant">EPUB</span> version <span class="number">2</span> <span class="keyword">or</span> <span class="number">3</span>, <span class="constant">FictionBook2</span>
-</span>-<span class="ruby"> <span class="constant">Documentation</span> <span class="symbol">formats:</span> <span class="constant">DocBook</span>, <span class="constant">GNU</span> <span class="constant">TexInfo</span>, <span class="constant">Groff</span> man pages, <span class="constant">Haddock</span> markup
-</span>-<span class="ruby"> <span class="constant">Page</span> layout <span class="symbol">formats:</span> <span class="constant">InDesign</span> <span class="constant">ICML</span>
-</span>-<span class="ruby"> <span class="constant">Outline</span> <span class="symbol">formats:</span> <span class="constant">OPML</span>
-</span>-<span class="ruby"> <span class="constant">TeX</span> <span class="symbol">formats:</span> <span class="constant">LaTeX</span>, <span class="constant">ConTeXt</span>, <span class="constant">LaTeX</span> <span class="constant">Beamer</span> slides
-</span>-<span class="ruby"> <span class="constant">PDF</span> via <span class="constant">LaTeX</span>
-</span>-<span class="ruby"> <span class="constant">Lightweight</span> markup <span class="symbol">formats:</span> <span class="constant">Markdown</span>, reStructuredText, <span class="constant">AsciiDoc</span>, <span class="constant">MediaWiki</span> markup, <span class="constant">DokuWiki</span> markup, <span class="constant">Emacs</span> <span class="constant">Org</span>-<span class="constant">Mode</span>, <span class="constant">Textile</span>
-</span>-<span class="ruby"> <span class="constant">Custom</span> <span class="symbol">formats:</span> custom writers can be written <span class="keyword">in</span> lua.</span>
-</code></pre></blockquote>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/03/10/mark2html/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/code/">code</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/html/">html</a><a href="/tags/pandoc/">pandoc</a><a href="/tags/slide/">slide</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/03/10/mark2html/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -770,7 +772,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/code/" title="code">code<sup>24</sup></a></li>
+			<li><a href="/categories/code/" title="code">code<sup>25</sup></a></li>
 		  
 		
 		  
@@ -811,7 +813,7 @@
 			
 		
 			
-				<li><a href="/tags/handle/" title="handle">handle<sup>1</sup></a></li>
+				<li><a href="/tags/process/" title="process">process<sup>1</sup></a></li>
 			
 		
 			

@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-08-07T00:19:26.493Z</updated>
+  <updated>2015-08-23T03:20:08.080Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,64 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[指标下的单元测试]]></title>
+    <link href="http://blog.decbug.com/2015/08/23/fake_unit_test/"/>
+    <id>http://blog.decbug.com/2015/08/23/fake_unit_test/</id>
+    <published>2015-08-22T16:00:00.000Z</published>
+    <updated>2015-08-23T03:20:08.080Z</updated>
+    <content type="html"><![CDATA[<h1 id="前言">前言</h1><blockquote>
+<p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
+</blockquote>
+<p>距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？<br>半年前我的猜测是<code>为了提高覆盖率，写一堆无效代码</code>，然而实际情况却比这更糟糕。</p>
+<ul>
+<li>有人的测试函数的末尾始终是<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPECT_EQ(TRUE=TRUE)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样每个用例都是绿的</p>
+<ul>
+<li>还有人这么写<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//init module</span></span><br><span class="line"><span class="comment">//run module</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>测试的是整个模块的输入输出，这样可以保证覆盖率</p>
+<p>领导看到用例一片绿，覆盖率90%，觉得我们的代码质量很高。</p>
+<p>然而，这并没有什么卵用！！！<br>这真的没有什么卵用！<br>这真的没有什么卵用！<br>这真的没有什么卵用！</p>
+<a id="more"></a>
+<h1 id="分析">分析</h1><ul>
+<li>正如我所说<code>没几个人觉得写好UT是为了提升软件质量，提高自己的代码水平</code></li>
+<li>责任心？能想出这样方法的人，都是比较聪明的人。只能说是责任心吧。</li>
+<li>管理方式？为什么没有早点发现？为什么我没有去经常查看单元测试代码的提交记录（我平时会看看生产代码）？我有罪。</li>
+</ul>
+<p>待续</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="前言">前言</h1><blockquote>
+<p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
+</blockquote>
+<p>距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？<br>半年前我的猜测是<code>为了提高覆盖率，写一堆无效代码</code>，然而实际情况却比这更糟糕。</p>
+<ul>
+<li>有人的测试函数的末尾始终是<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPECT_EQ(TRUE=TRUE)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样每个用例都是绿的</p>
+<ul>
+<li>还有人这么写<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//init module</span></span><br><span class="line"><span class="comment">//run module</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>测试的是整个模块的输入输出，这样可以保证覆盖率</p>
+<p>领导看到用例一片绿，覆盖率90%，觉得我们的代码质量很高。</p>
+<p>然而，这并没有什么卵用！！！<br>这真的没有什么卵用！<br>这真的没有什么卵用！<br>这真的没有什么卵用！</p>]]>
+    
+    </summary>
+    
+      <category term="indicator" scheme="http://blog.decbug.com/tags/indicator/"/>
+    
+      <category term="unit_test" scheme="http://blog.decbug.com/tags/unit-test/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[抄代码引发的句柄泄漏]]></title>
@@ -1101,45 +1159,6 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
       <category term="GTEST" scheme="http://blog.decbug.com/tags/GTEST/"/>
     
       <category term="UT" scheme="http://blog.decbug.com/tags/UT/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[学习GCC & GDB]]></title>
-    <link href="http://blog.decbug.com/2014/11/26/test_gcc_gdb/"/>
-    <id>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</id>
-    <published>2014-11-25T16:00:00.000Z</published>
-    <updated>2015-08-04T14:28:02.475Z</updated>
-    <content type="html"><![CDATA[<h3 id="前言">前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
-<h3 id="GCC">GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
-<blockquote>
-<p>gcc -E  test.c -o test.i 中间文件<br>gcc -S test.i -o test.s  ASM<br>gcc -c test.s -o test.o  OBJ<br>gcc test.o -o test       可执行文件</p>
-</blockquote>
-<a id="more"></a>
-<p>当然，可以用一行命令搞定</p>
-<blockquote>
-<p>gcc -o test test.c</p>
-</blockquote>
-<h3 id="GDB">GDB</h3><p>回忆一下GDB的常用命令吧<code>l, b, r, watch, bt, n, step</code><br>从<a href="http://coolshell.cn/" target="_blank" rel="external">陈皓巨巨</a>那A了段教程<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line">     </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> n)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum=<span class="number">0</span>,i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum+=i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">long</span> result = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>; i&lt;=<span class="number">100</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        result += i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"result[1-100] = %d /n"</span>, result );</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"result[1-250] = %d /n"</span>, func(<span class="number">250</span>) );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">gcc -g -o <span class="built_in">test</span> test.c 	<span class="comment">#-g表示gdb</span></span><br><span class="line">gdb ./<span class="built_in">test</span> 				<span class="comment">#用gdb打开</span></span><br><span class="line">l 						<span class="comment">#显示代码</span></span><br><span class="line">b linenum				<span class="comment">#给指定行号价断点 bp</span></span><br><span class="line">b <span class="keyword">function</span>_name			<span class="comment">#给函数加断点</span></span><br><span class="line">i b						<span class="comment">#info breakpoint显示断点，类似于windbg的bl</span></span><br><span class="line">r						<span class="comment">#run</span></span><br><span class="line">n						<span class="comment">#next</span></span><br><span class="line">p var_name				<span class="comment">#显示变量的值</span></span><br><span class="line">step					<span class="comment">#下一行</span></span><br><span class="line">info locals				<span class="comment">#显示local</span></span><br><span class="line">watch i					<span class="comment">#watch某变量</span></span><br><span class="line">d <span class="number">1</span>						<span class="comment">#delete breakpoint 1</span></span><br><span class="line">c						<span class="comment">#continue</span></span><br><span class="line">q						<span class="comment">#quit</span></span><br></pre></td></tr></table></figure>
-<h3 id="conclusion">conclusion</h3><p>还是要得写几段代码玩呃，拳不离手，曲不离口。。。。</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h3 id="前言">前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
-<h3 id="GCC">GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
-<blockquote>
-<p>gcc -E  test.c -o test.i 中间文件<br>gcc -S test.i -o test.s  ASM<br>gcc -c test.s -o test.o  OBJ<br>gcc test.o -o test       可执行文件</p>
-</blockquote>]]>
-    
-    </summary>
-    
-      <category term="GCC" scheme="http://blog.decbug.com/tags/GCC/"/>
-    
-      <category term="GDB" scheme="http://blog.decbug.com/tags/GDB/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     

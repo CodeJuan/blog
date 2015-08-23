@@ -4,36 +4,32 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>用jenkins监控程序内存CPU | Continuous Learning</title>
+    <title>指标下的单元测试 | Continuous Learning</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="CodeJuan">
     
 
     
-    <meta name="description" content="背景组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。
-老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。
-大概原理：写个脚本
+    <meta name="description" content="前言
+最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。可以预见的是，有人会为了提高覆盖率，写一堆无效代码。 “上有所好，下必甚焉”。
 
-取得构建包列表。下载没有测试过的最新的包。">
+距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？半年前我的猜测是为了提高覆盖率，写一堆无效代码，然而实际情况却">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用jenkins监控程序内存CPU">
-<meta property="og:url" content="http://blog.decbug.com/2015/01/12/jenkins/index.html">
+<meta property="og:title" content="指标下的单元测试">
+<meta property="og:url" content="http://blog.decbug.com/2015/08/23/fake_unit_test/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="背景组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。
-老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。
-大概原理：写个脚本
+<meta property="og:description" content="前言
+最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。可以预见的是，有人会为了提高覆盖率，写一堆无效代码。 “上有所好，下必甚焉”。
 
-取得构建包列表。下载没有测试过的最新的包。">
-<meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/jenkins/jenkins_welcome.png">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.455Z">
+距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？半年前我的猜测是为了提高覆盖率，写一堆无效代码，然而实际情况却">
+<meta property="og:updated_time" content="2015-08-23T03:20:08.080Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用jenkins监控程序内存CPU">
-<meta name="twitter:description" content="背景组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。
-老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。
-大概原理：写个脚本
+<meta name="twitter:title" content="指标下的单元测试">
+<meta name="twitter:description" content="前言
+最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。可以预见的是，有人会为了提高覆盖率，写一堆无效代码。 “上有所好，下必甚焉”。
 
-取得构建包列表。下载没有测试过的最新的包。">
+距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？半年前我的猜测是为了提高覆盖率，写一堆无效代码，然而实际情况却">
 
     
     <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
@@ -97,14 +93,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/01/12/jenkins/" title="用jenkins监控程序内存CPU" itemprop="url">用jenkins监控程序内存CPU</a>
+      <a href="/2015/08/23/fake_unit_test/" title="指标下的单元测试" itemprop="url">指标下的单元测试</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-01-12T15:30:09.000Z" itemprop="datePublished"> 发表于 2015-01-12</time>
+    <time datetime="2015-08-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-23</time>
     
   </p>
 </header>
@@ -113,38 +109,33 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#windows"><span class="toc-number">2.1.</span> <span class="toc-text">windows</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ubuntu"><span class="toc-number">2.2.</span> <span class="toc-text">ubuntu</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开工"><span class="toc-number">3.</span> <span class="toc-text">开工</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载插件"><span class="toc-number">3.1.</span> <span class="toc-text">下载插件</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
-<p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
-<p>大概原理：写个脚本</p>
-<ol>
-<li>取得构建包列表。下载没有测试过的最新的包。</li>
-<li>读配置文件，获取测试用例，期望运行时间，期望内存峰值及均值。</li>
-<li>自动运行程序，每1s采样一次进程内存大小，记录在日志里。</li>
-<li>当程序结束时，计算运行时间间隔，与期望值比较，如果超出，则红。</li>
-<li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
-</ol>
+		<h1 id="前言">前言</h1><blockquote>
+<p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
+</blockquote>
+<p>距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？<br>半年前我的猜测是<code>为了提高覆盖率，写一堆无效代码</code>，然而实际情况却比这更糟糕。</p>
+<ul>
+<li>有人的测试函数的末尾始终是<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPECT_EQ(TRUE=TRUE)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样每个用例都是绿的</p>
+<ul>
+<li>还有人这么写<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//init module</span></span><br><span class="line"><span class="comment">//run module</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>测试的是整个模块的输入输出，这样可以保证覆盖率</p>
+<p>领导看到用例一片绿，覆盖率90%，觉得我们的代码质量很高。</p>
+<p>然而，这并没有什么卵用！！！<br>这真的没有什么卵用！<br>这真的没有什么卵用！<br>这真的没有什么卵用！</p>
 <a id="more"></a>
-<h2 id="安装">安装</h2><h3 id="windows">windows</h3><p>此项目是开发windows应用程序，正好在<a href="http://www.onlinedown.net/soft/172085.htm" target="_blank" rel="external">华军</a>有1.575的安装版，安装后就能用，省去不少事，访问<a href="http://localhost:8080/" target="_blank" rel="external">http://你的IP:8080/</a>就能看到jenkins的dashboard。</p>
-<h3 id="ubuntu">ubuntu</h3><p>家里木有windows，只能在ubuntu上安装一份，用于截图了。</p>
-<ul>
-<li>JAVA，TOMCAT自然是少不了的。</li>
-<li>在<a href="http://jenkins-ci.org/" target="_blank" rel="external">官网</a>下载Jenkins.war，然后拷贝到你的tomcat的webapps下。</li>
-<li>启动tomcat，运行tomcat/bin下destartup，命令： sudo sh startup.sh。</li>
-<li>进入<a href="http://localhost:8080/jenkins/" target="_blank" rel="external">http://localhost:8080/jenkins/</a>，熟悉的dashboard又出现了。</li>
+<h1 id="分析">分析</h1><ul>
+<li>正如我所说<code>没几个人觉得写好UT是为了提升软件质量，提高自己的代码水平</code></li>
+<li>责任心？能想出这样方法的人，都是比较聪明的人。只能说是责任心吧。</li>
+<li>管理方式？为什么没有早点发现？为什么我没有去经常查看单元测试代码的提交记录（我平时会看看生产代码）？我有罪。</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/jenkins/jenkins_welcome.png" alt=""></p>
-<h2 id="开工">开工</h2><h3 id="下载插件">下载插件</h3><p>由于公司坑爹的网络设置，无法直接在线更新，只能采用手动下载。以Build Pipeline Plugin为例示范一下</p>
-<ul>
-<li>进入 plugin manager，找到并点击<a href="https://wiki.jenkins-ci.org/display/JENKINS/Build+Pipeline+Plugin" target="_blank" rel="external">Build Pipeline Plugin</a></li>
-<li>在表格左上角找到Lastest Release，点击<a href="http://updates.jenkins-ci.org/download/plugins/build-pipeline-plugin/" target="_blank" rel="external">archives</a>，下载你喜欢的版本即可。</li>
-</ul>
-<p>未完待续</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+<p>待续</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -158,7 +149,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/CPU/">CPU</a><a href="/tags/jenkins/">jenkins</a><a href="/tags/memory/">memory</a>
+  <span></span> <a href="/tags/indicator/">indicator</a><a href="/tags/unit-test/">unit_test</a>
   </div>
 
 </div>
@@ -167,7 +158,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.decbug.com/2015/01/12/jenkins/" data-title="用jenkins监控程序内存CPU | Continuous Learning" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.decbug.com/2015/08/23/fake_unit_test/" data-title="指标下的单元测试 | Continuous Learning" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -180,19 +171,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/01/15/fragment/" title="真的是内存碎片吗">
-  <strong>上一篇：</strong><br/>
-  <span>
-  真的是内存碎片吗</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/12/27/understand_code/"  title="understand your code">
+<a href="/2015/08/06/handle_leak/"  title="抄代码引发的句柄泄漏">
  <strong>下一篇：</strong><br/> 
- <span>understand your code
+ <span>抄代码引发的句柄泄漏
 </span>
 </a>
 </div>
@@ -213,7 +196,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#windows"><span class="toc-number">2.1.</span> <span class="toc-text">windows</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ubuntu"><span class="toc-number">2.2.</span> <span class="toc-text">ubuntu</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开工"><span class="toc-number">3.</span> <span class="toc-text">开工</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载插件"><span class="toc-number">3.1.</span> <span class="toc-text">下载插件</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li></ol>
  
   </div>
 
