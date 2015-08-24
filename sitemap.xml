@@ -2,23 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2015/08/23/docker_tutorial/</loc>
+    <lastmod>2015-08-24T14:10:46.806Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/book/index.html</loc>
+    <lastmod>2015-08-24T12:38:55.799Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/test/index.html</loc>
+    <lastmod>2015-08-23T03:21:53.556Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/08/23/fake_unit_test/</loc>
     <lastmod>2015-08-23T03:20:08.080Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/book/index.html</loc>
-    <lastmod>2015-08-23T02:36:59.424Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://blog.decbug.com/2015/07/26/pe_depen/</loc>
     <lastmod>2015-08-13T14:39:31.945Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.decbug.com/test/index.html</loc>
-    <lastmod>2015-08-13T14:34:20.905Z</lastmod>
   </url>
   
   <url>
@@ -37,12 +42,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
+    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
+    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
@@ -62,12 +67,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/03/04/learning_rlang/</loc>
+    <loc>http://blog.decbug.com/2015/04/15/auto_analyze_dump/</loc>
     <lastmod>2015-08-04T14:28:02.471Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/04/15/auto_analyze_dump/</loc>
+    <loc>http://blog.decbug.com/2015/03/04/learning_rlang/</loc>
     <lastmod>2015-08-04T14:28:02.471Z</lastmod>
   </url>
   
@@ -77,12 +82,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
+    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
+    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
