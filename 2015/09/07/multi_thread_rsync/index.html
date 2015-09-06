@@ -4,29 +4,41 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>understand your code | Continuous Learning</title>
+    <title>多线程同步镜像 | Continuous Learning</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="CodeJuan">
     
 
     
-    <meta name="description" content="代码可视化understand，一款很强大的软件，支持C++/JAVA/VHDL等等十几种语言，可以生成依赖图，类图，调用图，控制流图。
+    <meta name="description" content="背景以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。
+大概的思路:
 
-本博客欢迎转发,但请保留原作者信息github:codejuan博客地址:http://blog.decbug.com/">
+爬index，如hust的镜像http://mirrors.hust.edu.cn/ubuntu-releases/，找出所有href。以前用过beautifulsoup，感觉还可以，打算试试。
+每个href就启动一个rsync，同步到对应的文件夹
+记录每个rsync的同步状态
+汇总全部状态，看所有h">
 <meta property="og:type" content="article">
-<meta property="og:title" content="understand your code">
-<meta property="og:url" content="http://blog.decbug.com/2014/12/27/understand_code/index.html">
+<meta property="og:title" content="多线程同步镜像">
+<meta property="og:url" content="http://blog.decbug.com/2015/09/07/multi_thread_rsync/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="代码可视化understand，一款很强大的软件，支持C++/JAVA/VHDL等等十几种语言，可以生成依赖图，类图，调用图，控制流图。
+<meta property="og:description" content="背景以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。
+大概的思路:
 
-本博客欢迎转发,但请保留原作者信息github:codejuan博客地址:http://blog.decbug.com/">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.475Z">
+爬index，如hust的镜像http://mirrors.hust.edu.cn/ubuntu-releases/，找出所有href。以前用过beautifulsoup，感觉还可以，打算试试。
+每个href就启动一个rsync，同步到对应的文件夹
+记录每个rsync的同步状态
+汇总全部状态，看所有h">
+<meta property="og:updated_time" content="2015-09-06T23:47:16.579Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="understand your code">
-<meta name="twitter:description" content="代码可视化understand，一款很强大的软件，支持C++/JAVA/VHDL等等十几种语言，可以生成依赖图，类图，调用图，控制流图。
+<meta name="twitter:title" content="多线程同步镜像">
+<meta name="twitter:description" content="背景以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。
+大概的思路:
 
-本博客欢迎转发,但请保留原作者信息github:codejuan博客地址:http://blog.decbug.com/">
+爬index，如hust的镜像http://mirrors.hust.edu.cn/ubuntu-releases/，找出所有href。以前用过beautifulsoup，感觉还可以，打算试试。
+每个href就启动一个rsync，同步到对应的文件夹
+记录每个rsync的同步状态
+汇总全部状态，看所有h">
 
     
     <link rel="alternative" href="/atom.xml" title="Continuous Learning" type="application/atom+xml">
@@ -88,14 +100,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/27/understand_code/" title="understand your code" itemprop="url">understand your code</a>
+      <a href="/2015/09/07/multi_thread_rsync/" title="多线程同步镜像" itemprop="url">多线程同步镜像</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
 		
   <p class="article-time">
-    <time datetime="2014-12-27T15:30:09.000Z" itemprop="datePublished"> 发表于 2014-12-27</time>
+    <time datetime="2015-09-06T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-07</time>
     
   </p>
 </header>
@@ -104,13 +116,22 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码可视化"><span class="toc-number">1.</span> <span class="toc-text">代码可视化</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#步骤"><span class="toc-number">2.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#装beautifulsoup"><span class="toc-number">2.1.</span> <span class="toc-text">装beautifulsoup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开始爬"><span class="toc-number">2.2.</span> <span class="toc-text">开始爬</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h2 id="代码可视化">代码可视化</h2><p><a href="https://scitools.com/" target="_blank" rel="external">understand</a>，一款很强大的软件，支持C++/JAVA/VHDL等等十几种语言，可以生成依赖图，类图，调用图，控制流图。</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+		<h2 id="背景">背景</h2><p>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
+<p>大概的思路:</p>
+<ul>
+<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/" target="_blank" rel="external">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。以前用过<code>beautifulsoup</code>，感觉还可以，打算试试。</li>
+<li>每个href就启动一个rsync，同步到对应的文件夹</li>
+<li>记录每个rsync的同步状态</li>
+<li>汇总全部状态，看所有href是否都同步成功<a id="more"></a>
+</li>
+</ul>
+<h2 id="步骤">步骤</h2><h3 id="装beautifulsoup">装beautifulsoup</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#19979;&#36733;&#24182;&#23433;&#35013;pip&#10;wget https://pypi.python.org/packages/source/p/pip/pip-7.1.2.tar.gz&#10;tar zxvf pip-7.1.2.tar.gz&#10;cd pip-7.1.2&#10;sudo python setup.py install&#10;&#10;#&#35013;beautifulsoup4&#10;sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
+<p>其实还有一种方法，直接wget镜像的index.html，然后正则匹配</p>
+<h3 id="开始爬">开始爬</h3><p>由于index的页面都很简洁，爬起来还是相对比较容易。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -124,7 +145,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/scitools/">scitools</a><a href="/tags/understand/">understand</a>
+  <span></span> <a href="/tags/mirror/">mirror</a><a href="/tags/python/">python</a><a href="/tags/rsync/">rsync</a><a href="/tags/wget/">wget</a>
   </div>
 
 </div>
@@ -133,7 +154,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.decbug.com/2014/12/27/understand_code/" data-title="understand your code | Continuous Learning" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.decbug.com/2015/09/07/multi_thread_rsync/" data-title="多线程同步镜像 | Continuous Learning" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -146,19 +167,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/01/12/jenkins/" title="用jenkins监控程序内存CPU">
-  <strong>上一篇：</strong><br/>
-  <span>
-  用jenkins监控程序内存CPU</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/12/24/CreateUTproject/"  title="一键式给VC工程创建UT工程">
+<a href="/2015/08/23/docker_tutorial/"  title="初学docker">
  <strong>下一篇：</strong><br/> 
- <span>一键式给VC工程创建UT工程
+ <span>初学docker
 </span>
 </a>
 </div>
@@ -179,7 +192,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码可视化"><span class="toc-number">1.</span> <span class="toc-text">代码可视化</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#步骤"><span class="toc-number">2.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#装beautifulsoup"><span class="toc-number">2.1.</span> <span class="toc-text">装beautifulsoup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开始爬"><span class="toc-number">2.2.</span> <span class="toc-text">开始爬</span></a></li></ol></li></ol>
  
   </div>
 

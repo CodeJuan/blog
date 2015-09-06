@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2015/09/07/multi_thread_rsync/</loc>
+    <lastmod>2015-09-06T23:47:16.579Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/08/23/docker_tutorial/</loc>
     <lastmod>2015-08-24T14:10:46.806Z</lastmod>
   </url>
@@ -42,12 +47,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
+    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
+    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
@@ -57,12 +62,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
+    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
+    <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   

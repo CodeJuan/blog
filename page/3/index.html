@@ -83,6 +83,74 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2014/12/01/Vld2CI/" title="VLD集成到CI自动化检测内存泄露" itemprop="url">VLD集成到CI自动化检测内存泄露</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="CodeJuan" target="_blank" itemprop="author">CodeJuan</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-30T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-12-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="VLD简介">VLD简介</h1><blockquote>
+<p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
+</blockquote>
+<p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/">codeplex</a></p>
+<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2014/12/01/Vld2CI/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/code/">code</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/ContinuousIntegration/">ContinuousIntegration</a><a href="/tags/MemoryLeak/">MemoryLeak</a><a href="/tags/VLD/">VLD</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/12/01/Vld2CI/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2014/11/29/gtest_gmock/" title="学习gtest&amp;gmock" itemprop="url">学习gtest&amp;gmock</a>
   </h1>
   <p class="article-author">By
@@ -570,7 +638,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/code/" title="code">code<sup>26</sup></a></li>
+			<li><a href="/categories/code/" title="code">code<sup>27</sup></a></li>
 		  
 		
 		  
@@ -585,10 +653,6 @@
 <div class="tagslist">
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/C/" title="C++">C++<sup>2</sup></a></li>
-			
 		
 			
 				<li><a href="/tags/dependency/" title="dependency">dependency<sup>2</sup></a></li>
@@ -607,11 +671,15 @@
 			
 		
 			
+				<li><a href="/tags/C/" title="C++">C++<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/UT/" title="UT">UT<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/module/" title="module">module<sup>1</sup></a></li>
+				<li><a href="/tags/handle/" title="handle">handle<sup>1</sup></a></li>
 			
 		
 			
@@ -635,6 +703,22 @@
 			
 		
 			
+				<li><a href="/tags/mirror/" title="mirror">mirror<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/rsync/" title="rsync">rsync<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/wget/" title="wget">wget<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/科普/" title="科普">科普<sup>1</sup></a></li>
 			
 		
@@ -648,22 +732,6 @@
 		
 			
 				<li><a href="/tags/slide/" title="slide">slide<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/R/" title="R">R<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/jenkins/" title="jenkins">jenkins<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/GDB/" title="GDB">GDB<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/CPU/" title="CPU">CPU<sup>1</sup></a></li>
 			
 		
 		</ul>

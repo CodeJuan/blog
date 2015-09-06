@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-08-24T14:10:46.806Z</updated>
+  <updated>2015-09-06T23:47:16.579Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[多线程同步镜像]]></title>
+    <link href="http://blog.decbug.com/2015/09/07/multi_thread_rsync/"/>
+    <id>http://blog.decbug.com/2015/09/07/multi_thread_rsync/</id>
+    <published>2015-09-06T16:00:00.000Z</published>
+    <updated>2015-09-06T23:47:16.579Z</updated>
+    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
+<p>大概的思路:</p>
+<ul>
+<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/" target="_blank" rel="external">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。以前用过<code>beautifulsoup</code>，感觉还可以，打算试试。</li>
+<li>每个href就启动一个rsync，同步到对应的文件夹</li>
+<li>记录每个rsync的同步状态</li>
+<li>汇总全部状态，看所有href是否都同步成功<a id="more"></a>
+</li>
+</ul>
+<h2 id="步骤">步骤</h2><h3 id="装beautifulsoup">装beautifulsoup</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#19979;&#36733;&#24182;&#23433;&#35013;pip&#10;wget https://pypi.python.org/packages/source/p/pip/pip-7.1.2.tar.gz&#10;tar zxvf pip-7.1.2.tar.gz&#10;cd pip-7.1.2&#10;sudo python setup.py install&#10;&#10;#&#35013;beautifulsoup4&#10;sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
+<p>其实还有一种方法，直接wget镜像的index.html，然后正则匹配</p>
+<h3 id="开始爬">开始爬</h3><p>由于index的页面都很简洁，爬起来还是相对比较容易。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="背景">背景</h2><p>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
+<p>大概的思路:</p>
+<ul>
+<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。以前用过<code>beautifulsoup</code>，感觉还可以，打算试试。</li>
+<li>每个href就启动一个rsync，同步到对应的文件夹</li>
+<li>记录每个rsync的同步状态</li>
+<li>汇总全部状态，看所有href是否都同步成功]]>
+    
+    </summary>
+    
+      <category term="mirror" scheme="http://blog.decbug.com/tags/mirror/"/>
+    
+      <category term="python" scheme="http://blog.decbug.com/tags/python/"/>
+    
+      <category term="rsync" scheme="http://blog.decbug.com/tags/rsync/"/>
+    
+      <category term="wget" scheme="http://blog.decbug.com/tags/wget/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[初学docker]]></title>
@@ -1088,85 +1130,6 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
       <category term="UT" scheme="http://blog.decbug.com/tags/UT/"/>
     
       <category term="automation" scheme="http://blog.decbug.com/tags/automation/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[VLD集成到CI自动化检测内存泄露]]></title>
-    <link href="http://blog.decbug.com/2014/12/01/Vld2CI/"/>
-    <id>http://blog.decbug.com/2014/12/01/Vld2CI/</id>
-    <published>2014-11-30T16:00:00.000Z</published>
-    <updated>2015-08-04T14:28:02.459Z</updated>
-    <content type="html"><![CDATA[<h1 id="VLD简介">VLD简介</h1><blockquote>
-<p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
-</blockquote>
-<p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/" target="_blank" rel="external">codeplex</a></p>
-<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
-<a id="more"></a>
-<h2 id="简单用法">简单用法</h2><ol>
-<li>下载及安装，假设安装在<code>VldPath</code></li>
-<li>配置VC的include路径：右键-属性-directory-include directory，增加<code>VldPath\include</code></li>
-<li>配置lib路径：右键-属性-directory-lib directory，，增加<code>VldPath\lib\win32</code>，如果是x64的系统，那么选择win64即可。</li>
-<li>根据需要配置vld.ini</li>
-<li>声明</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">define</span> VLD_FORCE_ENABLE    <span class="comment">//2.3版本之后，支持release下检测内存泄露</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "vld.h"</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>构建，运行，就会生成report。</li>
-</ol>
-<h1 id="集成到CI">集成到CI</h1><p>其实就是用脚本来实现上面的步骤，由于项目暂时不允许上传lib和dll到svn，只能通过迂回的方法来实现。</p>
-<h2 id="vld-h">vld.h</h2><p>项目中有一个专门的目录存放开源代码的头文件，此时正好派上用场</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y vld.h <span class="envvar">%CODE_HOME%</span>\opensrc\include\
-:: /y表示默认覆盖同名文件
-<span class="keyword">copy</span> /y vld_def.h <span class="envvar">%CODE_HOME%</span>\opensrc\include\
-</code></pre>
-<h2 id="vld-lib">vld.lib</h2><p>同样也有个存放开源代码lib的目录</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y vld.lib <span class="envvar">%CODE_HOME%</span>\opensrc\lib\
-</code></pre>
-<h2 id="dll">dll</h2><p>将vld_x86.dll拷贝到bin目录</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y vld_x86.dll <span class="envvar">%CODE_HOME%</span>\bin\
-</code></pre>
-<h2 id="vld-ini">vld.ini</h2><p>将AggregateDuplicates设置为yes，表示将引起泄露同一行代码合并到一块。<br>将ReportFile设置为.\leak_report.txt，表示将结果输出到leak_report.txt中<br>再将ini拷贝到bin</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y vld.ini <span class="envvar">%CODE_HOME%</span>\bin\
-</code></pre>
-<h2 id="更新代码">更新代码</h2><p>svn revert -R .<br>svn update .</p>
-<h2 id="修改stdafx-h">修改stdafx.h</h2><p>由于stdafx.h会被预编译，只要在其包含vld.h，那么整个工程都会处于vld的监控之下。</p>
-<pre><code class="bat">:: 家里没有windows的系统，凭记忆写的，可能会有点小纰漏
-<span class="flow">FOR</span> /F "delims=" <span class="envvar">%%i</span> <span class="flow">IN</span>('<span class="built_in">dir</span> /b /s stdafx.h') <span class="flow">DO</span>(
-    <span class="keyword">echo</span> //&gt;&gt;"<span class="envvar">%%i</span>"
-    <span class="keyword">echo</span> #define VLD_FORCE_ENABLE&gt;&gt;"<span class="envvar">%%i</span>"
-    <span class="keyword">echo</span> #include "vld.h"&gt;&gt;"<span class="envvar">%%i</span>"
-)
-</code></pre>
-<h2 id="build">build</h2><pre><code class="bat"><span class="flow">FOR</span> /F "delims=" <span class="envvar">%%i</span> <span class="flow">IN</span>('<span class="built_in">dir</span> /b /s *.sln') <span class="flow">DO</span>(
-    msbuild.exe "<span class="envvar">%%i</span>" /p:Configuration=Release /t:rebuild
-)
-</code></pre>
-<h2 id="运行">运行</h2><p>提示0xC0150002，无法正确启动程序，这是因为缺少manifest，还需要把vld目录下的microsoft.dtfw.dhl.manifest拷贝到bin目录</p>
-<pre><code class="bat"><span class="keyword">copy</span> /y microsoft.dtfw.dhl.manifest <span class="envvar">%CODE_HOME%</span>\bin\
-</code></pre>
-<p>在运行目录生成了一个leak_report.txt，如果有泄露，则会有一行提示<code>WARNING:Visual Leak Detector detected memory leaks!</code>，并指出引起内存泄露的代码。<br>只要检测report就能知道是否有泄露。</p>
-<h1 id="加入到自动化测试套餐">加入到自动化测试套餐</h1><p>将脚本调试好，自动构建出检测内存泄露的版本，然后运行自动化测试，最后检测leak_report的内容，如有泄露则告警。</p>
-<h1 id="PS">PS</h1><p>家里没有windows系统，有些命令记不清了，不知有没有写错。领会精神，不要在意这些细节。<br>囧rz</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="VLD简介">VLD简介</h1><blockquote>
-<p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
-</blockquote>
-<p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/">codeplex</a></p>
-<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>]]>
-    
-    </summary>
-    
-      <category term="ContinuousIntegration" scheme="http://blog.decbug.com/tags/ContinuousIntegration/"/>
-    
-      <category term="MemoryLeak" scheme="http://blog.decbug.com/tags/MemoryLeak/"/>
-    
-      <category term="VLD" scheme="http://blog.decbug.com/tags/VLD/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
