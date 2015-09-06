@@ -29,7 +29,7 @@
 每个href就启动一个rsync，同步到对应的文件夹
 记录每个rsync的同步状态
 汇总全部状态，看所有h">
-<meta property="og:updated_time" content="2015-09-06T23:47:16.579Z">
+<meta property="og:updated_time" content="2015-09-06T23:51:11.967Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程同步镜像">
 <meta name="twitter:description" content="背景以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。
@@ -129,7 +129,7 @@
 <li>汇总全部状态，看所有href是否都同步成功<a id="more"></a>
 </li>
 </ul>
-<h2 id="步骤">步骤</h2><h3 id="装beautifulsoup">装beautifulsoup</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#19979;&#36733;&#24182;&#23433;&#35013;pip&#10;wget https://pypi.python.org/packages/source/p/pip/pip-7.1.2.tar.gz&#10;tar zxvf pip-7.1.2.tar.gz&#10;cd pip-7.1.2&#10;sudo python setup.py install&#10;&#10;#&#35013;beautifulsoup4&#10;sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
+<h2 id="步骤">步骤</h2><h3 id="装beautifulsoup">装beautifulsoup</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载并安装pip</span></span><br><span class="line">wget https://pypi.python.org/packages/<span class="built_in">source</span>/p/pip/pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line">tar zxvf pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">2</span></span><br><span class="line">sudo python setup.py install</span><br><span class="line"></span><br><span class="line"><span class="comment">#装beautifulsoup4</span></span><br><span class="line">sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
 <p>其实还有一种方法，直接wget镜像的index.html，然后正则匹配</p>
 <h3 id="开始爬">开始爬</h3><p>由于index的页面都很简洁，爬起来还是相对比较容易。</p>
   
