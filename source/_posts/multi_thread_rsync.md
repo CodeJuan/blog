@@ -25,7 +25,7 @@ description:
 ## 步骤
 
 ### 装beautifulsoup
-```shell
+```sh
 #下载并安装pip
 wget https://pypi.python.org/packages/source/p/pip/pip-7.1.2.tar.gz
 tar zxvf pip-7.1.2.tar.gz
