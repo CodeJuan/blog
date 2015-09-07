@@ -53,8 +53,11 @@ cat $bak_file | grep "href*=*\"" | grep "<a" | cut -d "\"" -f 2 | grep "/$" | gr
 echo ${whole_url_list[@]} | xargs -n 1 -P 8 ./single_down.sh "$des"
 ```
 
+#### 还没实现获取同步状态
+如果下载失败了，完全没有办法知道。
+下一步实现
 
-## python爬
+## 另一种玩法：python爬
 ### 步骤
 
 #### 装beautifulsoup
@@ -74,3 +77,4 @@ sudo pip install beautifulsoup4
 #### 开始爬
 由于index的页面都很简洁，爬起来还是相对比较容易。
 
+以后有空搞定～～
