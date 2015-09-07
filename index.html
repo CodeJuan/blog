@@ -96,12 +96,11 @@
 </header>
     <div class="article-content">
         
-        <h2 id="背景">背景</h2><p>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
-<p>大概的思路:</p>
-<ul>
-<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。以前用过<code>beautifulsoup</code>，感觉还可以，打算试试。</li>
-<li>每个href就启动一个rsync，同步到对应的文件夹</li>
-<li>记录每个rsync的同步状态</li>
+        <h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
+<h2 id="大概的思路">大概的思路</h2><ul>
+<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
+<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
+<li>记录每个href的同步状态</li>
 <li>汇总全部状态，看所有href是否都同步成功
         
         
