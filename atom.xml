@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-09-07T13:07:01.304Z</updated>
+  <updated>2015-09-07T13:19:41.240Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.decbug.com/2015/09/07/multi_thread_rsync/"/>
     <id>http://blog.decbug.com/2015/09/07/multi_thread_rsync/</id>
     <published>2015-09-06T16:00:00.000Z</published>
-    <updated>2015-09-07T13:07:01.304Z</updated>
+    <updated>2015-09-07T13:19:41.240Z</updated>
     <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
 <h2 id="大概的思路">大概的思路</h2><ul>
 <li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/" target="_blank" rel="external">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
@@ -39,8 +39,10 @@
 <h4 id="wget_index-html">wget index.html</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get index.html</span></span><br><span class="line">wget <span class="variable">$link</span> -O <span class="variable">$file</span></span><br></pre></td></tr></table></figure>
 <h4 id="regex得到二级目录">regex得到二级目录</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep "href" "&lt;a" "/$"</span></span><br><span class="line"><span class="comment"># cut "\""</span></span><br><span class="line">cat <span class="variable">$bak_file</span> | grep <span class="string">"href*=*\""</span> | grep <span class="string">"&lt;a"</span> | cut <span class="operator">-d</span> <span class="string">"\""</span> <span class="operator">-f</span> <span class="number">2</span> | grep <span class="string">"/$"</span> | grep -v <span class="string">"\.\."</span></span><br></pre></td></tr></table></figure>
 <h4 id="xargs_-P_八个线程同时wget_-r">xargs -P 八个线程同时wget -r</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;whole_url_list[@]&#125;</span> | xargs -n <span class="number">1</span> -P <span class="number">8</span> ./single_down.sh <span class="string">"<span class="variable">$des</span>"</span></span><br></pre></td></tr></table></figure>
-<h2 id="python爬">python爬</h2><h3 id="步骤-1">步骤</h3><h4 id="装beautifulsoup">装beautifulsoup</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载并安装pip</span></span><br><span class="line">wget https://pypi.python.org/packages/<span class="built_in">source</span>/p/pip/pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line">tar zxvf pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">2</span></span><br><span class="line">sudo python setup.py install</span><br><span class="line"></span><br><span class="line"><span class="comment">#装beautifulsoup4</span></span><br><span class="line">sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
+<h4 id="还没实现获取同步状态">还没实现获取同步状态</h4><p>如果下载失败了，完全没有办法知道。<br>下一步实现</p>
+<h2 id="另一种玩法：python爬">另一种玩法：python爬</h2><h3 id="步骤-1">步骤</h3><h4 id="装beautifulsoup">装beautifulsoup</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载并安装pip</span></span><br><span class="line">wget https://pypi.python.org/packages/<span class="built_in">source</span>/p/pip/pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line">tar zxvf pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">2</span></span><br><span class="line">sudo python setup.py install</span><br><span class="line"></span><br><span class="line"><span class="comment">#装beautifulsoup4</span></span><br><span class="line">sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
 <h4 id="开始爬">开始爬</h4><p>由于index的页面都很简洁，爬起来还是相对比较容易。</p>
+<p>以后有空搞定～～</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
