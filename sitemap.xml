@@ -2,18 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://blog.decbug.com/2015/09/07/multi_thread_rsync/</loc>
-    <lastmod>2015-09-07T13:19:41.240Z</lastmod>
+    <loc>http://blog.decbug.com/book/index.html</loc>
+    <lastmod>2015-09-10T15:32:34.450Z</lastmod>
   </url>
   
   <url>
     <loc>http://blog.decbug.com/2015/08/23/docker_tutorial/</loc>
-    <lastmod>2015-08-24T14:10:46.806Z</lastmod>
+    <lastmod>2015-09-07T13:34:43.284Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/book/index.html</loc>
-    <lastmod>2015-08-24T12:38:55.799Z</lastmod>
+    <loc>http://blog.decbug.com/2015/09/07/multi_thread_rsync/</loc>
+    <lastmod>2015-09-07T13:19:41.240Z</lastmod>
   </url>
   
   <url>
@@ -62,22 +62,22 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
-    <lastmod>2015-08-04T14:28:02.475Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/04/15/auto_analyze_dump/</loc>
-    <lastmod>2015-08-04T14:28:02.471Z</lastmod>
+    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
+    <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   
   <url>
     <loc>http://blog.decbug.com/2015/03/04/learning_rlang/</loc>
+    <lastmod>2015-08-04T14:28:02.471Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/2015/04/15/auto_analyze_dump/</loc>
     <lastmod>2015-08-04T14:28:02.471Z</lastmod>
   </url>
   
@@ -87,12 +87,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
+    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
+    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
@@ -119,11 +119,6 @@
   <url>
     <loc>http://blog.decbug.com/2015/03/27/gprof_sprof_perf/</loc>
     <lastmod>2015-08-04T14:28:02.447Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.decbug.com/2014/01/01/resume/</loc>
-    <lastmod>2015-08-04T14:28:02.443Z</lastmod>
   </url>
   
   <url>
