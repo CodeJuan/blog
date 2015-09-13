@@ -78,3 +78,10 @@ sudo pip install beautifulsoup4
 由于index的页面都很简洁，爬起来还是相对比较容易。
 
 以后有空搞定～～
+
+----------------------------
+
+`本博客欢迎转发,但请保留原作者信息`                                                                                                                                                                          
+github:[codejuan](https://github.com/CodeJuan)
+博客地址:http://blog.decbug.com/
+
