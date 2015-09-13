@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-09-07T13:19:41.240Z</updated>
+  <updated>2015-09-13T14:23:43.382Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -16,11 +16,43 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[tornado]]></title>
+    <link href="http://blog.decbug.com/2015/09/13/tornado/"/>
+    <id>http://blog.decbug.com/2015/09/13/tornado/</id>
+    <published>2015-09-12T16:00:00.000Z</published>
+    <updated>2015-09-13T14:23:43.382Z</updated>
+    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>实现白名单，只允许可信用户访问我的服务<br>考虑采用iptables或者nginx</p>
+<p>如果用nginx，那么可以建立一个<code>allow_ip.conf</code>，然后把这个配置文件include到nginx的配置中<br>用户可以主动添加他们的IP到我这，打算玩玩tornado，用户输入他的IP，然后存入到我的文件中，最后定时合并到<code>allow_ip.conf</code></p>
+<a id="more"></a>
+<h2 id="安装">安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://pypi.python.org/packages/<span class="built_in">source</span>/t/tornado/tornado-<span class="number">4.2</span>.<span class="number">1</span>.tar.gz</span><br><span class="line">tar zxvf tornado-<span class="number">4.2</span>.<span class="number">1</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> tornado-<span class="number">4.2</span>.<span class="number">1</span></span><br><span class="line">python setup.py build</span><br><span class="line">sudo python setup.py install</span><br></pre></td></tr></table></figure>
+<h2 id="开搞">开搞</h2><p>再分析一下需求</p>
+<ul>
+<li>一个input，一个button，点button就把input的内容追加到某个文件中，暂时不考虑input是否合法</li>
+<li>tornado 写一个handler</li>
+<li>定时把最新的IP合并到allow_ip.con</li>
+</ul>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="背景">背景</h2><p>实现白名单，只允许可信用户访问我的服务<br>考虑采用iptables或者nginx</p>
+<p>如果用nginx，那么可以建立一个<code>allow_ip.conf</code>，然后把这个配置文件include到nginx的配置中<br>用户可以主动添加他们的IP到我这，打算玩玩tornado，用户输入他的IP，然后存入到我的文件中，最后定时合并到<code>allow_ip.conf</code></p>]]>
+    
+    </summary>
+    
+      <category term="python" scheme="http://blog.decbug.com/tags/python/"/>
+    
+      <category term="tornado" scheme="http://blog.decbug.com/tags/tornado/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[多线程同步镜像]]></title>
     <link href="http://blog.decbug.com/2015/09/07/multi_thread_rsync/"/>
     <id>http://blog.decbug.com/2015/09/07/multi_thread_rsync/</id>
     <published>2015-09-06T16:00:00.000Z</published>
-    <updated>2015-09-07T13:19:41.240Z</updated>
+    <updated>2015-09-13T14:25:46.038Z</updated>
     <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
 <h2 id="大概的思路">大概的思路</h2><ul>
 <li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/" target="_blank" rel="external">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
@@ -43,6 +75,8 @@
 <h2 id="另一种玩法：python爬">另一种玩法：python爬</h2><h3 id="步骤-1">步骤</h3><h4 id="装beautifulsoup">装beautifulsoup</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载并安装pip</span></span><br><span class="line">wget https://pypi.python.org/packages/<span class="built_in">source</span>/p/pip/pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line">tar zxvf pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">2</span></span><br><span class="line">sudo python setup.py install</span><br><span class="line"></span><br><span class="line"><span class="comment">#装beautifulsoup4</span></span><br><span class="line">sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
 <h4 id="开始爬">开始爬</h4><p>由于index的页面都很简洁，爬起来还是相对比较容易。</p>
 <p>以后有空搞定～～</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
@@ -71,7 +105,7 @@
     <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
     <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
     <published>2015-08-22T16:00:00.000Z</published>
-    <updated>2015-09-07T13:34:43.284Z</updated>
+    <updated>2015-09-13T14:25:20.974Z</updated>
     <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
 <a id="more"></a>
 <h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
@@ -101,7 +135,9 @@
 </li>
 </ol>
 <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
-<h2 id="进阶">进阶</h2>]]></content>
+<h2 id="进阶">进阶</h2><hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
     <summary type="html">
     <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
     
@@ -120,7 +156,7 @@
     <link href="http://blog.decbug.com/2015/08/23/fake_unit_test/"/>
     <id>http://blog.decbug.com/2015/08/23/fake_unit_test/</id>
     <published>2015-08-22T16:00:00.000Z</published>
-    <updated>2015-08-23T03:20:08.080Z</updated>
+    <updated>2015-09-13T14:25:33.374Z</updated>
     <content type="html"><![CDATA[<h1 id="前言">前言</h1><blockquote>
 <p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
 </blockquote>
@@ -144,6 +180,8 @@
 <li>管理方式？为什么没有早点发现？为什么我没有去经常查看单元测试代码的提交记录（我平时会看看生产代码）？我有罪。</li>
 </ul>
 <p>待续</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="前言">前言</h1><blockquote>
@@ -1083,62 +1121,6 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
       <category term="scitools" scheme="http://blog.decbug.com/tags/scitools/"/>
     
       <category term="understand" scheme="http://blog.decbug.com/tags/understand/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[一键式给VC工程创建UT工程]]></title>
-    <link href="http://blog.decbug.com/2014/12/24/CreateUTproject/"/>
-    <id>http://blog.decbug.com/2014/12/24/CreateUTproject/</id>
-    <published>2014-12-24T15:30:09.000Z</published>
-    <updated>2015-08-04T14:28:02.431Z</updated>
-    <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
-<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
-<ol>
-<li>把某工程的vcxproj及filter拷贝到UT目录</li>
-<li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
-<li>additional path加入gtest和gmock的头文件及lib</li>
-<li>def也要改成相对路径</li>
-<li>additional Include path 要加上原有工程的路径</li>
-<li>application type 改为 exe</li>
-<li>link-system-subsystem改为console</li>
-<li>gtest gmock的runtime lib都改为/mdd</li>
-</ol>
-<a id="more"></a>
-<h4 id="果然可以">果然可以</h4><p>效果如图</p>
-<p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/ut_migrate/UT_gtest.png" alt=""></p>
-<h2 id="powershell_脚本">powershell 脚本</h2><p>说白了就是用脚本处理vcxproj(其实就xml)，把上文提到的几个步骤都用脚本实现。</p>
-<pre><code class="powershell"><span class="variable">$path</span>= gi .\abc.xml
-<span class="variable">$xmldata</span> = [xml](<span class="built_in">Get-Content</span> <span class="variable">$path</span>)
-<span class="variable">$xmldata</span>.rss.channel.title
-<span class="variable">$xmldata</span>.rss.channel.title=<span class="string">"abc"</span>
-<span class="variable">$xmldata</span>.save(<span class="variable">$path</span>.fullname)
-</code></pre>
-<h2 id="conclusion">conclusion</h2><p>花了半天的时间把创建方法及脚本写好，省去N个人的重复劳动。通过脚本实现，还不容易出错。<br>YEAH!!</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
-<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
-<ol>
-<li>把某工程的vcxproj及filter拷贝到UT目录</li>
-<li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
-<li>additional path加入gtest和gmock的头文件及lib</li>
-<li>def也要改成相对路径</li>
-<li>additional Include path 要加上原有工程的路径</li>
-<li>application type 改为 exe</li>
-<li>link-system-subsystem改为console</li>
-<li>gtest gmock的runtime lib都改为/mdd</li>
-</ol>]]>
-    
-    </summary>
-    
-      <category term="UT" scheme="http://blog.decbug.com/tags/UT/"/>
-    
-      <category term="automation" scheme="http://blog.decbug.com/tags/automation/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
