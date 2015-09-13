@@ -19,6 +19,11 @@ description:
 
 <!--more-->
 
+## 分析一下需求
+- 一个input，一个button，点button就把input的内容追加到某个文件中，暂时不考虑input是否合法
+- tornado 写一个handler
+- 定时把最新的IP合并到allow_ip.con
+
 ## 安装
 ```sh
 wget https://pypi.python.org/packages/source/t/tornado/tornado-4.2.1.tar.gz
@@ -29,11 +34,10 @@ sudo python setup.py install
 ```
 
 ## 开搞
-再分析一下需求
-- 一个input，一个button，点button就把input的内容追加到某个文件中，暂时不考虑input是否合法
-- tornado 写一个handler
-- 定时把最新的IP合并到allow_ip.con
 
+
+
+----------------------------
 
 `本博客欢迎转发,但请保留原作者信息`                                                                                                                                                                          
 github:[codejuan](https://github.com/CodeJuan)
