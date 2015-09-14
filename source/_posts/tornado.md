@@ -107,6 +107,50 @@ if __name__ == "__main__":
 先写入到一个临时文件，然后定时同步到nginx的配置里include白名单文件allow_ips.conf
 
 #### 写入文件
+先实现一个最简单的，不考虑锁啊，共享之类的
+
+```python
+import tornado.ioloop
+import tornado.web
+
+class MainHandler(tornado.web.RequestHandler):
+    def get(self):
+        #self.write("Hello, world")
+        items = ["Item 1", "Item 2", "Item 3"]
+        self.render("temp.html", title="My title", items=items)
+
+class LoginHandler(tornado.web.RequestHandler):
+    file_name = "ip.txt"
+    FILE = None
+
+    def get(self):
+        self.render("login.html", title="login")
+
+    def post(self):
+        usr=self.get_argument("username", "") 
+
+        # 把用户输入的IP写入到文件
+        self.WriteIP(usr)
+        self.write("Your IP have been added to the white list\n"+usr)
+
+    # 增加一个writeIP的方法不考虑共享等问题
+    def WriteIP(self,ip):
+        self.FILE = open(self.file_name, "w") 
+        self.FILE.writelines(ip)
+
+application = tornado.web.Application([
+    (r"/", MainHandler),
+    (r"/login", LoginHandler),
+])
+
+if __name__ == "__main__":
+    application.listen(8888)
+    tornado.ioloop.IOLoop.current().start()
+
+```
+
+
+未完待续
 
 
 ----------------------------
