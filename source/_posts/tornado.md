@@ -1,5 +1,5 @@
 ---
-title: tornado 
+title: tornado+nginx+IP白名单
 date: 2015-09-13 00:00:00
 categories:
 - code
@@ -10,7 +10,7 @@ mathjax: true
 description: 
 ---
 
-## 背景
+# 背景
 实现白名单，只允许可信用户访问我的服务
 考虑采用iptables或者nginx
 
@@ -24,6 +24,7 @@ description:
 - tornado 写一个handler
 - 定时把最新的IP合并到allow_ip.con
 
+# tornado
 ## 安装
 ```sh
 wget https://pypi.python.org/packages/source/t/tornado/tornado-4.2.1.tar.gz
@@ -149,6 +150,44 @@ if __name__ == "__main__":
 
 ```
 
+# nginx
+
+## 下载安装
+
+### 源码编译
+```sh
+wget http://nginx.org/download/nginx-1.9.4.tar.gz
+tar zxvf nginx-1.9.4.tar.gz
+cd nginx-1.9.4
+./configure
+```
+提示缺少C编译器，于是`yum install gcc`
+提示缺少pcre library，于是`yum -y install pcre-devel`
+接着又提示缺少zlib。。算了，还是换别的方式吧，不从源码编了
+
+### yum安装
+```sh
+wget http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+sudo rpm -ivh nginx-release-centos-7-0.el7.ngx.noarch.rpm 
+sudo yum install nginx
+
+```
+
+### 配置nginx.conf
+```
+    server {
+        listen 8777;
+
+        location / {
+            proxy_pass http://192.168.151.55:8888/;
+        }
+    }
+
+```
+```sh
+# 测试配置是否正确
+sudo nginx -t -c /etc/nginx/nginx.conf 
+```
 
 未完待续
 
