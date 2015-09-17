@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cp -rf public/* ../blog_page/
 cd ../blog_page/
 git add .
