@@ -189,6 +189,29 @@ sudo yum install nginx
 sudo nginx -t -c /etc/nginx/nginx.conf 
 ```
 
+# iptables
+我们只是需要一个白名单而已，用nginx是不是太重型化了？
+iptables热插拔，即使生效，也支持可信ip，而且用起来比较简单。
+
+## 导入导出
+```sh
+# export the rules of iptable
+iptables-save > /some/file
+
+# restore
+iptables-restore </some/file
+```
+
+## 即时生效
+> Is a reboot required after edit/saving linux iptables?
+  >> iptables rules take effect immediately.
+  >> Changes to iptables take effect immediately when they are run.However, your language of "edit and save" makes me think you are editing a conf file or script of some kind rather than actually running the iptables commands.If you are making your changes in a script, you must make sure that script gets run in order for the changes to take affect. 
+
+## 使用
+
+
+
+
 未完待续
 
 
