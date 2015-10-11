@@ -7,7 +7,7 @@ title: Continuous Learning
 subtitle: 浮云一别后，流水十年间
 description:
 author: CodeJuan
-language: zh-CN
+language: zh-Hans
 timezone: Asia/Shanghai
 
 # URL
@@ -29,6 +29,24 @@ book_dir: book
 test_dir: test
 i18n_dir: :lang
 skip_render:
+
+# theme next
+avatar: avatar.jpg
+disqus_shortname: codejuan
+google_analytics: UA-57346409-1
+# Social links
+social:
+  github: https://github.com/codejuan
+  twitter: https://twitter.com/decbug
+  stackoverflow: http://stackoverflow.com/users/2763396/codejuan
+  #weibo: http://weibo.com/your-user-name
+  #douban: http://douban.com/people/your-user-name
+  #zhihu: http://www.zhihu.com/people/your-user-name
+links_title: Links
+# links
+links:
+  decbug: http://blog.decbug.com/
+
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -70,7 +88,7 @@ plugins:
  - hexo-generator-feed
 # - hexo-tag-emojis
 ## Themes: http://hexo.io/themes/
-theme: jacman
+theme: next
 stylus:
   compress: true
 
