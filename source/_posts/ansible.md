@@ -59,6 +59,13 @@ ansible all -m ping
 ```
 我明明已经把master加入到可信SSH里了呀，可以不用密码ssh到agent呢。
 
+## 配置ssh-agent试试
+```bash
+ssh-agent bash
+ssh-add ~/.ssh/id_rsa
+```
+还是不行
+
 ## 解决
 查看官方文档[http://docs.ansible.com/ansible/intro_inventory.html](http://docs.ansible.com/ansible/intro_inventory.html)，提到
 > `ansible_host`
@@ -95,6 +102,47 @@ ansible_ssh_pipelining
 g530 ansible_user=g530 ansible_ssh_host=192.168.161.52
 ```
 再次调用`ansible all -m ping`，提示成功
+
+# dynamic_inventory
+[http://docs.ansible.com/ansible/intro_dynamic_inventory.html](http://docs.ansible.com/ansible/intro_dynamic_inventory.html)
+暂时不看，等用到的时候再看
+
+# pattern & ad-hoc command
+也暂时略过
+
+# playbook
+
+## ping
+先写一个最简单的ping
+
+```yml
+---                                                                        
+- hosts: g530
+  tasks:
+  - name: ping
+    ping:  
+```
+
+然后调用
+```
+ansible-playbook -i /etc/ansible/hosts playbook.yml
+```
+显示
+```
+PLAY ***************************************************************************
+
+TASK [setup] *******************************************************************
+ok: [g530 -> localhost]
+
+TASK [ping] ********************************************************************
+ok: [g530 -> localhost]
+
+PLAY RECAP *********************************************************************
+g530                       : ok=2    changed=0    unreachable=0    failed=0   
+```
+说明成功
+
+
 
 ----------------------------
 
