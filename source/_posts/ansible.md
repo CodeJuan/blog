@@ -235,6 +235,14 @@ g530                       : ok=3    changed=1    unreachable=0    failed=0
 代码放在[https://github.com/CodeJuan/ansible_play/tree/master/advancded_play](https://github.com/CodeJuan/ansible_play/tree/master/advancded_play)
 
 
+# 深入学习
+已经了解了基本概念，接下来就要看一些优秀案例了
+[http://docs.ansible.com/ansible/playbooks_best_practices.html](http://docs.ansible.com/ansible/playbooks_best_practices.html)
+[https://github.com/ansible/ansible-examples](https://github.com/ansible/ansible-examples)
+
+
+
+
 
 ----------------------------
 
