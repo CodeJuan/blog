@@ -31,7 +31,7 @@ i18n_dir: :lang
 skip_render:
 
 # theme next
-avatar: avatar.jpg
+avatar: https://avatars3.githubusercontent.com/u/5423628?v=3&s=460
 disqus_shortname: codejuan
 google_analytics: UA-57346409-1
 # Social links
