@@ -142,6 +142,98 @@ g530                       : ok=2    changed=0    unreachable=0    failed=0
 ```
 说明成功
 
+代码放在[https://github.com/CodeJuan/ansible_play/tree/master/ping](https://github.com/CodeJuan/ansible_play/tree/master/ping)
+
+## advanced
+来尝试一个高端点的，带roles handler template的
+### playbook
+```yml
+---
+- name: role_handler
+  hosts: g530
+  
+  roles:
+  - test
+```
+
+### 创建roles
+```
+current_dir
+|--playbook.yml
+|--roles
+   |--test
+      |--handlers
+         |--main.yml
+      |--tasks
+         |--main.yml
+      |--templates
+         |--存放模板
+```
+需要创建一个roles文件夹，里边的子文件夹的名字就是playbook里写的roles名字
+
+### handlers
+每个role都会有handlers文件夹，里边的main.yml放一些响应事件
+```yml
+---
+- name: restart
+  service: name=iptables state=restarted enabled=yes
+```
+例子里表示重启iptables
+
+### tasks
+role的tasks里的main.yml就是真正要执行的任务
+```yml
+---
+- name: ping and restart iptables
+  ping:  
+  notify: restart test
+```
+表示先ping，然后调用handler里的restart
+
+### template
+在template里创建一个文件`haha`，将他拷贝到agent的`/tmp`
+tasks mail.yml改为
+```yml
+---
+- name: ping
+  ping:   
+  template: src=haha dest=/tmp/haha
+  notify: restart test
+```
+提示语法错误，看起来似乎一个`name`只能有一个操作
+
+改为两个name貌似就好了
+```
+---
+- name: ping
+  ping:   
+
+- name: template iptables
+  template: src=haha dest=/tmp/haha
+  notify: restart test
+```
+
+再play一下
+```
+PLAY [role_handler] ************************************************************
+
+TASK [setup] *******************************************************************
+ok: [g530 -> localhost]
+
+TASK [test : ping] *************************************************************
+ok: [g530 -> localhost]
+
+TASK [test : template iptables] ************************************************
+changed: [g530 -> localhost]
+
+PLAY RECAP *********************************************************************
+g530                       : ok=3    changed=1    unreachable=0    failed=0   
+
+```
+果然多了一个操作
+
+代码放在[https://github.com/CodeJuan/ansible_play/tree/master/advancded_play](https://github.com/CodeJuan/ansible_play/tree/master/advancded_play)
+
 
 
 ----------------------------
