@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-10-11T13:04:34.719Z</updated>
+  <updated>2015-10-14T14:49:53.771Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[学习ruby on rails]]></title>
+    <link href="http://blog.decbug.com/2015/10/14/ror/"/>
+    <id>http://blog.decbug.com/2015/10/14/ror/</id>
+    <published>2015-10-13T16:00:00.000Z</published>
+    <updated>2015-10-14T14:49:53.771Z</updated>
+    <content type="html"><![CDATA[<h1 id="入门文档">入门文档</h1><p><a href="http://guides.ruby-china.org/getting_started.html" target="_blank" rel="external">http://guides.ruby-china.org/getting_started.html</a><br><a id="more"></a></p>
+<h1 id="install">install</h1><h2 id="ruby-lang_&amp;_sqlite">ruby-lang &amp; sqlite</h2><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yum install ruby-devel sqlite sqlite-devel ruby-rdoc</span><br><span class="line"></span><br><span class="line">ruby --version</span><br><span class="line"><span class="preprocessor"># show ############</span></span><br><span class="line"><span class="preprocessor"># ruby 2.0.0p598 (2014-11-13) [x86_64-linux]</span></span><br><span class="line"><span class="preprocessor">##############</span></span><br><span class="line"></span><br><span class="line">sqlite3 --version</span><br><span class="line"><span class="preprocessor"># show ############</span></span><br><span class="line"><span class="preprocessor"># 3.7.17 2013-05-20 00:56:22 118a3b35693b134d56ebd780123b7fd6f1497668</span></span><br><span class="line"><span class="preprocessor">##############</span></span><br></pre></td></tr></table></figure>
+<h2 id="gem">gem</h2><h3 id="换源">换源</h3><p>需要换源，原因</p>
+<blockquote>
+<p>由于国内网络原因（你懂的），导致 rubygems.org 存放在 Amazon S3 上面的资源文件间歇性连接失败。所以你会与遇到 gem install rack 或 bundle install 的时候半天没有响应，具体可以用 gem install rails -V 来查看执行过程。</p>
+</blockquote>
+<p>以上引用自<a href="https://ruby.taobao.org/" target="_blank" rel="external">https://ruby.taobao.org/</a>，好人一生平安。</p>
+<h3 id="方法">方法</h3><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gem sources --add https:<span class="comment">//ruby.taobao.org/ --remove https://rubygems.org/</span></span><br><span class="line">gem sources -l</span><br><span class="line"><span class="preprocessor"># show ############</span></span><br><span class="line"><span class="preprocessor"># *** CURRENT SOURCES ***</span></span><br><span class="line"><span class="preprocessor"># </span></span><br><span class="line"><span class="preprocessor"># https://ruby.taobao.org/</span></span><br><span class="line"><span class="preprocessor">##############</span></span><br></pre></td></tr></table></figure>
+<p>说明换成了<em>taobao</em>的源</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bundle config mirror<span class="class">.https</span>:<span class="comment">//rubygems.org https://ruby.taobao.org</span></span><br></pre></td></tr></table></figure>
+<p>bundle也需要换，然而似乎还是没啥用，后面还是得改<code>Gemfile</code></p>
+<h2 id="rails">rails</h2><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem <span class="keyword">install</span> rails</span><br></pre></td></tr></table></figure>
+<p>漫长的等待，就装好了，查看一下版本吧<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rails --version</span><br><span class="line"><span class="preprocessor"># show ############</span></span><br><span class="line"><span class="preprocessor"># Rails 4.2.4</span></span><br><span class="line"><span class="preprocessor">##############</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="new_project">new project</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rails <span class="keyword">new</span> learn_ror</span><br></pre></td></tr></table></figure>
+<p>卡在<code>bundle install</code>，原因是learn_ror/Gemfile里的source指向的还是官网，所以需要手动改成淘宝的源<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">source</span> <span class="string">'https://rubygems.org'</span>                                                                                                                                                                             </span><br><span class="line"><span class="keyword">source</span> <span class="string">'https://ruby.taobao.org'</span></span><br></pre></td></tr></table></figure></p>
+<p>再次执行install<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">cd</span> learn_ror</span><br><span class="line"><span class="keyword">bundle </span>install</span><br></pre></td></tr></table></figure></p>
+<h2 id="启动">启动</h2><p>执行启动命令<br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rails <span class="keyword">server</span></span><br></pre></td></tr></table></figure></p>
+<p>提示缺少jsruntime，看了下<a href="https://github.com/rails/execjs" target="_blank" rel="external">https://github.com/rails/execjs</a>，决定采用<a href="https://github.com/cowboyd/therubyracer" target="_blank" rel="external">therubyracer</a>，在<code>Gemfile</code>里添加一行<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">https:</span><span class="comment">//github.com/cowboyd/therubyracer</span></span><br></pre></td></tr></table></figure></p>
+<p>再次bundle install，rails server，欢迎页面就出现了。</p>
+<p>如果指定端口-p，则提示create_listener没权限<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">2015</span>-<span class="number">10</span>-<span class="number">14</span> <span class="number">10</span>:<span class="number">22</span>:<span class="number">46</span>] INFO  WEBrick <span class="number">1.3</span>.1</span><br><span class="line">[<span class="number">2015</span>-<span class="number">10</span>-<span class="number">14</span> <span class="number">10</span>:<span class="number">22</span>:<span class="number">46</span>] INFO  ruby <span class="number">2.0</span>.0 (<span class="number">2014</span>-<span class="number">11</span>-<span class="number">13</span>) [x86_64-linux]</span><br><span class="line">[<span class="number">2015</span>-<span class="number">10</span>-<span class="number">14</span> <span class="number">10</span>:<span class="number">22</span>:<span class="number">46</span>] WARN  TCPServer <span class="keyword">Error</span>: Permission denied - bind(<span class="number">2</span>)</span><br><span class="line">Exiting</span><br><span class="line">/home/g640/.gem/ruby/gems/activesupport-<span class="number">4.2</span>.4/<span class="keyword">lib</span>/active_support/dependencies.rb:<span class="number">274</span>:<span class="keyword">in</span> `require<span class="comment">': cannot load such file -- abrt/handler (LoadError)</span></span><br><span class="line">	<span class="keyword">from</span> /home/g640/.gem/ruby/gems/activesupport-<span class="number">4.2</span>.4/<span class="keyword">lib</span>/active_support/dependencies.rb:<span class="number">274</span>:<span class="keyword">in</span> `block <span class="keyword">in</span> require<span class="comment">'</span></span><br><span class="line">	<span class="keyword">from</span> /home/g640/.gem/ruby/gems/activesupport-<span class="number">4.2</span>.4/<span class="keyword">lib</span>/active_support/dependencies.rb:<span class="number">240</span>:<span class="keyword">in</span> `load_dependency<span class="comment">'</span></span><br><span class="line">	<span class="keyword">from</span> /home/g640/.gem/ruby/gems/activesupport-<span class="number">4.2</span>.4/<span class="keyword">lib</span>/active_support/dependencies.rb:<span class="number">274</span>:<span class="keyword">in</span> `require<span class="comment">'</span></span><br><span class="line">	<span class="keyword">from</span> /home/g640/.gem/ruby/gems/abrt-<span class="number">0.1</span>.1/<span class="keyword">lib</span>/abrt.rb:<span class="number">6</span>:<span class="keyword">in</span> `block <span class="keyword">in</span> &lt;top (required)&gt;<span class="comment">'</span></span><br><span class="line">/usr/share/ruby/webrick/utils.rb:<span class="number">85</span>:<span class="keyword">in</span> `initialize<span class="comment">': Permission denied - bind(2) (Errno::EACCES)</span></span><br><span class="line">	<span class="keyword">from</span> /usr/share/ruby/webrick/utils.rb:<span class="number">85</span>:<span class="keyword">in</span> `<span class="keyword">new</span><span class="comment">'</span></span><br><span class="line">	<span class="keyword">from</span> /usr/share/ruby/webrick/utils.rb:<span class="number">85</span>:<span class="keyword">in</span> `block <span class="keyword">in</span> create_listeners<span class="comment">'</span></span><br></pre></td></tr></table></figure></p>
+<p>这个时候需要<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo semanage port -<span class="tag">a</span> -t http_port_t -<span class="tag">p</span> tcp <span class="number">3000</span></span><br><span class="line">sudo iptables -I INPUT -<span class="tag">p</span> TCP --dport <span class="number">3000</span> -j ACCEPT</span><br></pre></td></tr></table></figure></p>
+<h2 id="hello_world">hello world</h2><p>接下来就是照着教程做了，没啥技术含量。。。。。。。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="入门文档">入门文档</h1><p><a href="http://guides.ruby-china.org/getting_started.html">http://guides.ruby-china.org/getting_started.html</a><br>]]>
+    
+    </summary>
+    
+      <category term="rails" scheme="http://blog.decbug.com/tags/rails/"/>
+    
+      <category term="ruby" scheme="http://blog.decbug.com/tags/ruby/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[学习ansible]]></title>
@@ -213,6 +257,57 @@
   </entry>
   
   <entry>
+    <title><![CDATA[初学docker]]></title>
+    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
+    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
+    <published>2015-08-22T16:00:00.000Z</published>
+    <updated>2015-09-13T14:25:20.974Z</updated>
+    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
+<a id="more"></a>
+<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
+<h3 id="查看内核版本">查看内核版本</h3><blockquote>
+<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
+<h3 id="用脚本安装">用脚本安装</h3><ol>
+<li><p>yum package最新</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Run the Docker installation script.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
+<ol>
+<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
+<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
+<p>果然complete</p>
+<ol>
+<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
+<h2 id="进阶">进阶</h2><hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
+    
+    </summary>
+    
+      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[指标下的单元测试]]></title>
     <link href="http://blog.decbug.com/2015/08/23/fake_unit_test/"/>
     <id>http://blog.decbug.com/2015/08/23/fake_unit_test/</id>
@@ -267,57 +362,6 @@
       <category term="indicator" scheme="http://blog.decbug.com/tags/indicator/"/>
     
       <category term="unit_test" scheme="http://blog.decbug.com/tags/unit-test/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[初学docker]]></title>
-    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
-    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
-    <published>2015-08-22T16:00:00.000Z</published>
-    <updated>2015-09-13T14:25:20.974Z</updated>
-    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
-<a id="more"></a>
-<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
-<h3 id="查看内核版本">查看内核版本</h3><blockquote>
-<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
-</blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
-<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
-<h3 id="用脚本安装">用脚本安装</h3><ol>
-<li><p>yum package最新</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Run the Docker installation script.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
-<ol>
-<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
-<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
-<p>果然complete</p>
-<ol>
-<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
-<h2 id="进阶">进阶</h2><hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
-    
-    </summary>
-    
-      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -1067,91 +1111,6 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
       <category term="debug" scheme="http://blog.decbug.com/tags/debug/"/>
     
       <category term="debugdiag" scheme="http://blog.decbug.com/tags/debugdiag/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[真的是内存碎片吗]]></title>
-    <link href="http://blog.decbug.com/2015/01/15/fragment/"/>
-    <id>http://blog.decbug.com/2015/01/15/fragment/</id>
-    <published>2015-01-15T15:30:09.000Z</published>
-    <updated>2015-08-04T14:28:02.479Z</updated>
-    <content type="html"><![CDATA[<h2 id="背景">背景</h2><table>
-<thead>
-<tr>
-<th>配置</th>
-<th>参数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>系统</td>
-<td>win32</td>
-</tr>
-<tr>
-<td>CPU</td>
-<td>E5505</td>
-</tr>
-<tr>
-<td>内存</td>
-<td>4G</td>
-</tr>
-</tbody>
-</table>
-<p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>
-<a id="more"></a>
-<h2 id="调查">调查</h2><p>运行两次，在不同的地方crash，抓到两个dump，用windbg简单分析一下。</p>
-<h3 id="Crash_1_:_vector-push_back">Crash 1 : vector.push_back</h3><p>异常链:  <code>push_back -&gt; allovator -&gt; new -&gt; MemoryException</code>。说明是在<code>push_back</code>申请内存时抛出的内存异常。简单回忆一下vector的内存分配机制，vector是连续存储的容器，它在新插入一个元素的时候，如果发现当前持有的<em>内存</em>放不下，那么就会再申请一块更大的内存（内存分配策略有差异，可以简单视为两倍），然后将旧内存中的元素复制到新内存中，并释放旧内存中的元素，再插入新的元素。<br>由此猜测，push_back时vector里是不是有很多元素，使得此次会申请很大的一块连续内存，而系统没有合适的内存空间，然后申请失败抛出异常呢？<br>查看代码，并询问开发小伙，得知crash时vector中元素个数不多，push_back时申请的不会是一块很大的连续内存，难道是真的是传说中的碎片？</p>
-<h3 id="Crash_12:_CString-AppendFormat">Crash 12: CString.AppendFormat</h3><p>异常链:  <code>AppendFormat -&gt; PrepareWrite -&gt; Reallocate -&gt; MemoryException</code>。<br>有<code>allocate</code>的字样，看起来又像是在申请内存。查看一下微软CString的源码，在preparewrite函数中实现了这么一个内存算法：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//凭印象写的，领会精神</span></span><br><span class="line">PrepareWrite()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (current_len &lt; <span class="number">1</span>G)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//小于1G，每次都是申请1.5倍</span></span><br><span class="line">		new_len = current_len * <span class="number">1.5</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//大于1G，每次加1M</span></span><br><span class="line">		new_len = current_len + <span class="number">1</span>M;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PrepareWrite()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (current_len &lt; <span class="number">1</span>G)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//小于1G，每次都是申请1.5倍</span></span><br><span class="line">		new_len = current_len * <span class="number">1.5</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//大于1G，每次加1M</span></span><br><span class="line">		new_len = current_len + <span class="number">1</span>M;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>查看了当前string的长度，几百几千个字符而已，也就只申请几K内存。只是申请这么小的内存，怎么也申请失败了？</p>
-<h2 id="简单分析">简单分析</h2><p>查了下微软的一些文档</p>
-<blockquote>
-<p>.Net application, 32-bit process, 32-bit OS, 800-1200 MB</p>
-</blockquote>
-<p>微软说32位.Net程序内存在800M-1200M的时候，可能会出现out of memory的异常。</p>
-<blockquote>
-<p>High memory usage or memory leak can cause virtual memory usage in a process to keep growing over time and prevent it from ever returning to normal usage levels. The process can then run out of memory and this can cause it to terminate unexpectedly. During these out-of-memory instances, the virtual memory may fall below 1 Gb, instead of the 2 Gb allowed to Win 32 processes. This problem is sometimes caused by high memory fragmentation.</p>
-</blockquote>
-<p>微软建议虽然win32进程可以用2G，但最好是低于1G，否则可能会许多奇怪问题，有时就是内存碎片引起的。</p>
-<p>如此，可能真的是碎片引起的。</p>
-<h2 id="初步解决方法">初步解决方法</h2><p>将前面的内存降下去，就能顺利申请到内存，正常运行。但还是不能确定真的是内存碎片引起的。<br>As a modern OS, the strategy of memory allocation so sucks? I don’t think so. The  failure of memory allocattion caused by fragment. And The fragment should be caused by memory leak..</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="背景">背景</h2><table>
-<thead>
-<tr>
-<th>配置</th>
-<th>参数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>系统</td>
-<td>win32</td>
-</tr>
-<tr>
-<td>CPU</td>
-<td>E5505</td>
-</tr>
-<tr>
-<td>内存</td>
-<td>4G</td>
-</tr>
-</tbody>
-</table>
-<p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>]]>
-    
-    </summary>
-    
-      <category term="fragment" scheme="http://blog.decbug.com/tags/fragment/"/>
-    
-      <category term="memory" scheme="http://blog.decbug.com/tags/memory/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
