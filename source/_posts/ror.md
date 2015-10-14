@@ -120,6 +120,7 @@ sudo iptables -I INPUT -p TCP --dport 3000 -j ACCEPT
 
 ## hello world
 接下来就是照着教程做了，没啥技术含量。。。。。。。
+练习的代码放在[https://github.com/CodeJuan/learn_ror](https://github.com/CodeJuan/learn_ror)
 
 
 ----------------------------
