@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="Hexo,next" />
+  <meta name="keywords" content="AMQP,openstack,perfmance," />
 
 
 
@@ -39,49 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="半路出家的码农
-少时曾攻经略，长大不通权谋
-熟悉C++，了解C#/JAVA，略懂脚本。能用机器完成的工作，就不要靠人力去做。
-虽然工作中都是在windows开发，但喜欢linux
-会调试，会持续集成
-看过内核，玩过板子，搞过驱动，耍过DB，写过页面，可惜都很菜，入门级全栈。
-不算简历，只能算简介
-
-github
-stackoverflow
-twitter
-xh@decbug.com">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about me">
-<meta property="og:url" content="http://blog.decbug.com/about/index.html">
+<meta name="description" content="openstack简介The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstack性能测试器(2):消息调用过程oslo.messaging">
+<meta property="og:url" content="http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="半路出家的码农
-少时曾攻经略，长大不通权谋
-熟悉C++，了解C#/JAVA，略懂脚本。能用机器完成的工作，就不要靠人力去做。
-虽然工作中都是在windows开发，但喜欢linux
-会调试，会持续集成
-看过内核，玩过板子，搞过驱动，耍过DB，写过页面，可惜都很菜，入门级全栈。
-不算简历，只能算简介
-
-github
-stackoverflow
-twitter
-xh@decbug.com">
-<meta property="og:updated_time" content="2015-08-06T23:57:01.165Z">
+<meta property="og:description" content="openstack简介The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich s">
+<meta property="og:updated_time" content="2015-10-21T14:52:55.132Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="about me">
-<meta name="twitter:description" content="半路出家的码农
-少时曾攻经略，长大不通权谋
-熟悉C++，了解C#/JAVA，略懂脚本。能用机器完成的工作，就不要靠人力去做。
-虽然工作中都是在windows开发，但喜欢linux
-会调试，会持续集成
-看过内核，玩过板子，搞过驱动，耍过DB，写过页面，可惜都很菜，入门级全栈。
-不算简历，只能算简介
-
-github
-stackoverflow
-twitter
-xh@decbug.com">
+<meta name="twitter:title" content="openstack性能测试器(2):消息调用过程oslo.messaging">
+<meta name="twitter:description" content="openstack简介The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich s">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -91,7 +58,7 @@ xh@decbug.com">
   };
 </script>
 
-  <title> about me | Continuous Learning </title>
+  <title> openstack性能测试器(2):消息调用过程oslo.messaging | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -231,7 +198,7 @@ xh@decbug.com">
           
           
             
-              about me
+              openstack性能测试器(2):消息调用过程oslo.messaging
             
           
         </h1>
@@ -240,19 +207,34 @@ xh@decbug.com">
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2013-12-24T23:30:09+08:00" content="2013-12-24">
-            2013-12-24
+          <time itemprop="dateCreated" datetime="2015-10-16T00:00:00+08:00" content="2015-10-16">
+            2015-10-16
           </time>
         </span>
 
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
         
 
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/about/index.html#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="about/index.html" itemprop="commentsCount"></span>
+            <a href="/2015/10/16/openstack_perf_tester_2/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/16/openstack_perf_tester_2/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -266,26 +248,112 @@ xh@decbug.com">
       
 
       
-        <span itemprop="articleBody"><ul>
-<li>半路出家的码农</li>
-<li>少时曾攻经略，长大不通权谋</li>
-<li>熟悉C++，了解C#/JAVA，略懂脚本。能用机器完成的工作，就不要靠人力去做。</li>
-<li>虽然工作中都是在windows开发，但喜欢linux</li>
-<li>会调试，会持续集成</li>
-<li>看过内核，玩过板子，搞过驱动，耍过DB，写过页面，可惜都很菜，入门级全栈。</li>
-<li><a href="http://codejuan.github.io/resume/" target="_blank" rel="external">不算简历，只能算简介</a></li>
-</ul>
-<p><a href="https://github.com/CodeJuan" target="_blank" rel="external">github</a></p>
-<p><a href="http://stackoverflow.com/users/2763396/codejuan" target="_blank" rel="external">stackoverflow</a></p>
-<p><a href="http://twitter.com/decbug" target="_blank" rel="external">twitter</a></p>
-<p><a href="mailto:xh@decbug.com" target="_blank" rel="external">xh@decbug.com</a></p>
+        <span itemprop="articleBody"><h1 id="openstack简介">openstack简介</h1><p>The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich set of features. Cloud computing experts from around the world contribute to the project.<br><a id="more"></a></p>
+<p>OpenStack provides an Infrastructure-as-a-Service (IaaS) solution through a variety of complemental services. Each service offers an application programming interface (API) that facilitates this integration.</p>
+<h1 id="openstack组件">openstack组件</h1><table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Project name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard</td>
+<td>Horizon</td>
+<td>Provides a web-based self-service portal to interact with underlying OpenStack services, such as launching an instance, assigning IP addresses and configuring access controls.</td>
+</tr>
+<tr>
+<td>Compute</td>
+<td>Nova</td>
+<td>Manages the lifecycle of compute instances in an OpenStack environment. Responsibilities include spawning, scheduling and decommissioning of virtual machines on demand.</td>
+</tr>
+<tr>
+<td>Networking</td>
+<td>Neutron</td>
+<td>Enables Network-Connectivity-as-a-Service for other OpenStack services, such as OpenStack Compute. Provides an API for users to define networks and the attachments into them. Has a pluggable architecture that supports many popular networking vendors and technologies.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Storage</td>
+</tr>
+<tr>
+<td>Object Storage</td>
+<td>Swift</td>
+<td>Stores and retrieves arbitrary unstructured data objects via a RESTful, HTTP based API. It is highly fault tolerant with its data replication and scale-out architecture. Its implementation is not like a file server with mountable directories. In this case, it writes objects and files to multiple drives, ensuring the data is replicated across a server cluster.</td>
+</tr>
+<tr>
+<td>Block Storage</td>
+<td>Cinder</td>
+<td>Provides persistent block storage to running instances. Its pluggable driver architecture facilitates the creation and management of block storage devices.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Shared services</td>
+</tr>
+<tr>
+<td>Identity service</td>
+<td>Keystone</td>
+<td>Provides an authentication and authorization service for other OpenStack services. Provides a catalog of endpoints for all OpenStack services.</td>
+</tr>
+<tr>
+<td>Image service</td>
+<td>Glance</td>
+<td>Stores and retrieves virtual machine disk images. OpenStack Compute makes use of this during instance provisioning.</td>
+</tr>
+<tr>
+<td>Telemetry</td>
+<td>Ceilometer</td>
+<td>Monitors and meters the OpenStack cloud for billing, benchmarking, scalability, and statistical purposes.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Higher-level services</td>
+</tr>
+<tr>
+<td>Orchestration</td>
+<td>Heat</td>
+<td>Orchestrates multiple composite cloud applications by using either the native HOT template format or the AWS CloudFormation template format, through both an OpenStack-native REST API and a CloudFormation-compatible Query API.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="oslo-messaging">oslo.messaging</h2><p>消息组件，其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。我们要用的AMQP就是靠它来完成。</p>
+<h1 id="一个call的前世今生">一个call的前世今生</h1><p>neutron/neutron/agent/rpc.py<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PluginAPI-&#62;Target: oslo.messaging Target</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
       
     </div>
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/AMQP/" rel="tag">#AMQP</a>
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+            <a href="/tags/perfmance/" rel="tag">#perfmance</a>
+          
+        </div>
+      
 
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/16/openstack_perf_tester_1/" rel="next">openstack性能测试器(1):AMQP</a>
+            
+          </div>
+        </div>
       
 
       
@@ -418,7 +486,7 @@ xh@decbug.com">
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#openstack简介"><span class="nav-number">1.</span> <span class="nav-text">openstack简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#openstack组件"><span class="nav-number">2.</span> <span class="nav-text">openstack组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#oslo-messaging"><span class="nav-number">2.1.</span> <span class="nav-text">oslo.messaging</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一个call的前世今生"><span class="nav-number">3.</span> <span class="nav-text">一个call的前世今生</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -472,9 +540,9 @@ xh@decbug.com">
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = 'about/index.html';
-      var disqus_title = 'about me';
-      var disqus_url = 'http://blog.decbug.com/about/index.html';
+      var disqus_identifier = '2015/10/16/openstack_perf_tester_2/';
+      var disqus_title = 'openstack性能测试器(2):消息调用过程oslo.messaging';
+      var disqus_url = 'http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

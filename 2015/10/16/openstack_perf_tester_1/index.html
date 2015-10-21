@@ -55,7 +55,8 @@
 另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。
 
 有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组">
-<meta property="og:updated_time" content="2015-10-15T23:41:08.245Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/blog/master/source/image/amqp/hello-world-example-routing.png">
+<meta property="og:updated_time" content="2015-10-21T14:15:09.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openstack性能测试器(1):AMQP">
 <meta name="twitter:description" content="背景我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。
@@ -270,6 +271,16 @@
 </ul>
 <p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br><a id="more"></a></p>
 <h1 id="AMQP">AMQP</h1><p>要想做好模拟器，就需要了解AMQP协议，以及此协议在OpenStack中的应用场景。</p>
+<h2 id="概念">概念</h2><p>AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图<br><img src="https://raw.githubusercontent.com/CodeJuan/blog/master/source/image/amqp/hello-world-example-routing.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">producer-&gt;broker-&gt;consumer</span><br></pre></td></tr></table></figure></p>
+<p>producer连接broker，broker可以理解为一个消息服务器，所有的消息都是通过它来中转。<br>还有几个概念需要注意：exchange channel topic routing-key</p>
+<h2 id="openstack">openstack</h2><p>openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者皆可使用。曾描过一眼，说ubuntu用rabbit，centos用qpid。我司用的是ubuntu，那么就看rabbitMQ好了。<br>发送分为三类</p>
+<ul>
+<li>cast:发送给特定的consumer，且不等待response</li>
+<li>call：发送给特定consumer，需要等待response</li>
+<li>fanout：发送给订阅了此消息的一组consumer，不等待response</li>
+</ul>
+<h3 id="oslo-messaging">oslo.messaging</h3><p>这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。</p>
+<p>欲知后事如何，请看下集openstack的消息流程</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -292,6 +303,8 @@
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/16/openstack_perf_tester_2/" rel="prev">openstack性能测试器(2):消息调用过程oslo.messaging</a>
             
           </div>
 
@@ -363,7 +376,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -433,7 +446,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AMQP"><span class="nav-number">2.</span> <span class="nav-text">AMQP</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AMQP"><span class="nav-number">2.</span> <span class="nav-text">AMQP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">2.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#openstack"><span class="nav-number">2.2.</span> <span class="nav-text">openstack</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#oslo-messaging"><span class="nav-number">2.2.1.</span> <span class="nav-text">oslo.messaging</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
