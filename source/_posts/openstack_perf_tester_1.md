@@ -25,8 +25,28 @@ description:
 # AMQP
 要想做好模拟器，就需要了解AMQP协议，以及此协议在OpenStack中的应用场景。
 
+## 概念
+AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图
+![](https://raw.githubusercontent.com/CodeJuan/blog/master/source/image/amqp/hello-world-example-routing.png)
+```
+producer->broker->consumer
+```
+producer连接broker，broker可以理解为一个消息服务器，所有的消息都是通过它来中转。
+还有几个概念需要注意：exchange channel topic routing-key
 
 
+## openstack
+openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者皆可使用。曾描过一眼，说ubuntu用rabbit，centos用qpid。我司用的是ubuntu，那么就看rabbitMQ好了。
+发送分为三类
+- cast:发送给特定的consumer，且不等待response
+- call：发送给特定consumer，需要等待response
+- fanout：发送给订阅了此消息的一组consumer，不等待response
+
+### oslo.messaging
+这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。
+
+
+欲知后事如何，请看下集openstack的消息流程
 
 
 
