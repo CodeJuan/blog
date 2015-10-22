@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-10-21T14:52:55.132Z</updated>
+  <updated>2015-10-22T14:54:47.285Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/"/>
     <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/</id>
     <published>2015-10-15T16:00:00.000Z</published>
-    <updated>2015-10-21T14:52:55.132Z</updated>
+    <updated>2015-10-22T14:54:47.285Z</updated>
     <content type="html"><![CDATA[<h1 id="openstack简介">openstack简介</h1><p>The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich set of features. Cloud computing experts from around the world contribute to the project.<br><a id="more"></a></p>
 <p>OpenStack provides an Infrastructure-as-a-Service (IaaS) solution through a variety of complemental services. Each service offers an application programming interface (API) that facilitates this integration.</p>
 <h1 id="openstack组件">openstack组件</h1><table>
@@ -95,7 +95,12 @@
 </tbody>
 </table>
 <h2 id="oslo-messaging">oslo.messaging</h2><p>消息组件，其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。我们要用的AMQP就是靠它来完成。</p>
-<h1 id="一个call的前世今生">一个call的前世今生</h1><p>neutron/neutron/agent/rpc.py<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PluginAPI-&#62;Target: oslo.messaging Target</span><br></pre></td></tr></table></figure></p>
+<h1 id="一个call的前世今生">一个call的前世今生</h1><h2 id="neutron/common/rpc-py_init">neutron/common/rpc.py init</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">common/rpc-&#62;oslo_messaging/transport:get_transport&#10;oslo_messaging/transport-&#62;stevedore:DriverManager&#10;stevedore-&#62;impl_rabbit:get impl_rabbit&#10;impl_rabbit--&#62;stevedore:return impl_rabbit&#10;stevedore--&#62;oslo_messaging/transport:return driver&#10;oslo_messaging/transport--&#62;common/rpc:return transport</span><br></pre></td></tr></table></figure>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/amqp/1.png" alt=""></p>
+<h2 id="neutron/plugins/ml2/drivers/openvswitch/agent/ovs_neutron_agent-py">neutron/plugins/ml2/drivers/openvswitch/agent/ovs_neutron_agent.py</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OVSNeutronAgent-&#62;OVSNeutronAgent: __init__&#10;OVSNeutronAgent-&#62;OVSNeutronAgent: setup_rpc&#10;setup_rpc-&#62;OVSPluginApi: plugin_rpc = OVSPluginApi&#10;OVSPluginApi-&#62;PluginApi: __init__&#10;PluginApi-&#62;oslo_messaging/target:tartget::__init__&#10;oslo_messaging/target--&#62;PluginApi: return target&#10;PluginApi-&#62;common/rpc: get_client&#10;common/rpc-&#62;oslo_messaging/rpc/client:construct RPCClient&#10;oslo_messaging/rpc/client--&#62;common/rpc: return RPCClient&#10;common/rpc--&#62;PluginApi: return client</span><br></pre></td></tr></table></figure>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/amqp/2.png" alt=""></p>
+<h2 id="call">call</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OVSNeutronAgent-&#62;OVSPluginApi.plugin_rpc:tunnel_sync&#10;OVSPluginApi.plugin_rpc-&#62;PluginApi:tunnel_sync&#10;PluginApi-&#62;oslo_messaging/rpc/client.RPCClient:prepare&#10;oslo_messaging/rpc/client.RPCClient-&#62;oslo_messaging/rpc/client._CallContext:_prepare&#10;oslo_messaging/rpc/client._CallContext--&#62;oslo_messaging/rpc/client.RPCClient:return callContext&#10;oslo_messaging/rpc/client.RPCClient--&#62;PluginApi:return callContext&#10;PluginApi-&#62;oslo_messaging/rpc/client._CallContext: call&#10;oslo_messaging/rpc/client._CallContext-&#62;oslo_messaging/rpc/client._CallContext:make message&#10;oslo_messaging/rpc/client._CallContext-&#62;transport:send&#10;transport-&#62;AMQPDriverBase:_send&#10;AMQPDriverBase-&#62;oslo_messaging/_drivers/amqp:get connection&#10;note right of oslo_messaging/_drivers/amqp: get connection from pool&#10;oslo_messaging/_drivers/amqp--&#62;driverbase:return connection&#10;AMQPDriverBase-&#62;AMQPDriverBase: get exchange&#10;AMQPDriverBase-&#62;ReplyWaiter: _get_reply_q&#10;AMQPDriverBase-&#62;impl_rabbit:connection.topic_send&#10;impl_rabbit-&#62;impl_rabbit: connection._ensure_publishing&#10;AMQPDriverBase-&#62;ReplyWaiter: wait&#10;ReplyWaiter--&#62;AMQPDriverBase: return result&#10;AMQPDriverBase--&#62;transport: return result&#10;transport--&#62;oslo_messaging/rpc/client._CallContext: return result&#10;oslo_messaging/rpc/client._CallContext--&#62;PluginApi: return&#10;PluginApi--&#62;OVSPluginApi.plugin_rpc: return</span><br></pre></td></tr></table></figure>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/amqp/3.png" alt=""></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
