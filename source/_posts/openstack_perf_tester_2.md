@@ -37,11 +37,65 @@ Orchestration|Heat|Orchestrates multiple composite cloud applications by using e
 消息组件，其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。我们要用的AMQP就是靠它来完成。
 
 # 一个call的前世今生
-neutron/neutron/agent/rpc.py
+## neutron/common/rpc.py init
 ```sequence
-PluginAPI->Target: oslo.messaging Target
+common/rpc->oslo_messaging/transport:get_transport
+oslo_messaging/transport->stevedore:DriverManager
+stevedore->impl_rabbit:get impl_rabbit
+impl_rabbit-->stevedore:return impl_rabbit
+stevedore-->oslo_messaging/transport:return driver
+oslo_messaging/transport-->common/rpc:return transport
 ```
 
+
+![](https://github.com/CodeJuan/blog/raw/master/source/image/amqp/1.png)
+
+
+## neutron/plugins/ml2/drivers/openvswitch/agent/ovs_neutron_agent.py
+```sequence
+OVSNeutronAgent->OVSNeutronAgent: __init__
+OVSNeutronAgent->OVSNeutronAgent: setup_rpc
+setup_rpc->OVSPluginApi: plugin_rpc = OVSPluginApi
+OVSPluginApi->PluginApi: __init__
+PluginApi->oslo_messaging/target:tartget::__init__
+oslo_messaging/target-->PluginApi: return target
+PluginApi->common/rpc: get_client
+common/rpc->oslo_messaging/rpc/client:construct RPCClient
+oslo_messaging/rpc/client-->common/rpc: return RPCClient
+common/rpc-->PluginApi: return client
+```
+
+![](https://github.com/CodeJuan/blog/raw/master/source/image/amqp/2.png)
+
+
+## call
+```sequence
+OVSNeutronAgent->OVSPluginApi.plugin_rpc:tunnel_sync
+OVSPluginApi.plugin_rpc->PluginApi:tunnel_sync
+PluginApi->oslo_messaging/rpc/client.RPCClient:prepare
+oslo_messaging/rpc/client.RPCClient->oslo_messaging/rpc/client._CallContext:_prepare
+oslo_messaging/rpc/client._CallContext-->oslo_messaging/rpc/client.RPCClient:return callContext
+oslo_messaging/rpc/client.RPCClient-->PluginApi:return callContext
+PluginApi->oslo_messaging/rpc/client._CallContext: call
+oslo_messaging/rpc/client._CallContext->oslo_messaging/rpc/client._CallContext:make message
+oslo_messaging/rpc/client._CallContext->transport:send
+transport->AMQPDriverBase:_send
+AMQPDriverBase->oslo_messaging/_drivers/amqp:get connection
+note right of oslo_messaging/_drivers/amqp: get connection from pool
+oslo_messaging/_drivers/amqp-->driverbase:return connection
+AMQPDriverBase->AMQPDriverBase: get exchange
+AMQPDriverBase->ReplyWaiter: _get_reply_q
+AMQPDriverBase->impl_rabbit:connection.topic_send
+impl_rabbit->impl_rabbit: connection._ensure_publishing
+AMQPDriverBase->ReplyWaiter: wait
+ReplyWaiter-->AMQPDriverBase: return result
+AMQPDriverBase-->transport: return result
+transport-->oslo_messaging/rpc/client._CallContext: return result
+oslo_messaging/rpc/client._CallContext-->PluginApi: return
+PluginApi-->OVSPluginApi.plugin_rpc: return
+```
+
+![](https://github.com/CodeJuan/blog/raw/master/source/image/amqp/3.png)
 
 
 
