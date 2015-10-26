@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-10-22T14:54:47.285Z</updated>
+  <updated>2015-10-26T14:40:18.368Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[openstack性能测试器(3):移植rabbitmq-c]]></title>
+    <link href="http://blog.decbug.com/2015/10/26/openstack_perf_tester_3/"/>
+    <id>http://blog.decbug.com/2015/10/26/openstack_perf_tester_3/</id>
+    <published>2015-10-25T16:00:00.000Z</published>
+    <updated>2015-10-26T14:40:18.368Z</updated>
+    <content type="html"><![CDATA[<h1 id="rabbitmq">rabbitmq</h1><p>rabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是<a href="http://www.rabbitmq.com/" target="_blank" rel="external">http://www.rabbitmq.com/</a></p>
+<p>我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，下载链接是<a href="http://www.rabbitmq.com/devtools.html" target="_blank" rel="external">http://www.rabbitmq.com/devtools.html</a>，C版本的链接是<a href="https://github.com/alanxz/rabbitmq-c" target="_blank" rel="external">https://github.com/alanxz/rabbitmq-c</a></p>
+<a id="more"></a>
+<h1 id="移植">移植</h1><h2 id="编译rabbitmq-c">编译rabbitmq-c</h2><p>生产环境用的是suse，那边哥们给我的测试环境无法mount到我的本机，所以，只能在我docker ubuntu14.04来先验证一下。</p>
+<h3 id="CMake">CMake</h3><p>下载<a href="https://cmake.org/files/v3.4/cmake-3.4.0-rc2.tar.gz" target="_blank" rel="external">https://cmake.org/files/v3.4/cmake-3.4.0-rc2.tar.gz</a><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://cmake.org/files/v3.<span class="number">4</span>/cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2.tar.gz</span><br><span class="line">tar -xzvf cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2.tar.gz </span><br><span class="line"><span class="built_in">cd</span> cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2</span><br><span class="line">./bootstrap &amp;&amp; make &amp;&amp; sudo make install</span><br></pre></td></tr></table></figure></p>
+<h4 id="-/bootstrap">./bootstrap</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-- Check <span class="keyword">if</span> the system is big endian</span><br><span class="line">-- Searching <span class="number">16</span> bit <span class="built_in">integer</span></span><br><span class="line">-- Using unsigned short</span><br><span class="line">-- Check <span class="keyword">if</span> the system is big endian - little endian</span><br><span class="line">Curses libraries were not found. Curses GUI <span class="keyword">for</span> CMake will not be built.</span><br><span class="line">-- Looking <span class="keyword">for</span> elf.h</span><br><span class="line">-- Looking <span class="keyword">for</span> elf.h - found</span><br><span class="line">-- Looking <span class="keyword">for</span> a Fortran compiler</span><br><span class="line">-- Looking <span class="keyword">for</span> a Fortran compiler - NOTFOUND</span><br><span class="line">qmake: could not <span class="built_in">exec</span> <span class="string">'/usr/lib/x86_64-linux-gnu/qt4/bin/qmake'</span>: No such file or directory</span><br><span class="line">qmake: could not <span class="built_in">exec</span> <span class="string">'/usr/lib/x86_64-linux-gnu/qt4/bin/qmake'</span>: No such file or directory</span><br><span class="line">-- Performing Test run_pic_<span class="built_in">test</span></span><br><span class="line">-- Performing Test run_pic_<span class="built_in">test</span> - Success</span><br><span class="line">-- Performing Test run_inlines_hidden_<span class="built_in">test</span></span><br><span class="line">-- Performing Test run_inlines_hidden_<span class="built_in">test</span> - Success</span><br><span class="line">-- Configuring <span class="keyword">done</span></span><br><span class="line">-- Generating <span class="keyword">done</span></span><br><span class="line">-- Build files have been written to: /home/xh/save/code/cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2</span><br><span class="line">---------------------------------------------</span><br><span class="line">CMake has bootstrapped.  Now run make.</span><br></pre></td></tr></table></figure>
+<h4 id="make">make</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">61</span>%] Built target cmjsoncpp</span><br><span class="line">Scanning dependencies of target CMakeLib</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmArchiveWrite.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmBootstrapCommands1.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmBootstrapCommands2.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCacheManager.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommands.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCLocaleEnvironmentScope.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentLexer.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentParser.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentParserHelper.cxx.o</span><br></pre></td></tr></table></figure>
+<h4 id="make_install">make install</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/UtilityHeader.dsptemplate</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CTestScript.cmake.in</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CPack.GenericDescription.txt</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CPack.GenericLicense.txt</span><br></pre></td></tr></table></figure>
+<h4 id="version">version</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmake --version</span><br><span class="line"><span class="comment"># cmake version 3.4.0-rc2</span></span><br></pre></td></tr></table></figure>
+<h3 id="openssl">openssl</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.openssl.org/<span class="built_in">source</span>/openssl-<span class="number">1.0</span>.<span class="number">2</span>d.tar.gz</span><br><span class="line">tar -xzvf openssl-<span class="number">1.0</span>.<span class="number">2</span>d</span><br><span class="line"><span class="built_in">cd</span> openssl-<span class="number">1.0</span>.<span class="number">2</span>d</span><br><span class="line">./config</span><br><span class="line">make</span><br><span class="line">make <span class="built_in">test</span></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>version一下看看<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl version</span><br><span class="line"><span class="comment"># OpenSSL 1.0.1f 6 Jan 2014</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="make-1">make</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:alanxz/rabbitmq-c.git</span><br><span class="line"><span class="built_in">cd</span> rabbitmq-c</span><br><span class="line">mkdir build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">cmake ..</span><br><span class="line">cmake --build . --config BUILD_TOOLS=OFF</span><br></pre></td></tr></table></figure>
+<p><code>cmake ..</code>时会提示找不到xmlto等等，因为我不需要生成辅助工具（文档、命令行工具等等)，暂时不管它。<br><code>BUILD_TOOLS=OFF</code>就表示不生成辅助工具</p>
+<p>一路编译没有报错，至此，我们的rabbitmq就编译成功了，接下来就是要把<code>librabbitmq</code>移植到现有代码中。</p>
+<h2 id="移植过程">移植过程</h2><ul>
+<li>拷贝<code>librabbitmq</code>到原有代码中</li>
+<li>在makefile里加上<code>librabbitmq</code>的路径</li>
+<li>make，提示说找不到<code>amqp_framing.h</code>，原因是include用的是<code>&lt;&gt;</code>，而amqp_framing.h就在同一个目录。</li>
+<li>sed -i s/<amqp_framing.h>/\”amqp_framing.h\”/g改成相对路径，再次make，不报这个错了。</amqp_framing.h></li>
+<li>找不到<code>threads.h</code>，原因是没有把<code>librabbitmq/unix</code>-I，所以需要改以下路径为<code>unix/threads.h</code></li>
+<li><p>找不到<code>AMQP_PLATFORM</code>,这个是在config.h里定义的。看了下报错的c文件，确实有include了config.h，但为什么还报这个错呢？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#ifdef HAVE_CONFIG_H</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "config.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原因就在于<code>HAVE_CONFIG_H</code>了，在makefile的gcc后加上<code>-DHAVE_CONFIG_H</code>，再次编译，就OK了。</p>
+</li>
+</ul>
+<p>在ubuntu上已经搞定，接下来就是迁移到suse上。<br>关键点就在于config.h，因为config.h包含了内核版本以及epoll等等，所以需要在suse上编译一下rabbitmq-c，然后把suse上的config.h替换ubuntu上的config.h，编译就OK了。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="rabbitmq">rabbitmq</h1><p>rabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是<a href="http://www.rabbitmq.com/">http://www.rabbitmq.com/</a></p>
+<p>我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，下载链接是<a href="http://www.rabbitmq.com/devtools.html">http://www.rabbitmq.com/devtools.html</a>，C版本的链接是<a href="https://github.com/alanxz/rabbitmq-c">https://github.com/alanxz/rabbitmq-c</a></p>]]>
+    
+    </summary>
+    
+      <category term="AMQP" scheme="http://blog.decbug.com/tags/AMQP/"/>
+    
+      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
+    
+      <category term="rabbitmq" scheme="http://blog.decbug.com/tags/rabbitmq/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[openstack性能测试器(2):消息调用过程oslo.messaging]]></title>
@@ -124,7 +176,7 @@
     <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/"/>
     <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</id>
     <published>2015-10-15T16:00:00.000Z</published>
-    <updated>2015-10-21T14:15:09.540Z</updated>
+    <updated>2015-10-26T13:16:32.512Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
 <ul>
 <li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
@@ -141,6 +193,7 @@
 <li>fanout：发送给订阅了此消息的一组consumer，不等待response</li>
 </ul>
 <h3 id="oslo-messaging">oslo.messaging</h3><p>这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。</p>
+<h2 id="吐槽">吐槽</h2><p>在折腾的过程中，在oslo.messaging的tools里发现了一个<code>simulator.py</code>，就是一个消息模拟器，然而由于原有框架是C写的，历史原因只能用C再做一个模拟器。<br>其实openstack就有一个性能测试工具，名叫rally，也很不错，但是也不让用，sigh～～</p>
 <p>欲知后事如何，请看下集openstack的消息流程</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
@@ -407,57 +460,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[初学docker]]></title>
-    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
-    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
-    <published>2015-08-22T16:00:00.000Z</published>
-    <updated>2015-09-13T14:25:20.974Z</updated>
-    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
-<a id="more"></a>
-<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
-<h3 id="查看内核版本">查看内核版本</h3><blockquote>
-<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
-</blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
-<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
-<h3 id="用脚本安装">用脚本安装</h3><ol>
-<li><p>yum package最新</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Run the Docker installation script.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
-<ol>
-<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
-<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
-<p>果然complete</p>
-<ol>
-<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
-<h2 id="进阶">进阶</h2><hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
-    
-    </summary>
-    
-      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[指标下的单元测试]]></title>
     <link href="http://blog.decbug.com/2015/08/23/fake_unit_test/"/>
     <id>http://blog.decbug.com/2015/08/23/fake_unit_test/</id>
@@ -512,6 +514,57 @@
       <category term="indicator" scheme="http://blog.decbug.com/tags/indicator/"/>
     
       <category term="unit_test" scheme="http://blog.decbug.com/tags/unit-test/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[初学docker]]></title>
+    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
+    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
+    <published>2015-08-22T16:00:00.000Z</published>
+    <updated>2015-09-13T14:25:20.974Z</updated>
+    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
+<a id="more"></a>
+<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
+<h3 id="查看内核版本">查看内核版本</h3><blockquote>
+<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
+<h3 id="用脚本安装">用脚本安装</h3><ol>
+<li><p>yum package最新</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Run the Docker installation script.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
+<ol>
+<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
+<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
+<p>果然complete</p>
+<ol>
+<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
+<h2 id="进阶">进阶</h2><hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
+    
+    </summary>
+    
+      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -1118,74 +1171,6 @@ html.bat &quot;input_file_name&quot; &quot;output_name&quot;
       <category term="pandoc" scheme="http://blog.decbug.com/tags/pandoc/"/>
     
       <category term="slide" scheme="http://blog.decbug.com/tags/slide/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[学习R语言]]></title>
-    <link href="http://blog.decbug.com/2015/03/04/learning_rlang/"/>
-    <id>http://blog.decbug.com/2015/03/04/learning_rlang/</id>
-    <published>2015-03-04T15:30:09.000Z</published>
-    <updated>2015-08-04T14:28:02.471Z</updated>
-    <content type="html"><![CDATA[<h1 id="安装">安装</h1><ol>
-<li><p><a href="http://cran.r-project.org/mirrors.html" target="_blank" rel="external">mirriors</a></p>
-</li>
-<li><p>select China， <a href="http://mirror.bjtu.edu.cn/cran" target="_blank" rel="external">bjtu</a></p>
-</li>
-<li><p><a href="http://mirror.bjtu.edu.cn/cran/sources.html" target="_blank" rel="external">resouce</a> , current version is <a href="http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz" target="_blank" rel="external">R-3.1.2</a></p>
-</li>
-</ol>
-<a id="more"></a>
-<ol>
-<li><p>extract,    <code>sudo tar xf r-3.1.2.tar.gz -C extract/</code></p>
-</li>
-<li><p>view the build document,<code>vim INSTALL</code></p>
-</li>
-<li><p><code>./configure</code>,  <em>error: No F77 compiler found</em>。<a href="http://laymantech.blogbus.com/logs/80761679.html" target="_blank" rel="external">学自这里http://laymantech.blogbus.com/logs/80761679.html</a></p>
-<p>  会产生错误：configure: error: No F77 compiler found</p>
-<p>  R语言需要fortran compiler，也就是说， 在上面尝试寻找了若干种Fortran 编译器未果之后，提示你没有安装任何一种可以使用的fortran 77 编译器。随便装个gfortran就行了。</p>
-<p>  $ sudo apt-get install gfortran</p>
-<p>  再次运行./configure</p>
-<p>  $ ./configure</p>
-<p>  会产生错误：configure: error: con—with-readline=yes (default) and headers/libs are not available</p>
-<p>  首先检查是否安装readline.</p>
-<p>  $ sudo apt-get install readline-common</p>
-<p>  $ ./configure —with-readline=no</p>
-<p>  会出现错误：configure: error: —with-x=yes (default) and X11 headers/libs are no t available</p>
-<p>  $ ./configure —with-x=no —with-readline=no</p>
-<p>  配置通过，但是会产生如下warning：</p>
-<p>  configure: WARNING: you cannot build DVI versions of the R manuals</p>
-<p>  configure: WARNING: you cannot build DVI versions of all the help pages</p>
-<p>  configure: WARNING: you cannot build info or HTML versions of the R manuals</p>
-<p>  configure: WARNING: you cannot build PDF versions of the R manuals</p>
-<p>  configure: WARNING: you cannot build PDF versions of all the help pages</p>
-<p>  这是缺少生成相应格式manuals的插件，如果有需要可以依次安装。</p>
-</li>
-</ol>
-<ol>
-<li>sudo make，安装完毕。</li>
-</ol>
-<h1 id="简单试用">简单试用</h1><h3 id=""> </h3><p>cd 到bin，sudo ./R，进入R控制台<br>按照<a href="http://developer.51cto.com/art/201305/393121.htm试用一下" target="_blank" rel="external">http://developer.51cto.com/art/201305/393121.htm试用一下</a><br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install.packages(<span class="string">'quantmod'</span>) <span class="preprocessor"># 安装quantmod包 ，</span></span><br></pre></td></tr></table></figure></p>
-<p>会提示选择哪个镜像，19号beijing离我最近，于是输入19</p>
-<p>q()是退出</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="安装">安装</h1><ol>
-<li><p><a href="http://cran.r-project.org/mirrors.html">mirriors</a></p>
-</li>
-<li><p>select China， <a href="http://mirror.bjtu.edu.cn/cran">bjtu</a></p>
-</li>
-<li><p><a href="http://mirror.bjtu.edu.cn/cran/sources.html">resouce</a> , current version is <a href="http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz">R-3.1.2</a></p>
-</li>
-</ol>]]>
-    
-    </summary>
-    
-      <category term="R" scheme="http://blog.decbug.com/tags/R/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     

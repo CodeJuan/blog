@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="blog," />
+  <meta name="keywords" content="AMQP,openstack,rabbitmq," />
 
 
 
@@ -39,16 +39,19 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="用pelican或hexo建一个漂亮的博客">
+<meta name="description" content="rabbitmqrabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是http://www.rabbitmq.com/
+我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hexo and pelican">
-<meta property="og:url" content="http://blog.decbug.com/2015/06/22/Pelican_hexo/index.html">
+<meta property="og:title" content="openstack性能测试器(3):移植rabbitmq-c">
+<meta property="og:url" content="http://blog.decbug.com/2015/10/26/openstack_perf_tester_3/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="用pelican或hexo建一个漂亮的博客">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.463Z">
+<meta property="og:description" content="rabbitmqrabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是http://www.rabbitmq.com/
+我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，">
+<meta property="og:updated_time" content="2015-10-26T14:40:18.368Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hexo and pelican">
-<meta name="twitter:description" content="用pelican或hexo建一个漂亮的博客">
+<meta name="twitter:title" content="openstack性能测试器(3):移植rabbitmq-c">
+<meta name="twitter:description" content="rabbitmqrabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是http://www.rabbitmq.com/
+我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -58,7 +61,7 @@
   };
 </script>
 
-  <title> hexo and pelican | Continuous Learning </title>
+  <title> openstack性能测试器(3):移植rabbitmq-c | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -198,7 +201,7 @@
           
           
             
-              hexo and pelican
+              openstack性能测试器(3):移植rabbitmq-c
             
           
         </h1>
@@ -207,8 +210,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-06-22T00:00:00+08:00" content="2015-06-22">
-            2015-06-22
+          <time itemprop="dateCreated" datetime="2015-10-26T00:00:00+08:00" content="2015-10-26">
+            2015-10-26
           </time>
         </span>
 
@@ -233,8 +236,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/06/22/Pelican_hexo/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/22/Pelican_hexo/" itemprop="commentsCount"></span>
+            <a href="/2015/10/26/openstack_perf_tester_3/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/26/openstack_perf_tester_3/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -248,18 +251,33 @@
       
 
       
-        <span itemprop="articleBody"><p>用pelican或hexo建一个漂亮的博客<br><a id="more"></a></p>
-<h2 id="install">install</h2><h3 id="python_2-7">python 2.7</h3><p><a href="https://www.python.org/downloads/release/python-2710/" target="_blank" rel="external">https://www.python.org/downloads/release/python-2710/</a></p>
-<h3 id="easy_install">easy_install</h3><p><a href="https://pypi.python.org/pypi/setuptools" target="_blank" rel="external">https://pypi.python.org/pypi/setuptools</a><br><a href="https://bootstrap.pypa.io/ez_setup.py" target="_blank" rel="external">https://bootstrap.pypa.io/ez_setup.py</a><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\Python27\python.exe ez_setup.py</span><br></pre></td></tr></table></figure></p>
-<h3 id="pip">pip</h3><p>easy_install pip 提示找不到命令<br>设置环境变量 E:\Python27;E:\Python27\Scripts<br>其实新版的python都自带了pip，无需安装</p>
-<h3 id="make">make</h3><p><a href="http://pan.baidu.com/s/1hqzJBBe" target="_blank" rel="external">http://pan.baidu.com/s/1hqzJBBe</a><br>解压到python目录</p>
-<h3 id="pelican">pelican</h3><p>pip install pelican</p>
-<h3 id="markdown">markdown</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install markdown</span><br></pre></td></tr></table></figure>
-<h3 id="quick-start">quick-start</h3><p><a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="external">https://en.wikipedia.org/wiki/List_of_tz_database_time_zones</a><br>timezone Asia/Shanghai</p>
-<h3 id="run">run</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pelican content&#10;cd ~/projects/yoursite/output&#10;python -m pelican.server</span><br></pre></td></tr></table></figure>
-<h3 id="themes">themes</h3><p>下载themes<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pelican theme -i &#34;&#20320;&#21916;&#27426;&#30340;&#20027;&#39064;&#34;</span><br></pre></td></tr></table></figure></p>
-<h1 id="hexo">hexo</h1><h2 id="install-1">install</h2><p><a href="https://nodejs.org/dist/v0.12.5/node-v0.12.5-x86.msi" target="_blank" rel="external">download</a><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo&#10;mkdir blog&#10;cd blog&#10;hexo init&#10;npm install&#10;hexo generate&#10;hexo server</span><br></pre></td></tr></table></figure></p>
-<h2 id="theme">theme</h2><p>clone theme to folder <code>themes</code><br>_config.yml theme: jacman</p>
+        <span itemprop="articleBody"><h1 id="rabbitmq">rabbitmq</h1><p>rabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是<a href="http://www.rabbitmq.com/" target="_blank" rel="external">http://www.rabbitmq.com/</a></p>
+<p>我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，下载链接是<a href="http://www.rabbitmq.com/devtools.html" target="_blank" rel="external">http://www.rabbitmq.com/devtools.html</a>，C版本的链接是<a href="https://github.com/alanxz/rabbitmq-c" target="_blank" rel="external">https://github.com/alanxz/rabbitmq-c</a></p>
+<a id="more"></a>
+<h1 id="移植">移植</h1><h2 id="编译rabbitmq-c">编译rabbitmq-c</h2><p>生产环境用的是suse，那边哥们给我的测试环境无法mount到我的本机，所以，只能在我docker ubuntu14.04来先验证一下。</p>
+<h3 id="CMake">CMake</h3><p>下载<a href="https://cmake.org/files/v3.4/cmake-3.4.0-rc2.tar.gz" target="_blank" rel="external">https://cmake.org/files/v3.4/cmake-3.4.0-rc2.tar.gz</a><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://cmake.org/files/v3.<span class="number">4</span>/cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2.tar.gz</span><br><span class="line">tar -xzvf cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2.tar.gz </span><br><span class="line"><span class="built_in">cd</span> cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2</span><br><span class="line">./bootstrap &amp;&amp; make &amp;&amp; sudo make install</span><br></pre></td></tr></table></figure></p>
+<h4 id="-/bootstrap">./bootstrap</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-- Check <span class="keyword">if</span> the system is big endian</span><br><span class="line">-- Searching <span class="number">16</span> bit <span class="built_in">integer</span></span><br><span class="line">-- Using unsigned short</span><br><span class="line">-- Check <span class="keyword">if</span> the system is big endian - little endian</span><br><span class="line">Curses libraries were not found. Curses GUI <span class="keyword">for</span> CMake will not be built.</span><br><span class="line">-- Looking <span class="keyword">for</span> elf.h</span><br><span class="line">-- Looking <span class="keyword">for</span> elf.h - found</span><br><span class="line">-- Looking <span class="keyword">for</span> a Fortran compiler</span><br><span class="line">-- Looking <span class="keyword">for</span> a Fortran compiler - NOTFOUND</span><br><span class="line">qmake: could not <span class="built_in">exec</span> <span class="string">'/usr/lib/x86_64-linux-gnu/qt4/bin/qmake'</span>: No such file or directory</span><br><span class="line">qmake: could not <span class="built_in">exec</span> <span class="string">'/usr/lib/x86_64-linux-gnu/qt4/bin/qmake'</span>: No such file or directory</span><br><span class="line">-- Performing Test run_pic_<span class="built_in">test</span></span><br><span class="line">-- Performing Test run_pic_<span class="built_in">test</span> - Success</span><br><span class="line">-- Performing Test run_inlines_hidden_<span class="built_in">test</span></span><br><span class="line">-- Performing Test run_inlines_hidden_<span class="built_in">test</span> - Success</span><br><span class="line">-- Configuring <span class="keyword">done</span></span><br><span class="line">-- Generating <span class="keyword">done</span></span><br><span class="line">-- Build files have been written to: /home/xh/save/code/cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2</span><br><span class="line">---------------------------------------------</span><br><span class="line">CMake has bootstrapped.  Now run make.</span><br></pre></td></tr></table></figure>
+<h4 id="make">make</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">61</span>%] Built target cmjsoncpp</span><br><span class="line">Scanning dependencies of target CMakeLib</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmArchiveWrite.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmBootstrapCommands1.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmBootstrapCommands2.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCacheManager.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommands.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCLocaleEnvironmentScope.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentLexer.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentParser.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentParserHelper.cxx.o</span><br></pre></td></tr></table></figure>
+<h4 id="make_install">make install</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/UtilityHeader.dsptemplate</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CTestScript.cmake.in</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CPack.GenericDescription.txt</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CPack.GenericLicense.txt</span><br></pre></td></tr></table></figure>
+<h4 id="version">version</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmake --version</span><br><span class="line"><span class="comment"># cmake version 3.4.0-rc2</span></span><br></pre></td></tr></table></figure>
+<h3 id="openssl">openssl</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.openssl.org/<span class="built_in">source</span>/openssl-<span class="number">1.0</span>.<span class="number">2</span>d.tar.gz</span><br><span class="line">tar -xzvf openssl-<span class="number">1.0</span>.<span class="number">2</span>d</span><br><span class="line"><span class="built_in">cd</span> openssl-<span class="number">1.0</span>.<span class="number">2</span>d</span><br><span class="line">./config</span><br><span class="line">make</span><br><span class="line">make <span class="built_in">test</span></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>version一下看看<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl version</span><br><span class="line"><span class="comment"># OpenSSL 1.0.1f 6 Jan 2014</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="make-1">make</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:alanxz/rabbitmq-c.git</span><br><span class="line"><span class="built_in">cd</span> rabbitmq-c</span><br><span class="line">mkdir build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">cmake ..</span><br><span class="line">cmake --build . --config BUILD_TOOLS=OFF</span><br></pre></td></tr></table></figure>
+<p><code>cmake ..</code>时会提示找不到xmlto等等，因为我不需要生成辅助工具（文档、命令行工具等等)，暂时不管它。<br><code>BUILD_TOOLS=OFF</code>就表示不生成辅助工具</p>
+<p>一路编译没有报错，至此，我们的rabbitmq就编译成功了，接下来就是要把<code>librabbitmq</code>移植到现有代码中。</p>
+<h2 id="移植过程">移植过程</h2><ul>
+<li>拷贝<code>librabbitmq</code>到原有代码中</li>
+<li>在makefile里加上<code>librabbitmq</code>的路径</li>
+<li>make，提示说找不到<code>amqp_framing.h</code>，原因是include用的是<code>&lt;&gt;</code>，而amqp_framing.h就在同一个目录。</li>
+<li>sed -i s/<amqp_framing.h>/\”amqp_framing.h\”/g改成相对路径，再次make，不报这个错了。</amqp_framing.h></li>
+<li>找不到<code>threads.h</code>，原因是没有把<code>librabbitmq/unix</code>-I，所以需要改以下路径为<code>unix/threads.h</code></li>
+<li><p>找不到<code>AMQP_PLATFORM</code>,这个是在config.h里定义的。看了下报错的c文件，确实有include了config.h，但为什么还报这个错呢？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#ifdef HAVE_CONFIG_H</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "config.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原因就在于<code>HAVE_CONFIG_H</code>了，在makefile的gcc后加上<code>-DHAVE_CONFIG_H</code>，再次编译，就OK了。</p>
+</li>
+</ul>
+<p>在ubuntu上已经搞定，接下来就是迁移到suse上。<br>关键点就在于config.h，因为config.h包含了内核版本以及epoll等等，所以需要在suse上编译一下rabbitmq-c，然后把suse上的config.h替换ubuntu上的config.h，编译就OK了。</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -270,7 +288,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/blog/" rel="tag">#blog</a>
+            <a href="/tags/AMQP/" rel="tag">#AMQP</a>
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+            <a href="/tags/rabbitmq/" rel="tag">#rabbitmq</a>
           
         </div>
       
@@ -279,13 +301,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/06/dependency_in_sln/" rel="prev">自动生成sln中各project依赖图</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/13/Premature_Optimization/" rel="next">身边的过早优化事件</a>
+              <a href="/2015/10/16/openstack_perf_tester_2/" rel="next">openstack性能测试器(2):消息调用过程oslo.messaging</a>
             
           </div>
         </div>
@@ -421,7 +441,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#install"><span class="nav-number">1.</span> <span class="nav-text">install</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python_2-7"><span class="nav-number">1.1.</span> <span class="nav-text">python 2.7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#easy_install"><span class="nav-number">1.2.</span> <span class="nav-text">easy_install</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pip"><span class="nav-number">1.3.</span> <span class="nav-text">pip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#make"><span class="nav-number">1.4.</span> <span class="nav-text">make</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pelican"><span class="nav-number">1.5.</span> <span class="nav-text">pelican</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#markdown"><span class="nav-number">1.6.</span> <span class="nav-text">markdown</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#quick-start"><span class="nav-number">1.7.</span> <span class="nav-text">quick-start</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#run"><span class="nav-number">1.8.</span> <span class="nav-text">run</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#themes"><span class="nav-number">1.9.</span> <span class="nav-text">themes</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hexo"><span class="nav-number"></span> <span class="nav-text">hexo</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#install-1"><span class="nav-number">1.</span> <span class="nav-text">install</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theme"><span class="nav-number">2.</span> <span class="nav-text">theme</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rabbitmq"><span class="nav-number">1.</span> <span class="nav-text">rabbitmq</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#移植"><span class="nav-number">2.</span> <span class="nav-text">移植</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译rabbitmq-c"><span class="nav-number">2.1.</span> <span class="nav-text">编译rabbitmq-c</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CMake"><span class="nav-number">2.1.1.</span> <span class="nav-text">CMake</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#-/bootstrap"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">./bootstrap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#make"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">make</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#make_install"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">make install</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#version"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">version</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#openssl"><span class="nav-number">2.1.2.</span> <span class="nav-text">openssl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#make-1"><span class="nav-number">2.1.3.</span> <span class="nav-text">make</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移植过程"><span class="nav-number">2.2.</span> <span class="nav-text">移植过程</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -475,9 +495,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = '2015/06/22/Pelican_hexo/';
-      var disqus_title = 'hexo and pelican';
-      var disqus_url = 'http://blog.decbug.com/2015/06/22/Pelican_hexo/';
+      var disqus_identifier = '2015/10/26/openstack_perf_tester_3/';
+      var disqus_title = 'openstack性能测试器(3):移植rabbitmq-c';
+      var disqus_url = 'http://blog.decbug.com/2015/10/26/openstack_perf_tester_3/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

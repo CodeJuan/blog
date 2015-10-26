@@ -56,7 +56,7 @@
 
 有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组">
 <meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/blog/master/source/image/amqp/hello-world-example-routing.png">
-<meta property="og:updated_time" content="2015-10-21T14:15:09.540Z">
+<meta property="og:updated_time" content="2015-10-26T13:16:32.512Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openstack性能测试器(1):AMQP">
 <meta name="twitter:description" content="背景我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。
@@ -280,6 +280,7 @@
 <li>fanout：发送给订阅了此消息的一组consumer，不等待response</li>
 </ul>
 <h3 id="oslo-messaging">oslo.messaging</h3><p>这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。</p>
+<h2 id="吐槽">吐槽</h2><p>在折腾的过程中，在oslo.messaging的tools里发现了一个<code>simulator.py</code>，就是一个消息模拟器，然而由于原有框架是C写的，历史原因只能用C再做一个模拟器。<br>其实openstack就有一个性能测试工具，名叫rally，也很不错，但是也不让用，sigh～～</p>
 <p>欲知后事如何，请看下集openstack的消息流程</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
@@ -376,7 +377,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -390,7 +391,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">62</span>
+              <span class="site-state-item-count">63</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -446,7 +447,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AMQP"><span class="nav-number">2.</span> <span class="nav-text">AMQP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">2.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#openstack"><span class="nav-number">2.2.</span> <span class="nav-text">openstack</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#oslo-messaging"><span class="nav-number">2.2.1.</span> <span class="nav-text">oslo.messaging</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AMQP"><span class="nav-number">2.</span> <span class="nav-text">AMQP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">2.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#openstack"><span class="nav-number">2.2.</span> <span class="nav-text">openstack</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#oslo-messaging"><span class="nav-number">2.2.1.</span> <span class="nav-text">oslo.messaging</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#吐槽"><span class="nav-number">2.3.</span> <span class="nav-text">吐槽</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
