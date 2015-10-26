@@ -45,6 +45,10 @@ openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者�
 ### oslo.messaging
 这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。
 
+## 吐槽
+在折腾的过程中，在oslo.messaging的tools里发现了一个`simulator.py`，就是一个消息模拟器，然而由于原有框架是C写的，历史原因只能用C再做一个模拟器。
+其实openstack就有一个性能测试工具，名叫rally，也很不错，但是也不让用，sigh～～
+
 
 欲知后事如何，请看下集openstack的消息流程
 
