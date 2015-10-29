@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/about/index.html</loc>
+    <lastmod>2015-10-29T15:00:41.081Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</loc>
     <lastmod>2015-10-29T14:56:24.433Z</lastmod>
   </url>
@@ -92,22 +97,17 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/about/index.html</loc>
-    <lastmod>2015-08-06T23:57:01.165Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://blog.decbug.com/2015/01/18/debugdiag/</loc>
     <lastmod>2015-08-04T14:28:02.487Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
+    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
+    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
