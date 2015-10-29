@@ -35,6 +35,21 @@ producer连接broker，broker可以理解为一个消息服务器，所有的消
 还有几个概念需要注意：exchange channel topic routing-key
 
 
+等有空的时候，照着wireshark抓的包来对着讲解一下消息收发过程。
+以login为例，
+
+clien|direct|server
+-------|-------|----
+建立TCP连接| ==>|
+发送heade| ==>|
+收| <==|connection
+connection ok| ==>|
+收| <==|connection.tune
+connection.tune ok| ==>|
+open connection| ==>|
+收| <==|open connection ok
+
+
 ## openstack
 openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者皆可使用。曾描过一眼，说ubuntu用rabbit，centos用qpid。我司用的是ubuntu，那么就看rabbitMQ好了。
 发送分为三类
