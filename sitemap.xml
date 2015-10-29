@@ -2,13 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://blog.decbug.com/2015/10/26/openstack_perf_tester_3/</loc>
-    <lastmod>2015-10-26T14:40:18.368Z</lastmod>
+    <loc>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</loc>
+    <lastmod>2015-10-29T14:56:24.433Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</loc>
-    <lastmod>2015-10-26T13:16:32.512Z</lastmod>
+    <loc>http://blog.decbug.com/book/index.html</loc>
+    <lastmod>2015-10-26T14:44:40.416Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/2015/10/26/openstack_perf_tester_3/</loc>
+    <lastmod>2015-10-26T14:40:18.368Z</lastmod>
   </url>
   
   <url>
@@ -34,11 +39,6 @@
   <url>
     <loc>http://blog.decbug.com/2015/10/10/dept/</loc>
     <lastmod>2015-10-11T07:17:25.543Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.decbug.com/book/index.html</loc>
-    <lastmod>2015-10-11T07:08:00.843Z</lastmod>
   </url>
   
   <url>

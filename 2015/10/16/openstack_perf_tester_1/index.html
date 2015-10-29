@@ -56,7 +56,7 @@
 
 有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组">
 <meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/blog/master/source/image/amqp/hello-world-example-routing.png">
-<meta property="og:updated_time" content="2015-10-26T13:16:32.512Z">
+<meta property="og:updated_time" content="2015-10-29T14:56:24.433Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openstack性能测试器(1):AMQP">
 <meta name="twitter:description" content="背景我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。
@@ -273,6 +273,58 @@
 <h1 id="AMQP">AMQP</h1><p>要想做好模拟器，就需要了解AMQP协议，以及此协议在OpenStack中的应用场景。</p>
 <h2 id="概念">概念</h2><p>AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图<br><img src="https://raw.githubusercontent.com/CodeJuan/blog/master/source/image/amqp/hello-world-example-routing.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">producer-&gt;broker-&gt;consumer</span><br></pre></td></tr></table></figure></p>
 <p>producer连接broker，broker可以理解为一个消息服务器，所有的消息都是通过它来中转。<br>还有几个概念需要注意：exchange channel topic routing-key</p>
+<p>等有空的时候，照着wireshark抓的包来对着讲解一下消息收发过程。<br>以login为例，</p>
+<table>
+<thead>
+<tr>
+<th>clien</th>
+<th>direct</th>
+<th>server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>建立TCP连接</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>发送heade</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>connection</td>
+</tr>
+<tr>
+<td>connection ok</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>connection.tune</td>
+</tr>
+<tr>
+<td>connection.tune ok</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>open connection</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>open connection ok</td>
+</tr>
+</tbody>
+</table>
 <h2 id="openstack">openstack</h2><p>openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者皆可使用。曾描过一眼，说ubuntu用rabbit，centos用qpid。我司用的是ubuntu，那么就看rabbitMQ好了。<br>发送分为三类</p>
 <ul>
 <li>cast:发送给特定的consumer，且不等待response</li>
