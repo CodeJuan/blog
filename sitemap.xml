@@ -2,13 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://blog.decbug.com/about/index.html</loc>
-    <lastmod>2015-10-29T15:00:41.081Z</lastmod>
+    <loc>http://blog.decbug.com/2015/11/01/ansible4ci_distributed/</loc>
+    <lastmod>2015-11-01T13:09:42.354Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/2015/11/01/cobbler/</loc>
+    <lastmod>2015-11-01T13:08:05.434Z</lastmod>
   </url>
   
   <url>
     <loc>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</loc>
-    <lastmod>2015-10-29T14:56:24.433Z</lastmod>
+    <lastmod>2015-11-01T13:06:11.378Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/about/index.html</loc>
+    <lastmod>2015-10-29T15:00:41.081Z</lastmod>
   </url>
   
   <url>
@@ -117,12 +127,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
+    <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
+    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   

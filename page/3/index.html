@@ -199,6 +199,197 @@
           
           
             
+              <a class="post-title-link" href="/2015/03/27/gprof_sprof_perf/" itemprop="url">
+                Linux C++性能调优笔记
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-03-27T23:30:09+08:00" content="2015-03-27">
+            2015-03-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/03/27/gprof_sprof_perf/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/27/gprof_sprof_perf/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h2 id="前言">前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
+<p>此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。</p>
+<p>每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/03/27/gprof_sprof_perf/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/03/10/mark2html/" itemprop="url">
+                pandoc---markdown转换利器
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-03-10T23:30:09+08:00" content="2015-03-10">
+            2015-03-10
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/03/10/mark2html/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/10/mark2html/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="背景">背景</h1><p>项目要发布一堆开发文档，并支持快速更新。经过我的不断安利，领导同意用markdown（<em>感觉好有成就感啊</em>）。<br>经过一番探索，决定采用<a href="http://johnmacfarlane.net/pandoc/index.html">pandoc</a>，因为功能真的很强大，请看官网介绍</p>
+<blockquote>
+<p>If you need to convert files from one markup format into another, pandoc is your swiss-army knife. Pandoc can convert documents in markdown, reStructuredText, textile, HTML, DocBook, LaTeX, MediaWiki markup, TWiki markup, OPML, Emacs Org-Mode, Txt2Tags, Microsoft Word docx, EPUB, or Haddock markup to</p>
+<pre><code>-<span class="ruby"> <span class="constant">HTML</span> <span class="symbol">formats:</span> <span class="constant">XHTML</span>, <span class="constant">HTML5</span>, <span class="keyword">and</span> <span class="constant">HTML</span> slide shows using <span class="constant">Slidy</span>, reveal.js, <span class="constant">Slideous</span>, <span class="constant">S5</span>, <span class="keyword">or</span> <span class="constant">DZSlides</span>.
+</span>-<span class="ruby"> <span class="constant">Word</span> processor <span class="symbol">formats:</span> <span class="constant">Microsoft</span> <span class="constant">Word</span> docx, <span class="constant">OpenOffice</span>/<span class="constant">LibreOffice</span> <span class="constant">ODT</span>, <span class="constant">OpenDocument</span> <span class="constant">XML</span>
+</span>-<span class="ruby"> <span class="constant">Ebooks</span><span class="symbol">:</span> <span class="constant">EPUB</span> version <span class="number">2</span> <span class="keyword">or</span> <span class="number">3</span>, <span class="constant">FictionBook2</span>
+</span>-<span class="ruby"> <span class="constant">Documentation</span> <span class="symbol">formats:</span> <span class="constant">DocBook</span>, <span class="constant">GNU</span> <span class="constant">TexInfo</span>, <span class="constant">Groff</span> man pages, <span class="constant">Haddock</span> markup
+</span>-<span class="ruby"> <span class="constant">Page</span> layout <span class="symbol">formats:</span> <span class="constant">InDesign</span> <span class="constant">ICML</span>
+</span>-<span class="ruby"> <span class="constant">Outline</span> <span class="symbol">formats:</span> <span class="constant">OPML</span>
+</span>-<span class="ruby"> <span class="constant">TeX</span> <span class="symbol">formats:</span> <span class="constant">LaTeX</span>, <span class="constant">ConTeXt</span>, <span class="constant">LaTeX</span> <span class="constant">Beamer</span> slides
+</span>-<span class="ruby"> <span class="constant">PDF</span> via <span class="constant">LaTeX</span>
+</span>-<span class="ruby"> <span class="constant">Lightweight</span> markup <span class="symbol">formats:</span> <span class="constant">Markdown</span>, reStructuredText, <span class="constant">AsciiDoc</span>, <span class="constant">MediaWiki</span> markup, <span class="constant">DokuWiki</span> markup, <span class="constant">Emacs</span> <span class="constant">Org</span>-<span class="constant">Mode</span>, <span class="constant">Textile</span>
+</span>-<span class="ruby"> <span class="constant">Custom</span> <span class="symbol">formats:</span> custom writers can be written <span class="keyword">in</span> lua.</span>
+</code></pre></blockquote>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/03/10/mark2html/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/03/04/learning_rlang/" itemprop="url">
                 学习R语言
               </a>
@@ -950,188 +1141,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2014/11/29/gtest_gmock/" itemprop="url">
-                学习gtest&gmock
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2014-11-29T00:00:00+08:00" content="2014-11-29">
-            2014-11-29
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2014/11/29/gtest_gmock/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/29/gtest_gmock/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h3 id="UT">UT</h3><p>单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。</p>
-<p>所以，作为码农，必须掌握单元测试的方法，并将UT集成到本地构建及CI服务器上，这样无论是新开发，还是维护重构等等，都能对我们的改动进行检测，及时反馈。</p>
-<p>以前用过JUnit和CppUnit，已不太适合当前开发。很多同僚都推荐gtest，我自然不能错过。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/29/gtest_gmock/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2014/11/26/test_gcc_gdb/" itemprop="url">
-                学习GCC & GDB
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2014-11-26T00:00:00+08:00" content="2014-11-26">
-            2014-11-26
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2014/11/26/test_gcc_gdb/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/26/test_gcc_gdb/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h3 id="前言">前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
-<h3 id="GCC">GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
-<blockquote>
-<p>gcc -E  test.c -o test.i 中间文件<br>gcc -S test.i -o test.s  ASM<br>gcc -c test.s -o test.o  OBJ<br>gcc test.o -o test       可执行文件</p>
-</blockquote>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/26/test_gcc_gdb/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1170,7 +1179,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-count">36</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1184,7 +1193,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-count">66</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

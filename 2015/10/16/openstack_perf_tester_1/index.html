@@ -55,8 +55,8 @@
 另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。
 
 有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组">
-<meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/blog/master/source/image/amqp/hello-world-example-routing.png">
-<meta property="og:updated_time" content="2015-10-29T14:56:24.433Z">
+<meta property="og:image" content="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/hello-world-example-routing.png">
+<meta property="og:updated_time" content="2015-11-01T13:06:11.378Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openstack性能测试器(1):AMQP">
 <meta name="twitter:description" content="背景我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。
@@ -271,7 +271,7 @@
 </ul>
 <p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br><a id="more"></a></p>
 <h1 id="AMQP">AMQP</h1><p>要想做好模拟器，就需要了解AMQP协议，以及此协议在OpenStack中的应用场景。</p>
-<h2 id="概念">概念</h2><p>AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图<br><img src="https://raw.githubusercontent.com/CodeJuan/blog/master/source/image/amqp/hello-world-example-routing.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">producer-&gt;broker-&gt;consumer</span><br></pre></td></tr></table></figure></p>
+<h2 id="概念">概念</h2><p>AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/hello-world-example-routing.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">producer-&gt;broker-&gt;consumer</span><br></pre></td></tr></table></figure></p>
 <p>producer连接broker，broker可以理解为一个消息服务器，所有的消息都是通过它来中转。<br>还有几个概念需要注意：exchange channel topic routing-key</p>
 <p>等有空的时候，照着wireshark抓的包来对着讲解一下消息收发过程。<br>以login为例，</p>
 <table>
@@ -429,7 +429,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-count">36</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -443,7 +443,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-count">66</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
