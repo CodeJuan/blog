@@ -42,7 +42,7 @@
 <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Continuous Learning">
-<meta property="og:url" content="http://blog.decbug.com/page/2/index.html">
+<meta property="og:url" content="http://blog.decbug.com/page/7/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -199,8 +199,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/14/ror/" itemprop="url">
-                学习ruby on rails
+              <a class="post-title-link" href="/2014/11/29/gtest_gmock/" itemprop="url">
+                学习gtest&gmock
               </a>
             
           
@@ -210,8 +210,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-14T00:00:00+08:00" content="2015-10-14">
-            2015-10-14
+          <time itemprop="dateCreated" datetime="2014-11-29T00:00:00+08:00" content="2014-11-29">
+            2014-11-29
           </time>
         </span>
 
@@ -236,8 +236,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/14/ror/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/14/ror/" itemprop="commentsCount"></span>
+            <a href="/2014/11/29/gtest_gmock/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/29/gtest_gmock/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -252,9 +252,11 @@
 
       
         
-          <h1 id="入门文档">入门文档</h1><p><a href="http://guides.ruby-china.org/getting_started.html">http://guides.ruby-china.org/getting_started.html</a><br>
+          <h3 id="UT">UT</h3><p>单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。</p>
+<p>所以，作为码农，必须掌握单元测试的方法，并将UT集成到本地构建及CI服务器上，这样无论是新开发，还是维护重构等等，都能对我们的改动进行检测，及时反馈。</p>
+<p>以前用过JUnit和CppUnit，已不太适合当前开发。很多同僚都推荐gtest，我自然不能错过。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/14/ror/#more" rel="contents">
+            <a class="btn" href="/2014/11/29/gtest_gmock/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -287,8 +289,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/11/ansible/" itemprop="url">
-                学习ansible
+              <a class="post-title-link" href="/2014/11/26/test_gcc_gdb/" itemprop="url">
+                学习GCC & GDB
               </a>
             
           
@@ -298,8 +300,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-11T00:00:00+08:00" content="2015-10-11">
-            2015-10-11
+          <time itemprop="dateCreated" datetime="2014-11-26T00:00:00+08:00" content="2014-11-26">
+            2014-11-26
           </time>
         </span>
 
@@ -324,8 +326,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/11/ansible/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/11/ansible/" itemprop="commentsCount"></span>
+            <a href="/2014/11/26/test_gcc_gdb/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/26/test_gcc_gdb/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -340,9 +342,13 @@
 
       
         
-          <h1 id="入门文档">入门文档</h1><p>开始get ops技能，自动部署应该算是基础的基础了吧，而ansible美名远扬，自然不能错过。<br>先从入门文档开始<a href="http://docs.ansible.com/">http://docs.ansible.com/</a><br>
+          <h3 id="前言">前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
+<h3 id="GCC">GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
+<blockquote>
+<p>gcc -E  test.c -o test.i 中间文件<br>gcc -S test.i -o test.s  ASM<br>gcc -c test.s -o test.o  OBJ<br>gcc test.o -o test       可执行文件</p>
+</blockquote>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/11/ansible/#more" rel="contents">
+            <a class="btn" href="/2014/11/26/test_gcc_gdb/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -375,8 +381,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/10/dept/" itemprop="url">
-                换部门
+              <a class="post-title-link" href="/2014/11/19/CompareWinPE/" itemprop="url">
+                比较WinPE文件(忽略时间戳)
               </a>
             
           
@@ -386,8 +392,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-10T00:00:00+08:00" content="2015-10-10">
-            2015-10-10
+          <time itemprop="dateCreated" datetime="2014-11-19T00:00:00+08:00" content="2014-11-19">
+            2014-11-19
           </time>
         </span>
 
@@ -396,8 +402,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/mumble/" itemprop="url" rel="index">
-                  <span itemprop="name">mumble</span>
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
                 </a>
               </span>
 
@@ -412,8 +418,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/10/dept/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/10/dept/" itemprop="commentsCount"></span>
+            <a href="/2014/11/19/CompareWinPE/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/19/CompareWinPE/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -428,9 +434,11 @@
 
       
         
-          <p>换了个好玩的部门<br>
+          <h2 id="背景">背景</h2><p>项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。<br>因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是有几个字节不相同。于是向我求助。</p>
+<h2 id="过程">过程</h2><p>我曾看过windows的PE文件结构，依稀记得里边会有几个字节存放TimeStamp和CheckSum，所以会有这么几个字节的差异。为避免误人子弟，特找来微软的定义看看：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _IMAGE_NT_HEADERS &#123;  </span><br><span class="line">    DWORD Signature;  </span><br><span class="line">    IMAGE_FILE_HEADER FileHeader;  </span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 OptionalHeader;  </span><br><span class="line">&#125; IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32;</span><br></pre></td></tr></table></figure>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/10/dept/#more" rel="contents">
+            <a class="btn" href="/2014/11/19/CompareWinPE/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -463,8 +471,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/09/13/tornado/" itemprop="url">
-                tornado+nginx+IP白名单
+              <a class="post-title-link" href="/2014/05/06/optimize/" itemprop="url">
+                优化草稿
               </a>
             
           
@@ -474,8 +482,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-09-13T00:00:00+08:00" content="2015-09-13">
-            2015-09-13
+          <time itemprop="dateCreated" datetime="2014-05-06T00:00:00+08:00" content="2014-05-06">
+            2014-05-06
           </time>
         </span>
 
@@ -500,8 +508,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/09/13/tornado/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/13/tornado/" itemprop="commentsCount"></span>
+            <a href="/2014/05/06/optimize/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/05/06/optimize/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -516,10 +524,15 @@
 
       
         
-          <h1 id="背景">背景</h1><p>实现白名单，只允许可信用户访问我的服务<br>考虑采用iptables或者nginx</p>
-<p>如果用nginx，那么可以建立一个<code>allow_ip.conf</code>，然后把这个配置文件include到nginx的配置中<br>用户可以主动添加他们的IP到我这，打算玩玩tornado，用户输入他的IP，然后存入到我的文件中，最后定时合并到<code>allow_ip.conf</code></p>
+          <h3 id="背景">背景</h3><p>用于大数据分析，追求速度，将所有数据都放于内存处理。分为：业务模块层，框架层，表现层。</p>
+<h3 id="流程">流程</h3><ol>
+<li>用户点击运行。</li>
+<li>框架层从文件中读入数据，进行预处理，放入内存，传递给业务层。</li>
+<li>业务层从内存中获取数据，进行二次处理，生成结果。</li>
+</ol>
+<p>循环2与3，直至处理完全部文件。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/13/tornado/#more" rel="contents">
+            <a class="btn" href="/2014/05/06/optimize/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -552,8 +565,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/09/07/multi_thread_rsync/" itemprop="url">
-                多线程同步镜像
+              <a class="post-title-link" href="/2014/04/06/memory/" itemprop="url">
+                内存基础知识
               </a>
             
           
@@ -563,8 +576,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
-            2015-09-07
+          <time itemprop="dateCreated" datetime="2014-04-06T00:00:00+08:00" content="2014-04-06">
+            2014-04-06
           </time>
         </span>
 
@@ -589,8 +602,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/09/07/multi_thread_rsync/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/multi_thread_rsync/" itemprop="commentsCount"></span>
+            <a href="/2014/04/06/memory/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/04/06/memory/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -605,14 +618,10 @@
 
       
         
-          <h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
-<h2 id="大概的思路">大概的思路</h2><ul>
-<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
-<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
-<li>记录每个href的同步状态</li>
-<li>汇总全部状态，看所有href是否都同步成功
+          <h3 id="当前问题">当前问题</h3><p>目前有一个日志分析程序，随着数据的膨胀，工具的运行性能越来越差，甚至运行过程中出现申请不到内存的情况。在任务管理器里可以看到，还有足够的内存，可是却申请不到。由于程序在运行过程中，有许多次new/delete的操作，据此推测是有太多的内存碎片，导致无法申请到足够大的连续内存。 </p>
+<h3 id="基础知识">基础知识</h3><p>new/delete做了什么？有哪些开销<br>slab<br>锁-查找空闲-找到合适大小连续的-分配-解锁。delete相反</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/07/multi_thread_rsync/#more" rel="contents">
+            <a class="btn" href="/2014/04/06/memory/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -638,7 +647,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/">&laquo;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/6/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/">&raquo;</a>
   </nav>
 
  </div>
@@ -785,7 +794,7 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = 'page/2/index.html';
+      var disqus_identifier = 'page/7/index.html';
       var disqus_title = '';
       var disqus_url = '';
 

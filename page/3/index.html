@@ -199,8 +199,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/03/27/gprof_sprof_perf/" itemprop="url">
-                Linux C++性能调优笔记
+              <a class="post-title-link" href="/2015/08/23/docker_tutorial/" itemprop="url">
+                初学docker
               </a>
             
           
@@ -210,8 +210,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-03-27T23:30:09+08:00" content="2015-03-27">
-            2015-03-27
+          <time itemprop="dateCreated" datetime="2015-08-23T00:00:00+08:00" content="2015-08-23">
+            2015-08-23
           </time>
         </span>
 
@@ -236,8 +236,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/03/27/gprof_sprof_perf/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/27/gprof_sprof_perf/" itemprop="commentsCount"></span>
+            <a href="/2015/08/23/docker_tutorial/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/23/docker_tutorial/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -252,11 +252,9 @@
 
       
         
-          <h2 id="前言">前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
-<p>此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。</p>
-<p>每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。</p>
+          <h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/03/27/gprof_sprof_perf/#more" rel="contents">
+            <a class="btn" href="/2015/08/23/docker_tutorial/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -289,8 +287,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/03/10/mark2html/" itemprop="url">
-                pandoc---markdown转换利器
+              <a class="post-title-link" href="/2015/08/23/fake_unit_test/" itemprop="url">
+                指标下的单元测试
               </a>
             
           
@@ -300,8 +298,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-03-10T23:30:09+08:00" content="2015-03-10">
-            2015-03-10
+          <time itemprop="dateCreated" datetime="2015-08-23T00:00:00+08:00" content="2015-08-23">
+            2015-08-23
           </time>
         </span>
 
@@ -326,8 +324,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/03/10/mark2html/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/10/mark2html/" itemprop="commentsCount"></span>
+            <a href="/2015/08/23/fake_unit_test/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/23/fake_unit_test/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -342,300 +340,24 @@
 
       
         
-          <h1 id="背景">背景</h1><p>项目要发布一堆开发文档，并支持快速更新。经过我的不断安利，领导同意用markdown（<em>感觉好有成就感啊</em>）。<br>经过一番探索，决定采用<a href="http://johnmacfarlane.net/pandoc/index.html">pandoc</a>，因为功能真的很强大，请看官网介绍</p>
-<blockquote>
-<p>If you need to convert files from one markup format into another, pandoc is your swiss-army knife. Pandoc can convert documents in markdown, reStructuredText, textile, HTML, DocBook, LaTeX, MediaWiki markup, TWiki markup, OPML, Emacs Org-Mode, Txt2Tags, Microsoft Word docx, EPUB, or Haddock markup to</p>
-<pre><code>-<span class="ruby"> <span class="constant">HTML</span> <span class="symbol">formats:</span> <span class="constant">XHTML</span>, <span class="constant">HTML5</span>, <span class="keyword">and</span> <span class="constant">HTML</span> slide shows using <span class="constant">Slidy</span>, reveal.js, <span class="constant">Slideous</span>, <span class="constant">S5</span>, <span class="keyword">or</span> <span class="constant">DZSlides</span>.
-</span>-<span class="ruby"> <span class="constant">Word</span> processor <span class="symbol">formats:</span> <span class="constant">Microsoft</span> <span class="constant">Word</span> docx, <span class="constant">OpenOffice</span>/<span class="constant">LibreOffice</span> <span class="constant">ODT</span>, <span class="constant">OpenDocument</span> <span class="constant">XML</span>
-</span>-<span class="ruby"> <span class="constant">Ebooks</span><span class="symbol">:</span> <span class="constant">EPUB</span> version <span class="number">2</span> <span class="keyword">or</span> <span class="number">3</span>, <span class="constant">FictionBook2</span>
-</span>-<span class="ruby"> <span class="constant">Documentation</span> <span class="symbol">formats:</span> <span class="constant">DocBook</span>, <span class="constant">GNU</span> <span class="constant">TexInfo</span>, <span class="constant">Groff</span> man pages, <span class="constant">Haddock</span> markup
-</span>-<span class="ruby"> <span class="constant">Page</span> layout <span class="symbol">formats:</span> <span class="constant">InDesign</span> <span class="constant">ICML</span>
-</span>-<span class="ruby"> <span class="constant">Outline</span> <span class="symbol">formats:</span> <span class="constant">OPML</span>
-</span>-<span class="ruby"> <span class="constant">TeX</span> <span class="symbol">formats:</span> <span class="constant">LaTeX</span>, <span class="constant">ConTeXt</span>, <span class="constant">LaTeX</span> <span class="constant">Beamer</span> slides
-</span>-<span class="ruby"> <span class="constant">PDF</span> via <span class="constant">LaTeX</span>
-</span>-<span class="ruby"> <span class="constant">Lightweight</span> markup <span class="symbol">formats:</span> <span class="constant">Markdown</span>, reStructuredText, <span class="constant">AsciiDoc</span>, <span class="constant">MediaWiki</span> markup, <span class="constant">DokuWiki</span> markup, <span class="constant">Emacs</span> <span class="constant">Org</span>-<span class="constant">Mode</span>, <span class="constant">Textile</span>
-</span>-<span class="ruby"> <span class="constant">Custom</span> <span class="symbol">formats:</span> custom writers can be written <span class="keyword">in</span> lua.</span>
-</code></pre></blockquote>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/03/10/mark2html/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/03/04/learning_rlang/" itemprop="url">
-                学习R语言
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-03-04T23:30:09+08:00" content="2015-03-04">
-            2015-03-04
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/03/04/learning_rlang/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/04/learning_rlang/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="安装">安装</h1><ol>
-<li><p><a href="http://cran.r-project.org/mirrors.html">mirriors</a></p>
-</li>
-<li><p>select China， <a href="http://mirror.bjtu.edu.cn/cran">bjtu</a></p>
-</li>
-<li><p><a href="http://mirror.bjtu.edu.cn/cran/sources.html">resouce</a> , current version is <a href="http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz">R-3.1.2</a></p>
-</li>
-</ol>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/03/04/learning_rlang/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/01/31/netcn_zblog/" itemprop="url">
-                万网免费主机搭博客
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-01-31T23:30:09+08:00" content="2015-01-31">
-            2015-01-31
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/01/31/netcn_zblog/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/31/netcn_zblog/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>最近万网搞活动，域名29，虚拟主机免费，有小朋友动了建博客的念头，于是申请好了域名、虚拟主机。但是不知道后续该如何处理，乐于助人的我自然是要帮他一把的。</p>
-<h2 id="选框架">选框架</h2><p>小朋友选的是windows主机，简单搜索了一下，zblog貌似不错，好吧，就选它了，官网链接<a href="http://www.zblogcn.com/">http://www.zblogcn.com/</a>，下载ASP版<a href="http://www.zblogcn.com/zblog/">http://www.zblogcn.com/zblog/</a>，当前最新版的Z-Blog 2.2 Prism Build 140101。</p>
-<p>解压后会看到一个release文件夹，由于后续要将release文件夹里的文件放在主机根目录，所以还要再压缩一次，格式还必须是rar，如下图所示<br><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/zblog/zlog_rar.png" alt=""></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/01/31/netcn_zblog/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/01/18/debugdiag/" itemprop="url">
-                DebugDiag使用指南
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-01-18T23:30:09+08:00" content="2015-01-18">
-            2015-01-18
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/01/18/debugdiag/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/18/debugdiag/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="DebugDiag使用指南">DebugDiag使用指南</h1><h2 id="Foreword">Foreword</h2><p>一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。<br>恰好找到了<code>DebugDiag</code>，据说很简单，微软原文如下：</p>
-<blockquote>
-<p>The right debugging tool can dramatically simplify the isolation of these problem s and the provision of solutions. There are several types of these issues for which the Debug Diagnostic Tool  is a better choice than other debugging tools</p>
-<p>Using the Windows core debuggers (Windbg.exe or Cdb.exe) for post-mortem analysis is a time consuming process and requires many debugging skills.</p>
+          <h1 id="前言">前言</h1><blockquote>
+<p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
 </blockquote>
-<p>试用之后，果然比较简单，功能也很强大。这么个挺好用的工具，还是值得安利一下的。鉴于帮助文档大多是英文版，我就顺手把<code>How to Use the Debug Diagnostic Tool (DebugDiag) to Debug User Mode Processes</code>翻译一下。</p>
+<p>距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？<br>半年前我的猜测是<code>为了提高覆盖率，写一堆无效代码</code>，然而实际情况却比这更糟糕。</p>
+<ul>
+<li>有人的测试函数的末尾始终是<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPECT_EQ(TRUE=TRUE)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样每个用例都是绿的</p>
+<ul>
+<li>还有人这么写<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//init module</span></span><br><span class="line"><span class="comment">//run module</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>测试的是整个模块的输入输出，这样可以保证覆盖率</p>
+<p>领导看到用例一片绿，覆盖率90%，觉得我们的代码质量很高。</p>
+<p>然而，这并没有什么卵用！！！<br>这真的没有什么卵用！<br>这真的没有什么卵用！<br>这真的没有什么卵用！</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/01/18/debugdiag/#more" rel="contents">
+            <a class="btn" href="/2015/08/23/fake_unit_test/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -668,8 +390,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/01/15/fragment/" itemprop="url">
-                真的是内存碎片吗
+              <a class="post-title-link" href="/2015/08/06/handle_leak/" itemprop="url">
+                抄代码引发的句柄泄漏
               </a>
             
           
@@ -679,8 +401,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-01-15T23:30:09+08:00" content="2015-01-15">
-            2015-01-15
+          <time itemprop="dateCreated" datetime="2015-08-06T00:00:00+08:00" content="2015-08-06">
+            2015-08-06
           </time>
         </span>
 
@@ -705,8 +427,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/01/15/fragment/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/15/fragment/" itemprop="commentsCount"></span>
+            <a href="/2015/08/06/handle_leak/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/06/handle_leak/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -721,31 +443,11 @@
 
       
         
-          <h2 id="背景">背景</h2><table>
-<thead>
-<tr>
-<th>配置</th>
-<th>参数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>系统</td>
-<td>win32</td>
-</tr>
-<tr>
-<td>CPU</td>
-<td>E5505</td>
-</tr>
-<tr>
-<td>内存</td>
-<td>4G</td>
-</tr>
-</tbody>
-</table>
-<p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>
+          <h1 id="背景">背景</h1><h2 id="现象">现象</h2><p>主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。<br>网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。</p>
+<p>心急的朋友可以直接看原理:<a href="https://github.com/CodeJuan/HandleLeak">https://github.com/CodeJuan/HandleLeak</a></p>
+<p>不着急的朋友可以慢慢看定位过程</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/01/15/fragment/#more" rel="contents">
+            <a class="btn" href="/2015/08/06/handle_leak/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -778,8 +480,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/01/12/jenkins/" itemprop="url">
-                用jenkins监控程序内存CPU
+              <a class="post-title-link" href="/2015/07/26/pe_depen/" itemprop="url">
+                自动生成软件中模块依赖图
               </a>
             
           
@@ -789,8 +491,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-01-12T23:30:09+08:00" content="2015-01-12">
-            2015-01-12
+          <time itemprop="dateCreated" datetime="2015-07-26T00:00:00+08:00" content="2015-07-26">
+            2015-07-26
           </time>
         </span>
 
@@ -815,8 +517,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/01/12/jenkins/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/12/jenkins/" itemprop="commentsCount"></span>
+            <a href="/2015/07/26/pe_depen/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/26/pe_depen/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -831,18 +533,15 @@
 
       
         
-          <h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
-<p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
-<p>大概原理：写个脚本</p>
-<ol>
-<li>取得构建包列表。下载没有测试过的最新的包。</li>
-<li>读配置文件，获取测试用例，期望运行时间，期望内存峰值及均值。</li>
-<li>自动运行程序，每1s采样一次进程内存大小，记录在日志里。</li>
-<li>当程序结束时，计算运行时间间隔，与期望值比较，如果超出，则红。</li>
-<li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
+          <h1 id="前言">前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
+<h1 id="思路">思路</h1><ol>
+<li>获取该软件目录下所有模块(exe和dll)</li>
+<li>通过vs自带的dumpbin命令得到每个模块文件的依赖</li>
+<li>画出graphviz的dot脚本</li>
+<li>graphviz绘图</li>
 </ol>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/01/12/jenkins/#more" rel="contents">
+            <a class="btn" href="/2015/07/26/pe_depen/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -875,8 +574,8 @@
           
           
             
-              <a class="post-title-link" href="/2014/12/27/understand_code/" itemprop="url">
-                understand your code
+              <a class="post-title-link" href="/2015/07/25/install_centos/" itemprop="url">
+                在家里玩分布式(1)install centos
               </a>
             
           
@@ -886,8 +585,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2014-12-27T23:30:09+08:00" content="2014-12-27">
-            2014-12-27
+          <time itemprop="dateCreated" datetime="2015-07-25T00:00:00+08:00" content="2015-07-25">
+            2015-07-25
           </time>
         </span>
 
@@ -912,8 +611,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2014/12/27/understand_code/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/12/27/understand_code/" itemprop="commentsCount"></span>
+            <a href="/2015/07/25/install_centos/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/25/install_centos/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -928,198 +627,15 @@
 
       
         
-          <span itemprop="articleBody"><h2 id="代码可视化">代码可视化</h2><p><a href="https://scitools.com/" target="_blank" rel="external">understand</a>，一款很强大的软件，支持C++/JAVA/VHDL等等十几种语言，可以生成依赖图，类图，调用图，控制流图。</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-</span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2014/12/24/CreateUTproject/" itemprop="url">
-                一键式给VC工程创建UT工程
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2014-12-24T23:30:09+08:00" content="2014-12-24">
-            2014-12-24
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2014/12/24/CreateUTproject/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/12/24/CreateUTproject/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
-<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
-<ol>
-<li>把某工程的vcxproj及filter拷贝到UT目录</li>
-<li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
-<li>additional path加入gtest和gmock的头文件及lib</li>
-<li>def也要改成相对路径</li>
-<li>additional Include path 要加上原有工程的路径</li>
-<li>application type 改为 exe</li>
-<li>link-system-subsystem改为console</li>
-<li>gtest gmock的runtime lib都改为/mdd</li>
-</ol>
+          <h1 id="扯淡">扯淡</h1><p>自己在家玩，买了一堆二手配件，整了4个台式机，打算</p>
+<pre><code>-<span class="ruby"> 弄个scrapy爬数据
+</span>-<span class="ruby"> 存到分布式内存数据库(redis吧)
+</span>-<span class="ruby"> 再存到分布式文件系统(打算用fastdfs)
+</span>-<span class="ruby"> 同时用storm流计算，弄个什么东西挖掘一下
+</span>-<span class="ruby"> 最后用<span class="constant">PHP</span>展示</span>
+</code></pre><p>也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/12/24/CreateUTproject/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2014/12/01/Vld2CI/" itemprop="url">
-                VLD集成到CI自动化检测内存泄露
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2014-12-01T00:00:00+08:00" content="2014-12-01">
-            2014-12-01
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2014/12/01/Vld2CI/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/12/01/Vld2CI/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="VLD简介">VLD简介</h1><blockquote>
-<p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
-</blockquote>
-<p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/">codeplex</a></p>
-<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2014/12/01/Vld2CI/#more" rel="contents">
+            <a class="btn" href="/2015/07/25/install_centos/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1145,7 +661,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/">&raquo;</a>
   </nav>
 
  </div>

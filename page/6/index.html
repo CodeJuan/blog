@@ -42,7 +42,7 @@
 <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Continuous Learning">
-<meta property="og:url" content="http://blog.decbug.com/page/2/index.html">
+<meta property="og:url" content="http://blog.decbug.com/page/6/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -199,8 +199,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/14/ror/" itemprop="url">
-                学习ruby on rails
+              <a class="post-title-link" href="/2015/01/15/fragment/" itemprop="url">
+                真的是内存碎片吗
               </a>
             
           
@@ -210,8 +210,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-14T00:00:00+08:00" content="2015-10-14">
-            2015-10-14
+          <time itemprop="dateCreated" datetime="2015-01-15T23:30:09+08:00" content="2015-01-15">
+            2015-01-15
           </time>
         </span>
 
@@ -236,8 +236,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/14/ror/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/14/ror/" itemprop="commentsCount"></span>
+            <a href="/2015/01/15/fragment/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/15/fragment/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -252,9 +252,31 @@
 
       
         
-          <h1 id="入门文档">入门文档</h1><p><a href="http://guides.ruby-china.org/getting_started.html">http://guides.ruby-china.org/getting_started.html</a><br>
+          <h2 id="背景">背景</h2><table>
+<thead>
+<tr>
+<th>配置</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统</td>
+<td>win32</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>E5505</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>4G</td>
+</tr>
+</tbody>
+</table>
+<p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/14/ror/#more" rel="contents">
+            <a class="btn" href="/2015/01/15/fragment/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -287,8 +309,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/11/ansible/" itemprop="url">
-                学习ansible
+              <a class="post-title-link" href="/2015/01/12/jenkins/" itemprop="url">
+                用jenkins监控程序内存CPU
               </a>
             
           
@@ -298,8 +320,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-11T00:00:00+08:00" content="2015-10-11">
-            2015-10-11
+          <time itemprop="dateCreated" datetime="2015-01-12T23:30:09+08:00" content="2015-01-12">
+            2015-01-12
           </time>
         </span>
 
@@ -324,8 +346,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/11/ansible/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/11/ansible/" itemprop="commentsCount"></span>
+            <a href="/2015/01/12/jenkins/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/12/jenkins/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -340,9 +362,18 @@
 
       
         
-          <h1 id="入门文档">入门文档</h1><p>开始get ops技能，自动部署应该算是基础的基础了吧，而ansible美名远扬，自然不能错过。<br>先从入门文档开始<a href="http://docs.ansible.com/">http://docs.ansible.com/</a><br>
+          <h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
+<p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
+<p>大概原理：写个脚本</p>
+<ol>
+<li>取得构建包列表。下载没有测试过的最新的包。</li>
+<li>读配置文件，获取测试用例，期望运行时间，期望内存峰值及均值。</li>
+<li>自动运行程序，每1s采样一次进程内存大小，记录在日志里。</li>
+<li>当程序结束时，计算运行时间间隔，与期望值比较，如果超出，则红。</li>
+<li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
+</ol>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/11/ansible/#more" rel="contents">
+            <a class="btn" href="/2015/01/12/jenkins/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -375,8 +406,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/10/dept/" itemprop="url">
-                换部门
+              <a class="post-title-link" href="/2014/12/27/understand_code/" itemprop="url">
+                understand your code
               </a>
             
           
@@ -386,8 +417,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-10T00:00:00+08:00" content="2015-10-10">
-            2015-10-10
+          <time itemprop="dateCreated" datetime="2014-12-27T23:30:09+08:00" content="2014-12-27">
+            2014-12-27
           </time>
         </span>
 
@@ -396,8 +427,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/mumble/" itemprop="url" rel="index">
-                  <span itemprop="name">mumble</span>
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
                 </a>
               </span>
 
@@ -412,8 +443,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/10/dept/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/10/dept/" itemprop="commentsCount"></span>
+            <a href="/2014/12/27/understand_code/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/12/27/understand_code/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -428,9 +459,106 @@
 
       
         
-          <p>换了个好玩的部门<br>
+          <span itemprop="articleBody"><h2 id="代码可视化">代码可视化</h2><p><a href="https://scitools.com/" target="_blank" rel="external">understand</a>，一款很强大的软件，支持C++/JAVA/VHDL等等十几种语言，可以生成依赖图，类图，调用图，控制流图。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+</span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2014/12/24/CreateUTproject/" itemprop="url">
+                一键式给VC工程创建UT工程
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2014-12-24T23:30:09+08:00" content="2014-12-24">
+            2014-12-24
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2014/12/24/CreateUTproject/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/12/24/CreateUTproject/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
+<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
+<ol>
+<li>把某工程的vcxproj及filter拷贝到UT目录</li>
+<li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
+<li>additional path加入gtest和gmock的头文件及lib</li>
+<li>def也要改成相对路径</li>
+<li>additional Include path 要加上原有工程的路径</li>
+<li>application type 改为 exe</li>
+<li>link-system-subsystem改为console</li>
+<li>gtest gmock的runtime lib都改为/mdd</li>
+</ol>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/10/dept/#more" rel="contents">
+            <a class="btn" href="/2014/12/24/CreateUTproject/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -463,8 +591,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/09/13/tornado/" itemprop="url">
-                tornado+nginx+IP白名单
+              <a class="post-title-link" href="/2014/12/01/Vld2CI/" itemprop="url">
+                VLD集成到CI自动化检测内存泄露
               </a>
             
           
@@ -474,8 +602,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-09-13T00:00:00+08:00" content="2015-09-13">
-            2015-09-13
+          <time itemprop="dateCreated" datetime="2014-12-01T00:00:00+08:00" content="2014-12-01">
+            2014-12-01
           </time>
         </span>
 
@@ -500,8 +628,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/09/13/tornado/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/13/tornado/" itemprop="commentsCount"></span>
+            <a href="/2014/12/01/Vld2CI/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/12/01/Vld2CI/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -516,103 +644,13 @@
 
       
         
-          <h1 id="背景">背景</h1><p>实现白名单，只允许可信用户访问我的服务<br>考虑采用iptables或者nginx</p>
-<p>如果用nginx，那么可以建立一个<code>allow_ip.conf</code>，然后把这个配置文件include到nginx的配置中<br>用户可以主动添加他们的IP到我这，打算玩玩tornado，用户输入他的IP，然后存入到我的文件中，最后定时合并到<code>allow_ip.conf</code></p>
+          <h1 id="VLD简介">VLD简介</h1><blockquote>
+<p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
+</blockquote>
+<p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/">codeplex</a></p>
+<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/13/tornado/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/09/07/multi_thread_rsync/" itemprop="url">
-                多线程同步镜像
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
-            2015-09-07
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/09/07/multi_thread_rsync/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/multi_thread_rsync/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
-<h2 id="大概的思路">大概的思路</h2><ul>
-<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
-<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
-<li>记录每个href的同步状态</li>
-<li>汇总全部状态，看所有href是否都同步成功
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/07/multi_thread_rsync/#more" rel="contents">
+            <a class="btn" href="/2014/12/01/Vld2CI/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -638,7 +676,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/">&laquo;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/5/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">&raquo;</a>
   </nav>
 
  </div>
@@ -785,7 +823,7 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = 'page/2/index.html';
+      var disqus_identifier = 'page/6/index.html';
       var disqus_title = '';
       var disqus_url = '';
 

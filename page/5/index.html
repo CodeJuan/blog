@@ -42,7 +42,7 @@
 <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Continuous Learning">
-<meta property="og:url" content="http://blog.decbug.com/page/2/index.html">
+<meta property="og:url" content="http://blog.decbug.com/page/5/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -199,8 +199,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/14/ror/" itemprop="url">
-                学习ruby on rails
+              <a class="post-title-link" href="/2015/03/27/gprof_sprof_perf/" itemprop="url">
+                Linux C++性能调优笔记
               </a>
             
           
@@ -210,8 +210,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-14T00:00:00+08:00" content="2015-10-14">
-            2015-10-14
+          <time itemprop="dateCreated" datetime="2015-03-27T23:30:09+08:00" content="2015-03-27">
+            2015-03-27
           </time>
         </span>
 
@@ -236,8 +236,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/14/ror/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/14/ror/" itemprop="commentsCount"></span>
+            <a href="/2015/03/27/gprof_sprof_perf/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/27/gprof_sprof_perf/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -252,9 +252,11 @@
 
       
         
-          <h1 id="入门文档">入门文档</h1><p><a href="http://guides.ruby-china.org/getting_started.html">http://guides.ruby-china.org/getting_started.html</a><br>
+          <h2 id="前言">前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
+<p>此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。</p>
+<p>每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/14/ror/#more" rel="contents">
+            <a class="btn" href="/2015/03/27/gprof_sprof_perf/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -287,8 +289,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/11/ansible/" itemprop="url">
-                学习ansible
+              <a class="post-title-link" href="/2015/03/10/mark2html/" itemprop="url">
+                pandoc---markdown转换利器
               </a>
             
           
@@ -298,8 +300,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-11T00:00:00+08:00" content="2015-10-11">
-            2015-10-11
+          <time itemprop="dateCreated" datetime="2015-03-10T23:30:09+08:00" content="2015-03-10">
+            2015-03-10
           </time>
         </span>
 
@@ -324,8 +326,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/11/ansible/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/11/ansible/" itemprop="commentsCount"></span>
+            <a href="/2015/03/10/mark2html/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/10/mark2html/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -340,9 +342,22 @@
 
       
         
-          <h1 id="入门文档">入门文档</h1><p>开始get ops技能，自动部署应该算是基础的基础了吧，而ansible美名远扬，自然不能错过。<br>先从入门文档开始<a href="http://docs.ansible.com/">http://docs.ansible.com/</a><br>
+          <h1 id="背景">背景</h1><p>项目要发布一堆开发文档，并支持快速更新。经过我的不断安利，领导同意用markdown（<em>感觉好有成就感啊</em>）。<br>经过一番探索，决定采用<a href="http://johnmacfarlane.net/pandoc/index.html">pandoc</a>，因为功能真的很强大，请看官网介绍</p>
+<blockquote>
+<p>If you need to convert files from one markup format into another, pandoc is your swiss-army knife. Pandoc can convert documents in markdown, reStructuredText, textile, HTML, DocBook, LaTeX, MediaWiki markup, TWiki markup, OPML, Emacs Org-Mode, Txt2Tags, Microsoft Word docx, EPUB, or Haddock markup to</p>
+<pre><code>-<span class="ruby"> <span class="constant">HTML</span> <span class="symbol">formats:</span> <span class="constant">XHTML</span>, <span class="constant">HTML5</span>, <span class="keyword">and</span> <span class="constant">HTML</span> slide shows using <span class="constant">Slidy</span>, reveal.js, <span class="constant">Slideous</span>, <span class="constant">S5</span>, <span class="keyword">or</span> <span class="constant">DZSlides</span>.
+</span>-<span class="ruby"> <span class="constant">Word</span> processor <span class="symbol">formats:</span> <span class="constant">Microsoft</span> <span class="constant">Word</span> docx, <span class="constant">OpenOffice</span>/<span class="constant">LibreOffice</span> <span class="constant">ODT</span>, <span class="constant">OpenDocument</span> <span class="constant">XML</span>
+</span>-<span class="ruby"> <span class="constant">Ebooks</span><span class="symbol">:</span> <span class="constant">EPUB</span> version <span class="number">2</span> <span class="keyword">or</span> <span class="number">3</span>, <span class="constant">FictionBook2</span>
+</span>-<span class="ruby"> <span class="constant">Documentation</span> <span class="symbol">formats:</span> <span class="constant">DocBook</span>, <span class="constant">GNU</span> <span class="constant">TexInfo</span>, <span class="constant">Groff</span> man pages, <span class="constant">Haddock</span> markup
+</span>-<span class="ruby"> <span class="constant">Page</span> layout <span class="symbol">formats:</span> <span class="constant">InDesign</span> <span class="constant">ICML</span>
+</span>-<span class="ruby"> <span class="constant">Outline</span> <span class="symbol">formats:</span> <span class="constant">OPML</span>
+</span>-<span class="ruby"> <span class="constant">TeX</span> <span class="symbol">formats:</span> <span class="constant">LaTeX</span>, <span class="constant">ConTeXt</span>, <span class="constant">LaTeX</span> <span class="constant">Beamer</span> slides
+</span>-<span class="ruby"> <span class="constant">PDF</span> via <span class="constant">LaTeX</span>
+</span>-<span class="ruby"> <span class="constant">Lightweight</span> markup <span class="symbol">formats:</span> <span class="constant">Markdown</span>, reStructuredText, <span class="constant">AsciiDoc</span>, <span class="constant">MediaWiki</span> markup, <span class="constant">DokuWiki</span> markup, <span class="constant">Emacs</span> <span class="constant">Org</span>-<span class="constant">Mode</span>, <span class="constant">Textile</span>
+</span>-<span class="ruby"> <span class="constant">Custom</span> <span class="symbol">formats:</span> custom writers can be written <span class="keyword">in</span> lua.</span>
+</code></pre></blockquote>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/11/ansible/#more" rel="contents">
+            <a class="btn" href="/2015/03/10/mark2html/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -375,8 +390,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/10/10/dept/" itemprop="url">
-                换部门
+              <a class="post-title-link" href="/2015/03/04/learning_rlang/" itemprop="url">
+                学习R语言
               </a>
             
           
@@ -386,8 +401,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-10-10T00:00:00+08:00" content="2015-10-10">
-            2015-10-10
+          <time itemprop="dateCreated" datetime="2015-03-04T23:30:09+08:00" content="2015-03-04">
+            2015-03-04
           </time>
         </span>
 
@@ -396,8 +411,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/mumble/" itemprop="url" rel="index">
-                  <span itemprop="name">mumble</span>
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
                 </a>
               </span>
 
@@ -412,8 +427,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/10/10/dept/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/10/dept/" itemprop="commentsCount"></span>
+            <a href="/2015/03/04/learning_rlang/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/04/learning_rlang/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -428,9 +443,16 @@
 
       
         
-          <p>换了个好玩的部门<br>
+          <h1 id="安装">安装</h1><ol>
+<li><p><a href="http://cran.r-project.org/mirrors.html">mirriors</a></p>
+</li>
+<li><p>select China， <a href="http://mirror.bjtu.edu.cn/cran">bjtu</a></p>
+</li>
+<li><p><a href="http://mirror.bjtu.edu.cn/cran/sources.html">resouce</a> , current version is <a href="http://mirror.bjtu.edu.cn/cran/src/base/R-3/R-3.1.2.tar.gz">R-3.1.2</a></p>
+</li>
+</ol>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/10/dept/#more" rel="contents">
+            <a class="btn" href="/2015/03/04/learning_rlang/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -463,8 +485,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/09/13/tornado/" itemprop="url">
-                tornado+nginx+IP白名单
+              <a class="post-title-link" href="/2015/01/31/netcn_zblog/" itemprop="url">
+                万网免费主机搭博客
               </a>
             
           
@@ -474,8 +496,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-09-13T00:00:00+08:00" content="2015-09-13">
-            2015-09-13
+          <time itemprop="dateCreated" datetime="2015-01-31T23:30:09+08:00" content="2015-01-31">
+            2015-01-31
           </time>
         </span>
 
@@ -500,8 +522,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/09/13/tornado/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/13/tornado/" itemprop="commentsCount"></span>
+            <a href="/2015/01/31/netcn_zblog/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/31/netcn_zblog/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -516,10 +538,11 @@
 
       
         
-          <h1 id="背景">背景</h1><p>实现白名单，只允许可信用户访问我的服务<br>考虑采用iptables或者nginx</p>
-<p>如果用nginx，那么可以建立一个<code>allow_ip.conf</code>，然后把这个配置文件include到nginx的配置中<br>用户可以主动添加他们的IP到我这，打算玩玩tornado，用户输入他的IP，然后存入到我的文件中，最后定时合并到<code>allow_ip.conf</code></p>
+          <p>最近万网搞活动，域名29，虚拟主机免费，有小朋友动了建博客的念头，于是申请好了域名、虚拟主机。但是不知道后续该如何处理，乐于助人的我自然是要帮他一把的。</p>
+<h2 id="选框架">选框架</h2><p>小朋友选的是windows主机，简单搜索了一下，zblog貌似不错，好吧，就选它了，官网链接<a href="http://www.zblogcn.com/">http://www.zblogcn.com/</a>，下载ASP版<a href="http://www.zblogcn.com/zblog/">http://www.zblogcn.com/zblog/</a>，当前最新版的Z-Blog 2.2 Prism Build 140101。</p>
+<p>解压后会看到一个release文件夹，由于后续要将release文件夹里的文件放在主机根目录，所以还要再压缩一次，格式还必须是rar，如下图所示<br><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/zblog/zlog_rar.png" alt=""></p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/13/tornado/#more" rel="contents">
+            <a class="btn" href="/2015/01/31/netcn_zblog/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -552,8 +575,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/09/07/multi_thread_rsync/" itemprop="url">
-                多线程同步镜像
+              <a class="post-title-link" href="/2015/01/18/debugdiag/" itemprop="url">
+                DebugDiag使用指南
               </a>
             
           
@@ -563,8 +586,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
-            2015-09-07
+          <time itemprop="dateCreated" datetime="2015-01-18T23:30:09+08:00" content="2015-01-18">
+            2015-01-18
           </time>
         </span>
 
@@ -589,8 +612,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/09/07/multi_thread_rsync/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/multi_thread_rsync/" itemprop="commentsCount"></span>
+            <a href="/2015/01/18/debugdiag/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/18/debugdiag/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -605,14 +628,14 @@
 
       
         
-          <h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
-<h2 id="大概的思路">大概的思路</h2><ul>
-<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
-<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
-<li>记录每个href的同步状态</li>
-<li>汇总全部状态，看所有href是否都同步成功
+          <h1 id="DebugDiag使用指南">DebugDiag使用指南</h1><h2 id="Foreword">Foreword</h2><p>一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。<br>恰好找到了<code>DebugDiag</code>，据说很简单，微软原文如下：</p>
+<blockquote>
+<p>The right debugging tool can dramatically simplify the isolation of these problem s and the provision of solutions. There are several types of these issues for which the Debug Diagnostic Tool  is a better choice than other debugging tools</p>
+<p>Using the Windows core debuggers (Windbg.exe or Cdb.exe) for post-mortem analysis is a time consuming process and requires many debugging skills.</p>
+</blockquote>
+<p>试用之后，果然比较简单，功能也很强大。这么个挺好用的工具，还是值得安利一下的。鉴于帮助文档大多是英文版，我就顺手把<code>How to Use the Debug Diagnostic Tool (DebugDiag) to Debug User Mode Processes</code>翻译一下。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/07/multi_thread_rsync/#more" rel="contents">
+            <a class="btn" href="/2015/01/18/debugdiag/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -638,7 +661,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/">&laquo;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/">&raquo;</a>
   </nav>
 
  </div>
@@ -785,7 +808,7 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = 'page/2/index.html';
+      var disqus_identifier = 'page/5/index.html';
       var disqus_title = '';
       var disqus_url = '';
 
