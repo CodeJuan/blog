@@ -39,25 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="背景项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#。当前编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不大。原因有二：
-
-构建的机器太差了，4核4G的虚拟机，蜗牛速度。
-项目中各组件（DLL）用的是隐式记载的方式。如果A依赖B，那么，必">
+<meta name="description" content="背景项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#，目前已有103万行代码。在代码只有30万行的时候，编译时间大约是10多分钟，反馈的速度足够快。然而随着代码膨胀，编译时间急剧上涨，当前的编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不">
 <meta property="og:type" content="article">
-<meta property="og:title" content="构建时间优化">
+<meta property="og:title" content="编译构建时间优化">
 <meta property="og:url" content="http://blog.decbug.com/2015/11/05/compile_optimize/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="背景项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#。当前编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不大。原因有二：
-
-构建的机器太差了，4核4G的虚拟机，蜗牛速度。
-项目中各组件（DLL）用的是隐式记载的方式。如果A依赖B，那么，必">
-<meta property="og:updated_time" content="2015-11-05T13:37:48.348Z">
+<meta property="og:description" content="背景项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#，目前已有103万行代码。在代码只有30万行的时候，编译时间大约是10多分钟，反馈的速度足够快。然而随着代码膨胀，编译时间急剧上涨，当前的编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不">
+<meta property="og:updated_time" content="2015-11-08T12:16:52.030Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="构建时间优化">
-<meta name="twitter:description" content="背景项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#。当前编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不大。原因有二：
-
-构建的机器太差了，4核4G的虚拟机，蜗牛速度。
-项目中各组件（DLL）用的是隐式记载的方式。如果A依赖B，那么，必">
+<meta name="twitter:title" content="编译构建时间优化">
+<meta name="twitter:description" content="背景项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#，目前已有103万行代码。在代码只有30万行的时候，编译时间大约是10多分钟，反馈的速度足够快。然而随着代码膨胀，编译时间急剧上涨，当前的编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -67,7 +58,7 @@
   };
 </script>
 
-  <title> 构建时间优化 | Continuous Learning </title>
+  <title> 编译构建时间优化 | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -207,7 +198,7 @@
           
           
             
-              构建时间优化
+              编译构建时间优化
             
           
         </h1>
@@ -257,7 +248,7 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="背景">背景</h1><p>项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#。<br>当前编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。<br>如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不大。<br>原因有二：</p>
+        <span itemprop="articleBody"><h1 id="背景">背景</h1><p>项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#，目前已有103万行代码。<br>在代码只有30万行的时候，编译时间大约是10多分钟，反馈的速度足够快。然而随着代码膨胀，编译时间急剧上涨，当前的编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。<br>如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不大。<br>原因有二：</p>
 <ul>
 <li>构建的机器太差了，4核4G的虚拟机，蜗牛速度。</li>
 <li>项目中各组件（DLL）用的是隐式记载的方式。如果A依赖B，那么，必须等待B编译结束，才能编译A，只能串行。</li>
@@ -533,7 +524,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
       var disqus_identifier = '2015/11/05/compile_optimize/';
-      var disqus_title = '构建时间优化';
+      var disqus_title = '编译构建时间优化';
       var disqus_url = 'http://blog.decbug.com/2015/11/05/compile_optimize/';
 
       function run_disqus_script(disqus_script){
