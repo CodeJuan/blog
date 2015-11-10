@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/</loc>
+    <lastmod>2015-11-10T16:52:13.852Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/11/05/compile_optimize/</loc>
     <lastmod>2015-11-08T12:16:52.030Z</lastmod>
   </url>

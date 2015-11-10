@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="mirror,python,rsync,wget," />
+  <meta name="keywords" content="openstack,rabbitmq,tcpdump," />
 
 
 
@@ -39,22 +39,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="背景为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。想用得爽，就得保持与官方一致，需要很频繁的同步。以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。
-大概的思路
-爬index，如hust的镜像http://mirrors.hust.edu.cn/ubuntu-releases/，找出所有h">
+<meta name="description" content="rabbitmq serverhttp://www.rabbitmq.com/download.html
+12wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.5.6/rabbitmq-server-3.5.6-1.noarch.rpmsudo rpm -ivh rabbitmq-server-3.5.6-1.noarch.rpm
+提">
 <meta property="og:type" content="article">
-<meta property="og:title" content="多线程同步镜像">
-<meta property="og:url" content="http://blog.decbug.com/2015/09/07/multi_thread_rsync/index.html">
+<meta property="og:title" content="openstack性能测试器(4):rabbitmq-server、kombu、tcpdump">
+<meta property="og:url" content="http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="背景为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。想用得爽，就得保持与官方一致，需要很频繁的同步。以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。
-大概的思路
-爬index，如hust的镜像http://mirrors.hust.edu.cn/ubuntu-releases/，找出所有h">
-<meta property="og:updated_time" content="2015-09-13T14:25:46.038Z">
+<meta property="og:description" content="rabbitmq serverhttp://www.rabbitmq.com/download.html
+12wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.5.6/rabbitmq-server-3.5.6-1.noarch.rpmsudo rpm -ivh rabbitmq-server-3.5.6-1.noarch.rpm
+提">
+<meta property="og:updated_time" content="2015-11-10T16:52:13.852Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="多线程同步镜像">
-<meta name="twitter:description" content="背景为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。想用得爽，就得保持与官方一致，需要很频繁的同步。以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。
-大概的思路
-爬index，如hust的镜像http://mirrors.hust.edu.cn/ubuntu-releases/，找出所有h">
+<meta name="twitter:title" content="openstack性能测试器(4):rabbitmq-server、kombu、tcpdump">
+<meta name="twitter:description" content="rabbitmq serverhttp://www.rabbitmq.com/download.html
+12wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.5.6/rabbitmq-server-3.5.6-1.noarch.rpmsudo rpm -ivh rabbitmq-server-3.5.6-1.noarch.rpm
+提">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -64,7 +64,7 @@
   };
 </script>
 
-  <title> 多线程同步镜像 | Continuous Learning </title>
+  <title> openstack性能测试器(4):rabbitmq-server、kombu、tcpdump | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -204,7 +204,7 @@
           
           
             
-              多线程同步镜像
+              openstack性能测试器(4):rabbitmq-server、kombu、tcpdump
             
           
         </h1>
@@ -213,8 +213,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
-            2015-09-07
+          <time itemprop="dateCreated" datetime="2015-11-10T00:00:00+08:00" content="2015-11-10">
+            2015-11-10
           </time>
         </span>
 
@@ -239,8 +239,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/09/07/multi_thread_rsync/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/multi_thread_rsync/" itemprop="commentsCount"></span>
+            <a href="/2015/11/10/openstack_perf_tester_4/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/11/10/openstack_perf_tester_4/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -254,28 +254,13 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
-<h2 id="大概的思路">大概的思路</h2><ul>
-<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/" target="_blank" rel="external">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
-<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
-<li>记录每个href的同步状态</li>
-<li>汇总全部状态，看所有href是否都同步成功<a id="more"></a>
-</li>
-</ul>
-<h2 id="shell爬">shell爬</h2><h3 id="步骤">步骤</h3><ul>
-<li>wget镜像的index.html</li>
-<li>正则匹配，找到二级目录href-</li>
-<li>xargs -P 八个线程同时wget -r</li>
-<li>有个问题，如何获取每个href的同步状态，成功还是失败？</li>
-</ul>
-<h3 id="代码">代码</h3><p>放在<a href="https://github.com/CodeJuan/multi_thread_rsync_mirror" target="_blank" rel="external">https://github.com/CodeJuan/multi_thread_rsync_mirror</a></p>
-<h4 id="wget_index-html">wget index.html</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get index.html</span></span><br><span class="line">wget <span class="variable">$link</span> -O <span class="variable">$file</span></span><br></pre></td></tr></table></figure>
-<h4 id="regex得到二级目录">regex得到二级目录</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep "href" "&lt;a" "/$"</span></span><br><span class="line"><span class="comment"># cut "\""</span></span><br><span class="line">cat <span class="variable">$bak_file</span> | grep <span class="string">"href*=*\""</span> | grep <span class="string">"&lt;a"</span> | cut <span class="operator">-d</span> <span class="string">"\""</span> <span class="operator">-f</span> <span class="number">2</span> | grep <span class="string">"/$"</span> | grep -v <span class="string">"\.\."</span></span><br></pre></td></tr></table></figure>
-<h4 id="xargs_-P_八个线程同时wget_-r">xargs -P 八个线程同时wget -r</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;whole_url_list[@]&#125;</span> | xargs -n <span class="number">1</span> -P <span class="number">8</span> ./single_down.sh <span class="string">"<span class="variable">$des</span>"</span></span><br></pre></td></tr></table></figure>
-<h4 id="还没实现获取同步状态">还没实现获取同步状态</h4><p>如果下载失败了，完全没有办法知道。<br>下一步实现</p>
-<h2 id="另一种玩法：python爬">另一种玩法：python爬</h2><h3 id="步骤-1">步骤</h3><h4 id="装beautifulsoup">装beautifulsoup</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载并安装pip</span></span><br><span class="line">wget https://pypi.python.org/packages/<span class="built_in">source</span>/p/pip/pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line">tar zxvf pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">2</span></span><br><span class="line">sudo python setup.py install</span><br><span class="line"></span><br><span class="line"><span class="comment">#装beautifulsoup4</span></span><br><span class="line">sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
-<h4 id="开始爬">开始爬</h4><p>由于index的页面都很简洁，爬起来还是相对比较容易。</p>
-<p>以后有空搞定～～</p>
+        <span itemprop="articleBody"><h1 id="rabbitmq_server">rabbitmq server</h1><p><a href="http://www.rabbitmq.com/download.html" target="_blank" rel="external">http://www.rabbitmq.com/download.html</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.<span class="number">5.6</span>/rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br><span class="line">sudo rpm -ivh rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>提示缺少erlang</p>
+<p><a href="http://www.erlang.org/download.html" target="_blank" rel="external">http://www.erlang.org/download.html</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">http://www.erlang.org/download/otp_src_18.<span class="number">1</span>.tar.gz</span><br><span class="line">tar -xvf otp_src_18.<span class="number">1</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> otp_src_18.<span class="number">1</span></span><br><span class="line">./configure</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提示缺少fop和wxWidgets</span></span><br><span class="line">sudo yum install fop</span><br><span class="line">sudo yum install wxWidgets</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh --nodeps rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -286,13 +271,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/mirror/" rel="tag">#mirror</a>
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
           
-            <a href="/tags/python/" rel="tag">#python</a>
+            <a href="/tags/rabbitmq/" rel="tag">#rabbitmq</a>
           
-            <a href="/tags/rsync/" rel="tag">#rsync</a>
-          
-            <a href="/tags/wget/" rel="tag">#wget</a>
+            <a href="/tags/tcpdump/" rel="tag">#tcpdump</a>
           
         </div>
       
@@ -301,13 +284,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/09/13/tornado/" rel="prev">tornado+nginx+IP白名单</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/08/23/fake_unit_test/" rel="next">指标下的单元测试</a>
+              <a href="/2015/11/05/compile_optimize/" rel="next">编译构建时间优化</a>
             
           </div>
         </div>
@@ -443,7 +424,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#大概的思路"><span class="nav-number">2.</span> <span class="nav-text">大概的思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell爬"><span class="nav-number">3.</span> <span class="nav-text">shell爬</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤"><span class="nav-number">3.1.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">3.2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#wget_index-html"><span class="nav-number">3.2.1.</span> <span class="nav-text">wget index.html</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#regex得到二级目录"><span class="nav-number">3.2.2.</span> <span class="nav-text">regex得到二级目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xargs_-P_八个线程同时wget_-r"><span class="nav-number">3.2.3.</span> <span class="nav-text">xargs -P 八个线程同时wget -r</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#还没实现获取同步状态"><span class="nav-number">3.2.4.</span> <span class="nav-text">还没实现获取同步状态</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#另一种玩法：python爬"><span class="nav-number">4.</span> <span class="nav-text">另一种玩法：python爬</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤-1"><span class="nav-number">4.1.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#装beautifulsoup"><span class="nav-number">4.1.1.</span> <span class="nav-text">装beautifulsoup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开始爬"><span class="nav-number">4.1.2.</span> <span class="nav-text">开始爬</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rabbitmq_server"><span class="nav-number">1.</span> <span class="nav-text">rabbitmq server</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -497,9 +478,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = '2015/09/07/multi_thread_rsync/';
-      var disqus_title = '多线程同步镜像';
-      var disqus_url = 'http://blog.decbug.com/2015/09/07/multi_thread_rsync/';
+      var disqus_identifier = '2015/11/10/openstack_perf_tester_4/';
+      var disqus_title = 'openstack性能测试器(4):rabbitmq-server、kombu、tcpdump';
+      var disqus_url = 'http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

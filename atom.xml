@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-11-08T12:16:52.030Z</updated>
+  <updated>2015-11-10T16:52:13.852Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,42 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[openstack性能测试器(4):rabbitmq-server、kombu、tcpdump]]></title>
+    <link href="http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/"/>
+    <id>http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/</id>
+    <published>2015-11-09T16:00:00.000Z</published>
+    <updated>2015-11-10T16:52:13.852Z</updated>
+    <content type="html"><![CDATA[<h1 id="rabbitmq_server">rabbitmq server</h1><p><a href="http://www.rabbitmq.com/download.html" target="_blank" rel="external">http://www.rabbitmq.com/download.html</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.<span class="number">5.6</span>/rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br><span class="line">sudo rpm -ivh rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>提示缺少erlang</p>
+<p><a href="http://www.erlang.org/download.html" target="_blank" rel="external">http://www.erlang.org/download.html</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">http://www.erlang.org/download/otp_src_18.<span class="number">1</span>.tar.gz</span><br><span class="line">tar -xvf otp_src_18.<span class="number">1</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> otp_src_18.<span class="number">1</span></span><br><span class="line">./configure</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提示缺少fop和wxWidgets</span></span><br><span class="line">sudo yum install fop</span><br><span class="line">sudo yum install wxWidgets</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh --nodeps rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="rabbitmq_server">rabbitmq server</h1><p><a href="http://www.rabbitmq.com/download.html">http://www.rabbitmq.com/download.html</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.<span class="number">5.6</span>/rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br><span class="line">sudo rpm -ivh rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>提示缺少erlang</p>
+<p><a href="http://www.erlang.org/download.html">http://www.erlang.org/download.html</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">http://www.erlang.org/download/otp_src_18.<span class="number">1</span>.tar.gz</span><br><span class="line">tar -xvf otp_src_18.<span class="number">1</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> otp_src_18.<span class="number">1</span></span><br><span class="line">./configure</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提示缺少fop和wxWidgets</span></span><br><span class="line">sudo yum install fop</span><br><span class="line">sudo yum install wxWidgets</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh --nodeps rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>]]>
+    
+    </summary>
+    
+      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
+    
+      <category term="rabbitmq" scheme="http://blog.decbug.com/tags/rabbitmq/"/>
+    
+      <category term="tcpdump" scheme="http://blog.decbug.com/tags/tcpdump/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[编译构建时间优化]]></title>
@@ -307,6 +343,105 @@
   </entry>
   
   <entry>
+    <title><![CDATA[openstack性能测试器(1):AMQP]]></title>
+    <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/"/>
+    <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</id>
+    <published>2015-10-15T16:00:00.000Z</published>
+    <updated>2015-11-01T13:06:11.378Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
+<ul>
+<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
+<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
+</ul>
+<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br><a id="more"></a></p>
+<h1 id="AMQP">AMQP</h1><p>要想做好模拟器，就需要了解AMQP协议，以及此协议在OpenStack中的应用场景。</p>
+<h2 id="概念">概念</h2><p>AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/hello-world-example-routing.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">producer-&gt;broker-&gt;consumer</span><br></pre></td></tr></table></figure></p>
+<p>producer连接broker，broker可以理解为一个消息服务器，所有的消息都是通过它来中转。<br>还有几个概念需要注意：exchange channel topic routing-key</p>
+<p>等有空的时候，照着wireshark抓的包来对着讲解一下消息收发过程。<br>以login为例，</p>
+<table>
+<thead>
+<tr>
+<th>clien</th>
+<th>direct</th>
+<th>server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>建立TCP连接</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>发送heade</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>connection</td>
+</tr>
+<tr>
+<td>connection ok</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>connection.tune</td>
+</tr>
+<tr>
+<td>connection.tune ok</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>open connection</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>open connection ok</td>
+</tr>
+</tbody>
+</table>
+<h2 id="openstack">openstack</h2><p>openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者皆可使用。曾描过一眼，说ubuntu用rabbit，centos用qpid。我司用的是ubuntu，那么就看rabbitMQ好了。<br>发送分为三类</p>
+<ul>
+<li>cast:发送给特定的consumer，且不等待response</li>
+<li>call：发送给特定consumer，需要等待response</li>
+<li>fanout：发送给订阅了此消息的一组consumer，不等待response</li>
+</ul>
+<h3 id="oslo-messaging">oslo.messaging</h3><p>这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。</p>
+<h2 id="吐槽">吐槽</h2><p>在折腾的过程中，在oslo.messaging的tools里发现了一个<code>simulator.py</code>，就是一个消息模拟器，然而由于原有框架是C写的，历史原因只能用C再做一个模拟器。<br>其实openstack就有一个性能测试工具，名叫rally，也很不错，但是也不让用，sigh～～</p>
+<p>欲知后事如何，请看下集openstack的消息流程</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
+<ul>
+<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
+<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
+</ul>
+<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br>]]>
+    
+    </summary>
+    
+      <category term="AMQP" scheme="http://blog.decbug.com/tags/AMQP/"/>
+    
+      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
+    
+      <category term="perfmance" scheme="http://blog.decbug.com/tags/perfmance/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[openstack性能测试器(2):消息调用过程oslo.messaging]]></title>
     <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/"/>
     <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/</id>
@@ -397,105 +532,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="openstack简介">openstack简介</h1><p>The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich set of features. Cloud computing experts from around the world contribute to the project.<br>]]>
-    
-    </summary>
-    
-      <category term="AMQP" scheme="http://blog.decbug.com/tags/AMQP/"/>
-    
-      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
-    
-      <category term="perfmance" scheme="http://blog.decbug.com/tags/perfmance/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[openstack性能测试器(1):AMQP]]></title>
-    <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/"/>
-    <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</id>
-    <published>2015-10-15T16:00:00.000Z</published>
-    <updated>2015-11-01T13:06:11.378Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
-<ul>
-<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
-<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
-</ul>
-<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br><a id="more"></a></p>
-<h1 id="AMQP">AMQP</h1><p>要想做好模拟器，就需要了解AMQP协议，以及此协议在OpenStack中的应用场景。</p>
-<h2 id="概念">概念</h2><p>AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/hello-world-example-routing.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">producer-&gt;broker-&gt;consumer</span><br></pre></td></tr></table></figure></p>
-<p>producer连接broker，broker可以理解为一个消息服务器，所有的消息都是通过它来中转。<br>还有几个概念需要注意：exchange channel topic routing-key</p>
-<p>等有空的时候，照着wireshark抓的包来对着讲解一下消息收发过程。<br>以login为例，</p>
-<table>
-<thead>
-<tr>
-<th>clien</th>
-<th>direct</th>
-<th>server</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>建立TCP连接</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>发送heade</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>收</td>
-<td>&lt;==</td>
-<td>connection</td>
-</tr>
-<tr>
-<td>connection ok</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>收</td>
-<td>&lt;==</td>
-<td>connection.tune</td>
-</tr>
-<tr>
-<td>connection.tune ok</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>open connection</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>收</td>
-<td>&lt;==</td>
-<td>open connection ok</td>
-</tr>
-</tbody>
-</table>
-<h2 id="openstack">openstack</h2><p>openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者皆可使用。曾描过一眼，说ubuntu用rabbit，centos用qpid。我司用的是ubuntu，那么就看rabbitMQ好了。<br>发送分为三类</p>
-<ul>
-<li>cast:发送给特定的consumer，且不等待response</li>
-<li>call：发送给特定consumer，需要等待response</li>
-<li>fanout：发送给订阅了此消息的一组consumer，不等待response</li>
-</ul>
-<h3 id="oslo-messaging">oslo.messaging</h3><p>这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。</p>
-<h2 id="吐槽">吐槽</h2><p>在折腾的过程中，在oslo.messaging的tools里发现了一个<code>simulator.py</code>，就是一个消息模拟器，然而由于原有框架是C写的，历史原因只能用C再做一个模拟器。<br>其实openstack就有一个性能测试工具，名叫rally，也很不错，但是也不让用，sigh～～</p>
-<p>欲知后事如何，请看下集openstack的消息流程</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
-<ul>
-<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
-<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
-</ul>
-<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br>]]>
     
     </summary>
     
@@ -751,57 +787,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[初学docker]]></title>
-    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
-    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
-    <published>2015-08-22T16:00:00.000Z</published>
-    <updated>2015-09-13T14:25:20.974Z</updated>
-    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
-<a id="more"></a>
-<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
-<h3 id="查看内核版本">查看内核版本</h3><blockquote>
-<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
-</blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
-<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
-<h3 id="用脚本安装">用脚本安装</h3><ol>
-<li><p>yum package最新</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Run the Docker installation script.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
-<ol>
-<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
-<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
-<p>果然complete</p>
-<ol>
-<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
-<h2 id="进阶">进阶</h2><hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
-    
-    </summary>
-    
-      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[指标下的单元测试]]></title>
     <link href="http://blog.decbug.com/2015/08/23/fake_unit_test/"/>
     <id>http://blog.decbug.com/2015/08/23/fake_unit_test/</id>
@@ -856,6 +841,57 @@
       <category term="indicator" scheme="http://blog.decbug.com/tags/indicator/"/>
     
       <category term="unit_test" scheme="http://blog.decbug.com/tags/unit-test/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[初学docker]]></title>
+    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
+    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
+    <published>2015-08-22T16:00:00.000Z</published>
+    <updated>2015-09-13T14:25:20.974Z</updated>
+    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
+<a id="more"></a>
+<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
+<h3 id="查看内核版本">查看内核版本</h3><blockquote>
+<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
+<h3 id="用脚本安装">用脚本安装</h3><ol>
+<li><p>yum package最新</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Run the Docker installation script.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
+<ol>
+<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
+<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
+<p>果然complete</p>
+<ol>
+<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
+<h2 id="进阶">进阶</h2><hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
+    
+    </summary>
+    
+      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -1187,50 +1223,6 @@
       <category term="optimize" scheme="http://blog.decbug.com/tags/optimize/"/>
     
       <category term="profiler" scheme="http://blog.decbug.com/tags/profiler/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[读程序员职业规划书有感]]></title>
-    <link href="http://blog.decbug.com/2015/06/11/career_of_programmer/"/>
-    <id>http://blog.decbug.com/2015/06/11/career_of_programmer/</id>
-    <published>2015-06-11T15:30:09.000Z</published>
-    <updated>2015-08-04T14:28:02.483Z</updated>
-    <content type="html"><![CDATA[<h2 id="前言">前言</h2><p><img src="http://img4.douban.com/lpic/s28065947.jpg" alt=""></p>
-<p>最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。<br>恰巧得到<a href="http://weibo.com/easy" target="_blank" rel="external">@Easy</a>兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。</p>
-<a id="more"></a>
-<h2 id="跳槽">跳槽</h2><blockquote>
-<p>不要因为“现在很差”而跳槽，要为“未来更好”而跳槽</p>
-</blockquote>
-<p>就我个人而言，每次跳槽都是一次很艰难的决定，因为有得必有失。有时候是为了更多的金钱放弃现在轻松不加班的工作；有时候是为了get新技能而放弃现在丰厚的薪水。但无论如何，我们的得到的都比失去的多，也就是<code>我现在的决定让我的未来更好</code>，也许这个<code>好</code>需要很长一段时间才能体现出来。</p>
-<p>现在的工作各方面都挺好，可是对于我个人的技术能力提升的空间已经不大。作为想努力成为大牛的人，我期望能补齐我的短板，丰富我的技能树。也就是说想要一份更有挑战的工作，薪水不要比现在差就好。</p>
-<h2 id="秀出自己的肌肉">秀出自己的肌肉</h2><p>虽然周围的朋友都决定我水平还行，可我还是觉得自己比较菜，越学习，就觉得自己越菜，我经常说自己还是菜鸟，要学的东西还很多<br><img src="http://ww3.sinaimg.cn/large/8cad9f13gw1es42gkkwvjj20gk090mxi.jpg" alt=""></p>
-<p>然而在求职的时候，却容不得半点谦虚，要把自己的能力都展现出来，才能让雇主给出合适的薪水。像我们猿类都比较低调，陌生人比较难发现我们的亮点。这时候就需要<code>构建个人品牌</code>，把自己的优势都展示出来。只是空口无凭，雇主如何才能相信你？<br>这个时候就需要博客，博客是最好的简历，曾做过什么，解决过什么，玩过什么，学了什么，都可以通通记录下来。</p>
-<ul>
-<li>自己可以常常回顾，温故知新；</li>
-<li>可以把自己的能力，经验以及业余时间的研究都展示出来；</li>
-<li>锻炼自己的写作沟通能力，<a href="http://www.shubhro.com/2014/12/27/software-engineers-should-write/" target="_blank" rel="external">程序员也要多写作</a>；</li>
-<li>晚上下班还愿意做总结的人，技术一般不会太差；</li>
-<li>也许我的博客能帮到别人呢？我经常拜读大牛们博客，有时真的大有收获。虽然我水平离大牛很远，但我解决的问题可能别人也会遇到，看我的博客之后就能少走点弯路。</li>
-</ul>
-<h2 id="总结">总结</h2><p>工作不是一件容易的事，跳槽则更难。每一个决定都可能影响未来几年的职业生涯，我们无法预见未来，我们只能把握当下，努力提升自己的能力，总归是不差的。</p>
-<blockquote>
-<p>当你的能力足够强，必然会有一份满意的工作，区别只是在哪家公司干而已</p>
-</blockquote>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="前言">前言</h2><p><img src="http://img4.douban.com/lpic/s28065947.jpg" alt=""></p>
-<p>最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。<br>恰巧得到<a href="http://weibo.com/easy">@Easy</a>兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。</p>]]>
-    
-    </summary>
-    
-      <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
-    
-      <category term="programmer" scheme="http://blog.decbug.com/tags/programmer/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
