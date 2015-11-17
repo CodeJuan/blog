@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-11-17T14:08:01.438Z</updated>
+  <updated>2015-11-17T14:28:21.670Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/"/>
     <id>http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/</id>
     <published>2015-11-09T16:00:00.000Z</published>
-    <updated>2015-11-17T14:08:01.438Z</updated>
+    <updated>2015-11-17T14:28:21.670Z</updated>
     <content type="html"><![CDATA[<h1 id="rabbitmq_server">rabbitmq server</h1><p><a href="http://www.rabbitmq.com/download.html" target="_blank" rel="external">http://www.rabbitmq.com/download.html</a></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.<span class="number">5.6</span>/rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br><span class="line">sudo rpm -ivh rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
 <p>提示缺少erlang</p>
@@ -55,6 +55,8 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh --nodeps rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>]]>
     
     </summary>
+    
+      <category term="AMQP" scheme="http://blog.decbug.com/tags/AMQP/"/>
     
       <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
     
@@ -358,110 +360,11 @@
   </entry>
   
   <entry>
-    <title><![CDATA[openstack性能测试器(1):AMQP]]></title>
-    <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/"/>
-    <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</id>
-    <published>2015-10-15T16:00:00.000Z</published>
-    <updated>2015-11-01T13:06:11.378Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
-<ul>
-<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
-<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
-</ul>
-<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br><a id="more"></a></p>
-<h1 id="AMQP">AMQP</h1><p>要想做好模拟器，就需要了解AMQP协议，以及此协议在OpenStack中的应用场景。</p>
-<h2 id="概念">概念</h2><p>AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/hello-world-example-routing.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">producer-&gt;broker-&gt;consumer</span><br></pre></td></tr></table></figure></p>
-<p>producer连接broker，broker可以理解为一个消息服务器，所有的消息都是通过它来中转。<br>还有几个概念需要注意：exchange channel topic routing-key</p>
-<p>等有空的时候，照着wireshark抓的包来对着讲解一下消息收发过程。<br>以login为例，</p>
-<table>
-<thead>
-<tr>
-<th>clien</th>
-<th>direct</th>
-<th>server</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>建立TCP连接</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>发送heade</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>收</td>
-<td>&lt;==</td>
-<td>connection</td>
-</tr>
-<tr>
-<td>connection ok</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>收</td>
-<td>&lt;==</td>
-<td>connection.tune</td>
-</tr>
-<tr>
-<td>connection.tune ok</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>open connection</td>
-<td>==&gt;</td>
-<td></td>
-</tr>
-<tr>
-<td>收</td>
-<td>&lt;==</td>
-<td>open connection ok</td>
-</tr>
-</tbody>
-</table>
-<h2 id="openstack">openstack</h2><p>openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者皆可使用。曾描过一眼，说ubuntu用rabbit，centos用qpid。我司用的是ubuntu，那么就看rabbitMQ好了。<br>发送分为三类</p>
-<ul>
-<li>cast:发送给特定的consumer，且不等待response</li>
-<li>call：发送给特定consumer，需要等待response</li>
-<li>fanout：发送给订阅了此消息的一组consumer，不等待response</li>
-</ul>
-<h3 id="oslo-messaging">oslo.messaging</h3><p>这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。</p>
-<h2 id="吐槽">吐槽</h2><p>在折腾的过程中，在oslo.messaging的tools里发现了一个<code>simulator.py</code>，就是一个消息模拟器，然而由于原有框架是C写的，历史原因只能用C再做一个模拟器。<br>其实openstack就有一个性能测试工具，名叫rally，也很不错，但是也不让用，sigh～～</p>
-<p>欲知后事如何，请看下集openstack的消息流程</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
-<ul>
-<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
-<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
-</ul>
-<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br>]]>
-    
-    </summary>
-    
-      <category term="AMQP" scheme="http://blog.decbug.com/tags/AMQP/"/>
-    
-      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
-    
-      <category term="perfmance" scheme="http://blog.decbug.com/tags/perfmance/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[openstack性能测试器(2):消息调用过程oslo.messaging]]></title>
     <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/"/>
     <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/</id>
-    <published>2015-10-15T16:00:00.000Z</published>
-    <updated>2015-10-22T14:54:47.285Z</updated>
+    <published>2015-10-15T17:00:00.000Z</published>
+    <updated>2015-11-17T14:28:43.362Z</updated>
     <content type="html"><![CDATA[<h1 id="openstack简介">openstack简介</h1><p>The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich set of features. Cloud computing experts from around the world contribute to the project.<br><a id="more"></a></p>
 <p>OpenStack provides an Infrastructure-as-a-Service (IaaS) solution through a variety of complemental services. Each service offers an application programming interface (API) that facilitates this integration.</p>
 <h1 id="openstack组件">openstack组件</h1><table>
@@ -547,6 +450,105 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="openstack简介">openstack简介</h1><p>The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich set of features. Cloud computing experts from around the world contribute to the project.<br>]]>
+    
+    </summary>
+    
+      <category term="AMQP" scheme="http://blog.decbug.com/tags/AMQP/"/>
+    
+      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
+    
+      <category term="perfmance" scheme="http://blog.decbug.com/tags/perfmance/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[openstack性能测试器(1):AMQP]]></title>
+    <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/"/>
+    <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_1/</id>
+    <published>2015-10-15T16:00:00.000Z</published>
+    <updated>2015-11-01T13:06:11.378Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
+<ul>
+<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
+<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
+</ul>
+<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br><a id="more"></a></p>
+<h1 id="AMQP">AMQP</h1><p>要想做好模拟器，就需要了解AMQP协议，以及此协议在OpenStack中的应用场景。</p>
+<h2 id="概念">概念</h2><p>AMQP是一种异步消息协议，在分布式系统就被大量使用。其传递流程可以大致理解成下图<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/hello-world-example-routing.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">producer-&gt;broker-&gt;consumer</span><br></pre></td></tr></table></figure></p>
+<p>producer连接broker，broker可以理解为一个消息服务器，所有的消息都是通过它来中转。<br>还有几个概念需要注意：exchange channel topic routing-key</p>
+<p>等有空的时候，照着wireshark抓的包来对着讲解一下消息收发过程。<br>以login为例，</p>
+<table>
+<thead>
+<tr>
+<th>clien</th>
+<th>direct</th>
+<th>server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>建立TCP连接</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>发送heade</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>connection</td>
+</tr>
+<tr>
+<td>connection ok</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>connection.tune</td>
+</tr>
+<tr>
+<td>connection.tune ok</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>open connection</td>
+<td>==&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>收</td>
+<td>&lt;==</td>
+<td>open connection ok</td>
+</tr>
+</tbody>
+</table>
+<h2 id="openstack">openstack</h2><p>openstack用的就是AMQP，具体实现有两种，是rabbitMQ和qpid，二者皆可使用。曾描过一眼，说ubuntu用rabbit，centos用qpid。我司用的是ubuntu，那么就看rabbitMQ好了。<br>发送分为三类</p>
+<ul>
+<li>cast:发送给特定的consumer，且不等待response</li>
+<li>call：发送给特定consumer，需要等待response</li>
+<li>fanout：发送给订阅了此消息的一组consumer，不等待response</li>
+</ul>
+<h3 id="oslo-messaging">oslo.messaging</h3><p>这个组件专门负责消息。其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。</p>
+<h2 id="吐槽">吐槽</h2><p>在折腾的过程中，在oslo.messaging的tools里发现了一个<code>simulator.py</code>，就是一个消息模拟器，然而由于原有框架是C写的，历史原因只能用C再做一个模拟器。<br>其实openstack就有一个性能测试工具，名叫rally，也很不错，但是也不让用，sigh～～</p>
+<p>欲知后事如何，请看下集openstack的消息流程</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
+<ul>
+<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
+<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
+</ul>
+<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br>]]>
     
     </summary>
     
