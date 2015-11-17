@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-11-17T14:28:21.670Z</updated>
+  <updated>2015-11-17T14:50:21.882Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/"/>
     <id>http://blog.decbug.com/2015/11/10/openstack_perf_tester_4/</id>
     <published>2015-11-09T16:00:00.000Z</published>
-    <updated>2015-11-17T14:28:21.670Z</updated>
+    <updated>2015-11-17T14:50:21.882Z</updated>
     <content type="html"><![CDATA[<h1 id="rabbitmq_server">rabbitmq server</h1><p><a href="http://www.rabbitmq.com/download.html" target="_blank" rel="external">http://www.rabbitmq.com/download.html</a></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.<span class="number">5.6</span>/rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br><span class="line">sudo rpm -ivh rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
 <p>提示缺少erlang</p>
@@ -34,6 +34,8 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 增加用户</span></span><br><span class="line">sudo rabbitmqctl add_user <span class="built_in">test</span> <span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置管理员权限</span></span><br><span class="line">sudo rabbitmqctl <span class="built_in">set</span>_user_tags <span class="built_in">test</span> administrator</span><br></pre></td></tr></table></figure>
 <p>然后再访问<code>serverIP:15672</code>，用刚才创建的test账户登录，就能看到管理界面了。</p>
 <p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/rabbitmq_management.png" alt=""></p>
+<h1 id="tracing_plugin">tracing plugin</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/lib/rabbitmq/bin</span><br><span class="line"><span class="comment"># enable tracing</span></span><br><span class="line">sudo rabbitmq-plugins <span class="built_in">enable</span> rabbitmq_tracing</span><br><span class="line"><span class="comment"># trace on</span></span><br><span class="line">rabbitmqctl trace_on </span><br><span class="line"><span class="comment"># stop</span></span><br><span class="line">sudo service rabbitmq-server stop</span><br><span class="line"><span class="comment"># start</span></span><br><span class="line">sudo service rabbitmq-server start</span><br></pre></td></tr></table></figure>
+<p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/rabbitmq_tracing.png" alt=""></p>
 <h1 id="kombu">kombu</h1><blockquote>
 <p>Kombu是一个为Python写的消息库，目标是为AMQ协议提供一个傻瓜式的高层接口，让Python中的消息传递变得尽可能简单，并且也提供一些常见消息传递问题的解决方案。</p>
 </blockquote>
