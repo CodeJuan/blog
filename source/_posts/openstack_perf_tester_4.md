@@ -7,6 +7,7 @@ tags:
 - openstack
 - tcpdump
 - rabbitmq
+- AMQP
 mathjax: true
 description: 
 ---

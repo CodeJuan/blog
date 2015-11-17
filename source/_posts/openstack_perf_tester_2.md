@@ -1,6 +1,6 @@
 ---
 title: openstack性能测试器(2):消息调用过程oslo.messaging
-date: 2015-10-16 00:00:00
+date: 2015-10-16 01:00:00
 categories:
 - code
 tags: 
