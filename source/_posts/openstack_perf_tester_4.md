@@ -72,6 +72,22 @@ sudo rabbitmqctl set_user_tags test administrator
 
 ![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/rabbitmq_management.png)
 
+# tracing plugin
+
+```sh
+cd /usr/lib/rabbitmq/bin
+# enable tracing
+sudo rabbitmq-plugins enable rabbitmq_tracing
+# trace on
+rabbitmqctl trace_on 
+# stop
+sudo service rabbitmq-server stop
+# start
+sudo service rabbitmq-server start
+```
+
+![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/amqp/rabbitmq_tracing.png)
+
 # kombu
 
 > Kombu是一个为Python写的消息库，目标是为AMQ协议提供一个傻瓜式的高层接口，让Python中的消息传递变得尽可能简单，并且也提供一些常见消息传递问题的解决方案。
