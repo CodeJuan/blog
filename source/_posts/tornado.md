@@ -209,10 +209,27 @@ iptables-restore </some/file
 
 ## 使用
 
+# 生产环境的使用
+最终还是采用了nginx
+1. 用户注册，将IP保存到数据库
+2. 定时从数据库中取IP，并生成allow_ips.conf
+3. nginx reload -s
+
+```
+# nginx 配置
+    server {
+        listen 8777;
+        location / {
+            include allow_ips.conf
+            deny all;
+            errorpage 403 http://register_server:port;
+            proxy_pass http://192.168.151.55:8888/;
+        }
+    }
+
+```
 
 
-
-未完待续
 
 
 ----------------------------
