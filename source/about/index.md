@@ -1,6 +1,5 @@
 title: about me
 date: 2013-12-24 23:30:09
-layout: post
 ---
 - 半路出家的码农
 - 少时曾攻经略，长大不通权谋
