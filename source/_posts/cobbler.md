@@ -25,6 +25,17 @@ description:
 
 <!--more-->
 
+# 开启PXE
+由于cobbler是通过PXE给裸机装系统的，所以要先改裸机的BIOS设置，改为从网卡启动。
+
+## 某品牌主板的设置方法
+![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cobbler/1.jpg)
+![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cobbler/2.jpg)
+![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cobbler/3.jpg)
+
+## 另一品牌主板的设置方法
+![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cobbler/MicroStar.jpg)
+
 # 安装cobbler
 
 参考官网的quick start [http://cobbler.github.io/manuals/quickstart/](http://cobbler.github.io/manuals/quickstart/)
@@ -35,7 +46,7 @@ description:
 
 参考[https://www.centos.org/docs/5/html/5.1/Deployment_Guide/sec-sel-enable-disable.html](https://www.centos.org/docs/5/html/5.1/Deployment_Guide/sec-sel-enable-disable.html)
 
-修改`/etc/sysconfig/selinux`，修改`SELINUX`的值为`permissive`，并增加一行`SETLOCALDEFS=0`
+修改`/etc/sysconfig/selinux`，修改`SELINUX`的值为`disabled`，并增加一行`SETLOCALDEFS=0`
 
 ```sh
 # This file controls the state of SELinux on the system.
@@ -121,7 +132,7 @@ openssl passwd -1
 next_server: 192.168.161.51
 server: 192.168.161.51
 
-我是通过路由分配IP，就不设置manage_dhcp
+manage_dhcp = 1
 
 ```
 
