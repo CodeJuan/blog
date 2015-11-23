@@ -199,6 +199,95 @@
           
           
             
+              <a class="post-title-link" href="/2015/11/23/json2lua/" itemprop="url">
+                通过python将json转换成lua
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-23T00:00:00+08:00" content="2015-11-23">
+            2015-11-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/11/23/json2lua/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/11/23/json2lua/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="背景">背景</h1><p>某需求要将json转换成lua代码，同事们的做法是人肉翻译，肉眼读json，然后一条条拷贝到lua，如果遇到嵌套多的情况，一不小心就搞错了。<br>即使没有出错，顺利翻译完成，一条简单的json将耗时半小时。如果是100条，将浪费50个小时，太恐怖了。</p>
+<p>我在翻译了一次之后，实在是无法接受，于是想通过python来解析json，然后按照格式生成lua代码，也就是<code>用代码写代码</code>。<br>这样可以避免机械劳动，不再浪费生命，可以从原来的半小时减少到1分钟，并且不容易出错。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/11/23/json2lua/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/11/10/openstack_perf_tester_4/" itemprop="url">
                 openstack性能测试器(4):rabbitmq-server、kombu、tcpdump
               </a>
@@ -565,95 +654,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/10/26/openstack_perf_tester_3/" itemprop="url">
-                openstack性能测试器(3):移植rabbitmq-c
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-10-26T00:00:00+08:00" content="2015-10-26">
-            2015-10-26
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/10/26/openstack_perf_tester_3/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/26/openstack_perf_tester_3/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="rabbitmq">rabbitmq</h1><p>rabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是<a href="http://www.rabbitmq.com/">http://www.rabbitmq.com/</a></p>
-<p>我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，下载链接是<a href="http://www.rabbitmq.com/devtools.html">http://www.rabbitmq.com/devtools.html</a>，C版本的链接是<a href="https://github.com/alanxz/rabbitmq-c">https://github.com/alanxz/rabbitmq-c</a></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/26/openstack_perf_tester_3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -692,7 +692,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -706,7 +706,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">69</span>
+              <span class="site-state-item-count">71</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
