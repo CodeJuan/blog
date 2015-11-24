@@ -199,6 +199,94 @@
           
           
             
+              <a class="post-title-link" href="/2015/06/22/Pelican_hexo/" itemprop="url">
+                hexo and pelican
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-06-22T00:00:00+08:00" content="2015-06-22">
+            2015-06-22
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/06/22/Pelican_hexo/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/22/Pelican_hexo/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="description">用pelican或hexo建一个漂亮的博客</span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/06/22/Pelican_hexo/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/06/13/Premature_Optimization/" itemprop="url">
                 身边的过早优化事件
               </a>
@@ -545,107 +633,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/03/10/mark2html/" itemprop="url">
-                pandoc---markdown转换利器
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-03-10T23:30:09+08:00" content="2015-03-10">
-            2015-03-10
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/03/10/mark2html/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/10/mark2html/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="背景">背景</h1><p>项目要发布一堆开发文档，并支持快速更新。经过我的不断安利，领导同意用markdown（<em>感觉好有成就感啊</em>）。<br>经过一番探索，决定采用<a href="http://johnmacfarlane.net/pandoc/index.html">pandoc</a>，因为功能真的很强大，请看官网介绍</p>
-<blockquote>
-<p>If you need to convert files from one markup format into another, pandoc is your swiss-army knife. Pandoc can convert documents in markdown, reStructuredText, textile, HTML, DocBook, LaTeX, MediaWiki markup, TWiki markup, OPML, Emacs Org-Mode, Txt2Tags, Microsoft Word docx, EPUB, or Haddock markup to</p>
-<pre><code>-<span class="ruby"> <span class="constant">HTML</span> <span class="symbol">formats:</span> <span class="constant">XHTML</span>, <span class="constant">HTML5</span>, <span class="keyword">and</span> <span class="constant">HTML</span> slide shows using <span class="constant">Slidy</span>, reveal.js, <span class="constant">Slideous</span>, <span class="constant">S5</span>, <span class="keyword">or</span> <span class="constant">DZSlides</span>.
-</span>-<span class="ruby"> <span class="constant">Word</span> processor <span class="symbol">formats:</span> <span class="constant">Microsoft</span> <span class="constant">Word</span> docx, <span class="constant">OpenOffice</span>/<span class="constant">LibreOffice</span> <span class="constant">ODT</span>, <span class="constant">OpenDocument</span> <span class="constant">XML</span>
-</span>-<span class="ruby"> <span class="constant">Ebooks</span><span class="symbol">:</span> <span class="constant">EPUB</span> version <span class="number">2</span> <span class="keyword">or</span> <span class="number">3</span>, <span class="constant">FictionBook2</span>
-</span>-<span class="ruby"> <span class="constant">Documentation</span> <span class="symbol">formats:</span> <span class="constant">DocBook</span>, <span class="constant">GNU</span> <span class="constant">TexInfo</span>, <span class="constant">Groff</span> man pages, <span class="constant">Haddock</span> markup
-</span>-<span class="ruby"> <span class="constant">Page</span> layout <span class="symbol">formats:</span> <span class="constant">InDesign</span> <span class="constant">ICML</span>
-</span>-<span class="ruby"> <span class="constant">Outline</span> <span class="symbol">formats:</span> <span class="constant">OPML</span>
-</span>-<span class="ruby"> <span class="constant">TeX</span> <span class="symbol">formats:</span> <span class="constant">LaTeX</span>, <span class="constant">ConTeXt</span>, <span class="constant">LaTeX</span> <span class="constant">Beamer</span> slides
-</span>-<span class="ruby"> <span class="constant">PDF</span> via <span class="constant">LaTeX</span>
-</span>-<span class="ruby"> <span class="constant">Lightweight</span> markup <span class="symbol">formats:</span> <span class="constant">Markdown</span>, reStructuredText, <span class="constant">AsciiDoc</span>, <span class="constant">MediaWiki</span> markup, <span class="constant">DokuWiki</span> markup, <span class="constant">Emacs</span> <span class="constant">Org</span>-<span class="constant">Mode</span>, <span class="constant">Textile</span>
-</span>-<span class="ruby"> <span class="constant">Custom</span> <span class="symbol">formats:</span> custom writers can be written <span class="keyword">in</span> lua.</span>
-</code></pre></blockquote>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/03/10/mark2html/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -684,7 +671,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -698,7 +685,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">71</span>
+              <span class="site-state-item-count">73</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
