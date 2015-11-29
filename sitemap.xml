@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2015/11/28/golang/</loc>
+    <lastmod>2015-11-29T04:12:03.359Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/11/24/virtualbox_share/</loc>
     <lastmod>2015-11-24T12:57:50.114Z</lastmod>
   </url>
@@ -167,12 +172,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
+    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
+    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
