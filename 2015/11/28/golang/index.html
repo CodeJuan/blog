@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://blog.decbug.com/2015/11/28/golang/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景最近经常听到有同事在安利golang，颇为心动。恰巧又看到这篇文章How We Moved Our API From Ruby to Go and Saved Our Sanity，于是便忍不住了，打算试试。毕竟是谷歌亲儿子，想必会有一番不错的表现。">
-<meta property="og:updated_time" content="2015-11-29T06:56:39.674Z">
+<meta property="og:updated_time" content="2015-11-29T07:19:23.410Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初学golang">
 <meta name="twitter:description" content="背景最近经常听到有同事在安利golang，颇为心动。恰巧又看到这篇文章How We Moved Our API From Ruby to Go and Saved Our Sanity，于是便忍不住了，打算试试。毕竟是谷歌亲儿子，想必会有一番不错的表现。">
@@ -275,6 +275,7 @@
 <h1 id="web_frame">web frame</h1><p>打算试试revel<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> `<span class="built_in">export</span> GOPATH=<span class="variable">$HOME</span>/code/go_code` &gt;&gt; ~/.bashrc</span><br><span class="line">go get -u github.com/revel/cmd/revel</span><br></pre></td></tr></table></figure></p>
 <p>提示<code>package golang.org/x/net/websocket: unrecognized import path &quot;golang.org/x/net/websocket&quot;</code></p>
 <p>我只在我的办公机上装了SS，其他的几台挖掘机都没装，所以下不了。。<br>看来我真的得把我的openwrt的路由弄好，用来全局Fxxk了。<br>心情不好，今天就玩到这吧，擦擦擦！</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">后来在这个地方下载gogs编译包 : http:<span class="comment">//gopm.io/github.com/gogits/gogs</span></span><br><span class="line">mkdir -<span class="tag">p</span>  <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">cd <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">ls <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">scp gogs-aaa3f1b2b9<span class="class">.zip</span>   i3@<span class="number">192.168</span>.<span class="number">161.51</span>:~/</span><br><span class="line">unzip ~/gogs-aaa3f1b2b9<span class="class">.zip</span></span><br><span class="line">go build</span><br></pre></td></tr></table></figure>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -293,6 +294,8 @@
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/29/open_falcon/" rel="prev">尝试open falcon</a>
             
           </div>
 
@@ -364,7 +367,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">43</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -378,7 +381,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">74</span>
+              <span class="site-state-item-count">77</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-11-29T06:56:39.674Z</updated>
+  <updated>2015-12-03T16:30:03.237Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -16,11 +16,81 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[Fast FWR171 openwrt]]></title>
+    <link href="http://blog.decbug.com/2015/12/03/openwrt/"/>
+    <id>http://blog.decbug.com/2015/12/03/openwrt/</id>
+    <published>2015-12-02T16:00:00.000Z</published>
+    <updated>2015-12-03T16:30:03.237Z</updated>
+    <content type="html"><![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥</p>
+<h1 id="原厂固件">原厂固件</h1><p>FWR171到703N<br><a href="http://pan.baidu.com/wap/share/home?uk=3457154703&amp;third=0" target="_blank" rel="external">http://pan.baidu.com/wap/share/home?uk=3457154703&amp;third=0</a></p>
+<h1 id="openwrt">openwrt</h1><p><a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin" target="_blank" rel="external">http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin</a><br><a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin" target="_blank" rel="external">http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin</a></p>
+<p>先刷factory</p>
+<p>然后ssh root@192.168.1.1</p>
+<p>passwd改密码</p>
+<h1 id="开启wifi">开启wifi</h1><p>/etc/config/wireless  radio0的disable一行需要删掉或注释掉<br>顺便加个密<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">config wifi-iface</span><br><span class="line">        <span class="keyword">option</span> device   radio0</span><br><span class="line">        <span class="keyword">option</span> network  lan</span><br><span class="line">        <span class="keyword">option</span> mode     ap</span><br><span class="line">        <span class="keyword">option</span> ssid     OpenWrt</span><br><span class="line">        <span class="keyword">option</span> encryption <span class="comment">'psk2'</span></span><br><span class="line">        <span class="keyword">option</span> <span class="keyword">key</span> <span class="comment">'psk2'  </span></span><br><span class="line"></span><br><span class="line">config wifi-iface</span><br><span class="line">        <span class="keyword">option</span> device   radio0</span><br><span class="line">        <span class="keyword">option</span> network  lan</span><br><span class="line">        <span class="keyword">option</span> mode     ap</span><br><span class="line">        <span class="keyword">option</span> ssid     OpenWrt</span><br><span class="line">        <span class="keyword">option</span> encryption <span class="comment">'psk2'</span></span><br><span class="line">        <span class="keyword">option</span> <span class="keyword">key</span> <span class="comment">'openwrt1234'</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="改_/etc/config/network">改 /etc/config/network</h1><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">config <span class="keyword">interface</span> <span class="comment">'loopback'</span></span><br><span class="line">        <span class="keyword">option</span> ifname <span class="comment">'lo'</span></span><br><span class="line">        <span class="keyword">option</span> proto <span class="comment">'static'</span></span><br><span class="line">        <span class="keyword">option</span> ipaddr <span class="comment">'127.0.0.1'</span></span><br><span class="line">        <span class="keyword">option</span> netmask <span class="comment">'255.0.0.0'</span></span><br><span class="line"></span><br><span class="line">config globals <span class="comment">'globals'</span></span><br><span class="line">        <span class="keyword">option</span> ula_prefix <span class="comment">'fdaa:5a73:9c8e::/48'</span></span><br><span class="line"></span><br><span class="line">config <span class="keyword">interface</span> <span class="comment">'lan'</span></span><br><span class="line">        <span class="keyword">option</span> ifname <span class="comment">'eth0'</span></span><br><span class="line">        <span class="keyword">option</span> force_link <span class="comment">'1'</span></span><br><span class="line">        <span class="keyword">option</span> type <span class="comment">'bridge'</span></span><br><span class="line">        <span class="keyword">option</span> proto <span class="comment">'static'</span></span><br><span class="line">        <span class="keyword">option</span> ipaddr <span class="comment">'192.168.1.1'</span></span><br><span class="line">        <span class="keyword">option</span> netmask <span class="comment">'255.255.255.0'</span></span><br><span class="line">        <span class="keyword">option</span> ip6assign <span class="comment">'60'</span></span><br></pre></td></tr></table></figure>
+<h1 id="搞挂了">搞挂了</h1><p>电脑的IP  192.168.1.2  gateway192.168.1.1 255.255.255.0<br>first_boot<br>reboot -f</p>
+<p>ssh 192.168.1.1</p>
+<h1 id="network">network</h1><p>加上<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">config <span class="keyword">interface</span> <span class="comment">'lan'</span></span><br><span class="line">        <span class="keyword">option</span> ifname <span class="comment">'eth0'</span></span><br><span class="line">        <span class="keyword">option</span> force_link <span class="comment">'1'</span></span><br><span class="line">        <span class="keyword">option</span> type <span class="comment">'bridge'</span></span><br><span class="line"><span class="preprocessor">#       option proto 'static'</span></span><br><span class="line">        <span class="keyword">option</span> proto <span class="comment">'dhcp'</span></span><br><span class="line"><span class="preprocessor">#       option ipaddr '192.168.1.1'</span></span><br><span class="line"><span class="preprocessor">#       option netmask '255.255.255.0'</span></span><br><span class="line">        <span class="keyword">option</span> ip6assign <span class="comment">'60'</span></span><br></pre></td></tr></table></figure></p>
+<p>连接已有的路由上网</p>
+<p>装东西</p>
+<p>软件安装</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">opkg <span class="operator"><span class="keyword">update</span></span><br><span class="line">opkg <span class="keyword">install</span> kmod-macvlan ip</span></span><br></pre></td></tr></table></figure>
+<p>编辑开机启动文件，在开机时虚拟出另外一张有线网卡，以区别WAN和LAN。</p>
+<p>vi /etc/rc.local</p>
+<p>在文件的exit 0之前加入以下内容。这里的MAC地址可以改成别的。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">ip</span> <span class="tag">link</span> <span class="tag">add</span> <span class="tag">link</span> <span class="tag">eth0</span> <span class="tag">eth2</span> <span class="tag">type</span> <span class="tag">macvlan</span></span><br><span class="line"><span class="tag">ifconfig</span> <span class="tag">eth2</span> <span class="tag">hw</span> <span class="tag">ether</span> 00<span class="pseudo">:11</span><span class="pseudo">:22</span><span class="pseudo">:33</span><span class="pseudo">:44</span><span class="pseudo">:5b</span></span><br><span class="line"><span class="tag">ifconfig</span> <span class="tag">eth2</span> <span class="tag">up</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">exit</span> 0</span><br></pre></td></tr></table></figure></p>
+<p>把虚拟出的网卡分配给LAN使用。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uci set network<span class="class">.lan</span><span class="class">.ifname</span>=eth2</span><br></pre></td></tr></table></figure></p>
+<p>创建WAN接口。这里的协议设为DHCP，可以直接将703N插入已经存在的有线网络中，即可上网。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">uci set network.wan=interface</span><br><span class="line">uci set network<span class="class">.wan</span><span class="class">.proto</span>=dhcp</span><br><span class="line">uci set network<span class="class">.wan</span><span class="class">.hostname</span>=openwrt-wan</span><br><span class="line">uci set network<span class="class">.wan</span><span class="class">.ifname</span>=eth0</span><br><span class="line">uci commit network</span><br></pre></td></tr></table></figure>
+<h1 id="install_ss">install ss</h1><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opkg <span class="keyword">install</span> http://ncu.dl.sourceforge.net/<span class="keyword">project</span>/openwrt-dist/shadowsocks-libev/<span class="number">2.4</span>.<span class="number">1</span>-<span class="number">6</span>f44d53/ar71xx/shadowsocks-libev-spec-polarssl_2.<span class="number">4.1</span>-<span class="number">1</span>_ar71xx.ipk</span><br></pre></td></tr></table></figure>
+<p>提示空间不够。。。。</p>
+<h1 id="参考">参考</h1><p><a href="http://www.cnblogs.com/Lifehacker/archive/2013/04/13/failure_on_fwr171-3g_with_openwrt.html" target="_blank" rel="external">http://www.cnblogs.com/Lifehacker/archive/2013/04/13/failure_on_fwr171-3g_with_openwrt.html</a><br><a href="http://www.isucc.me/555.html" target="_blank" rel="external">http://www.isucc.me/555.html</a><br><a href="http://shuyz.com/install-shadowsocks-on-hg255d-openwrt-and-config-nat.html" target="_blank" rel="external">http://shuyz.com/install-shadowsocks-on-hg255d-openwrt-and-config-nat.html</a><br><a href="http://www.tuicool.com/articles/3Q7V7z3" target="_blank" rel="external">http://www.tuicool.com/articles/3Q7V7z3</a></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥</p>
+<h1 id="原厂固件">原厂固件</h1><p>FWR171到703N<br><a href="http://pan.baidu.c]]>
+    </summary>
+    
+      <category term="openwrt" scheme="http://blog.decbug.com/tags/openwrt/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[尝试open falcon]]></title>
+    <link href="http://blog.decbug.com/2015/11/29/open_falcon/"/>
+    <id>http://blog.decbug.com/2015/11/29/open_falcon/</id>
+    <published>2015-11-28T16:00:00.000Z</published>
+    <updated>2015-11-29T09:47:36.738Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>尝试一下小米的open falcon</p>
+<a id="more"></a>
+<hr>
+<h1 id="步骤">步骤</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y redis</span><br><span class="line">sudo yum install -y mysql-server</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> HOME=/home/work</span><br><span class="line"><span class="built_in">export</span> WORKSPACE=<span class="variable">$HOME</span>/open-falcon</span><br><span class="line">mkdir -p <span class="variable">$WORKSPACE</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$WORKSPACE</span></span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/open-falcon/scripts.git</span><br><span class="line"><span class="built_in">cd</span> ./scripts/</span><br><span class="line">mysql -h localhost -u root -p &lt; db_schema/graph-db-schema.sql</span><br><span class="line">mysql -h localhost -u root -p &lt; db_schema/dashboard-db-schema.sql</span><br><span class="line"></span><br><span class="line">mysql -h localhost -u root -p &lt; db_schema/portal-db-schema.sql</span><br><span class="line">mysql -h localhost -u root -p &lt; db_schema/links-db-schema.sql</span><br><span class="line">mysql -h localhost -u root -p &lt; db_schema/uic-db-schema.sql</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">DOWNLOAD=<span class="string">"https://github.com/XiaoMi/open-falcon/releases/download/0.0.5/open-falcon-0.0.5.tar.gz"</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$WORKSPACE</span></span><br><span class="line"></span><br><span class="line">mkdir ./tmp</span><br><span class="line"><span class="comment">#下载</span></span><br><span class="line">wget <span class="variable">$DOWNLOAD</span> -O open-falcon-latest.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment">#解压</span></span><br><span class="line">tar -zxf open-falcon-latest.tar.gz -C ./tmp/</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> `find ./tmp/ -name <span class="string">"*.tar.gz"</span>`;<span class="keyword">do</span> \</span><br><span class="line">    app=`<span class="built_in">echo</span> <span class="variable">$x</span>|cut <span class="operator">-d</span> <span class="string">'-'</span> <span class="operator">-f</span>2`; \</span><br><span class="line">    mkdir -p <span class="variable">$app</span>; \</span><br><span class="line">    tar -zxf <span class="variable">$x</span> -C <span class="variable">$app</span>; \</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>尝试一下小米的open falcon</p>]]>
+    
+    </summary>
+    
+      <category term="monitoring" scheme="http://blog.decbug.com/tags/monitoring/"/>
+    
+      <category term="ops" scheme="http://blog.decbug.com/tags/ops/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[初学golang]]></title>
     <link href="http://blog.decbug.com/2015/11/28/golang/"/>
     <id>http://blog.decbug.com/2015/11/28/golang/</id>
     <published>2015-11-27T16:00:00.000Z</published>
-    <updated>2015-11-29T06:56:39.674Z</updated>
+    <updated>2015-11-29T07:19:23.410Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>最近经常听到有同事在安利golang，颇为心动。恰巧又看到这篇文章<a href="http://blog.parse.com/learn/how-we-moved-our-api-from-ruby-to-go-and-saved-our-sanity/" target="_blank" rel="external">How We Moved Our API From Ruby to Go and Saved Our Sanity</a>，于是便忍不住了，打算试试。<br>毕竟是谷歌亲儿子，想必会有一番不错的表现。</p>
 <a id="more"></a>
 <hr>
@@ -48,6 +118,7 @@
 <h1 id="web_frame">web frame</h1><p>打算试试revel<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> `<span class="built_in">export</span> GOPATH=<span class="variable">$HOME</span>/code/go_code` &gt;&gt; ~/.bashrc</span><br><span class="line">go get -u github.com/revel/cmd/revel</span><br></pre></td></tr></table></figure></p>
 <p>提示<code>package golang.org/x/net/websocket: unrecognized import path &quot;golang.org/x/net/websocket&quot;</code></p>
 <p>我只在我的办公机上装了SS，其他的几台挖掘机都没装，所以下不了。。<br>看来我真的得把我的openwrt的路由弄好，用来全局Fxxk了。<br>心情不好，今天就玩到这吧，擦擦擦！</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">后来在这个地方下载gogs编译包 : http:<span class="comment">//gopm.io/github.com/gogits/gogs</span></span><br><span class="line">mkdir -<span class="tag">p</span>  <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">cd <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">ls <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">scp gogs-aaa3f1b2b9<span class="class">.zip</span>   i3@<span class="number">192.168</span>.<span class="number">161.51</span>:~/</span><br><span class="line">unzip ~/gogs-aaa3f1b2b9<span class="class">.zip</span></span><br><span class="line">go build</span><br></pre></td></tr></table></figure>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
@@ -943,57 +1014,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[初学docker]]></title>
-    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
-    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
-    <published>2015-08-22T16:00:00.000Z</published>
-    <updated>2015-09-13T14:25:20.974Z</updated>
-    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
-<a id="more"></a>
-<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
-<h3 id="查看内核版本">查看内核版本</h3><blockquote>
-<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
-</blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
-<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
-<h3 id="用脚本安装">用脚本安装</h3><ol>
-<li><p>yum package最新</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Run the Docker installation script.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
-<ol>
-<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
-<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
-<p>果然complete</p>
-<ol>
-<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
-<h2 id="进阶">进阶</h2><hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
-    
-    </summary>
-    
-      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[指标下的单元测试]]></title>
     <link href="http://blog.decbug.com/2015/08/23/fake_unit_test/"/>
     <id>http://blog.decbug.com/2015/08/23/fake_unit_test/</id>
@@ -1048,6 +1068,57 @@
       <category term="indicator" scheme="http://blog.decbug.com/tags/indicator/"/>
     
       <category term="unit_test" scheme="http://blog.decbug.com/tags/unit-test/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[初学docker]]></title>
+    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
+    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
+    <published>2015-08-22T16:00:00.000Z</published>
+    <updated>2015-09-13T14:25:20.974Z</updated>
+    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
+<a id="more"></a>
+<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
+<h3 id="查看内核版本">查看内核版本</h3><blockquote>
+<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
+<h3 id="用脚本安装">用脚本安装</h3><ol>
+<li><p>yum package最新</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Run the Docker installation script.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
+<ol>
+<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
+<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
+<p>果然complete</p>
+<ol>
+<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
+<h2 id="进阶">进阶</h2><hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
+    
+    </summary>
+    
+      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -1119,115 +1190,6 @@
       <category term="leak" scheme="http://blog.decbug.com/tags/leak/"/>
     
       <category term="process" scheme="http://blog.decbug.com/tags/process/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[自动生成软件中模块依赖图]]></title>
-    <link href="http://blog.decbug.com/2015/07/26/pe_depen/"/>
-    <id>http://blog.decbug.com/2015/07/26/pe_depen/</id>
-    <published>2015-07-25T16:00:00.000Z</published>
-    <updated>2015-08-13T14:39:31.945Z</updated>
-    <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
-<h1 id="思路">思路</h1><ol>
-<li>获取该软件目录下所有模块(exe和dll)</li>
-<li>通过vs自带的dumpbin命令得到每个模块文件的依赖</li>
-<li>画出graphviz的dot脚本</li>
-<li>graphviz绘图</li>
-</ol>
-<a id="more"></a>
-<h1 id="使用方法">使用方法</h1><p>代码已经写好，放在<a href="https://github.com/CodeJuan/pe_dependency" target="_blank" rel="external">https://github.com/CodeJuan/pe_dependency</a><br>先说怎么用</p>
-<ol>
-<li>安装graphviz2.38<a href="http://www.graphviz.org/Download_windows.php" target="_blank" rel="external">http://www.graphviz.org/Download_windows.php</a>到D盘program files</li>
-<li>安装VS2010到到D盘program files<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell .\dependency.ps1 -sw_path &#34;&#36719;&#20214;&#30340;&#36335;&#24452;&#34;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>比如说我要分析腾讯TM，那么<code>powershell .\dependency.ps1 -sw_path &quot;D:\Program Files\Tencent\TM&quot;</code>就OK啦</p>
-<h1 id="代码">代码</h1><h2 id="获取目录下所有PE">获取目录下所有PE</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$get_pe_cmd</span> = <span class="string">"dir /S /B /a-d-h-s `"<span class="variable">$sw_path</span>`" | findstr /I `".dll .exe`" &gt; files.txt"</span></span><br><span class="line">cmd /c <span class="string">"<span class="variable">$get_pe_cmd</span>"</span></span><br></pre></td></tr></table></figure>
-<p>其中<code>findstr /I</code>表示忽略大小写</p>
-<h2 id="拷贝mspdb100-dll">拷贝mspdb100.dll</h2><p>由于无法直接调用vs2010 command prompt，所以没有设置环境变量，在使用dumpbin的时候会提示缺少<code>mspdb100.dll</code>，这就需要把<code>mspdb100.dll</code>拷贝到dumpbin.exe所在的<code>vc_bin</code>目录下<br><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$vs_path</span>=<span class="string">"D:\Program Files\Microsoft Visual Studio 10.0"</span></span><br><span class="line"><span class="built_in">copy-item</span> <span class="string">"<span class="variable">$vs_path</span>\Common7\IDE\mspdb100.dll"</span> <span class="string">"<span class="variable">$vc_bin</span>"</span> -Force</span><br></pre></td></tr></table></figure></p>
-<p>我的测试机是<code>x86 32位</code>，如果路径有变化，修改<code>$vs_path</code>即可</p>
-<h2 id="graphviz画图">graphviz画图</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$graph_dot</span>=<span class="string">"D:\Program Files\Graphviz2.38\bin\dot.exe"</span></span><br><span class="line"><span class="variable">$draw</span> = <span class="string">"`"<span class="variable">$graph_dot</span>`"  -Tpng graph.txt &gt; graph.png"</span> </span><br><span class="line">cmd /c <span class="string">"<span class="variable">$draw</span>"</span></span><br></pre></td></tr></table></figure>
-<p>我的graphviz装在D盘，如果有变化，修改<code>$graph_dot</code>即可</p>
-<h2 id="通过dumpbin获取依赖">通过dumpbin获取依赖</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$dump_cmd</span> = <span class="string">"`"<span class="variable">$dumpbin</span>`" /dependents `"<span class="variable">$line</span>`" | findstr /I .dll | findstr /I /vi `"dump of file`" &gt; <span class="variable">$deptxt</span>"</span></span><br><span class="line">cmd /c <span class="string">"`"<span class="variable">$dump_cmd</span>`""</span></span><br></pre></td></tr></table></figure>
-<h2 id="把依赖关系写入dot">把依赖关系写入dot</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">append <span class="string">"`"<span class="variable">$pename</span>`"[shape=box,fontname=consolas];"</span></span><br><span class="line">append <span class="string">"`"<span class="variable">$pename</span>`"-&gt;&#123;"</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$bFound</span> <span class="operator">-eq</span> <span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">    append <span class="string">"`"<span class="variable">$depen</span>`";"</span></span><br><span class="line">&#125;</span><br><span class="line">append <span class="string">"&#125;;"</span></span><br></pre></td></tr></table></figure>
-<h2 id="graphviz画图-1">graphviz画图</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$draw</span> = <span class="string">"`"<span class="variable">$graph_dot</span>`" <span class="variable">$graphtxt</span> -Tpng  &gt; dependency_graph.png"</span> </span><br><span class="line"><span class="built_in">write-host</span> <span class="variable">$draw</span></span><br><span class="line">cmd /c <span class="string">"<span class="variable">$draw</span>"</span></span><br><span class="line"></span><br><span class="line">`</span><br></pre></td></tr></table></figure>
-<h1 id="效果图">效果图</h1><p>分析了一下腾讯TM<br><img src="https://github.com/CodeJuan/pe_dependency/raw/master/dependency_graph11.png" alt=""></p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="前言">前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
-<h1 id="思路">思路</h1><ol>
-<li>获取该软件目录下所有模块(exe和dll)</li>
-<li>通过vs自带的dumpbin命令得到每个模块文件的依赖</li>
-<li>画出graphviz的dot脚本</li>
-<li>graphviz绘图</li>
-</ol>]]>
-    
-    </summary>
-    
-      <category term="dependency" scheme="http://blog.decbug.com/tags/dependency/"/>
-    
-      <category term="graphviz" scheme="http://blog.decbug.com/tags/graphviz/"/>
-    
-      <category term="module" scheme="http://blog.decbug.com/tags/module/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[在家里玩分布式(1)install centos]]></title>
-    <link href="http://blog.decbug.com/2015/07/25/install_centos/"/>
-    <id>http://blog.decbug.com/2015/07/25/install_centos/</id>
-    <published>2015-07-24T16:00:00.000Z</published>
-    <updated>2015-08-04T14:28:02.455Z</updated>
-    <content type="html"><![CDATA[<h1 id="扯淡">扯淡</h1><p>自己在家玩，买了一堆二手配件，整了4个台式机，打算</p>
-<pre><code>-<span class="ruby"> 弄个scrapy爬数据
-</span>-<span class="ruby"> 存到分布式内存数据库(redis吧)
-</span>-<span class="ruby"> 再存到分布式文件系统(打算用fastdfs)
-</span>-<span class="ruby"> 同时用storm流计算，弄个什么东西挖掘一下
-</span>-<span class="ruby"> 最后用<span class="constant">PHP</span>展示</span>
-</code></pre><p>也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。</p>
-<a id="more"></a>
-<h1 id="centos">centos</h1><h2 id="下载iso">下载iso</h2><p><a href="http://www.centos.org/download/" target="_blank" rel="external">http://www.centos.org/download/</a></p>
-<ul>
-<li>minimal: The aim of this image is to install a very basic CentOS system, with the minimum of packages needed to have a functional system</li>
-<li>dvd: 一般选择这个<br>下载x86_64</li>
-</ul>
-<h2 id="分区">分区</h2><p>/、/boot、/home、swap 就够了</p>
-<h2 id="预装软件">预装软件</h2><p>选择开发者模式，可以把python jdk都装上</p>
-<h2 id="设置自动登录">设置自动登录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/gdm/custom.conf</span><br></pre></td></tr></table></figure>
-<p>写上<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">[daemon]</span></span><br><span class="line"><span class="setting">AutomaticLoginEnable=<span class="value"><span class="keyword">true</span></span></span></span><br><span class="line"><span class="setting">AutomaticLogin=<span class="value">你的用户名</span></span></span><br></pre></td></tr></table></figure></p>
-<h2 id="启动网络">启动网络</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ntsysv</span><br><span class="line"><span class="comment"># TAB切换到OK</span></span><br></pre></td></tr></table></figure>
-<p>修改<code>/etc/sysconfig/network-scripts/ifcfg-enp2s0</code>,设置为<code>onboot=yes</code></p>
-<h2 id="安装启动SSH">安装启动SSH</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install ssh&#10;service sshd start&#10;chkconfig sshd on</span><br></pre></td></tr></table></figure>
-<h2 id="路由器设置固定IP">路由器设置固定IP</h2><ul>
-<li>查看每台机器的MAC ifconfig</li>
-<li>进入路由器管理页面，DHCP - 静态地址分配 - 绑定MAC和IP</li>
-</ul>
-<h2 id="安装vim_git">安装vim git</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install vim&#10;yum -y install git</span><br></pre></td></tr></table></figure>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/CodeJuan/config.git</span><br><span class="line">cp config/.vimrc ~/</span><br><span class="line">cat config/.gitconfig &gt;&gt; ~/.gitconfig</span><br></pre></td></tr></table></figure>
-<h1 id="装爬虫">装爬虫</h1><h2 id="装pip">装pip</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate  https://github.com/pypa/pip/archive/<span class="number">7.1</span>.<span class="number">0</span>.tar.gz</span><br><span class="line">tar zvxf <span class="number">7.1</span>.<span class="number">0</span>.tar.gz    <span class="comment">#解压文件</span></span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">0</span></span><br><span class="line">sudo python setup.py install</span><br></pre></td></tr></table></figure>
-<h2 id="装scrapy">装scrapy</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install scrapy</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="扯淡">扯淡</h1><p>自己在家玩，买了一堆二手配件，整了4个台式机，打算</p>
-<pre><code>-<span class="ruby"> 弄个scrapy爬数据
-</span>-<span class="ruby"> 存到分布式内存数据库(redis吧)
-</span>-<span class="ruby"> 再存到分布式文件系统(打算用fastdfs)
-</span>-<span class="ruby"> 同时用storm流计算，弄个什么东西挖掘一下
-</span>-<span class="ruby"> 最后用<span class="constant">PHP</span>展示</span>
-</code></pre><p>也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。</p>]]>
-    
-    </summary>
-    
-      <category term="system" scheme="http://blog.decbug.com/tags/system/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     

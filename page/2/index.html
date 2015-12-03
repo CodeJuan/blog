@@ -199,6 +199,193 @@
           
           
             
+              <a class="post-title-link" href="/2015/11/10/openstack_perf_tester_4/" itemprop="url">
+                openstack性能测试器(4):rabbitmq-server、kombu、tcpdump
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-10T00:00:00+08:00" content="2015-11-10">
+            2015-11-10
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/11/10/openstack_perf_tester_4/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/11/10/openstack_perf_tester_4/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="rabbitmq_server">rabbitmq server</h1><p><a href="http://www.rabbitmq.com/download.html">http://www.rabbitmq.com/download.html</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.<span class="number">5.6</span>/rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br><span class="line">sudo rpm -ivh rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>提示缺少erlang</p>
+<p><a href="http://www.erlang.org/download.html">http://www.erlang.org/download.html</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">http://www.erlang.org/download/otp_src_18.<span class="number">1</span>.tar.gz</span><br><span class="line">tar -xvf otp_src_18.<span class="number">1</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> otp_src_18.<span class="number">1</span></span><br><span class="line">./configure</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提示缺少fop和wxWidgets</span></span><br><span class="line">sudo yum install fop</span><br><span class="line">sudo yum install wxWidgets</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh --nodeps rabbitmq-server-<span class="number">3.5</span>.<span class="number">6</span>-<span class="number">1</span>.noarch.rpm</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/11/10/openstack_perf_tester_4/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/11/05/compile_optimize/" itemprop="url">
+                编译构建时间优化
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-05T00:00:00+08:00" content="2015-11-05">
+            2015-11-05
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/11/05/compile_optimize/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/11/05/compile_optimize/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="背景">背景</h1><p>项目是一个Windows桌面应用程序，用VS2010开发，后台是C++开发的DLL，UI是C#，目前已有103万行代码。<br>在代码只有30万行的时候，编译时间大约是10多分钟，反馈的速度足够快。然而随着代码膨胀，编译时间急剧上涨，当前的编译构建时间高达120分钟，也就是说，当你提交了一行代码，需要等120分钟之后，才能做全量测试。<br>如此长的等待时间，绝对是在浪费生命，此前我就一直想要优化，奈何见效不大。<br>原因有二：</p>
+<ul>
+<li>构建的机器太差了，4核4G的虚拟机，蜗牛速度。</li>
+<li>项目中各组件（DLL）用的是隐式记载的方式。如果A依赖B，那么，必须等待B编译结束，才能编译A，只能串行。</li>
+</ul>
+<p>我向领导安利了多次，采购一台好点的服务器，用来编译构建。也算了这么一笔账，项目组有100多人，如果有100个人在等待编译的话，这100个人的一小时的工资可不是小数目啊，绝对比一台服务器贵了。然而还是。。。。。。<br>还向各开发组安利过，快速构建的好处，可以减少等待，缩短反馈周期，更快的进行测试验证，然而。。。。。<br>对此我想说，呵呵！<br>不能再吐槽了，还是讲正事吧。</p>
+<p>由于家里没有windows系统，无法截图，只能凭记忆胡乱记录一下。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/11/05/compile_optimize/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/11/01/cobbler/" itemprop="url">
                 cobbler自动部署系统
               </a>
@@ -467,187 +654,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/10/16/openstack_perf_tester_2/" itemprop="url">
-                openstack性能测试器(2):消息调用过程oslo.messaging
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-10-16T01:00:00+08:00" content="2015-10-16">
-            2015-10-16
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/10/16/openstack_perf_tester_2/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/16/openstack_perf_tester_2/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="openstack简介">openstack简介</h1><p>The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich set of features. Cloud computing experts from around the world contribute to the project.<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/16/openstack_perf_tester_2/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/10/16/openstack_perf_tester_1/" itemprop="url">
-                openstack性能测试器(1):AMQP
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-10-16T00:00:00+08:00" content="2015-10-16">
-            2015-10-16
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/10/16/openstack_perf_tester_1/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/16/openstack_perf_tester_1/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="背景">背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
-<ul>
-<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
-<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
-</ul>
-<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/16/openstack_perf_tester_1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -686,7 +692,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">43</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -700,7 +706,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">74</span>
+              <span class="site-state-item-count">77</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
