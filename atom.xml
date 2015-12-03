@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-12-03T16:30:03.237Z</updated>
+  <updated>2015-12-03T16:33:46.125Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,8 +20,9 @@
     <link href="http://blog.decbug.com/2015/12/03/openwrt/"/>
     <id>http://blog.decbug.com/2015/12/03/openwrt/</id>
     <published>2015-12-02T16:00:00.000Z</published>
-    <updated>2015-12-03T16:30:03.237Z</updated>
+    <updated>2015-12-03T16:33:46.125Z</updated>
     <content type="html"><![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥</p>
+<a id="more"></a>
 <h1 id="原厂固件">原厂固件</h1><p>FWR171到703N<br><a href="http://pan.baidu.com/wap/share/home?uk=3457154703&amp;third=0" target="_blank" rel="external">http://pan.baidu.com/wap/share/home?uk=3457154703&amp;third=0</a></p>
 <h1 id="openwrt">openwrt</h1><p><a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin" target="_blank" rel="external">http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin</a><br><a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin" target="_blank" rel="external">http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin</a></p>
 <p>先刷factory</p>
@@ -49,8 +50,8 @@
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥</p>
-<h1 id="原厂固件">原厂固件</h1><p>FWR171到703N<br><a href="http://pan.baidu.c]]>
+    <![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥</p>]]>
+    
     </summary>
     
       <category term="openwrt" scheme="http://blog.decbug.com/tags/openwrt/"/>
