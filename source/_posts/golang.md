@@ -105,6 +105,16 @@ go get -u github.com/revel/cmd/revel
 看来我真的得把我的openwrt的路由弄好，用来全局Fxxk了。
 心情不好，今天就玩到这吧，擦擦擦！
 
+```
+后来在这个地方下载gogs编译包 : http://gopm.io/github.com/gogits/gogs
+mkdir -p  $GOPATH/src/github.com/gogits/gogs
+cd $GOPATH/src/github.com/gogits/gogs
+ls $GOPATH/src/github.com/gogits/gogs
+scp gogs-aaa3f1b2b9.zip   i3@192.168.161.51:~/
+unzip ~/gogs-aaa3f1b2b9.zip
+go build
+```
+
 ----------------------------
 
 `本博客欢迎转发,但请保留原作者信息`
