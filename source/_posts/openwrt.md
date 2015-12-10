@@ -16,10 +16,29 @@ description:
 
 <!--more-->
 
-#
+# HG225D
+购于淘宝，最好是买升级到64M内存的版本，速度会快一些。
+
+## 步骤
+
+### 刷机
+- 固件`openwrt-ramips-rt305x-hg255d-aria2-shadowsocks`，[http://pan.baidu.com/s/1kTst0gv#path=%252Fhg255d](http://pan.baidu.com/s/1kTst0gv#path=%252Fhg255d)
+- 按住reset不放，再给路由通电，直到power灯开始一闪一闪
+- 进入[192.168.1.1](192.168.1.1)，此时看到的是刷机界面，选择刚才的固件`openwrt-ramips-rt305x-hg255d-aria2-shadowsocks`，耐心等待即可
+
+### 内啥内啥的配置
+
+需要配置ss、Redsocks和chinadns，其中chinadns的作用就是，只有被墙了网站才会走ss。
+- 进入服务-ss，填入你的服务器信息
+- 进入服务-Redsocks，勾选启用Redsocks，在透明代理区域中，填写正确的代理服务器、代理服务器端口、代理服务器类型，加密方式以及密码。其中代理服务器类型选择`ss代理`
+- 还是在Redsocks，UDP转发区域，也填入和透明代理一样的信息
+- 进入网络-DHCP/DNS，在常规设置的DNS转发处填写`127.0.0.1#1153`
+- 还是DHCP/DNS，点击HOSTS和解析文件，勾选`忽略解析文件`
+
+再应用并保存所用配置，重启路由，就可以嘿嘿嘿了！
 
 
-# FAST-FWR171
+# FAST-FWR171失败的经历，可以不用看
 ### 原厂固件
 FWR171到703N
 [http://pan.baidu.com/wap/share/home?uk=3457154703&third=0](http://pan.baidu.com/wap/share/home?uk=3457154703&third=0)
