@@ -1,5 +1,5 @@
 ---
-title: Fast FWR171 openwrt
+title: openwrt内啥内啥
 date: 2015-12-03 00:00:00
 categories:
 - code
@@ -11,15 +11,20 @@ description:
 
 
 # 起因
-最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥
+最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。
+把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。
 
 <!--more-->
 
-# 原厂固件
+#
+
+
+# FAST-FWR171
+### 原厂固件
 FWR171到703N
 [http://pan.baidu.com/wap/share/home?uk=3457154703&third=0](http://pan.baidu.com/wap/share/home?uk=3457154703&third=0)
 
-# openwrt
+### openwrt
 http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
 http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin
 
@@ -29,7 +34,7 @@ http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-gener
 
 passwd改密码
 
-# 开启wifi
+### 开启wifi
 
 /etc/config/wireless  radio0的disable一行需要删掉或注释掉
 顺便加个密
@@ -52,7 +57,7 @@ config wifi-iface
 
 ```
 
-# 改 /etc/config/network
+### 改 /etc/config/network
 ```
 config interface 'loopback'
         option ifname 'lo'
@@ -74,14 +79,14 @@ config interface 'lan'
 
 ```
 
-# 搞挂了
+### 搞挂了
 电脑的IP  192.168.1.2  gateway192.168.1.1 255.255.255.0
 first_boot
 reboot -f
 
 ssh 192.168.1.1
 
-# network
+### network
 加上
 ```
 config interface 'lan'
@@ -137,14 +142,14 @@ uci commit network
 ```
 
 
-# install ss
+### install ss
 ```
 opkg install http://ncu.dl.sourceforge.net/project/openwrt-dist/shadowsocks-libev/2.4.1-6f44d53/ar71xx/shadowsocks-libev-spec-polarssl_2.4.1-1_ar71xx.ipk
 ```
 提示空间不够。。。。
 
 
-# 参考
+### 参考
 http://www.cnblogs.com/Lifehacker/archive/2013/04/13/failure_on_fwr171-3g_with_openwrt.html
 http://www.isucc.me/555.html
 http://shuyz.com/install-shadowsocks-on-hg255d-openwrt-and-config-nat.html
