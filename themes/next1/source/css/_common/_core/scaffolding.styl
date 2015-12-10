@@ -32,10 +32,14 @@ h1, h2, h3, h4, h5, h6 {
   font-family: $font-family-headings;
 }
 
+h1 {
+  color: #4682B4;
+  background-color: #F5F5F5;
+}
 
 for headline in (1..6) {
   h{headline} {
-    font-size: $font-size-headings-base - $font-size-headings-step * headline;
+    font-size: $font-size-headings-base + 3 - $font-size-headings-step * headline - 2 * headline;
   }
 
   +mobile() {
