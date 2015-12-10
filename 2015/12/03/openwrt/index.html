@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://blog.decbug.com/2015/12/03/openwrt/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="起因最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。">
-<meta property="og:updated_time" content="2015-12-10T14:43:11.146Z">
+<meta property="og:updated_time" content="2015-12-10T15:20:57.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openwrt内啥内啥">
 <meta name="twitter:description" content="起因最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。">
@@ -250,8 +250,22 @@
       
         <span itemprop="articleBody"><h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。<br>把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。</p>
 <a id="more"></a>
-<p>#</p>
-<h1 id="FAST-FWR171">FAST-FWR171</h1><h3 id="原厂固件">原厂固件</h3><p>FWR171到703N<br><a href="http://pan.baidu.com/wap/share/home?uk=3457154703&amp;third=0" target="_blank" rel="external">http://pan.baidu.com/wap/share/home?uk=3457154703&amp;third=0</a></p>
+<h1 id="HG225D">HG225D</h1><p>购于淘宝，最好是买升级到64M内存的版本，速度会快一些。</p>
+<h2 id="步骤">步骤</h2><h3 id="刷机">刷机</h3><ul>
+<li>固件<code>openwrt-ramips-rt305x-hg255d-aria2-shadowsocks</code>，<a href="http://pan.baidu.com/s/1kTst0gv#path=%252Fhg255d" target="_blank" rel="external">http://pan.baidu.com/s/1kTst0gv#path=%252Fhg255d</a></li>
+<li>按住reset不放，再给路由通电，直到power灯开始一闪一闪</li>
+<li>进入<a href="192.168.1.1">192.168.1.1</a>，此时看到的是刷机界面，选择刚才的固件<code>openwrt-ramips-rt305x-hg255d-aria2-shadowsocks</code>，耐心等待即可</li>
+</ul>
+<h3 id="内啥内啥的配置">内啥内啥的配置</h3><p>需要配置ss、Redsocks和chinadns，其中chinadns的作用就是，只有被墙了网站才会走ss。</p>
+<ul>
+<li>进入服务-ss，填入你的服务器信息</li>
+<li>进入服务-Redsocks，勾选启用Redsocks，在透明代理区域中，填写正确的代理服务器、代理服务器端口、代理服务器类型，加密方式以及密码。其中代理服务器类型选择<code>ss代理</code></li>
+<li>还是在Redsocks，UDP转发区域，也填入和透明代理一样的信息</li>
+<li>进入网络-DHCP/DNS，在常规设置的DNS转发处填写<code>127.0.0.1#1153</code></li>
+<li>还是DHCP/DNS，点击HOSTS和解析文件，勾选<code>忽略解析文件</code></li>
+</ul>
+<p>再应用并保存所用配置，重启路由，就可以嘿嘿嘿了！</p>
+<h1 id="FAST-FWR171失败的经历，可以不用看">FAST-FWR171失败的经历，可以不用看</h1><h3 id="原厂固件">原厂固件</h3><p>FWR171到703N<br><a href="http://pan.baidu.com/wap/share/home?uk=3457154703&amp;third=0" target="_blank" rel="external">http://pan.baidu.com/wap/share/home?uk=3457154703&amp;third=0</a></p>
 <h3 id="openwrt">openwrt</h3><p><a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin" target="_blank" rel="external">http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin</a><br><a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin" target="_blank" rel="external">http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin</a></p>
 <p>先刷factory</p>
 <p>然后ssh root@192.168.1.1</p>
@@ -433,7 +447,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#起因"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FAST-FWR171"><span class="nav-number">2.</span> <span class="nav-text">FAST-FWR171</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原厂固件"><span class="nav-number">2.0.1.</span> <span class="nav-text">原厂固件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#openwrt"><span class="nav-number">2.0.2.</span> <span class="nav-text">openwrt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启wifi"><span class="nav-number">2.0.3.</span> <span class="nav-text">开启wifi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改_/etc/config/network"><span class="nav-number">2.0.4.</span> <span class="nav-text">改 /etc/config/network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搞挂了"><span class="nav-number">2.0.5.</span> <span class="nav-text">搞挂了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#network"><span class="nav-number">2.0.6.</span> <span class="nav-text">network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#install_ss"><span class="nav-number">2.0.7.</span> <span class="nav-text">install ss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">2.0.8.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#起因"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HG225D"><span class="nav-number">2.</span> <span class="nav-text">HG225D</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">2.1.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#刷机"><span class="nav-number">2.1.1.</span> <span class="nav-text">刷机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内啥内啥的配置"><span class="nav-number">2.1.2.</span> <span class="nav-text">内啥内啥的配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FAST-FWR171失败的经历，可以不用看"><span class="nav-number">3.</span> <span class="nav-text">FAST-FWR171失败的经历，可以不用看</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原厂固件"><span class="nav-number">3.0.1.</span> <span class="nav-text">原厂固件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#openwrt"><span class="nav-number">3.0.2.</span> <span class="nav-text">openwrt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启wifi"><span class="nav-number">3.0.3.</span> <span class="nav-text">开启wifi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改_/etc/config/network"><span class="nav-number">3.0.4.</span> <span class="nav-text">改 /etc/config/network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搞挂了"><span class="nav-number">3.0.5.</span> <span class="nav-text">搞挂了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#network"><span class="nav-number">3.0.6.</span> <span class="nav-text">network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#install_ss"><span class="nav-number">3.0.7.</span> <span class="nav-text">install ss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">3.0.8.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
