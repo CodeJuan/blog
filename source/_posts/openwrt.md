@@ -14,19 +14,20 @@ description:
 最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。
 把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。
 
+
+
 <!--more-->
 
 # HG225D
 购于淘宝，一定要uboot的刷不死版本，如果可以的话，建议买升级到64M内存的版本，速度会快一些。
 
-## 步骤
 
-### 刷机
+## 刷机
 - 固件`openwrt-ramips-rt305x-hg255d-aria2-shadowsocks`，[http://pan.baidu.com/s/1kTst0gv#path=%252Fhg255d](http://pan.baidu.com/s/1kTst0gv#path=%252Fhg255d)
 - 按住reset不放，再给路由通电，直到power灯开始一闪一闪
 - 进入[192.168.1.1](192.168.1.1)，此时看到的是刷机界面，选择刚才的固件`openwrt-ramips-rt305x-hg255d-aria2-shadowsocks`，耐心等待即可
 
-### 内啥内啥的配置
+## 内啥内啥的配置
 
 需要配置ss、Redsocks和chinadns，其中chinadns的作用就是，只有被墙了网站才会走ss。
 - 进入服务-ss，填入你的服务器信息
@@ -38,12 +39,27 @@ description:
 再应用并保存所用配置，重启路由，就可以嘿嘿嘿了！
 
 
+# DB120
+- 刷飞翔的[http://downloads.openwrt.org.cn/OpenWrt-DreamBox/barrier_breaker/14.07/](http://downloads.openwrt.org.cn/OpenWrt-DreamBox/barrier_breaker/14.07/)
+- 然后更新chinaDNS-C到1.21
+[http://iweb.dl.sourceforge.net/project/openwrt-dist/chinadns/chinadns-c/1.2.1-102ab46/ChinaDNS-C_1.2.1-1_brcm63xx.ipk](http://iweb.dl.sourceforge.net/project/openwrt-dist/chinadns/chinadns-c/1.2.1-102ab46/ChinaDNS-C_1.2.1-1_brcm63xx.ipk)
+- 不更新的话，就有一些访问不了
+
+# WNDR4300
+- 下载石像鬼[https://github.com/gygy/gygy.github.io](https://github.com/gygy/gygy.github.io)
+- 按住reset开机
+- 等电源灯变绿并一闪一闪
+- 用tftp把刚下载好的固件传给4300
+- 刷好后关机再开机以激活5G
+- 填写相关配置，然后[@gygy](https://github.com/gygy)提供了三种方式，点一下按钮就OK了。
+
+
 # FAST-FWR171失败的经历，可以不用看
-### 原厂固件
+## 原厂固件
 FWR171到703N
 [http://pan.baidu.com/wap/share/home?uk=3457154703&third=0](http://pan.baidu.com/wap/share/home?uk=3457154703&third=0)
 
-### openwrt
+## openwrt
 http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
 http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin
 
@@ -53,7 +69,7 @@ http://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/openwrt-ar71xx-gener
 
 passwd改密码
 
-### 开启wifi
+## 开启wifi
 
 /etc/config/wireless  radio0的disable一行需要删掉或注释掉
 顺便加个密
@@ -76,7 +92,7 @@ config wifi-iface
 
 ```
 
-### 改 /etc/config/network
+## 改 /etc/config/network
 ```
 config interface 'loopback'
         option ifname 'lo'
@@ -98,14 +114,14 @@ config interface 'lan'
 
 ```
 
-### 搞挂了
+## 搞挂了
 电脑的IP  192.168.1.2  gateway192.168.1.1 255.255.255.0
 first_boot
 reboot -f
 
 ssh 192.168.1.1
 
-### network
+## network
 加上
 ```
 config interface 'lan'
@@ -161,14 +177,26 @@ uci commit network
 ```
 
 
-### install ss
+## install ss
 ```
 opkg install http://ncu.dl.sourceforge.net/project/openwrt-dist/shadowsocks-libev/2.4.1-6f44d53/ar71xx/shadowsocks-libev-spec-polarssl_2.4.1-1_ar71xx.ipk
 ```
 提示空间不够。。。。
 
+## 刷明月固件
+- [http://pan.baidu.com/s/1i3uYGeh#path=%252F](http://pan.baidu.com/s/1i3uYGeh#path=%252F)，下载最新的7100的upgrade固件
+- scp固件到路由的/tmp
+- ssh连上路由，cd到/tmp
+- `sysupgrade -v openwrt-ar71xx-generic-tl-wr2543-v1-squashfs-sysupgrade.bin`
+- 耐心等待
 
-### 参考
+
+
+
+
+
+
+# 参考
 http://www.cnblogs.com/Lifehacker/archive/2013/04/13/failure_on_fwr171-3g_with_openwrt.html
 http://www.isucc.me/555.html
 http://shuyz.com/install-shadowsocks-on-hg255d-openwrt-and-config-nat.html
