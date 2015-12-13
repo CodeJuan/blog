@@ -5,3 +5,5 @@ cd ../blog_page/
 git add .
 git cm 'page'
 git push origin gh-pages:gh-pages
+
+cd -
