@@ -39,16 +39,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="起因最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。">
+<meta name="description" content="起因最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。
+把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。
+刷完HG225D之后，又翻出个DB120，顺手也弄了下。最后，由于我的集群都是千兆网卡，而HG225D的有线只">
 <meta property="og:type" content="article">
 <meta property="og:title" content="openwrt内啥内啥">
 <meta property="og:url" content="http://blog.decbug.com/2015/12/03/openwrt/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="起因最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。">
-<meta property="og:updated_time" content="2015-12-13T06:03:03.791Z">
+<meta property="og:description" content="起因最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。
+把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。
+刷完HG225D之后，又翻出个DB120，顺手也弄了下。最后，由于我的集群都是千兆网卡，而HG225D的有线只">
+<meta property="og:updated_time" content="2015-12-13T06:09:18.531Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openwrt内啥内啥">
-<meta name="twitter:description" content="起因最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。">
+<meta name="twitter:description" content="起因最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。
+把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。
+刷完HG225D之后，又翻出个DB120，顺手也弄了下。最后，由于我的集群都是千兆网卡，而HG225D的有线只">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -248,7 +254,10 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。<br>把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。</p>
+        <span itemprop="articleBody"><h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。</p>
+<p>把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。</p>
+<p>刷完HG225D之后，又翻出个DB120，顺手也弄了下。最后，由于我的集群都是千兆网卡，而HG225D的有线只有百兆，所以趁着双12在京东买了个WNDR4300，299-40=259。</p>
+<p>至此，已经有三台openwrt设备了，嘿嘿嘿！</p>
 <a id="more"></a>
 <h1 id="HG225D">HG225D</h1><p>购于淘宝，一定要uboot的刷不死版本，如果可以的话，建议买升级到64M内存的版本，速度会快一些。</p>
 <h2 id="刷机">刷机</h2><ul>

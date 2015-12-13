@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-12-13T06:03:03.791Z</updated>
+  <updated>2015-12-13T06:09:18.531Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,8 +20,11 @@
     <link href="http://blog.decbug.com/2015/12/03/openwrt/"/>
     <id>http://blog.decbug.com/2015/12/03/openwrt/</id>
     <published>2015-12-02T16:00:00.000Z</published>
-    <updated>2015-12-13T06:03:03.791Z</updated>
-    <content type="html"><![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。<br>把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。</p>
+    <updated>2015-12-13T06:09:18.531Z</updated>
+    <content type="html"><![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。</p>
+<p>把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。</p>
+<p>刷完HG225D之后，又翻出个DB120，顺手也弄了下。最后，由于我的集群都是千兆网卡，而HG225D的有线只有百兆，所以趁着双12在京东买了个WNDR4300，299-40=259。</p>
+<p>至此，已经有三台openwrt设备了，嘿嘿嘿！</p>
 <a id="more"></a>
 <h1 id="HG225D">HG225D</h1><p>购于淘宝，一定要uboot的刷不死版本，如果可以的话，建议买升级到64M内存的版本，速度会快一些。</p>
 <h2 id="刷机">刷机</h2><ul>
@@ -85,7 +88,10 @@
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。<br>把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。</p>]]>
+    <![CDATA[<h1 id="起因">起因</h1><p>最近撸golang，下三方包太痛苦，挂代理太郁闷，所以。。。。。搞个openwrt全局内啥。</p>
+<p>把家里的老路由FWR171翻出来刷openwrt，但是还没搞定（具体折腾经历在本文第二段）。只好在淘宝买了个华为HG225D，59+12的邮费，半个小时就搞定啦，太方便了，所以简单记录一下。</p>
+<p>刷完HG225D之后，又翻出个DB120，顺手也弄了下。最后，由于我的集群都是千兆网卡，而HG225D的有线只有百兆，所以趁着双12在京东买了个WNDR4300，299-40=259。</p>
+<p>至此，已经有三台openwrt设备了，嘿嘿嘿！</p>]]>
     
     </summary>
     
