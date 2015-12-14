@@ -45,6 +45,16 @@ description:
 
 ![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cache/the-memory-system-15-638.jpg)
 
+## 这里顺便提以下CPU的提前预取？
+
+> 为了利用空间局部性，同时也为了覆盖传输延迟，可以随机性地在数据被用到之前就将其取入缓存。这一技术称为预取（Prefetch）。本质上讲，加载整个缓存块其实即是一种预取。
+
+大概就是，CPU会提前给你把数据取过来，如果取到的数据正好是你要用的数据，那么恭喜你，速度会很快。
+
+## 阶梯延时
+
+![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cache/cpu_cache.jpg)
+
 # 内存数据库
 
 也是将热点数据放在内存中，相当于是把内存当作硬盘的缓存
