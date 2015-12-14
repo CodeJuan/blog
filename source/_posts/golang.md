@@ -105,15 +105,22 @@ go get -u github.com/revel/cmd/revel
 看来我真的得把我的openwrt的路由弄好，用来全局Fxxk了。
 心情不好，今天就玩到这吧，擦擦擦！
 
+> 把内啥路由搞好了，HOHO，链接[http://blog.decbug.com/2015/12/03/openwrt/](http://blog.decbug.com/2015/12/03/openwrt/)。搞好了三台，网件WNDR4300、华为HG225D和DB120，搞挂了一个迅捷171。继续开搞吧
+
+```sh
+# get revel framework
+go get github.com/revel/revel
+
+# get 'revel' command
+go get github.com/revel/cmd/revel
+
+# get samples and run chat app
+go get github.com/revel/samples
+revel run github.com/revel/samples/chat
 ```
-后来在这个地方下载gogs编译包 : http://gopm.io/github.com/gogits/gogs
-mkdir -p  $GOPATH/src/github.com/gogits/gogs
-cd $GOPATH/src/github.com/gogits/gogs
-ls $GOPATH/src/github.com/gogits/gogs
-scp gogs-aaa3f1b2b9.zip   i3@192.168.161.51:~/
-unzip ~/gogs-aaa3f1b2b9.zip
-go build
-```
+
+
+
 
 ----------------------------
 
