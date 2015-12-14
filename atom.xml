@@ -132,7 +132,7 @@
     <link href="http://blog.decbug.com/2015/11/28/golang/"/>
     <id>http://blog.decbug.com/2015/11/28/golang/</id>
     <published>2015-11-27T16:00:00.000Z</published>
-    <updated>2015-11-29T07:19:23.410Z</updated>
+    <updated>2015-12-14T11:07:11.565Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>最近经常听到有同事在安利golang，颇为心动。恰巧又看到这篇文章<a href="http://blog.parse.com/learn/how-we-moved-our-api-from-ruby-to-go-and-saved-our-sanity/" target="_blank" rel="external">How We Moved Our API From Ruby to Go and Saved Our Sanity</a>，于是便忍不住了，打算试试。<br>毕竟是谷歌亲儿子，想必会有一番不错的表现。</p>
 <a id="more"></a>
 <hr>
@@ -160,7 +160,10 @@
 <h1 id="web_frame">web frame</h1><p>打算试试revel<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> `<span class="built_in">export</span> GOPATH=<span class="variable">$HOME</span>/code/go_code` &gt;&gt; ~/.bashrc</span><br><span class="line">go get -u github.com/revel/cmd/revel</span><br></pre></td></tr></table></figure></p>
 <p>提示<code>package golang.org/x/net/websocket: unrecognized import path &quot;golang.org/x/net/websocket&quot;</code></p>
 <p>我只在我的办公机上装了SS，其他的几台挖掘机都没装，所以下不了。。<br>看来我真的得把我的openwrt的路由弄好，用来全局Fxxk了。<br>心情不好，今天就玩到这吧，擦擦擦！</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">后来在这个地方下载gogs编译包 : http:<span class="comment">//gopm.io/github.com/gogits/gogs</span></span><br><span class="line">mkdir -<span class="tag">p</span>  <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">cd <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">ls <span class="variable">$GOPATH</span>/src/github.com/gogits/gogs</span><br><span class="line">scp gogs-aaa3f1b2b9<span class="class">.zip</span>   i3@<span class="number">192.168</span>.<span class="number">161.51</span>:~/</span><br><span class="line">unzip ~/gogs-aaa3f1b2b9<span class="class">.zip</span></span><br><span class="line">go build</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>把内啥路由搞好了，HOHO，链接<a href="http://blog.decbug.com/2015/12/03/openwrt/">http://blog.decbug.com/2015/12/03/openwrt/</a>。搞好了三台，网件WNDR4300、华为HG225D和DB120，搞挂了一个迅捷171。继续开搞吧</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get revel framework</span></span><br><span class="line">go get github.com/revel/revel</span><br><span class="line"></span><br><span class="line"><span class="comment"># get 'revel' command</span></span><br><span class="line">go get github.com/revel/cmd/revel</span><br><span class="line"></span><br><span class="line"><span class="comment"># get samples and run chat app</span></span><br><span class="line">go get github.com/revel/samples</span><br><span class="line">revel run github.com/revel/samples/chat</span><br></pre></td></tr></table></figure>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
