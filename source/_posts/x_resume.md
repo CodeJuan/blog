@@ -114,4 +114,12 @@ Ruby|0.1星|Hello World的水平
 - 兼职过IT，会组装电脑，维修电脑，搭建局域网
 
 
+# 家里的学习环境
+
+## 办公机
+![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/resume/home1.jpg)
+
+
+## 挖掘机
+![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/resume/home2.jpg)
 
