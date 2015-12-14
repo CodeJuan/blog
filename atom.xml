@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-12-14T13:17:57.798Z</updated>
+  <updated>2015-12-14T13:34:22.846Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.decbug.com/2015/12/14/cache/"/>
     <id>http://blog.decbug.com/2015/12/14/cache/</id>
     <published>2015-12-13T16:00:00.000Z</published>
-    <updated>2015-12-14T13:17:57.798Z</updated>
+    <updated>2015-12-14T13:34:22.846Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>缓存，可以说在计算机体系到处被用到。</p>
 <ul>
 <li>CPU有指令缓存，还有L1L2L3缓存；</li>
@@ -42,6 +42,11 @@
 </ul>
 <h1 id="CPU_Cache_hit_&amp;_miss">CPU Cache hit &amp; miss</h1><p>我不说话，我只上图，能用图说清楚的，我就不说话。</p>
 <p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cache/the-memory-system-15-638.jpg" alt=""></p>
+<h2 id="这里顺便提以下CPU的提前预取？">这里顺便提以下CPU的提前预取？</h2><blockquote>
+<p>为了利用空间局部性，同时也为了覆盖传输延迟，可以随机性地在数据被用到之前就将其取入缓存。这一技术称为预取（Prefetch）。本质上讲，加载整个缓存块其实即是一种预取。</p>
+</blockquote>
+<p>大概就是，CPU会提前给你把数据取过来，如果取到的数据正好是你要用的数据，那么恭喜你，速度会很快。</p>
+<h2 id="阶梯延时">阶梯延时</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cache/cpu_cache.jpg" alt=""></p>
 <h1 id="内存数据库">内存数据库</h1><p>也是将热点数据放在内存中，相当于是把内存当作硬盘的缓存</p>
 <p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cache/redis-memcached-pdf-12-728.jpg" alt=""></p>
 <h1 id="硬盘自身的缓存">硬盘自身的缓存</h1><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cache/disk.jpg" alt=""></p>
