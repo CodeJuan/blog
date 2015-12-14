@@ -96,3 +96,8 @@ stylus:
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
   type:
+
+
+# hexo-tag-emojis plugin configuration
+#emojis:
+#  image_dir: images/emojis
