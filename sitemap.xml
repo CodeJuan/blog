@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2015/12/14/cache/</loc>
+    <lastmod>2015-12-14T13:17:57.798Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/11/28/golang/</loc>
     <lastmod>2015-12-14T11:07:11.565Z</lastmod>
   </url>
@@ -147,12 +152,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
+    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
+    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
@@ -197,12 +202,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
+    <loc>http://blog.decbug.com/2015/01/12/jenkins/</loc>
     <lastmod>2015-08-04T14:28:02.455Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/01/12/jenkins/</loc>
+    <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
     <lastmod>2015-08-04T14:28:02.455Z</lastmod>
   </url>
   
