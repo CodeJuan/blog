@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-12-14T13:34:22.846Z</updated>
+  <updated>2015-12-15T12:43:28.345Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,39 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[一次去中心化的性能优化]]></title>
+    <link href="http://blog.decbug.com/2015/12/15/decentralized/"/>
+    <id>http://blog.decbug.com/2015/12/15/decentralized/</id>
+    <published>2015-12-14T16:00:00.000Z</published>
+    <updated>2015-12-15T12:43:28.345Z</updated>
+    <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>一个分布式计算系统，在数据量越来越大的情况下，处理时间太久，不符合用户需求，需要优化。</p>
+<p>经过分析，发现有一个从存储节点把数据拷贝到计算节点的动作，这个过程比较耗时间。如果能把这个拷贝过程去掉，对于系统的整体性能将会有很大提升。</p>
+<a id="more"></a>
+<h1 id="过程">过程</h1><h2 id="原来的流程">原来的流程</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/decentralized/data2compute.jpg" alt=""></p>
+<p>如图，为简化流程，只画了一个存储节点和计算节点<code>典型的数据向计算迁移</code>，当数据特别大（数十G～百G）的时候，从存储节点拷贝到计算节点将特别耗时间。</p>
+<p>而计算工具的身材特别苗条，几百M而已，拷贝过去也就是分分钟的事，如果能把计算工具放到存储节点，拷贝的时间就可以忽略不计，这个方法叫<code>计算向数据迁移</code></p>
+<h2 id="优化后的流程">优化后的流程</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/decentralized/compute2data.jpg" alt=""></p>
+<p>只是把百兆的计算工具拷过去，省去以前拷贝几百G数据的步骤～</p>
+<h1 id="结论">结论</h1><p>虽然不是什么很新的技术，但是简单几步就解决了业务问题，还是比较值得高兴一下的。</p>
+<p>后面如果能把计算工具封装成docker，放到docker registry上去，每次计算的时候，存储节点把镜像pull过来，应该会比较好玩吧～</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="前言">前言</h1><p>一个分布式计算系统，在数据量越来越大的情况下，处理时间太久，不符合用户需求，需要优化。</p>
+<p>经过分析，发现有一个从存储节点把数据拷贝到计算节点的动作，这个过程比较耗时间。如果能把这个拷贝过程去掉，对于系统的整体性能将会有很大提升。</p>]]>
+    
+    </summary>
+    
+      <category term="decentralized" scheme="http://blog.decbug.com/tags/decentralized/"/>
+    
+      <category term="optimization" scheme="http://blog.decbug.com/tags/optimization/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[讲讲缓存]]></title>
@@ -1167,66 +1200,6 @@
       <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
     
       <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[指标下的单元测试]]></title>
-    <link href="http://blog.decbug.com/2015/08/23/fake_unit_test/"/>
-    <id>http://blog.decbug.com/2015/08/23/fake_unit_test/</id>
-    <published>2015-08-22T16:00:00.000Z</published>
-    <updated>2015-09-13T14:25:33.374Z</updated>
-    <content type="html"><![CDATA[<h1 id="前言">前言</h1><blockquote>
-<p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
-</blockquote>
-<p>距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？<br>半年前我的猜测是<code>为了提高覆盖率，写一堆无效代码</code>，然而实际情况却比这更糟糕。</p>
-<ul>
-<li>有人的测试函数的末尾始终是<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPECT_EQ(TRUE=TRUE)</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>这样每个用例都是绿的</p>
-<ul>
-<li>还有人这么写<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//init module</span></span><br><span class="line"><span class="comment">//run module</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>测试的是整个模块的输入输出，这样可以保证覆盖率</p>
-<p>领导看到用例一片绿，覆盖率90%，觉得我们的代码质量很高。</p>
-<p>然而，这并没有什么卵用！！！<br>这真的没有什么卵用！<br>这真的没有什么卵用！<br>这真的没有什么卵用！</p>
-<a id="more"></a>
-<h1 id="分析">分析</h1><ul>
-<li>正如我所说<code>没几个人觉得写好UT是为了提升软件质量，提高自己的代码水平</code></li>
-<li>责任心？能想出这样方法的人，都是比较聪明的人。只能说是责任心吧。</li>
-<li>管理方式？为什么没有早点发现？为什么我没有去经常查看单元测试代码的提交记录（我平时会看看生产代码）？我有罪。</li>
-</ul>
-<p>待续</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="前言">前言</h1><blockquote>
-<p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
-</blockquote>
-<p>距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？<br>半年前我的猜测是<code>为了提高覆盖率，写一堆无效代码</code>，然而实际情况却比这更糟糕。</p>
-<ul>
-<li>有人的测试函数的末尾始终是<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPECT_EQ(TRUE=TRUE)</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>这样每个用例都是绿的</p>
-<ul>
-<li>还有人这么写<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//init module</span></span><br><span class="line"><span class="comment">//run module</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>测试的是整个模块的输入输出，这样可以保证覆盖率</p>
-<p>领导看到用例一片绿，覆盖率90%，觉得我们的代码质量很高。</p>
-<p>然而，这并没有什么卵用！！！<br>这真的没有什么卵用！<br>这真的没有什么卵用！<br>这真的没有什么卵用！</p>]]>
-    
-    </summary>
-    
-      <category term="indicator" scheme="http://blog.decbug.com/tags/indicator/"/>
-    
-      <category term="unit_test" scheme="http://blog.decbug.com/tags/unit-test/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
