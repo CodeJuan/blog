@@ -9,12 +9,14 @@ mathjax: true
 description: 
 ---
 
-# 联系方式
+# 个人资料
 
-mail:			[xh@decbug.com](mailto:xh@decbug.com)
-github:			[codejuan](http://github.com/codejuan)
-stackoverflow:	[codejuan](http://stackoverflow.com/users/2763396/codejuan)
-blog:			[blog.decbug.com](http://blog.decbug.com)
+mail:[xh@decbug.com](mailto:xh@decbug.com)
+github:[codejuan](http://github.com/codejuan)
+stackoverflow:[codejuan](http://stackoverflow.com/users/2763396/codejuan)
+blog:[blog.decbug.com](http://blog.decbug.com)
+毕业学校:南昌大学 20xx年～20xx年 本科
+手机号:xxxxxxxxxxxx**个人隐私不公开可以发邮件索取**
 
 
 # 技能
@@ -81,7 +83,7 @@ Ruby|0.1星|Hello World的水平
 
 # 工作经历
 
-## huawei
+## 华为 20xx年～至今
 1. 作为技术`砖家`，在一个开发数据挖掘工具的150人团队里厮混
     - 持续集成，将整个系统的构建时间由2小时缩短到0.5小时
     - 导入开源框架
@@ -96,23 +98,26 @@ Ruby|0.1星|Hello World的水平
     - Cobbler 裸机通过网线安装系统
     - 模仿AWS
 
-## samsung
+## Samsung 20xx年～20xx年
 - 接触前端/数据库等等，丰富技能树
 - 基于Redmine/Jira做二次开发
 - SilverLight
 - 用SSH做了个xx系统
 - 敢于开口说英语
 
-## ZTE
+## 中兴 20xx年～20xx年
 - 开发手机检测系统，C/S架构，Windows应用程序，C++，用到socket、USB等等
 - 收获信心，挂科学渣竟然能教同龄名校硕士干活
 - 开始抛弃百度，拥抱谷歌，向真正程序员迈进
 
 
-## GD
+## GD 20xx年～20xx年
 - 由维修工转职为程序员，用过VB，C++，C#，奠定了啥都会一点的基础
 - 兼职过IT，会组装电脑，维修电脑，搭建局域网
 
+# 备注
+
+前文中的xx都涉及个人隐私，可以私下发邮件索取。
 
 # 家里的学习环境
 
@@ -122,4 +127,6 @@ Ruby|0.1星|Hello World的水平
 
 ## 挖掘机
 ![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/resume/home2.jpg)
+
+
 
