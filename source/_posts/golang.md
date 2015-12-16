@@ -28,6 +28,8 @@ wget https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz
 tar -C /usr/local -xzf go1.5.1.linux-amd64.tar.gz
 echo 'export GOROOT="/usr/local/go"' >> ~/.bashrc
 echo 'export PATH=$PATH:$GOROOT/bin' >> ~/.bashrc
+echo 'export GOPATH="$HOME/code/go_code"' >> ~/.bashrc
+echo 'export PATH=$PATH:$GOROOT/bin' >> ~/.bashrc
 . ~/.bashrc
 ```
 
@@ -96,7 +98,6 @@ func main() {
 # web frame
 打算试试revel
 ```sh
-echo `export GOPATH=$HOME/code/go_code` >> ~/.bashrc
 go get -u github.com/revel/cmd/revel
 ```
 提示`package golang.org/x/net/websocket: unrecognized import path "golang.org/x/net/websocket"`
@@ -116,6 +117,8 @@ go get github.com/revel/cmd/revel
 
 # get samples and run chat app
 go get github.com/revel/samples
+vi src/github.com/codejuan/my-app/conf/app.conf #8080
+sudo /sbin/iptables -I INPUT -p tcp -m tcp --dport 8080 -j ACCEPT
 revel run github.com/revel/samples/chat
 ```
 
