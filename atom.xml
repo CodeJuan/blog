@@ -49,6 +49,28 @@
   </entry>
   
   <entry>
+    <title><![CDATA[学golang(2):web框架revel]]></title>
+    <link href="http://blog.decbug.com/2015/12/15/golang_revel/"/>
+    <id>http://blog.decbug.com/2015/12/15/golang_revel/</id>
+    <published>2015-12-14T16:00:00.000Z</published>
+    <updated>2015-12-22T15:15:56.636Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>
+<a id="more"></a>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>]]>
+    
+    </summary>
+    
+      <category term="golang" scheme="http://blog.decbug.com/tags/golang/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[讲讲缓存]]></title>
     <link href="http://blog.decbug.com/2015/12/14/cache/"/>
     <id>http://blog.decbug.com/2015/12/14/cache/</id>
@@ -224,11 +246,11 @@
   </entry>
   
   <entry>
-    <title><![CDATA[初学golang]]></title>
+    <title><![CDATA[学golang(2):初学]]></title>
     <link href="http://blog.decbug.com/2015/11/28/golang/"/>
     <id>http://blog.decbug.com/2015/11/28/golang/</id>
     <published>2015-11-27T16:00:00.000Z</published>
-    <updated>2015-12-16T14:41:06.558Z</updated>
+    <updated>2015-12-17T13:51:50.631Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>最近经常听到有同事在安利golang，颇为心动。恰巧又看到这篇文章<a href="http://blog.parse.com/learn/how-we-moved-our-api-from-ruby-to-go-and-saved-our-sanity/" target="_blank" rel="external">How We Moved Our API From Ruby to Go and Saved Our Sanity</a>，于是便忍不住了，打算试试。<br>毕竟是谷歌亲儿子，想必会有一番不错的表现。</p>
 <a id="more"></a>
 <hr>
@@ -1149,57 +1171,6 @@
       <category term="rsync" scheme="http://blog.decbug.com/tags/rsync/"/>
     
       <category term="wget" scheme="http://blog.decbug.com/tags/wget/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[初学docker]]></title>
-    <link href="http://blog.decbug.com/2015/08/23/docker_tutorial/"/>
-    <id>http://blog.decbug.com/2015/08/23/docker_tutorial/</id>
-    <published>2015-08-22T16:00:00.000Z</published>
-    <updated>2015-09-13T14:25:20.974Z</updated>
-    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
-<a id="more"></a>
-<h2 id="安装">安装</h2><p>参考<a href="http://docs.docker.com/installation/centos/" target="_blank" rel="external">installation on CentOS</a></p>
-<h3 id="查看内核版本">查看内核版本</h3><blockquote>
-<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum, which CentOS 7 runs.<br>要求centos7 64-bit</p>
-</blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
-<p>我的是CentOS7，<code>3.10.0-229.el7.x86_64</code>，符合要求</p>
-<h3 id="用脚本安装">用脚本安装</h3><ol>
-<li><p>yum package最新</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Run the Docker installation script.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>This script adds the <code>docker.repo</code> repository and installs Docker.</p>
-<ol>
-<li>Start the Docker daemon.<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>失败了，提示<code>Job for docker.service failed. See &#39;systemctl status docker.service&#39; and &#39;journalctl -xn&#39; for details.</code><br>查了一下，<a href="https://github.com/docker/docker/issues/15498" target="_blank" rel="external">#15498</a>有人说要装docker-selinux<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-selinux</span><br></pre></td></tr></table></figure></p>
-<p>然后<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure></p>
-<p>果然complete</p>
-<ol>
-<li>verify<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Unable <span class="built_in">to</span> find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling <span class="built_in">from</span> library/hello-world</span><br><span class="line"><span class="number">535020</span>c3e8ad: Pull complete </span><br><span class="line">af340544ed62: Already exists </span><br><span class="line">library/hello-world:latest: The image you are pulling has been verified. Important: image verification is <span class="operator">a</span> tech preview feature <span class="operator">and</span> should <span class="operator">not</span> be relied <span class="command"><span class="keyword">on</span> <span class="title">to</span> <span class="title">provide</span> <span class="title">security</span>.</span></span><br><span class="line">Digest: sha256:d5fbd996e6562438f7ea5389d7da867fe58e04d581810e230df4cc073271ea52</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello <span class="built_in">from</span> Docker.</span><br><span class="line">This message shows that your installation appears <span class="built_in">to</span> be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took <span class="operator">the</span> following steps:</span><br><span class="line"> <span class="number">1.</span> The Docker client contacted <span class="operator">the</span> Docker daemon.</span><br><span class="line"> <span class="number">2.</span> The Docker daemon pulled <span class="operator">the</span> <span class="string">"hello-world"</span> image <span class="built_in">from</span> <span class="operator">the</span> Docker Hub.</span><br><span class="line"> <span class="number">3.</span> The Docker daemon created <span class="operator">a</span> <span class="built_in">new</span> container <span class="built_in">from</span> that image which runs <span class="operator">the</span></span><br><span class="line">    executable that produces <span class="operator">the</span> output you are currently reading.</span><br><span class="line"> <span class="number">4.</span> The Docker daemon streamed that output <span class="built_in">to</span> <span class="operator">the</span> Docker client, which sent <span class="keyword">it</span></span><br><span class="line">    <span class="built_in">to</span> your terminal.</span><br><span class="line"></span><br><span class="line">To <span class="keyword">try</span> something more ambitious, you can run <span class="operator">an</span> Ubuntu container <span class="operator">with</span>:</span><br><span class="line"> $ docker run -<span class="keyword">it</span> ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, <span class="operator">and</span> more <span class="operator">with</span> <span class="operator">a</span> free Docker Hub account:</span><br><span class="line"> <span class="keyword">https</span>://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples <span class="operator">and</span> ideas, visit:</span><br><span class="line"> <span class="keyword">https</span>://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
-<h2 id="进阶">进阶</h2><hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>]]>
-    
-    </summary>
-    
-      <category term="centos" scheme="http://blog.decbug.com/tags/centos/"/>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     

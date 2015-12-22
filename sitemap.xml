@@ -2,18 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2015/12/15/golang_revel/</loc>
+    <lastmod>2015-12-22T15:15:56.636Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/2014/01/01/x_resume/</loc>
+    <lastmod>2015-12-22T15:14:36.532Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/11/28/golang/</loc>
-    <lastmod>2015-12-16T14:41:06.558Z</lastmod>
+    <lastmod>2015-12-17T13:51:50.631Z</lastmod>
   </url>
   
   <url>
     <loc>http://blog.decbug.com/2015/12/15/decentralized/</loc>
     <lastmod>2015-12-15T12:43:28.345Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.decbug.com/2014/01/01/x_resume/</loc>
-    <lastmod>2015-12-15T12:04:13.799Z</lastmod>
   </url>
   
   <url>
@@ -162,12 +167,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
+    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
+    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
@@ -242,12 +247,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
+    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
+    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
