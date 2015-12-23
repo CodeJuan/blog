@@ -115,7 +115,7 @@ g530 ansible_user=g530 ansible_ssh_host=192.168.161.52
 ## ping
 先写一个最简单的ping
 
-```yml
+```
 ---                                                                        
 - hosts: g530
   tasks:
@@ -147,7 +147,7 @@ g530                       : ok=2    changed=0    unreachable=0    failed=0
 ## advanced
 来尝试一个高端点的，带roles handler template的
 ### playbook
-```yml
+```
 ---
 - name: role_handler
   hosts: g530
@@ -173,7 +173,7 @@ current_dir
 
 ### handlers
 每个role都会有handlers文件夹，里边的main.yml放一些响应事件
-```yml
+```
 ---
 - name: restart
   service: name=iptables state=restarted enabled=yes
@@ -182,7 +182,7 @@ current_dir
 
 ### tasks
 role的tasks里的main.yml就是真正要执行的任务
-```yml
+```
 ---
 - name: ping and restart iptables
   ping:  
@@ -193,7 +193,7 @@ role的tasks里的main.yml就是真正要执行的任务
 ### template
 在template里创建一个文件`haha`，将他拷贝到agent的`/tmp`
 tasks mail.yml改为
-```yml
+```
 ---
 - name: ping
   ping:   

@@ -13,6 +13,8 @@ description:
 
 看到别的开源软件的ReadMe上总一些build success的图标，感觉很帅，也想尝试一下。
 
+<!--more-->
+
 # 步骤
 
 - 首先，用github帐号登录[https://travis-ci.org/](https://travis-ci.org/)
