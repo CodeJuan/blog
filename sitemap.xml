@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2015/12/23/travisci/</loc>
+    <lastmod>2015-12-23T13:11:35.823Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/12/15/golang_revel/</loc>
     <lastmod>2015-12-22T15:15:56.636Z</lastmod>
   </url>

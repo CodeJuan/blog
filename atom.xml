@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-12-15T12:43:28.345Z</updated>
+  <updated>2015-12-23T13:11:35.823Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,71 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[尝试travis CI]]></title>
+    <link href="http://blog.decbug.com/2015/12/23/travisci/"/>
+    <id>http://blog.decbug.com/2015/12/23/travisci/</id>
+    <published>2015-12-22T16:00:00.000Z</published>
+    <updated>2015-12-23T13:11:35.823Z</updated>
+    <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>看到别的开源软件的ReadMe上总一些build success的图标，感觉很帅，也想尝试一下。</p>
+<h1 id="步骤">步骤</h1><ul>
+<li>首先，用github帐号登录<a href="https://travis-ci.org/" target="_blank" rel="external">https://travis-ci.org/</a></li>
+<li>把某个工程打开，我选的工程是<a href="https://github.com/CodeJuan/python_convert_json2lua" target="_blank" rel="external">https://github.com/CodeJuan/python_convert_json2lua</a></li>
+<li><p>创建’.travis.yml’，根据<a href="https://docs.travis-ci.com/user/languages/python" target="_blank" rel="external">https://docs.travis-ci.com/user/languages/python</a>填写一个python的yml</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">language:</span> python</span><br><span class="line"><span class="label">python:</span></span><br><span class="line">  - <span class="string">"2.7"</span></span><br><span class="line"><span class="preprocessor"># command to install dependencies</span></span><br><span class="line"><span class="label">install:</span> <span class="string">"pip install simplejson"</span></span><br><span class="line"><span class="preprocessor"># command to run tests</span></span><br><span class="line"><span class="label">script:</span> python go.py</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>点击工程的status图标，拷贝链接<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/travisci/travis_status.png" alt=""></p>
+</li>
+<li><p>在readme加上</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="link_label">![Build Status</span>](<span class="link_url">https://travis-ci.org/CodeJuan/python_convert_json2lua.svg?branch=master</span>)](<span class="link_url">https://travis-ci.org/CodeJuan/python_convert_json2lua</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>效果如图</p>
+</li>
+</ul>
+<p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/travisci/demo.png" alt=""></p>
+<h1 id="感想">感想</h1><ul>
+<li>有提交就触发，很方便</li>
+<li>log很完整</li>
+<li>可以自由配置环境</li>
+<li>省去自己搭建jenkins的步骤</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="前言">前言</h1><p>看到别的开源软件的ReadMe上总一些build success的图标，感觉很帅，也想尝试一下。</p>
+<h1 id="步骤">步骤</h1><ul>
+<li>首先，用github帐号登录<a href="https://travis]]>
+    </summary>
+    
+      <category term="travisCI" scheme="http://blog.decbug.com/tags/travisCI/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[学golang(2):web框架revel]]></title>
+    <link href="http://blog.decbug.com/2015/12/15/golang_revel/"/>
+    <id>http://blog.decbug.com/2015/12/15/golang_revel/</id>
+    <published>2015-12-14T16:00:00.000Z</published>
+    <updated>2015-12-22T15:15:56.636Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>
+<a id="more"></a>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>]]>
+    
+    </summary>
+    
+      <category term="golang" scheme="http://blog.decbug.com/tags/golang/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[一次去中心化的性能优化]]></title>
@@ -43,28 +108,6 @@
       <category term="decentralized" scheme="http://blog.decbug.com/tags/decentralized/"/>
     
       <category term="optimization" scheme="http://blog.decbug.com/tags/optimization/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[学golang(2):web框架revel]]></title>
-    <link href="http://blog.decbug.com/2015/12/15/golang_revel/"/>
-    <id>http://blog.decbug.com/2015/12/15/golang_revel/</id>
-    <published>2015-12-14T16:00:00.000Z</published>
-    <updated>2015-12-22T15:15:56.636Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>
-<a id="more"></a>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>]]>
-    
-    </summary>
-    
-      <category term="golang" scheme="http://blog.decbug.com/tags/golang/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -1118,59 +1161,6 @@
       <category term="python" scheme="http://blog.decbug.com/tags/python/"/>
     
       <category term="tornado" scheme="http://blog.decbug.com/tags/tornado/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[多线程同步镜像]]></title>
-    <link href="http://blog.decbug.com/2015/09/07/multi_thread_rsync/"/>
-    <id>http://blog.decbug.com/2015/09/07/multi_thread_rsync/</id>
-    <published>2015-09-06T16:00:00.000Z</published>
-    <updated>2015-09-13T14:25:46.038Z</updated>
-    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
-<h2 id="大概的思路">大概的思路</h2><ul>
-<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/" target="_blank" rel="external">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
-<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
-<li>记录每个href的同步状态</li>
-<li>汇总全部状态，看所有href是否都同步成功<a id="more"></a>
-</li>
-</ul>
-<h2 id="shell爬">shell爬</h2><h3 id="步骤">步骤</h3><ul>
-<li>wget镜像的index.html</li>
-<li>正则匹配，找到二级目录href-</li>
-<li>xargs -P 八个线程同时wget -r</li>
-<li>有个问题，如何获取每个href的同步状态，成功还是失败？</li>
-</ul>
-<h3 id="代码">代码</h3><p>放在<a href="https://github.com/CodeJuan/multi_thread_rsync_mirror" target="_blank" rel="external">https://github.com/CodeJuan/multi_thread_rsync_mirror</a></p>
-<h4 id="wget_index-html">wget index.html</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get index.html</span></span><br><span class="line">wget <span class="variable">$link</span> -O <span class="variable">$file</span></span><br></pre></td></tr></table></figure>
-<h4 id="regex得到二级目录">regex得到二级目录</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep "href" "&lt;a" "/$"</span></span><br><span class="line"><span class="comment"># cut "\""</span></span><br><span class="line">cat <span class="variable">$bak_file</span> | grep <span class="string">"href*=*\""</span> | grep <span class="string">"&lt;a"</span> | cut <span class="operator">-d</span> <span class="string">"\""</span> <span class="operator">-f</span> <span class="number">2</span> | grep <span class="string">"/$"</span> | grep -v <span class="string">"\.\."</span></span><br></pre></td></tr></table></figure>
-<h4 id="xargs_-P_八个线程同时wget_-r">xargs -P 八个线程同时wget -r</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;whole_url_list[@]&#125;</span> | xargs -n <span class="number">1</span> -P <span class="number">8</span> ./single_down.sh <span class="string">"<span class="variable">$des</span>"</span></span><br></pre></td></tr></table></figure>
-<h4 id="还没实现获取同步状态">还没实现获取同步状态</h4><p>如果下载失败了，完全没有办法知道。<br>下一步实现</p>
-<h2 id="另一种玩法：python爬">另一种玩法：python爬</h2><h3 id="步骤-1">步骤</h3><h4 id="装beautifulsoup">装beautifulsoup</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载并安装pip</span></span><br><span class="line">wget https://pypi.python.org/packages/<span class="built_in">source</span>/p/pip/pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line">tar zxvf pip-<span class="number">7.1</span>.<span class="number">2</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> pip-<span class="number">7.1</span>.<span class="number">2</span></span><br><span class="line">sudo python setup.py install</span><br><span class="line"></span><br><span class="line"><span class="comment">#装beautifulsoup4</span></span><br><span class="line">sudo pip install beautifulsoup4</span><br></pre></td></tr></table></figure>
-<h4 id="开始爬">开始爬</h4><p>由于index的页面都很简洁，爬起来还是相对比较容易。</p>
-<p>以后有空搞定～～</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
-<h2 id="大概的思路">大概的思路</h2><ul>
-<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
-<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
-<li>记录每个href的同步状态</li>
-<li>汇总全部状态，看所有href是否都同步成功]]>
-    
-    </summary>
-    
-      <category term="mirror" scheme="http://blog.decbug.com/tags/mirror/"/>
-    
-      <category term="python" scheme="http://blog.decbug.com/tags/python/"/>
-    
-      <category term="rsync" scheme="http://blog.decbug.com/tags/rsync/"/>
-    
-      <category term="wget" scheme="http://blog.decbug.com/tags/wget/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
