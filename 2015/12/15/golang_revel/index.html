@@ -39,16 +39,20 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="背景上回已经把revel下载好了，顺利搞出个hello world，http://blog.decbug.com/2015/11/28/golang/接下来就要深入学习一下了。">
+<meta name="description" content="背景上回已经把revel下载好了，顺利搞出个hello world，
+http://blog.decbug.com/2015/11/28/golang/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学golang(2):web框架revel">
+<meta property="og:title" content="学golang(2):web框架">
 <meta property="og:url" content="http://blog.decbug.com/2015/12/15/golang_revel/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="背景上回已经把revel下载好了，顺利搞出个hello world，http://blog.decbug.com/2015/11/28/golang/接下来就要深入学习一下了。">
-<meta property="og:updated_time" content="2015-12-22T15:15:56.636Z">
+<meta property="og:description" content="背景上回已经把revel下载好了，顺利搞出个hello world，
+http://blog.decbug.com/2015/11/28/golang/">
+<meta property="og:image" content="http://beego.me/docs/images/beerun.png">
+<meta property="og:updated_time" content="2015-12-24T13:58:04.826Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学golang(2):web框架revel">
-<meta name="twitter:description" content="背景上回已经把revel下载好了，顺利搞出个hello world，http://blog.decbug.com/2015/11/28/golang/接下来就要深入学习一下了。">
+<meta name="twitter:title" content="学golang(2):web框架">
+<meta name="twitter:description" content="背景上回已经把revel下载好了，顺利搞出个hello world，
+http://blog.decbug.com/2015/11/28/golang/">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -58,7 +62,7 @@
   };
 </script>
 
-  <title> 学golang(2):web框架revel | Continuous Learning </title>
+  <title> 学golang(2):web框架 | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -198,7 +202,7 @@
           
           
             
-              学golang(2):web框架revel
+              学golang(2):web框架
             
           
         </h1>
@@ -248,8 +252,17 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>
+        <span itemprop="articleBody"><h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，</p>
+<p><a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a></p>
 <a id="more"></a>
+<h1 id="beego">beego</h1><p>接下来就要深入学习一下了，用revel弄一个restful api玩玩。然而由于revel写restful api太难了，于是改为使用比较出名的<code>beego</code>，国人出品的框架，不知效果如何。</p>
+<p>老规矩，从hello world开始</p>
+<h2 id="安装">安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装框架</span></span><br><span class="line">go get github.com/astaxie/beego</span><br><span class="line"><span class="comment"># 安装工具</span></span><br><span class="line">go get github.com/beego/bee</span><br></pre></td></tr></table></figure>
+<h2 id="建立工程">建立工程</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$GOPATH</span>/src</span><br><span class="line">bee new <span class="built_in">test</span>_beego</span><br></pre></td></tr></table></figure>
+<h2 id="运行">运行</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="built_in">test</span>_beego</span><br><span class="line">bee run</span><br></pre></td></tr></table></figure>
+<p><img src="http://beego.me/docs/images/beerun.png" alt=""></p>
+<h2 id="围观源码">围观源码</h2><p>放弃</p>
+<h1 id="revel">revel</h1><p>回归revel</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -411,7 +424,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#beego"><span class="nav-number">2.</span> <span class="nav-text">beego</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立工程"><span class="nav-number">2.2.</span> <span class="nav-text">建立工程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行"><span class="nav-number">2.3.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#围观源码"><span class="nav-number">2.4.</span> <span class="nav-text">围观源码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#revel"><span class="nav-number">3.</span> <span class="nav-text">revel</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -466,7 +479,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
       var disqus_identifier = '2015/12/15/golang_revel/';
-      var disqus_title = '学golang(2):web框架revel';
+      var disqus_title = '学golang(2):web框架';
       var disqus_url = 'http://blog.decbug.com/2015/12/15/golang_revel/';
 
       function run_disqus_script(disqus_script){

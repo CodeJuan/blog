@@ -59,18 +59,28 @@
   </entry>
   
   <entry>
-    <title><![CDATA[学golang(2):web框架revel]]></title>
+    <title><![CDATA[学golang(2):web框架]]></title>
     <link href="http://blog.decbug.com/2015/12/15/golang_revel/"/>
     <id>http://blog.decbug.com/2015/12/15/golang_revel/</id>
     <published>2015-12-14T16:00:00.000Z</published>
-    <updated>2015-12-22T15:15:56.636Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>
+    <updated>2015-12-24T13:58:04.826Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，</p>
+<p><a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a></p>
 <a id="more"></a>
+<h1 id="beego">beego</h1><p>接下来就要深入学习一下了，用revel弄一个restful api玩玩。然而由于revel写restful api太难了，于是改为使用比较出名的<code>beego</code>，国人出品的框架，不知效果如何。</p>
+<p>老规矩，从hello world开始</p>
+<h2 id="安装">安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装框架</span></span><br><span class="line">go get github.com/astaxie/beego</span><br><span class="line"><span class="comment"># 安装工具</span></span><br><span class="line">go get github.com/beego/bee</span><br></pre></td></tr></table></figure>
+<h2 id="建立工程">建立工程</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$GOPATH</span>/src</span><br><span class="line">bee new <span class="built_in">test</span>_beego</span><br></pre></td></tr></table></figure>
+<h2 id="运行">运行</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="built_in">test</span>_beego</span><br><span class="line">bee run</span><br></pre></td></tr></table></figure>
+<p><img src="http://beego.me/docs/images/beerun.png" alt=""></p>
+<h2 id="围观源码">围观源码</h2><p>放弃</p>
+<h1 id="revel">revel</h1><p>回归revel</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，<a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>接下来就要深入学习一下了。</p>]]>
+    <![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，</p>
+<p><a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a></p>]]>
     
     </summary>
     
