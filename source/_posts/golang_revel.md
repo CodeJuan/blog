@@ -49,13 +49,35 @@ bee run
 
 ![](http://beego.me/docs/images/beerun.png)
 
-## 围观源码
+# Restful API
 
-放弃
+## 安装mysql
+```sh
+yum -y install mariadb-server mariadb
+systemctl start mariadb.service
+systemctl enable mariadb.service
+mysql_secure_installation
+```
 
-# revel
-回归revel
+## 生成代码
+```sh
+bee generate scaffold post -fields="title:string,body:text"
+```
 
+## 安装sqlite3-go
+
+```sh
+go get github.com/mattn/go-sqlite3
+
+# 提示缺少gcc
+sudo yum install gcc
+
+# 生成model
+bee generate model post -fields="title:string,body:text"
+
+# controller
+bee generate controller post
+```
 
 
 ----------------------------
