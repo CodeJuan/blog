@@ -63,7 +63,7 @@
     <link href="http://blog.decbug.com/2015/12/15/golang_revel/"/>
     <id>http://blog.decbug.com/2015/12/15/golang_revel/</id>
     <published>2015-12-14T16:00:00.000Z</published>
-    <updated>2015-12-24T13:58:04.826Z</updated>
+    <updated>2015-12-27T13:37:21.347Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，</p>
 <p><a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a></p>
 <a id="more"></a>
@@ -73,8 +73,9 @@
 <h2 id="建立工程">建立工程</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$GOPATH</span>/src</span><br><span class="line">bee new <span class="built_in">test</span>_beego</span><br></pre></td></tr></table></figure>
 <h2 id="运行">运行</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="built_in">test</span>_beego</span><br><span class="line">bee run</span><br></pre></td></tr></table></figure>
 <p><img src="http://beego.me/docs/images/beerun.png" alt=""></p>
-<h2 id="围观源码">围观源码</h2><p>放弃</p>
-<h1 id="revel">revel</h1><p>回归revel</p>
+<h1 id="Restful_API">Restful API</h1><h2 id="安装mysql">安装mysql</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum -y install mariadb-server mariadb</span><br><span class="line">systemctl start mariadb.service</span><br><span class="line">systemctl <span class="built_in">enable</span> mariadb.service</span><br><span class="line">mysql_secure_installation</span><br></pre></td></tr></table></figure>
+<h2 id="生成代码">生成代码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bee generate scaffold post -fields=<span class="string">"title:string,body:text"</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装sqlite3-go">安装sqlite3-go</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/mattn/go-sqlite3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提示缺少gcc</span></span><br><span class="line">sudo yum install gcc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成model</span></span><br><span class="line">bee generate model post -fields=<span class="string">"title:string,body:text"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># controller</span></span><br><span class="line">bee generate controller post</span><br></pre></td></tr></table></figure>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
