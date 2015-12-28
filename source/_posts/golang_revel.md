@@ -64,21 +64,111 @@ mysql_secure_installation
 bee generate scaffold post -fields="title:string,body:text"
 ```
 
-## 安装sqlite3-go
-
-```sh
-go get github.com/mattn/go-sqlite3
-
-# 提示缺少gcc
-sudo yum install gcc
-
-# 生成model
-bee generate model post -fields="title:string,body:text"
-
-# controller
-bee generate controller post
+## 在server后台运行bee run
+在todo工程里运行
+```go
+bee run
 ```
 
+## 添加路由
+在main.go添加路由
+```go
+beego.Router("/post/", &controllers.PostController{}, "get:GetAll;post:Post")
+beego.Router("/post/:id:int", &controllers.PostController{}, "get:GetOne;put:Put;delete:Delete")
+```
+
+## 注册数据库
+提示没有default数据库，所以需要注册一下
+```go
+import (
+	"github.com/astaxie/beego"
+	"github.com/beego/samples/todo/controllers"
+
+// 导入orm和mysql驱动
+	"github.com/astaxie/beego/orm"
+	_ "github.com/go-sql-driver/mysql"
+)
+
+// 在init时注册
+func init() {
+orm.RegisterDriver("mysql", orm.DR_MySQL)
+
+// 注意第三个参数连接字符串
+orm.RegisterDataBase("default", "mysql", "root:@/test?charset=utf8")
+}
+
+func main() {
+	beego.Router("/", &controllers.MainController{})
+	beego.Router("/task/", &controllers.TaskController{}, "get:ListTasks;post:NewTask")
+	beego.Router("/task/:id:int", &controllers.TaskController{}, "get:GetTask;put:UpdateTask")
+
+    //添加post路由
+	beego.Router("/post/", &controllers.PostController{}, "get:GetAll;post:Post")
+	beego.Run()
+}
+```
+
+## 改index
+```html
+<div class='container' ng-controller='PostCtrl'>
+    <h1 class='charcoal rounded-box'>Blog</h1>
+
+    <h2>Posts</h2>
+
+    <ul class='grey rounded-box'>
+        <li ng-repeat='t in posts'>
+            <span class='checkbox'></span>{{t.Id}},{{t.Title}},{{t.Body}}
+        </li>
+    </ul>
+
+    <form>
+        <input type='text' class='rounded-box' placeholder='add new post here' ng-model='postText'>
+        <button class='grey rounded-box' ng-click='addPost()'>New Post</button>
+        <button class='grey rounded-box' ng-click='delPost()'>Delete Post</button>
+        <button class='grey rounded-box' ng-click='updatePost()'>Update Post</button>
+    </form>
+</div>
+```
+
+## 改angularjs，增加PostCtrl
+```js
+function PostCtrl($scope, $http) {
+  $scope.posts = [];
+
+  var logError = function(data, status) {
+    console.log('code '+status+': '+data);
+  };
+
+  var refresh = function() {
+    return $http.get('/post/').
+      success(function(data) { $scope.posts = data; }).
+      error(logError);
+  };
+
+  $scope.addPost = function() {
+    $http.post('/post/', {Title: $scope.postText}).
+      error(logError).
+      success(function() {
+      });
+  };
+
+  $scope.delPost = function() {
+      $http.delete('/post/'+$scope.postText).
+        error(logError).
+        success(function() {
+        });
+    };
+
+    $scope.updatePost = function() {
+        $http.put('/post/'+$scope.postText, {Body: "hahaha"}).
+          error(logError).
+          success(function() {
+          });
+      };
+
+  refresh().then(function() { });
+}
+```
 
 ----------------------------
 
