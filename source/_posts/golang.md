@@ -1,5 +1,5 @@
 ---
-title: 学golang(2):初学
+title: 学golang(1):初学
 date: 2015-11-28 00:00:00
 categories:
 - code
