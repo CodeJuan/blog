@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2015-12-29T13:28:58.495Z</updated>
+  <updated>2015-12-29T14:45:13.162Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,67 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[软件开发中的反馈]]></title>
+    <link href="http://blog.decbug.com/2015/12/29/feedback_software/"/>
+    <id>http://blog.decbug.com/2015/12/29/feedback_software/</id>
+    <published>2015-12-28T16:00:00.000Z</published>
+    <updated>2015-12-29T14:45:13.162Z</updated>
+    <content type="html"><![CDATA[<h1 id="现实中的反馈">现实中的反馈</h1><p>反馈，即信息的返回。在现实生活中，有很多反馈控制系统，系统的控制器会根据系统的输出进行调整，以期得到正确的输出。</p>
+<h2 id="一个小实验">一个小实验</h2><p>试想，有如下三个场景</p>
+<ol>
+<li>你的前方100米有一瓶水，让你去把水取回来，允许全程睁着眼睛</li>
+<li>还是把水取回来，但是只允许每一分钟睁开眼睛观察一次</li>
+<li>依旧是取水，但是不允许睁开眼睛，全程都闭着眼睛。</li>
+</ol>
+<p>那么，会得到怎样的结果呢？</p>
+<ol>
+<li>场景一：可以避开所有障碍，并按照最优路径把水取回来。</li>
+<li>场景二：由于可以睁眼观察，行进过程中会碰到障碍，会走弯路，但依旧可以完成任务</li>
+<li>场景三：两眼一抹黑，也许走一路摔一路，也许方向完全走偏，等到后期才发现完全错误，以至于推倒重建。</li>
+</ol>
+<a id="more"></a>
+<h2 id="关于实验的思考">关于实验的思考</h2><p>同样的人，同样的场景，为何结果会有这么大的差异？原因就在于，是否可以用眼睛观察。<br>结合本文的主题，就是：有反馈和没反馈的区别。我们在有反馈的时候，可以及时根据输出情况调整我们的方向，以避免弯路。<br>反馈在现实中是如此重要，那么在软件开发过程中又是怎样的情况呢？</p>
+<h1 id="软件开发与反馈">软件开发与反馈</h1><p>软件开发，其实也是一个输入输出系统，用户的需求经过我们的分析设计开发直到成为一个可运行的产品。<br>然而，在开发过程中，我们对反馈却不够重视。也许会有很极端的情况，我们的产品一直都不符合要求，直到最后死亡。<br>联想到现实生活中，我们看到的高楼大厦，也是从无到有创造出来的，一般很少有失败的情形，当然开发商跑路的烂尾楼除外。那么，二者究竟有什么差异导致不同的结局呢？<br>因为楼房在修建过程中，看得见摸得着，每时每刻都有反馈，细小的误差都会在最快的时间内解决。<br>那么软件开发为什么很难得到反馈呢？盖因软件不可见，只有可以运行的软件才能被我们感知。<br>在《程序员修炼之道》里有提到曳光弹</p>
+<blockquote>
+<p>注重实效的程序员往往更喜欢使用曳光弹。曳光弹之所以行之有效，是因为它们与真正的子弹在相同环境、相同条件下工作。它们快速飞向目标，所以枪手可以得到即时的反馈。</p>
+</blockquote>
+<h2 id="时间-成本">时间-成本</h2><p><img src="http://agilemodeling.com/images/costOfChangeTraditional.gif" alt=""></p>
+<ul>
+<li>时间越久，成本就越高</li>
+<li>及时反馈，及时发现问题，及时解决</li>
+</ul>
+<h2 id="软件开发该如何反馈">软件开发该如何反馈</h2><p><img src="http://blogs.msdn.com/cfs-file.ashx/__key/communityserver-blogs-components-weblogfiles/00-00-00-36-52-metablogapi/1830.image_5F00_6DC23340.png" alt=""></p>
+<p>敏捷也好，持续集成也罢，从头到尾都强调着反馈。<br><a href="http://blogs.msdn.com/b/brian_harry/archive/2011/09/20/10213910.aspx" target="_blank" rel="external">软件开发中反馈的重要性</a></p>
+<h1 id="后记">后记</h1><p>这个是在公司内网发的一篇完成任务的帖子，凭记忆复述了一遍，感觉不如原文多矣。文笔变差了～sigh</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="现实中的反馈">现实中的反馈</h1><p>反馈，即信息的返回。在现实生活中，有很多反馈控制系统，系统的控制器会根据系统的输出进行调整，以期得到正确的输出。</p>
+<h2 id="一个小实验">一个小实验</h2><p>试想，有如下三个场景</p>
+<ol>
+<li>你的前方100米有一瓶水，让你去把水取回来，允许全程睁着眼睛</li>
+<li>还是把水取回来，但是只允许每一分钟睁开眼睛观察一次</li>
+<li>依旧是取水，但是不允许睁开眼睛，全程都闭着眼睛。</li>
+</ol>
+<p>那么，会得到怎样的结果呢？</p>
+<ol>
+<li>场景一：可以避开所有障碍，并按照最优路径把水取回来。</li>
+<li>场景二：由于可以睁眼观察，行进过程中会碰到障碍，会走弯路，但依旧可以完成任务</li>
+<li>场景三：两眼一抹黑，也许走一路摔一路，也许方向完全走偏，等到后期才发现完全错误，以至于推倒重建。</li>
+</ol>]]>
+    
+    </summary>
+    
+      <category term="agile" scheme="http://blog.decbug.com/tags/agile/"/>
+    
+      <category term="feedback" scheme="http://blog.decbug.com/tags/feedback/"/>
+    
+      <category term="SoftwareEngineering" scheme="http://blog.decbug.com/categories/SoftwareEngineering/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[nodejs(MEAN)]]></title>
@@ -1121,27 +1182,6 @@
       <category term="devops" scheme="http://blog.decbug.com/tags/devops/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[换部门]]></title>
-    <link href="http://blog.decbug.com/2015/10/10/dept/"/>
-    <id>http://blog.decbug.com/2015/10/10/dept/</id>
-    <published>2015-10-09T16:00:00.000Z</published>
-    <updated>2015-10-11T07:17:25.543Z</updated>
-    <content type="html"><![CDATA[<p>换了个好玩的部门<br><a id="more"></a></p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>换了个好玩的部门<br>]]>
-    
-    </summary>
-    
-      <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
-    
-      <category term="mumble" scheme="http://blog.decbug.com/categories/mumble/"/>
     
   </entry>
   
