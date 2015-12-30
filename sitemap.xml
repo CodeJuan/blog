@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/twitter/index.html</loc>
+    <lastmod>2015-12-30T12:43:20.169Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2015/12/29/feedback_software/</loc>
     <lastmod>2015-12-29T14:45:13.162Z</lastmod>
   </url>
@@ -217,12 +222,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
+    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
+    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
@@ -262,12 +267,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
+    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
+    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
