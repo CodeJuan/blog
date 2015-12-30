@@ -26,6 +26,7 @@ category_dir: categories
 code_dir: downloads/code
 about_dir: about
 book_dir: book
+twitter_dir: twitter
 test_dir: test
 i18n_dir: :lang
 skip_render:
