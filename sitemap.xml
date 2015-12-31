@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2015/12/31/kpi/</loc>
+    <lastmod>2015-12-31T15:20:02.297Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/twitter/index.html</loc>
     <lastmod>2015-12-30T13:00:30.501Z</lastmod>
   </url>
@@ -267,12 +272,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
+    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
+    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
