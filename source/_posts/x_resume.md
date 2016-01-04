@@ -44,7 +44,7 @@ blog:[blog.decbug.com](http://blog.decbug.com)
 软件调试|善于解决各种疑难杂症
 性能优化|比较关注，一直在研究并实践
 敏捷开发|日常开发模式，很熟悉
-持续集成与持续交付|会jenkins，ant等，做静态检测，单元测试，自动化测试等,搭建过交付流水线
+持续集成与持续交付|会jenkins，ant等,搭建过交付流水线，做静态检测，单元测试，自动化测试等
 效率提升|通过脚本将杂事自动化
 其他|写代码，日常办公可以不用鼠标，这个算不算能力？
 
@@ -84,15 +84,15 @@ lua,js,Ruby|1星|用过一段时间
 
 ## 华为 2014年～至今
 1. 云计算
-    - 即将搞Docker，构建基于mesos+docker的DevOps平台，提供单元测试静态检测一站式服务
-    - OpenStack，参考RabbitMQ做了个消息模拟器，给OpenStack各组件发消息，测试组件的性能
+    - 即将搞Docker，构建基于mesos+docker+jenkins的DevOps平台，提供单元测试静态检测一站式服务
+    - OpenStack性能测试消息模拟器，给OpenStack各组件发消息，测试各组件的性能。基于RabbitMQ的C客户端和lua实现，仿真效果达到百万台虚拟机的水平
     - Ansible，集群部署；Cobbler 裸机通过网线安装系统
-    - 模仿AWS的Devops工具
 2. 作为技术`砖家`，在一个开发数据挖掘工具的150人团队里厮混
     - 持续集成，将整个系统的构建时间由2小时缩短到0.5小时；搭建单元测试，自动化测试框架，内存泄漏检测
-    - 负责性能优化，如何跑得更快，修炼了优化技能；如何吃下更大的数据，使得处理能力由GB级别跃升至TB级别
+    - 负责性能优化，总结出常见低性能C++代码案例，以及google perf tool+vs performance analyse使用方法；
+    - 采用STXXL+BOOST序列化，使得工具的数据处理能力由GB级别跃升至TB级别
     - 教组里小朋友写出好代码，解决各种疑难杂症
-    - 招聘，负责技术面试，招到的小伙水平都不错
+    - 招聘，负责技术面试；培训，STL用法，单元测试gtest用法等等
 
 
 ## Samsung 2013年～2014年
@@ -104,22 +104,10 @@ lua,js,Ruby|1星|用过一段时间
 
 ## 中兴 2011年～2013年
 - 开发手机检测系统。Windows应用程序，C/S架构，C++，用到socket、USB等等
-- 收获信心，挂科学渣竟然能教同龄名校硕士干活
 - 开始抛弃百度，拥抱谷歌，向真正程序员迈进
 
 
 ## Giesecke&Devrient 20xx年～20xx年
 - 由维修工转职为程序员，用过VB，C++，C#，奠定了啥都会一点的基础
 - 兼职过IT，会组装电脑，维修电脑，搭建局域网
-
-# 家里的学习环境
-
-## 办公机
-![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/resume/home1.jpg)
-
-
-## 挖掘机
-![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/resume/home2.jpg)
-
-
 
