@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2016-01-11T14:52:50.163Z</updated>
+  <updated>2016-01-12T13:40:12.781Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -16,11 +16,39 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[docker-compose]]></title>
+    <title><![CDATA[docker(3)-distribution]]></title>
+    <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
+    <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
+    <published>2016-01-11T16:00:00.000Z</published>
+    <updated>2016-01-12T13:40:12.781Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry" target="_blank" rel="external">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution" target="_blank" rel="external">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br><a id="more"></a></p>
+<h1 id="通过docker运行">通过docker运行</h1><p>先尝试一个简单的用法，即直接pull一个registry好了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从DaoCloud pull一个registry镜像</span></span><br><span class="line">docker pull daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker run -p <span class="number">5000</span>:<span class="number">5000</span> --name registry daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker pull golang:<span class="number">1.5</span>.<span class="number">2</span></span><br><span class="line">docker tag golang:<span class="number">1.5</span>.<span class="number">2</span> localhost:<span class="number">5000</span>/golang</span><br><span class="line">docker push localhost:<span class="number">5000</span>/golang</span><br></pre></td></tr></table></figure></p>
+<p>通过查看源码中的Dockerfile，有一句<code>VOLUME [&quot;/var/lib/registry&quot;]</code>，那么这个路径就是docker里存放push上来的镜像的路径<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 获取registry的ID</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 进入docker中调试,31f029b39e3c就是上一条命令获取到的ID</span></span><br><span class="line">docker exec -it <span class="number">31</span>f029b39e3c bash</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 这个路径下就有一个golang的文件夹</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/registry/docker/registry/v2/repositories</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 退出docker</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在宿主机中查看路径</span></span><br><span class="line">docker inspect <span class="number">31</span>f029b39e3c</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 查看Mounts字段</span></span><br><span class="line"><span class="preprocessor"># /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/docker/volumes/<span class="number">3</span>bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 果然也有docker/registry/v2/repositories/golang</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="源码">源码</h1><h2 id="下载并安装源码">下载并安装源码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:docker/distribution.git</span><br><span class="line"><span class="built_in">cd</span> distribution</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过查看distribution的Dockerfile，发现需要把$PWD/Godeps/_workspace添加到GOPATH</span></span><br><span class="line"><span class="comment"># 不然就会编译不过，会报缺少一堆库。当然，如果不嫌麻烦的话，也可以把缺失的库都go get下来</span></span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$GOPATH</span>:<span class="variable">$PWD</span>/Godeps/_workspace</span><br><span class="line"></span><br><span class="line"><span class="comment"># make</span></span><br><span class="line">make clean binaries</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">bin/registry --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动，也是查看Dockerfile</span></span><br><span class="line"><span class="comment"># ENTRYPOINT ["registry"] CMD ["/etc/docker/registry/config.yml"]</span></span><br><span class="line"><span class="comment"># 而这个config.yml又是从cmd/registry/config-dev.yml拷贝过去的</span></span><br><span class="line"><span class="comment"># 所以，我们这里直接用cmd/registry/config-dev.yml</span></span><br><span class="line">bin/registry cmd/registry/config-dev.yml</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br>]]>
+    
+    </summary>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
+    
+      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[docker(2)-compose]]></title>
     <link href="http://blog.decbug.com/2016/01/11/docker_compose/"/>
     <id>http://blog.decbug.com/2016/01/11/docker_compose/</id>
     <published>2016-01-10T16:00:00.000Z</published>
-    <updated>2016-01-11T14:52:50.163Z</updated>
+    <updated>2016-01-12T12:11:22.614Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>之前已经把docker的常用命令都试了一遍，也通过命令启动了一个django+mysql+redis的应用。需要敲很多行命令才能完成，感觉还是有些麻烦。<br>有鉴于此，正好可以尝试一下docker-compose，通过一个yml文件，就能启动一个服务。<br><a id="more"></a></p>
 <h1 id="docker-compose简介">docker-compose简介</h1><blockquote>
 <p>Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a Compose file to configure your application’s services. Then, using a single command, you create and start all the services from your configuration. To learn more about all the features of Compose see the list of features.<br>有点类似AWS的栈的概念，通过compose把一堆docker启动并组合起来，就是一个完整的服务。<br>与dockerfile的区别：</p>
@@ -50,9 +78,9 @@
     
     </summary>
     
-      <category term="compose" scheme="http://blog.decbug.com/tags/compose/"/>
-    
       <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="docker-compose" scheme="http://blog.decbug.com/tags/docker-compose/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -960,110 +988,6 @@
       <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
     
       <category term="rabbitmq" scheme="http://blog.decbug.com/tags/rabbitmq/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[openstack性能测试器(2):消息调用过程oslo.messaging]]></title>
-    <link href="http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/"/>
-    <id>http://blog.decbug.com/2015/10/16/openstack_perf_tester_2/</id>
-    <published>2015-10-15T17:00:00.000Z</published>
-    <updated>2015-11-17T14:28:43.362Z</updated>
-    <content type="html"><![CDATA[<h1 id="openstack简介">openstack简介</h1><p>The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich set of features. Cloud computing experts from around the world contribute to the project.<br><a id="more"></a></p>
-<p>OpenStack provides an Infrastructure-as-a-Service (IaaS) solution through a variety of complemental services. Each service offers an application programming interface (API) that facilitates this integration.</p>
-<h1 id="openstack组件">openstack组件</h1><table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Project name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Dashboard</td>
-<td>Horizon</td>
-<td>Provides a web-based self-service portal to interact with underlying OpenStack services, such as launching an instance, assigning IP addresses and configuring access controls.</td>
-</tr>
-<tr>
-<td>Compute</td>
-<td>Nova</td>
-<td>Manages the lifecycle of compute instances in an OpenStack environment. Responsibilities include spawning, scheduling and decommissioning of virtual machines on demand.</td>
-</tr>
-<tr>
-<td>Networking</td>
-<td>Neutron</td>
-<td>Enables Network-Connectivity-as-a-Service for other OpenStack services, such as OpenStack Compute. Provides an API for users to define networks and the attachments into them. Has a pluggable architecture that supports many popular networking vendors and technologies.</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>Storage</td>
-</tr>
-<tr>
-<td>Object Storage</td>
-<td>Swift</td>
-<td>Stores and retrieves arbitrary unstructured data objects via a RESTful, HTTP based API. It is highly fault tolerant with its data replication and scale-out architecture. Its implementation is not like a file server with mountable directories. In this case, it writes objects and files to multiple drives, ensuring the data is replicated across a server cluster.</td>
-</tr>
-<tr>
-<td>Block Storage</td>
-<td>Cinder</td>
-<td>Provides persistent block storage to running instances. Its pluggable driver architecture facilitates the creation and management of block storage devices.</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>Shared services</td>
-</tr>
-<tr>
-<td>Identity service</td>
-<td>Keystone</td>
-<td>Provides an authentication and authorization service for other OpenStack services. Provides a catalog of endpoints for all OpenStack services.</td>
-</tr>
-<tr>
-<td>Image service</td>
-<td>Glance</td>
-<td>Stores and retrieves virtual machine disk images. OpenStack Compute makes use of this during instance provisioning.</td>
-</tr>
-<tr>
-<td>Telemetry</td>
-<td>Ceilometer</td>
-<td>Monitors and meters the OpenStack cloud for billing, benchmarking, scalability, and statistical purposes.</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>Higher-level services</td>
-</tr>
-<tr>
-<td>Orchestration</td>
-<td>Heat</td>
-<td>Orchestrates multiple composite cloud applications by using either the native HOT template format or the AWS CloudFormation template format, through both an OpenStack-native REST API and a CloudFormation-compatible Query API.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="oslo-messaging">oslo.messaging</h2><p>消息组件，其中的/_drivers/impl_rabbit.py就是rabbitMQ的具体实现。我们要用的AMQP就是靠它来完成。</p>
-<h1 id="一个call的前世今生">一个call的前世今生</h1><h2 id="neutron/common/rpc-py_init">neutron/common/rpc.py init</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">common/rpc-&#62;oslo_messaging/transport:get_transport&#10;oslo_messaging/transport-&#62;stevedore:DriverManager&#10;stevedore-&#62;impl_rabbit:get impl_rabbit&#10;impl_rabbit--&#62;stevedore:return impl_rabbit&#10;stevedore--&#62;oslo_messaging/transport:return driver&#10;oslo_messaging/transport--&#62;common/rpc:return transport</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/amqp/1.png" alt=""></p>
-<h2 id="neutron/plugins/ml2/drivers/openvswitch/agent/ovs_neutron_agent-py">neutron/plugins/ml2/drivers/openvswitch/agent/ovs_neutron_agent.py</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OVSNeutronAgent-&#62;OVSNeutronAgent: __init__&#10;OVSNeutronAgent-&#62;OVSNeutronAgent: setup_rpc&#10;setup_rpc-&#62;OVSPluginApi: plugin_rpc = OVSPluginApi&#10;OVSPluginApi-&#62;PluginApi: __init__&#10;PluginApi-&#62;oslo_messaging/target:tartget::__init__&#10;oslo_messaging/target--&#62;PluginApi: return target&#10;PluginApi-&#62;common/rpc: get_client&#10;common/rpc-&#62;oslo_messaging/rpc/client:construct RPCClient&#10;oslo_messaging/rpc/client--&#62;common/rpc: return RPCClient&#10;common/rpc--&#62;PluginApi: return client</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/amqp/2.png" alt=""></p>
-<h2 id="call">call</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OVSNeutronAgent-&#62;OVSPluginApi.plugin_rpc:tunnel_sync&#10;OVSPluginApi.plugin_rpc-&#62;PluginApi:tunnel_sync&#10;PluginApi-&#62;oslo_messaging/rpc/client.RPCClient:prepare&#10;oslo_messaging/rpc/client.RPCClient-&#62;oslo_messaging/rpc/client._CallContext:_prepare&#10;oslo_messaging/rpc/client._CallContext--&#62;oslo_messaging/rpc/client.RPCClient:return callContext&#10;oslo_messaging/rpc/client.RPCClient--&#62;PluginApi:return callContext&#10;PluginApi-&#62;oslo_messaging/rpc/client._CallContext: call&#10;oslo_messaging/rpc/client._CallContext-&#62;oslo_messaging/rpc/client._CallContext:make message&#10;oslo_messaging/rpc/client._CallContext-&#62;transport:send&#10;transport-&#62;AMQPDriverBase:_send&#10;AMQPDriverBase-&#62;oslo_messaging/_drivers/amqp:get connection&#10;note right of oslo_messaging/_drivers/amqp: get connection from pool&#10;oslo_messaging/_drivers/amqp--&#62;driverbase:return connection&#10;AMQPDriverBase-&#62;AMQPDriverBase: get exchange&#10;AMQPDriverBase-&#62;ReplyWaiter: _get_reply_q&#10;AMQPDriverBase-&#62;impl_rabbit:connection.topic_send&#10;impl_rabbit-&#62;impl_rabbit: connection._ensure_publishing&#10;AMQPDriverBase-&#62;ReplyWaiter: wait&#10;ReplyWaiter--&#62;AMQPDriverBase: return result&#10;AMQPDriverBase--&#62;transport: return result&#10;transport--&#62;oslo_messaging/rpc/client._CallContext: return result&#10;oslo_messaging/rpc/client._CallContext--&#62;PluginApi: return&#10;PluginApi--&#62;OVSPluginApi.plugin_rpc: return</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/amqp/3.png" alt=""></p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="openstack简介">openstack简介</h1><p>The OpenStack project is an open source cloud computing platform that supports all types of cloud environments. The project aims for simple implementation, massive scalability, and a rich set of features. Cloud computing experts from around the world contribute to the project.<br>]]>
-    
-    </summary>
-    
-      <category term="AMQP" scheme="http://blog.decbug.com/tags/AMQP/"/>
-    
-      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
-    
-      <category term="perfmance" scheme="http://blog.decbug.com/tags/perfmance/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     

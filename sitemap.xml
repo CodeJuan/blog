@@ -2,8 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2016/01/12/docker_distribution/</loc>
+    <lastmod>2016-01-12T13:40:12.781Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2016/01/11/docker_compose/</loc>
-    <lastmod>2016-01-11T14:52:50.163Z</lastmod>
+    <lastmod>2016-01-12T12:11:22.614Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/2015/08/23/docker_tutorial/</loc>
+    <lastmod>2016-01-12T12:10:55.742Z</lastmod>
   </url>
   
   <url>
@@ -177,11 +187,6 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/08/23/docker_tutorial/</loc>
-    <lastmod>2015-09-13T14:25:20.974Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://blog.decbug.com/test/index.html</loc>
     <lastmod>2015-08-23T03:21:53.556Z</lastmod>
   </url>
@@ -217,12 +222,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
+    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
+    <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   

@@ -228,6 +228,100 @@
           
           
             
+              <a class="post-title-link" href="/2015/07/26/pe_depen/" itemprop="url">
+                自动生成软件中模块依赖图
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-07-26T00:00:00+08:00" content="2015-07-26">
+            2015-07-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/07/26/pe_depen/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/26/pe_depen/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="前言">前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
+<h1 id="思路">思路</h1><ol>
+<li>获取该软件目录下所有模块(exe和dll)</li>
+<li>通过vs自带的dumpbin命令得到每个模块文件的依赖</li>
+<li>画出graphviz的dot脚本</li>
+<li>graphviz绘图</li>
+</ol>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/07/26/pe_depen/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/25/install_centos/" itemprop="url">
                 在家里玩分布式(1)install centos
               </a>
@@ -576,95 +670,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/06/11/career_of_programmer/" itemprop="url">
-                读程序员职业规划书有感
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-06-11T23:30:09+08:00" content="2015-06-11">
-            2015-06-11
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/06/11/career_of_programmer/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/11/career_of_programmer/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h2 id="前言">前言</h2><p><img src="http://img4.douban.com/lpic/s28065947.jpg" alt=""></p>
-<p>最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。<br>恰巧得到<a href="http://weibo.com/easy">@Easy</a>兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/06/11/career_of_programmer/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -703,7 +708,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-count">54</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -717,7 +722,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">91</span>
+              <span class="site-state-item-count">93</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
