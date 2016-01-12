@@ -51,7 +51,7 @@ cd /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2
 # 果然也有docker/registry/v2/repositories/golang
 ```
 
-# 源码
+# 源码运行
 ## 下载并安装源码
 ```sh
 git clone git@github.com:docker/distribution.git
@@ -60,6 +60,13 @@ cd distribution
 # 通过查看distribution的Dockerfile，发现需要把$PWD/Godeps/_workspace添加到GOPATH
 # 不然就会编译不过，会报缺少一堆库。当然，如果不嫌麻烦的话，也可以把缺失的库都go get下来
 export GOPATH=$GOPATH:$PWD/Godeps/_workspace
+
+# Dockerfile添加了DOCKER_BUILDTAGS，在make时会用到
+export DOCKER_BUILDTAGS="include_rados include_oss include_gcs"
+
+# 需要安装
+sudo yum install librados2-devel
+sudo yum install httpd-tools
 
 # make
 make clean binaries
@@ -74,6 +81,33 @@ bin/registry --version
 bin/registry cmd/registry/config-dev.yml
 ```
 
+这样就运行起来了，但是仅仅是运行还不够，还得深入了解一下原理
+
+# 源码分析
+
+## makefile
+在上一节中，输入了`make clean binaries`构建出binaries，那么这个binaries就会build
+`${PREFIX}/bin/registry ${PREFIX}/bin/digest ${PREFIX}/bin/registry-api-descriptor-template`
+```makefile
+${PREFIX}/bin/registry: version/version.go $(shell find . -type f -name '*.go')
+	@echo "+ $@"
+	@go build -tags "${DOCKER_BUILDTAGS}" -o $@ ${GO_LDFLAGS}  ${GO_GCFLAGS} ./cmd/registry
+
+${PREFIX}/bin/digest: version/version.go $(shell find . -type f -name '*.go')
+	@echo "+ $@"
+	@go build -tags "${DOCKER_BUILDTAGS}" -o $@ ${GO_LDFLAGS}  ${GO_GCFLAGS} ./cmd/digest
+
+${PREFIX}/bin/registry-api-descriptor-template: version/version.go $(shell find . -type f -name '*.go')
+	@echo "+ $@"
+	@go build -o $@ ${GO_LDFLAGS} ${GO_GCFLAGS} ./cmd/registry-api-descriptor-template
+```
+
+结合前面的启动命令`bin/registry cmd/registry/config-dev.yml`，就找到了registry的程序入口，就是`cmd/registry/main.go`
+
+## 流程
+```
+cmd/registry/main.go/main -> registry/registry.go/Cmd:Excute
+```
 
 
 ----------------------------
