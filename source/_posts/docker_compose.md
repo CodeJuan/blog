@@ -1,11 +1,11 @@
 ---
-title: docker-compose
+title: docker(2)-compose
 date: 2016-01-11 00:00:00
 categories:
 - code
 tags: 
 - docker
-- compose
+- docker-compose
 mathjax: true
 description: 
 ---
