@@ -41,13 +41,13 @@
 
 <meta name="description" content="背景要搞自己的容器云了，那么就得有自己的docker hub，于是采用docker/registry V1。但由于registry V1荒废许久，所以最后决定采用docker/distribution鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="docker(3)-distribution">
+<meta property="og:title" content="docker(3)-distribution分析">
 <meta property="og:url" content="http://blog.decbug.com/2016/01/12/docker_distribution/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景要搞自己的容器云了，那么就得有自己的docker hub，于是采用docker/registry V1。但由于registry V1荒废许久，所以最后决定采用docker/distribution鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。">
-<meta property="og:updated_time" content="2016-01-12T14:57:52.093Z">
+<meta property="og:updated_time" content="2016-01-13T07:12:13.286Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="docker(3)-distribution">
+<meta name="twitter:title" content="docker(3)-distribution分析">
 <meta name="twitter:description" content="背景要搞自己的容器云了，那么就得有自己的docker hub，于是采用docker/registry V1。但由于registry V1荒废许久，所以最后决定采用docker/distribution鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。">
 
 
@@ -58,7 +58,7 @@
   };
 </script>
 
-  <title> docker(3)-distribution | Continuous Learning </title>
+  <title> docker(3)-distribution分析 | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -227,7 +227,7 @@
           
           
             
-              docker(3)-distribution
+              docker(3)-distribution分析
             
           
         </h1>
@@ -308,6 +308,8 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2016/01/12/docker_distribution_build/" rel="prev">docker(3)-搭建registry</a>
+            
           </div>
 
           <div class="post-nav-next post-nav-item">
@@ -378,7 +380,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">56</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -503,7 +505,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
       var disqus_identifier = '2016/01/12/docker_distribution/';
-      var disqus_title = 'docker(3)-distribution';
+      var disqus_title = 'docker(3)-distribution分析';
       var disqus_url = 'http://blog.decbug.com/2016/01/12/docker_distribution/';
 
       function run_disqus_script(disqus_script){

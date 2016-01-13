@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2016-01-12T14:57:52.093Z</updated>
+  <updated>2016-01-13T15:06:33.506Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -16,11 +16,73 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[docker(3)-distribution]]></title>
+    <title><![CDATA[docker(4)-nexus3]]></title>
+    <link href="http://blog.decbug.com/2016/01/13/docker_distribution_nexus/"/>
+    <id>http://blog.decbug.com/2016/01/13/docker_distribution_nexus/</id>
+    <published>2016-01-12T16:00:00.000Z</published>
+    <updated>2016-01-13T15:06:33.506Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>前面说到要搭建自己的私有docker云，尝试了registry，感觉还不错。<br>不过，今天有大神推荐nexus3，说很方便。所以呢，我就尝试一下。<br><a id="more"></a></p>
+<h1 id="下载安装nexu3_repo_manager_oss">下载安装nexu3 repo manager oss</h1><p>下载链接<a href="https://support.sonatype.com/hc/en-us/articles/213466018-Nexus-Repository-Manager-3-0-Technology-Preview-Milestone-6-Release-" target="_blank" rel="external">https://support.sonatype.com/hc/en-us/articles/213466018-Nexus-Repository-Manager-3-0-Technology-Preview-Milestone-6-Release-</a><br>我选择了<a href="http://download.sonatype.com/nexus/oss/nexus-installer-3.0.0-m6-unix-archive.tar.gz" target="_blank" rel="external">Unix bundle</a><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.sonatype.com/nexus/oss/nexus-installer-<span class="number">3.0</span>.<span class="number">0</span>-m6-unix-archive.tar.gz</span><br><span class="line">tar -zxf nexus-installer-<span class="number">3.0</span>.<span class="number">0</span>-m6-unix-archive.tar.gz</span><br><span class="line"><span class="built_in">cd</span> nexus-installer-<span class="number">3.0</span>.<span class="number">0</span>-m6-unix-archive</span><br><span class="line"><span class="built_in">cd</span> bin</span><br><span class="line">./nexus run</span><br></pre></td></tr></table></figure></p>
+<p>时间会比较久，直到出现<strong>Started Nexus Repository Manager 3.0.0-xxxxxxx</strong><br>然后访问<a href="http://192.168.1.173:8081/" target="_blank" rel="external">http://192.168.1.173:8081/</a>，其中的IP换成安装nexus3机器的IP</p>
+<h1 id="配置https">配置https</h1><p>registry V2需要https，参考这里进行配置<a href="https://books.sonatype.com/nexus-book/3.0/reference/security.html#ssl-inbound" target="_blank" rel="external">https://books.sonatype.com/nexus-book/3.0/reference/security.html#ssl-inbound</a></p>
+<p>还有这位印度GG的视频<a href="http://www.sonatype.org/nexus/2015/09/22/docker-and-nexus-3-ready-set-action/" target="_blank" rel="external">http://www.sonatype.org/nexus/2015/09/22/docker-and-nexus-3-ready-set-action/</a></p>
+<p>按照<a href="http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html" target="_blank" rel="external">http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html</a>生成不了jdx，奇怪</p>
+<p>个人感觉还是nexus比原生的registry好用，希望能搞定</p>
+<p>累成狗了，明天继续</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>前面说到要搭建自己的私有docker云，尝试了registry，感觉还不错。<br>不过，今天有大神推荐nexus3，说很方便。所以呢，我就尝试一下。<br>]]>
+    
+    </summary>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
+    
+      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[docker(3)-搭建registry]]></title>
+    <link href="http://blog.decbug.com/2016/01/12/docker_distribution_build/"/>
+    <id>http://blog.decbug.com/2016/01/12/docker_distribution_build/</id>
+    <published>2016-01-11T16:00:00.000Z</published>
+    <updated>2016-01-13T15:04:08.994Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry<br><a id="more"></a></p>
+<h1 id="架构">架构</h1><p><img src="http://dockerone.com/uploads/article/20150512/1e111941614512fcc0bdeb2e80ee9384.png" alt=""></p>
+<p>就采用<a href="http://dockone.io/people/%E9%9A%BE%E6%98%93" target="_blank" rel="external">钟成</a>提到的架构</p>
+<h1 id="进展1">进展1</h1><p>搭建了registry+front，配置了https<br>折腾一天，累成狗了，不详细写拉。直接看代码吧，都写成脚本和compose了<br><a href="https://github.com/CodeJuan/private_registry" target="_blank" rel="external">https://github.com/CodeJuan/private_registry</a></p>
+<h1 id="进展2">进展2</h1><p>还要实现后端镜像存储和前端负载均衡，明天继续吧</p>
+<h1 id="参考">参考</h1><p><a href="http://www.mworks92.com/2016/01/13/secure-registry-test/" target="_blank" rel="external">关于私有安全docker registry的实验</a><br><a href="http://blog.gesha.net/archives/613/" target="_blank" rel="external">搭建Docker私有仓库Registry-v2</a></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry<br>]]>
+    
+    </summary>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
+    
+      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[docker(3)-distribution分析]]></title>
     <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
     <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
     <published>2016-01-11T16:00:00.000Z</published>
-    <updated>2016-01-12T14:57:52.093Z</updated>
+    <updated>2016-01-13T07:12:13.286Z</updated>
     <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry" target="_blank" rel="external">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution" target="_blank" rel="external">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br><a id="more"></a></p>
 <h1 id="通过docker运行">通过docker运行</h1><p>先尝试一个简单的用法，即直接pull一个registry好了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从DaoCloud pull一个registry镜像</span></span><br><span class="line">docker pull daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker run -p <span class="number">5000</span>:<span class="number">5000</span> --name registry daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker pull golang:<span class="number">1.5</span>.<span class="number">2</span></span><br><span class="line">docker tag golang:<span class="number">1.5</span>.<span class="number">2</span> localhost:<span class="number">5000</span>/golang</span><br><span class="line">docker push localhost:<span class="number">5000</span>/golang</span><br></pre></td></tr></table></figure></p>
 <p>通过查看源码中的Dockerfile，有一句<code>VOLUME [&quot;/var/lib/registry&quot;]</code>，那么这个路径就是docker里存放push上来的镜像的路径<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 获取registry的ID</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 进入docker中调试,31f029b39e3c就是上一条命令获取到的ID</span></span><br><span class="line">docker exec -it <span class="number">31</span>f029b39e3c bash</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 这个路径下就有一个golang的文件夹</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/registry/docker/registry/v2/repositories</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 退出docker</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在宿主机中查看路径</span></span><br><span class="line">docker inspect <span class="number">31</span>f029b39e3c</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 查看Mounts字段</span></span><br><span class="line"><span class="preprocessor"># /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/docker/volumes/<span class="number">3</span>bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 果然也有docker/registry/v2/repositories/golang</span></span><br></pre></td></tr></table></figure></p>
@@ -272,6 +334,39 @@
   </entry>
   
   <entry>
+    <title><![CDATA[一次去中心化的性能优化]]></title>
+    <link href="http://blog.decbug.com/2015/12/15/decentralized/"/>
+    <id>http://blog.decbug.com/2015/12/15/decentralized/</id>
+    <published>2015-12-14T16:00:00.000Z</published>
+    <updated>2015-12-15T12:43:28.345Z</updated>
+    <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>一个分布式计算系统，在数据量越来越大的情况下，处理时间太久，不符合用户需求，需要优化。</p>
+<p>经过分析，发现有一个从存储节点把数据拷贝到计算节点的动作，这个过程比较耗时间。如果能把这个拷贝过程去掉，对于系统的整体性能将会有很大提升。</p>
+<a id="more"></a>
+<h1 id="过程">过程</h1><h2 id="原来的流程">原来的流程</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/decentralized/data2compute.jpg" alt=""></p>
+<p>如图，为简化流程，只画了一个存储节点和计算节点<code>典型的数据向计算迁移</code>，当数据特别大（数十G～百G）的时候，从存储节点拷贝到计算节点将特别耗时间。</p>
+<p>而计算工具的身材特别苗条，几百M而已，拷贝过去也就是分分钟的事，如果能把计算工具放到存储节点，拷贝的时间就可以忽略不计，这个方法叫<code>计算向数据迁移</code></p>
+<h2 id="优化后的流程">优化后的流程</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/decentralized/compute2data.jpg" alt=""></p>
+<p>只是把百兆的计算工具拷过去，省去以前拷贝几百G数据的步骤～</p>
+<h1 id="结论">结论</h1><p>虽然不是什么很新的技术，但是简单几步就解决了业务问题，还是比较值得高兴一下的。</p>
+<p>后面如果能把计算工具封装成docker，放到docker registry上去，每次计算的时候，存储节点把镜像pull过来，应该会比较好玩吧～</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="前言">前言</h1><p>一个分布式计算系统，在数据量越来越大的情况下，处理时间太久，不符合用户需求，需要优化。</p>
+<p>经过分析，发现有一个从存储节点把数据拷贝到计算节点的动作，这个过程比较耗时间。如果能把这个拷贝过程去掉，对于系统的整体性能将会有很大提升。</p>]]>
+    
+    </summary>
+    
+      <category term="decentralized" scheme="http://blog.decbug.com/tags/decentralized/"/>
+    
+      <category term="optimization" scheme="http://blog.decbug.com/tags/optimization/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[学golang(2):web框架]]></title>
     <link href="http://blog.decbug.com/2015/12/15/golang_revel/"/>
     <id>http://blog.decbug.com/2015/12/15/golang_revel/</id>
@@ -303,39 +398,6 @@
     </summary>
     
       <category term="golang" scheme="http://blog.decbug.com/tags/golang/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[一次去中心化的性能优化]]></title>
-    <link href="http://blog.decbug.com/2015/12/15/decentralized/"/>
-    <id>http://blog.decbug.com/2015/12/15/decentralized/</id>
-    <published>2015-12-14T16:00:00.000Z</published>
-    <updated>2015-12-15T12:43:28.345Z</updated>
-    <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>一个分布式计算系统，在数据量越来越大的情况下，处理时间太久，不符合用户需求，需要优化。</p>
-<p>经过分析，发现有一个从存储节点把数据拷贝到计算节点的动作，这个过程比较耗时间。如果能把这个拷贝过程去掉，对于系统的整体性能将会有很大提升。</p>
-<a id="more"></a>
-<h1 id="过程">过程</h1><h2 id="原来的流程">原来的流程</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/decentralized/data2compute.jpg" alt=""></p>
-<p>如图，为简化流程，只画了一个存储节点和计算节点<code>典型的数据向计算迁移</code>，当数据特别大（数十G～百G）的时候，从存储节点拷贝到计算节点将特别耗时间。</p>
-<p>而计算工具的身材特别苗条，几百M而已，拷贝过去也就是分分钟的事，如果能把计算工具放到存储节点，拷贝的时间就可以忽略不计，这个方法叫<code>计算向数据迁移</code></p>
-<h2 id="优化后的流程">优化后的流程</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/decentralized/compute2data.jpg" alt=""></p>
-<p>只是把百兆的计算工具拷过去，省去以前拷贝几百G数据的步骤～</p>
-<h1 id="结论">结论</h1><p>虽然不是什么很新的技术，但是简单几步就解决了业务问题，还是比较值得高兴一下的。</p>
-<p>后面如果能把计算工具封装成docker，放到docker registry上去，每次计算的时候，存储节点把镜像pull过来，应该会比较好玩吧～</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="前言">前言</h1><p>一个分布式计算系统，在数据量越来越大的情况下，处理时间太久，不符合用户需求，需要优化。</p>
-<p>经过分析，发现有一个从存储节点把数据拷贝到计算节点的动作，这个过程比较耗时间。如果能把这个拷贝过程去掉，对于系统的整体性能将会有很大提升。</p>]]>
-    
-    </summary>
-    
-      <category term="decentralized" scheme="http://blog.decbug.com/tags/decentralized/"/>
-    
-      <category term="optimization" scheme="http://blog.decbug.com/tags/optimization/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -887,111 +949,6 @@
       <category term="deploy" scheme="http://blog.decbug.com/tags/deploy/"/>
     
       <category term="system" scheme="http://blog.decbug.com/tags/system/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[絮叨ansible做持续交付,闲扯分布式]]></title>
-    <link href="http://blog.decbug.com/2015/11/01/ansible4ci_distributed/"/>
-    <id>http://blog.decbug.com/2015/11/01/ansible4ci_distributed/</id>
-    <published>2015-10-31T16:00:00.000Z</published>
-    <updated>2015-11-01T13:09:42.354Z</updated>
-    <content type="html"><![CDATA[<h1 id="随手记录">随手记录</h1><p>杂记而已，随便记录</p>
-<hr>
-<h1 id="ansbile做持续交付">ansbile做持续交付</h1><p>突然想到，ansible可以控制一大堆机器，那么是否可以像jenkins的master/slave那样，做分布式构建呢。<br>应该是可以的吧</p>
-<ul>
-<li>把代码同步到各个agent上，可以用git/svn都行</li>
-<li>通过一堆参数，控制各个agent做不同的事情，并行构建。比如编译，静态检测，单元测试，自动化测试等等</li>
-<li>artifact收集</li>
-<li>部署</li>
-</ul>
-<p>无缝接入呀，有时间可以试试。</p>
-<a id="more"></a>
-<hr>
-<h1 id="分布式的一些感想">分布式的一些感想</h1><p>想到一句话，<code>不谋全局者，不足以谋一域；不谋万世者，不足以谋一时</code>。</p>
-<ul>
-<li>以前把玩有限的几台服务器，更多的是关注单点的CPU/IO/内存等等，现在得关注整体的性能，找出拖慢整体性能的瓶颈。</li>
-<li>在考虑方案的时候，哪怕当前只有10台服务器，最好是按照1000台的规模去设计。</li>
-</ul>
-<p>哈哈哈～～</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code></p>
-<p>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a></p>
-<p>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="随手记录">随手记录</h1><p>杂记而已，随便记录</p>
-<hr>
-<h1 id="ansbile做持续交付">ansbile做持续交付</h1><p>突然想到，ansible可以控制一大堆机器，那么是否可以像jenkins的master/slave那样，做分布式构建呢。<br>应该是可以的吧</p>
-<ul>
-<li>把代码同步到各个agent上，可以用git/svn都行</li>
-<li>通过一堆参数，控制各个agent做不同的事情，并行构建。比如编译，静态检测，单元测试，自动化测试等等</li>
-<li>artifact收集</li>
-<li>部署</li>
-</ul>
-<p>无缝接入呀，有时间可以试试。</p>]]>
-    
-    </summary>
-    
-      <category term="ansible" scheme="http://blog.decbug.com/tags/ansible/"/>
-    
-      <category term="continous delivery" scheme="http://blog.decbug.com/tags/continous-delivery/"/>
-    
-      <category term="distributed" scheme="http://blog.decbug.com/tags/distributed/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[openstack性能测试器(3):移植rabbitmq-c]]></title>
-    <link href="http://blog.decbug.com/2015/10/26/openstack_perf_tester_3/"/>
-    <id>http://blog.decbug.com/2015/10/26/openstack_perf_tester_3/</id>
-    <published>2015-10-25T16:00:00.000Z</published>
-    <updated>2015-10-26T14:40:18.368Z</updated>
-    <content type="html"><![CDATA[<h1 id="rabbitmq">rabbitmq</h1><p>rabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是<a href="http://www.rabbitmq.com/" target="_blank" rel="external">http://www.rabbitmq.com/</a></p>
-<p>我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，下载链接是<a href="http://www.rabbitmq.com/devtools.html" target="_blank" rel="external">http://www.rabbitmq.com/devtools.html</a>，C版本的链接是<a href="https://github.com/alanxz/rabbitmq-c" target="_blank" rel="external">https://github.com/alanxz/rabbitmq-c</a></p>
-<a id="more"></a>
-<h1 id="移植">移植</h1><h2 id="编译rabbitmq-c">编译rabbitmq-c</h2><p>生产环境用的是suse，那边哥们给我的测试环境无法mount到我的本机，所以，只能在我docker ubuntu14.04来先验证一下。</p>
-<h3 id="CMake">CMake</h3><p>下载<a href="https://cmake.org/files/v3.4/cmake-3.4.0-rc2.tar.gz" target="_blank" rel="external">https://cmake.org/files/v3.4/cmake-3.4.0-rc2.tar.gz</a><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://cmake.org/files/v3.<span class="number">4</span>/cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2.tar.gz</span><br><span class="line">tar -xzvf cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2.tar.gz </span><br><span class="line"><span class="built_in">cd</span> cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2</span><br><span class="line">./bootstrap &amp;&amp; make &amp;&amp; sudo make install</span><br></pre></td></tr></table></figure></p>
-<h4 id="-/bootstrap">./bootstrap</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-- Check <span class="keyword">if</span> the system is big endian</span><br><span class="line">-- Searching <span class="number">16</span> bit <span class="built_in">integer</span></span><br><span class="line">-- Using unsigned short</span><br><span class="line">-- Check <span class="keyword">if</span> the system is big endian - little endian</span><br><span class="line">Curses libraries were not found. Curses GUI <span class="keyword">for</span> CMake will not be built.</span><br><span class="line">-- Looking <span class="keyword">for</span> elf.h</span><br><span class="line">-- Looking <span class="keyword">for</span> elf.h - found</span><br><span class="line">-- Looking <span class="keyword">for</span> a Fortran compiler</span><br><span class="line">-- Looking <span class="keyword">for</span> a Fortran compiler - NOTFOUND</span><br><span class="line">qmake: could not <span class="built_in">exec</span> <span class="string">'/usr/lib/x86_64-linux-gnu/qt4/bin/qmake'</span>: No such file or directory</span><br><span class="line">qmake: could not <span class="built_in">exec</span> <span class="string">'/usr/lib/x86_64-linux-gnu/qt4/bin/qmake'</span>: No such file or directory</span><br><span class="line">-- Performing Test run_pic_<span class="built_in">test</span></span><br><span class="line">-- Performing Test run_pic_<span class="built_in">test</span> - Success</span><br><span class="line">-- Performing Test run_inlines_hidden_<span class="built_in">test</span></span><br><span class="line">-- Performing Test run_inlines_hidden_<span class="built_in">test</span> - Success</span><br><span class="line">-- Configuring <span class="keyword">done</span></span><br><span class="line">-- Generating <span class="keyword">done</span></span><br><span class="line">-- Build files have been written to: /home/xh/save/code/cmake-<span class="number">3.4</span>.<span class="number">0</span>-rc2</span><br><span class="line">---------------------------------------------</span><br><span class="line">CMake has bootstrapped.  Now run make.</span><br></pre></td></tr></table></figure>
-<h4 id="make">make</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">61</span>%] Built target cmjsoncpp</span><br><span class="line">Scanning dependencies of target CMakeLib</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmArchiveWrite.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmBootstrapCommands1.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmBootstrapCommands2.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCacheManager.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommands.cxx.o</span><br><span class="line">[ <span class="number">61</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCLocaleEnvironmentScope.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentLexer.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentParser.cxx.o</span><br><span class="line">[ <span class="number">62</span>%] Building CXX object Source/CMakeFiles/CMakeLib.dir/cmCommandArgumentParserHelper.cxx.o</span><br></pre></td></tr></table></figure>
-<h4 id="make_install">make install</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/UtilityHeader.dsptemplate</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CTestScript.cmake.in</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CPack.GenericDescription.txt</span><br><span class="line">-- Installing: /usr/<span class="built_in">local</span>/share/cmake-<span class="number">3.4</span>/Templates/CPack.GenericLicense.txt</span><br></pre></td></tr></table></figure>
-<h4 id="version">version</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmake --version</span><br><span class="line"><span class="comment"># cmake version 3.4.0-rc2</span></span><br></pre></td></tr></table></figure>
-<h3 id="openssl">openssl</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.openssl.org/<span class="built_in">source</span>/openssl-<span class="number">1.0</span>.<span class="number">2</span>d.tar.gz</span><br><span class="line">tar -xzvf openssl-<span class="number">1.0</span>.<span class="number">2</span>d</span><br><span class="line"><span class="built_in">cd</span> openssl-<span class="number">1.0</span>.<span class="number">2</span>d</span><br><span class="line">./config</span><br><span class="line">make</span><br><span class="line">make <span class="built_in">test</span></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-<p>version一下看看<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl version</span><br><span class="line"><span class="comment"># OpenSSL 1.0.1f 6 Jan 2014</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="make-1">make</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:alanxz/rabbitmq-c.git</span><br><span class="line"><span class="built_in">cd</span> rabbitmq-c</span><br><span class="line">mkdir build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">cmake ..</span><br><span class="line">cmake --build . --config BUILD_TOOLS=OFF</span><br></pre></td></tr></table></figure>
-<p><code>cmake ..</code>时会提示找不到xmlto等等，因为我不需要生成辅助工具（文档、命令行工具等等)，暂时不管它。<br><code>BUILD_TOOLS=OFF</code>就表示不生成辅助工具</p>
-<p>一路编译没有报错，至此，我们的rabbitmq就编译成功了，接下来就是要把<code>librabbitmq</code>移植到现有代码中。</p>
-<h2 id="移植过程">移植过程</h2><ul>
-<li>拷贝<code>librabbitmq</code>到原有代码中</li>
-<li>在makefile里加上<code>librabbitmq</code>的路径</li>
-<li>make，提示说找不到<code>amqp_framing.h</code>，原因是include用的是<code>&lt;&gt;</code>，而amqp_framing.h就在同一个目录。</li>
-<li>sed -i s/<amqp_framing.h>/\”amqp_framing.h\”/g改成相对路径，再次make，不报这个错了。</amqp_framing.h></li>
-<li>找不到<code>threads.h</code>，原因是没有把<code>librabbitmq/unix</code>-I，所以需要改以下路径为<code>unix/threads.h</code></li>
-<li><p>找不到<code>AMQP_PLATFORM</code>,这个是在config.h里定义的。看了下报错的c文件，确实有include了config.h，但为什么还报这个错呢？</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#ifdef HAVE_CONFIG_H</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "config.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>原因就在于<code>HAVE_CONFIG_H</code>了，在makefile的gcc后加上<code>-DHAVE_CONFIG_H</code>，再次编译，就OK了。</p>
-</li>
-</ul>
-<p>在ubuntu上已经搞定，接下来就是迁移到suse上。<br>关键点就在于config.h，因为config.h包含了内核版本以及epoll等等，所以需要在suse上编译一下rabbitmq-c，然后把suse上的config.h替换ubuntu上的config.h，编译就OK了。</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="rabbitmq">rabbitmq</h1><p>rabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是<a href="http://www.rabbitmq.com/">http://www.rabbitmq.com/</a></p>
-<p>我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，下载链接是<a href="http://www.rabbitmq.com/devtools.html">http://www.rabbitmq.com/devtools.html</a>，C版本的链接是<a href="https://github.com/alanxz/rabbitmq-c">https://github.com/alanxz/rabbitmq-c</a></p>]]>
-    
-    </summary>
-    
-      <category term="AMQP" scheme="http://blog.decbug.com/tags/AMQP/"/>
-    
-      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
-    
-      <category term="rabbitmq" scheme="http://blog.decbug.com/tags/rabbitmq/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
