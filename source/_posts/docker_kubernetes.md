@@ -80,6 +80,13 @@ ansible-playbook -i hosts playbook.yml -K
 [http://blog.decbug.com/2015/11/28/golang/](http://blog.decbug.com/2015/11/28/golang/)
 参考之前写的安装一下，要不要翻译成Ansible呢。。。。。。
 
+## etcd
+```sh
+curl -L  https://github.com/coreos/etcd/releases/download/v2.2.4/etcd-v2.2.4-linux-amd64.tar.gz -o etcd-v2.2.4-linux-amd64.tar.gz
+tar xzvf etcd-v2.2.4-linux-amd64.tar.gz
+cd etcd-v2.2.4-linux-amd64
+./etcd
+```
 
 
 
