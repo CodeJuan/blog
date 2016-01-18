@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2016/01/18/docker_kubernetes/</loc>
+    <lastmod>2016-01-18T15:56:54.155Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2016/01/13/docker_distribution_nexus/</loc>
     <lastmod>2016-01-13T15:06:33.506Z</lastmod>
   </url>
@@ -232,12 +237,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
+    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/27/understand_code/</loc>
+    <loc>http://blog.decbug.com/2014/11/26/test_gcc_gdb/</loc>
     <lastmod>2015-08-04T14:28:02.475Z</lastmod>
   </url>
   
@@ -267,12 +272,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
+    <loc>http://blog.decbug.com/2015/01/12/jenkins/</loc>
     <lastmod>2015-08-04T14:28:02.455Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/01/12/jenkins/</loc>
+    <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
     <lastmod>2015-08-04T14:28:02.455Z</lastmod>
   </url>
   
@@ -297,12 +302,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
+    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
+    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
