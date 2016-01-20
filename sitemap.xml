@@ -2,18 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2016/01/12/docker_distribution_build/</loc>
+    <lastmod>2016-01-20T13:24:49.515Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2016/01/18/docker_kubernetes/</loc>
-    <lastmod>2016-01-18T15:56:54.155Z</lastmod>
+    <lastmod>2016-01-18T16:02:39.063Z</lastmod>
   </url>
   
   <url>
     <loc>http://blog.decbug.com/2016/01/13/docker_distribution_nexus/</loc>
     <lastmod>2016-01-13T15:06:33.506Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.decbug.com/2016/01/12/docker_distribution_build/</loc>
-    <lastmod>2016-01-13T15:04:08.994Z</lastmod>
   </url>
   
   <url>
