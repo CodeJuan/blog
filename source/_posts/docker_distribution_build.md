@@ -27,7 +27,12 @@ description:
 [https://github.com/CodeJuan/private_registry](https://github.com/CodeJuan/private_registry)
 
 # 进展2
-还要实现后端镜像存储和前端负载均衡，明天继续吧
+实现了负载均衡
+用的是nginx1.9的镜像
+[https://github.com/CodeJuan/private_registry/commit/7233fbf7def7b32daccc065f6ef546b234606e0d](https://github.com/CodeJuan/private_registry/commit/7233fbf7def7b32daccc065f6ef546b234606e0d)
+
+# 进展3
+后端存储采用的是某共享存储技术，所有的registry都访问同一个存储集群，路径都一样
 
 # 参考
 [关于私有安全docker registry的实验](http://www.mworks92.com/2016/01/13/secure-registry-test/)
