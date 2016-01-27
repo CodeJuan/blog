@@ -89,6 +89,40 @@ time="2016-01-22T13:36:29Z" level=error msg="response completed with error" err.
 ```
 奇怪
 
+# 进展5：调通删除镜像API
+I sent the same request with @adolphlwq 's request, and got the same response
+```
+curl -v -X DELETE http://myregistry/v2/busybox/manifests/sha256:blablabla...
+
+{"errors":[{"code":"UNSUPPORTED","message":"The operation is unsupported."}]}
+```
+
+## update
+I got the solution to delete images
+
+### enable delete
+ set the environment variable `REGISTRY_STORAGE_DELETE_ENABLED = True`
+
+### the API to delete image
+1. get the manifest from registry
+```
+get v2/<repoName>/manifests/<tagName>
+```
+the `Docker-Content-Digest` is response.Header["Docker-Content-Digest"]
+the `layerDigests` is response.body["fsLayers"]["blobSum"]
+
+2. delete layerDigests
+```
+delete v2/<repoName>/blobs/<layerDigests>
+```
+3. delete Docker-Content-Digest
+```
+delete v2/<repoName>/manifests/<Docker-Content-Digest>
+```
+4. then pull the image from registry, the response is `invalid character '<' looking for beginning of value`
+
+But when I get 'v2/repoName/tags/list', the tag which was been deleted is still exist.......
+
 # 参考
 [关于私有安全docker registry的实验](http://www.mworks92.com/2016/01/13/secure-registry-test/)
 [搭建Docker私有仓库Registry-v2](http://blog.gesha.net/archives/613/)
