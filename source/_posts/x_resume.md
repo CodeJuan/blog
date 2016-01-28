@@ -11,23 +11,25 @@ description:
 
 # 个人资料
 
-mail:[xh@decbug.com](mailto:xh@decbug.com)
-github:[codejuan](http://github.com/codejuan)
-stackoverflow:[codejuan](http://stackoverflow.com/users/2763396/codejuan)
-blog:[blog.decbug.com](http://blog.decbug.com)
-毕业学校:南昌大学 20xx年～20xx年 本科
-手机号:xxxxxxxxxxxx**个人隐私不公开可以发邮件索取**
+标题|内容
+----|------
+mail|[xh@decbug.com](mailto:xh@decbug.com)
+github|[codejuan](http://github.com/codejuan)
+stackoverflow|[codejuan](http://stackoverflow.com/users/2763396/codejuan)
+blog|[blog.decbug.com](http://blog.decbug.com)
+毕业学校|南昌大学 20xx年～20xx年 本科
+手机号|xxxxxxxxxxxx**个人隐私不公开可以发邮件索取**
 
 <!--more-->
 
 # 技能
 
-可以算全栈吧，需求、设计、编码、持续集成、测试、部署、运维。
+全栈，需求、设计、编码、持续集成、测试、部署、运维。
 - 代码写的还不错，会多门语言，比较了解操作系统底层原理
 - 帮测试团队做过自动化测试框架，并教会测试同事们写脚本
 - 懂持续集成，持续交付
-- 运维，会自动部署，目前正在补全监控技能
-- 略有带团队经验，兼职过招聘，以及人员培养
+- 运维，会自动部署，目前正在做Docker
+- 略有带团队经验，兼职过招聘以及人员培养
 
 ## 英文水平
 
@@ -36,7 +38,7 @@ blog:[blog.decbug.com](http://blog.decbug.com)
 读|日常只用谷歌，看开源社区毫无压力，日常会刷quora，StackOverflow，翻译过帖子
 听|只要不是太奇怪的口音，基本都能听懂
 说|敢说，不怕有语法错误，反正外国同事能听懂
-写|工作交流没问题
+写|工作交流没问题，在github上和外国同行交流
 
 ## 软件工程能力
 项目| 评分
@@ -61,14 +63,14 @@ linux| 后来转型linux开发。看过内核的书，知道MMU，进程，锁�
 
 语言| 评分(满分五星)|短评
 ----|------|-----
-C/C++|4星|虽用的最多，但实在不敢说精通
-C#|3星|微软系的东西，还是比较熟悉
-Python|3星|最近用的比较多，常用来写点小脚本，尝试过Tornado。最近做OpenStack相关开发，了解的多了一些
-PowerShell|3.5星|用它写过windows桌面程序的测试框架，以及持续集成脚本
-Go|1.5星|beego做后端restful api、前端angularjs做了个玩具，还在继续折腾，目标4星
-JAVA|2.5星|基本开发没问题，且看过JVM的资料
-shell|2星|大体会用，写过提升工作效率的脚本。awk，sed还需要查资料，简单的命令基本都会写
-lua,js,Ruby|1星|用过一段时间
+C/C++|★★★★☆|虽用的最多，但实在不敢说精通
+C#|★★★|微软系的东西，还是比较熟悉
+Python|★★★|最近用的比较多，常用来写点小脚本，尝试过Tornado。最近做OpenStack相关开发，了解的多了一些
+PowerShell|★★★☆|用它写过windows桌面程序的测试框架，以及持续集成脚本
+Go|★☆|beego做后端restful api、前端angularjs做了个玩具，还在继续折腾，目标4星
+JAVA|★★☆|基本开发没问题，且看过JVM的资料
+shell|★★|大体会用，写过提升工作效率的脚本。awk，sed还需要查资料，简单的命令基本都会写
+lua,js,Ruby|★|用过一段时间
 
 ## 关键字
 
@@ -84,14 +86,14 @@ lua,js,Ruby|1星|用过一段时间
 
 ## 华为 2014年～至今
 1. 云计算
-    - 即将搞Docker，构建基于mesos+docker+jenkins的DevOps平台，提供单元测试静态检测一站式服务
-    - OpenStack性能测试消息模拟器，给OpenStack各组件发消息，测试各组件的性能。基于RabbitMQ的C客户端和lua实现，仿真效果达到百万台虚拟机的水平
+    - Docker，搭建企业私有镜像仓库，nginx+registry v2+自研DFS
+    - OpenStack性能测试消息模拟器，给OpenStack各组件发消息，测试各组件的性能。基于开源RabbitMQ客户端的C语言版本和lua实现，采用异步+状态机+责任链，仿真效果达到百万台虚拟机的水平
     - Ansible，集群部署；Cobbler 裸机通过网线安装系统
-2. 作为技术`砖家`，在一个开发数据挖掘工具的150人团队里厮混
-    - 持续集成，将整个系统的构建时间由2小时缩短到0.5小时；搭建单元测试，自动化测试框架，内存泄漏检测
-    - 负责性能优化，总结出常见低性能C++代码案例，以及google perf tool+vs performance analyse使用方法；
-    - 采用STXXL+BOOST序列化，使得工具的数据处理能力由GB级别跃升至TB级别
-    - 教组里小朋友写出好代码，解决各种疑难杂症
+2. 在一个开发数据挖掘工具的150人团队担任技术`砖家`
+    - 持续集成，将整个系统的构建时间由2小时缩短到0.5小时；搭建单元测试(关键代码全覆盖)，自动化测试框架，内存泄漏检测
+    - 负责性能优化，总结出常见低性能C++代码案例，以及google perf tool+vs performance analyse使用方法
+    - 采用STXXL+BOOST序列化，将非热点数据缓存至硬盘，在基本不需要改动代码的前提下，使得工具的数据处理能力由GB级别跃升至TB级别。没有用redis的原因是，对已有代码冲击太大。
+    - 指导组内同事开发，解决各种疑难杂症，如Core，性能慢等
     - 招聘，负责技术面试；培训，STL用法，单元测试gtest用法等等
 
 
@@ -104,10 +106,13 @@ lua,js,Ruby|1星|用过一段时间
 
 ## 中兴 2011年～2013年
 - 开发手机检测系统。Windows应用程序，C/S架构，C++，用到socket、USB等等
+- 有点手机/无线路由的硬件经验，了解高通调测指令及方法，了解Atheros,Broadcom的路由方案。
 - 开始抛弃百度，拥抱谷歌，向真正程序员迈进
 
 
 ## Giesecke&Devrient 20xx年～20xx年
 - 由维修工转职为程序员，用过VB，C++，C#，奠定了啥都会一点的基础
+- 基于VB实现一套标签打印系统，并针对业务需求优化，效果胜于某商用标签打印软件
+- 基于VC，通过串口及并口操作设备，将生产过程自动化
 - 兼职过IT，会组装电脑，维修电脑，搭建局域网
 
