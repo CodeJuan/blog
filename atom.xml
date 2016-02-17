@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2016-02-02T00:22:21.314Z</updated>
+  <updated>2016-02-17T23:56:03.458Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[用go写的镜像构建微服务]]></title>
+    <link href="http://blog.decbug.com/2016/02/17/go_image_build/"/>
+    <id>http://blog.decbug.com/2016/02/17/go_image_build/</id>
+    <published>2016-02-16T16:00:00.000Z</published>
+    <updated>2016-02-17T23:56:03.458Z</updated>
+    <content type="html"><![CDATA[<h1 id="功能">功能</h1><p>类似Daoloud的代码构建功能</p>
+<ol>
+<li>用户点击构建按钮（或是其他触发方式）</li>
+<li>我的镜像构建微服务收到请求后，就从内网github Clone代码</li>
+<li>在刚Clone代码里找到Dockerfile</li>
+<li>执行docker build -t <code>私有registry域名/用户名/镜像名：tag</code> .</li>
+<li>docker push 刚build出来的镜像</li>
+<li>构建日志，构建结果，入库</li>
+<li>返回 <code>私有registry域名/用户名/镜像名：tag</code></li>
+</ol>
+<p>用户就可以 pull <code>私有registry域名/用户名/镜像名：tag</code> 啦<br><a id="more"></a></p>
+<h1 id="记录">记录</h1><p>终于用go写完了一个类似DaoCloud自动构建镜像的微服务，一边google一边写，全程都是用Docker来开发的，收获还是挺大的，简单记录下。</p>
+<ol>
+<li>基于golang1.5.3基础镜像，然后在代码里增加一个Godeps，把用到的库都放在Godeps，然后在Dockefile里r把Goeps加入到GOPATH环境变量</li>
+<li>由于只提供restful，就用的gorilla/mux框架</li>
+<li>数据库MySQL，orm用的是gorm</li>
+<li>用到了sync,crypt等库</li>
+<li>开发测试部署都是用的Docker，数据库也是Docker。大概流程是<ul>
+<li>修改代码，build我的微服务镜像，push到我的私有registry</li>
+<li>docker-compose从私有registry获取刚build的镜像，由于link了MySQL，就会先启动MySQL。</li>
+<li>接下来自动跑测试，我用的是python给我的微服务发post get等等。</li>
+</ul>
+</li>
+<li>后续计划<ul>
+<li>自动测试的脚本要加上从数据库里获取结果，与我的期望值进行比对。目前还是人肉比对，有些慢</li>
+<li>jenkins自动触发，有代码上了库就自动拉下来完成打镜像，推镜像，拉镜像，compse up，测试的一系列操作</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="功能">功能</h1><p>类似Daoloud的代码构建功能</p>
+<ol>
+<li>用户点击构建按钮（或是其他触发方式）</li>
+<li>我的镜像构建微服务收到请求后，就从内网github Clone代码</li>
+<li>在刚Clone代码里找到Dockerfile</li>
+<li>执行docker build -t <code>私有registry域名/用户名/镜像名：tag</code> .</li>
+<li>docker push 刚build出来的镜像</li>
+<li>构建日志，构建结果，入库</li>
+<li>返回 <code>私有registry域名/用户名/镜像名：tag</code></li>
+</ol>
+<p>用户就可以 pull <code>私有registry域名/用户名/镜像名：tag</code> 啦<br>]]>
+    
+    </summary>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="golang" scheme="http://blog.decbug.com/tags/golang/"/>
+    
+      <category term="microservice" scheme="http://blog.decbug.com/tags/microservice/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[分布式消息系统架构图]]></title>
@@ -144,38 +207,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[docker(3)-distribution分析]]></title>
-    <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
-    <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
-    <published>2016-01-11T16:00:00.000Z</published>
-    <updated>2016-01-13T07:12:13.286Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry" target="_blank" rel="external">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution" target="_blank" rel="external">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br><a id="more"></a></p>
-<h1 id="通过docker运行">通过docker运行</h1><p>先尝试一个简单的用法，即直接pull一个registry好了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从DaoCloud pull一个registry镜像</span></span><br><span class="line">docker pull daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker run -p <span class="number">5000</span>:<span class="number">5000</span> --name registry daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker pull golang:<span class="number">1.5</span>.<span class="number">2</span></span><br><span class="line">docker tag golang:<span class="number">1.5</span>.<span class="number">2</span> localhost:<span class="number">5000</span>/golang</span><br><span class="line">docker push localhost:<span class="number">5000</span>/golang</span><br></pre></td></tr></table></figure></p>
-<p>通过查看源码中的Dockerfile，有一句<code>VOLUME [&quot;/var/lib/registry&quot;]</code>，那么这个路径就是docker里存放push上来的镜像的路径<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 获取registry的ID</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 进入docker中调试,31f029b39e3c就是上一条命令获取到的ID</span></span><br><span class="line">docker exec -it <span class="number">31</span>f029b39e3c bash</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 这个路径下就有一个golang的文件夹</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/registry/docker/registry/v2/repositories</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 退出docker</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在宿主机中查看路径</span></span><br><span class="line">docker inspect <span class="number">31</span>f029b39e3c</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 查看Mounts字段</span></span><br><span class="line"><span class="preprocessor"># /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/docker/volumes/<span class="number">3</span>bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 果然也有docker/registry/v2/repositories/golang</span></span><br></pre></td></tr></table></figure></p>
-<h1 id="源码运行">源码运行</h1><h2 id="下载并安装源码">下载并安装源码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:docker/distribution.git</span><br><span class="line"><span class="built_in">cd</span> distribution</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过查看distribution的Dockerfile，发现需要把$PWD/Godeps/_workspace添加到GOPATH</span></span><br><span class="line"><span class="comment"># 不然就会编译不过，会报缺少一堆库。当然，如果不嫌麻烦的话，也可以把缺失的库都go get下来</span></span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$GOPATH</span>:<span class="variable">$PWD</span>/Godeps/_workspace</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dockerfile添加了DOCKER_BUILDTAGS，在make时会用到</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_BUILDTAGS=<span class="string">"include_rados include_oss include_gcs"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要安装</span></span><br><span class="line">sudo yum install librados2-devel</span><br><span class="line">sudo yum install httpd-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># make</span></span><br><span class="line">make clean binaries</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">bin/registry --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动，也是查看Dockerfile</span></span><br><span class="line"><span class="comment"># ENTRYPOINT ["registry"] CMD ["/etc/docker/registry/config.yml"]</span></span><br><span class="line"><span class="comment"># 而这个config.yml又是从cmd/registry/config-dev.yml拷贝过去的</span></span><br><span class="line"><span class="comment"># 所以，我们这里直接用cmd/registry/config-dev.yml</span></span><br><span class="line">bin/registry cmd/registry/config-dev.yml</span><br></pre></td></tr></table></figure>
-<p>这样就运行起来了，但是仅仅是运行还不够，还得深入了解一下原理</p>
-<h1 id="源码分析">源码分析</h1><h2 id="makefile">makefile</h2><p>在上一节中，输入了<code>make clean binaries</code>构建出binaries，那么这个binaries就会build<br><code>${PREFIX}/bin/registry ${PREFIX}/bin/digest ${PREFIX}/bin/registry-api-descriptor-template</code><br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$&#123;PREFIX&#125;/bin/registry: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/registry</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/digest: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/digest</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/registry-api-descriptor-template: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -o $@ $&#123;GO_LDFLAGS&#125; $&#123;GO_GCFLAGS&#125; ./cmd/registry-api-descriptor-template</span><br></pre></td></tr></table></figure></p>
-<p>结合前面的启动命令<code>bin/registry cmd/registry/config-dev.yml</code>，就找到了registry的程序入口，就是<code>cmd/registry/main.go</code></p>
-<h2 id="流程">流程</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd<span class="regexp">/registry/</span>main.go<span class="regexp">/main -&gt; registry/</span>registry.go/<span class="string">Cmd:</span>Excute</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br>]]>
-    
-    </summary>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
-    
-      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[docker(3)-搭建registry,nginx,mirror]]></title>
     <link href="http://blog.decbug.com/2016/01/12/docker_distribution_build/"/>
     <id>http://blog.decbug.com/2016/01/12/docker_distribution_build/</id>
@@ -222,6 +253,38 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="背景">背景</h1><p>关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry<br>]]>
+    
+    </summary>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
+    
+      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[docker(3)-distribution分析]]></title>
+    <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
+    <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
+    <published>2016-01-11T16:00:00.000Z</published>
+    <updated>2016-01-13T07:12:13.286Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry" target="_blank" rel="external">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution" target="_blank" rel="external">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br><a id="more"></a></p>
+<h1 id="通过docker运行">通过docker运行</h1><p>先尝试一个简单的用法，即直接pull一个registry好了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从DaoCloud pull一个registry镜像</span></span><br><span class="line">docker pull daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker run -p <span class="number">5000</span>:<span class="number">5000</span> --name registry daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker pull golang:<span class="number">1.5</span>.<span class="number">2</span></span><br><span class="line">docker tag golang:<span class="number">1.5</span>.<span class="number">2</span> localhost:<span class="number">5000</span>/golang</span><br><span class="line">docker push localhost:<span class="number">5000</span>/golang</span><br></pre></td></tr></table></figure></p>
+<p>通过查看源码中的Dockerfile，有一句<code>VOLUME [&quot;/var/lib/registry&quot;]</code>，那么这个路径就是docker里存放push上来的镜像的路径<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 获取registry的ID</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 进入docker中调试,31f029b39e3c就是上一条命令获取到的ID</span></span><br><span class="line">docker exec -it <span class="number">31</span>f029b39e3c bash</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 这个路径下就有一个golang的文件夹</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/registry/docker/registry/v2/repositories</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 退出docker</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在宿主机中查看路径</span></span><br><span class="line">docker inspect <span class="number">31</span>f029b39e3c</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 查看Mounts字段</span></span><br><span class="line"><span class="preprocessor"># /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/docker/volumes/<span class="number">3</span>bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 果然也有docker/registry/v2/repositories/golang</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="源码运行">源码运行</h1><h2 id="下载并安装源码">下载并安装源码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:docker/distribution.git</span><br><span class="line"><span class="built_in">cd</span> distribution</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过查看distribution的Dockerfile，发现需要把$PWD/Godeps/_workspace添加到GOPATH</span></span><br><span class="line"><span class="comment"># 不然就会编译不过，会报缺少一堆库。当然，如果不嫌麻烦的话，也可以把缺失的库都go get下来</span></span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$GOPATH</span>:<span class="variable">$PWD</span>/Godeps/_workspace</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dockerfile添加了DOCKER_BUILDTAGS，在make时会用到</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_BUILDTAGS=<span class="string">"include_rados include_oss include_gcs"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要安装</span></span><br><span class="line">sudo yum install librados2-devel</span><br><span class="line">sudo yum install httpd-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># make</span></span><br><span class="line">make clean binaries</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">bin/registry --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动，也是查看Dockerfile</span></span><br><span class="line"><span class="comment"># ENTRYPOINT ["registry"] CMD ["/etc/docker/registry/config.yml"]</span></span><br><span class="line"><span class="comment"># 而这个config.yml又是从cmd/registry/config-dev.yml拷贝过去的</span></span><br><span class="line"><span class="comment"># 所以，我们这里直接用cmd/registry/config-dev.yml</span></span><br><span class="line">bin/registry cmd/registry/config-dev.yml</span><br></pre></td></tr></table></figure>
+<p>这样就运行起来了，但是仅仅是运行还不够，还得深入了解一下原理</p>
+<h1 id="源码分析">源码分析</h1><h2 id="makefile">makefile</h2><p>在上一节中，输入了<code>make clean binaries</code>构建出binaries，那么这个binaries就会build<br><code>${PREFIX}/bin/registry ${PREFIX}/bin/digest ${PREFIX}/bin/registry-api-descriptor-template</code><br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$&#123;PREFIX&#125;/bin/registry: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/registry</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/digest: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/digest</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/registry-api-descriptor-template: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -o $@ $&#123;GO_LDFLAGS&#125; $&#123;GO_GCFLAGS&#125; ./cmd/registry-api-descriptor-template</span><br></pre></td></tr></table></figure></p>
+<p>结合前面的启动命令<code>bin/registry cmd/registry/config-dev.yml</code>，就找到了registry的程序入口，就是<code>cmd/registry/main.go</code></p>
+<h2 id="流程">流程</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd<span class="regexp">/registry/</span>main.go<span class="regexp">/main -&gt; registry/</span>registry.go/<span class="string">Cmd:</span>Excute</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br>]]>
     
     </summary>
     
@@ -781,56 +844,6 @@
       <category term="share" scheme="http://blog.decbug.com/tags/share/"/>
     
       <category term="virtualbox" scheme="http://blog.decbug.com/tags/virtualbox/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[通过python将json转换成lua]]></title>
-    <link href="http://blog.decbug.com/2015/11/23/json2lua/"/>
-    <id>http://blog.decbug.com/2015/11/23/json2lua/</id>
-    <published>2015-11-22T16:00:00.000Z</published>
-    <updated>2015-11-24T11:43:35.314Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>某需求要将json转换成lua代码，同事们的做法是人肉翻译，肉眼读json，然后一条条拷贝到lua，如果遇到嵌套多的情况，一不小心就搞错了。<br>即使没有出错，顺利翻译完成，一条简单的json将耗时半小时。如果是100条，将浪费50个小时，太恐怖了。</p>
-<p>我在翻译了一次之后，实在是无法接受，于是想通过python来解析json，然后按照格式生成lua代码，也就是<code>用代码写代码</code>。<br>这样可以避免机械劳动，不再浪费生命，可以从原来的半小时减少到1分钟，并且不容易出错。</p>
-<a id="more"></a>
-<hr>
-<h1 id="效果">效果</h1><p>原始的json文件<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">glossary</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">title</span>": <span class="value"><span class="string">"example glossary"</span></span>,</span><br><span class="line">		"<span class="attribute">GlossDiv</span>": <span class="value">&#123;</span><br><span class="line">            "<span class="attribute">title</span>": <span class="value"><span class="string">"S"</span></span>,</span><br><span class="line">			"<span class="attribute">GlossList</span>": <span class="value">&#123;</span><br><span class="line">                "<span class="attribute">GlossEntry</span>": <span class="value">&#123;</span><br><span class="line">                    "<span class="attribute">ID</span>": <span class="value"><span class="string">"SGML"</span></span>,</span><br><span class="line">					"<span class="attribute">SortAs</span>": <span class="value"><span class="string">"SGML"</span></span>,</span><br><span class="line">					"<span class="attribute">GlossTerm</span>": <span class="value"><span class="string">"Standard Generalized Markup Language"</span></span>,</span><br><span class="line">					"<span class="attribute">Acronym</span>": <span class="value"><span class="string">"SGML"</span></span>,</span><br><span class="line">					"<span class="attribute">Abbrev</span>": <span class="value"><span class="string">"ISO 8879:1986"</span></span>,</span><br><span class="line">					"<span class="attribute">GlossDef</span>": <span class="value">&#123;</span><br><span class="line">                        "<span class="attribute">para</span>": <span class="value"><span class="string">"A meta-markup language, used to create markup languages such as DocBook."</span></span>,</span><br><span class="line">						"<span class="attribute">GlossSeeAlso</span>": <span class="value">[<span class="string">"GML"</span>, <span class="string">"XML"</span>]</span><br><span class="line">                    </span>&#125;</span>,</span><br><span class="line">					"<span class="attribute">GlossSee</span>": <span class="value"><span class="string">"markup"</span></span><br><span class="line">                </span>&#125;</span><br><span class="line">            </span>&#125;</span><br><span class="line">        </span>&#125;</span><br><span class="line">    </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure></p>
-<p>转换成lua的样子<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> msg = &#123;&#125;</span><br><span class="line"><span class="keyword">local</span> glossary = &#123;&#125;</span><br><span class="line"><span class="keyword">local</span> GlossDiv = &#123;&#125;</span><br><span class="line"><span class="keyword">local</span> GlossList = &#123;&#125;</span><br><span class="line"><span class="keyword">local</span> GlossEntry = &#123;&#125;</span><br><span class="line"><span class="keyword">local</span> GlossDef = &#123;&#125;</span><br><span class="line">GlossDef.GlossSeeAlso = &#123;<span class="string">"GML"</span>,<span class="string">"XML"</span>&#125;</span><br><span class="line">GlossDef.para = <span class="string">"A meta-markup language, used to create markup languages such as DocBook."</span></span><br><span class="line">GlossEntry.GlossDef = GlossDef</span><br><span class="line">GlossEntry.GlossSee = <span class="string">"markup"</span></span><br><span class="line">GlossEntry.Acronym = <span class="string">"SGML"</span></span><br><span class="line">GlossEntry.GlossTerm = <span class="string">"Standard Generalized Markup Language"</span></span><br><span class="line">GlossEntry.Abbrev = <span class="string">"ISO 8879:1986"</span></span><br><span class="line">GlossEntry.SortAs = <span class="string">"SGML"</span></span><br><span class="line">GlossEntry.ID = <span class="string">"SGML"</span></span><br><span class="line">GlossList.GlossEntry = GlossEntry</span><br><span class="line">GlossDiv.GlossList = GlossList</span><br><span class="line">GlossDiv.title = <span class="string">"S"</span></span><br><span class="line">glossary.GlossDiv = GlossDiv</span><br><span class="line">glossary.title = <span class="string">"example glossary"</span></span><br><span class="line">msg.glossary = glossary</span><br></pre></td></tr></table></figure></p>
-<h1 id="思路">思路</h1><ul>
-<li>simplejson解析原始的json文件</li>
-<li>识别出array，subitem，alue</li>
-<li>subitem递归下去，然后一层一层往上汇总</li>
-<li>根据规律分别组装出lua代码</li>
-<li>输出</li>
-</ul>
-<hr>
-<h1 id="步骤">步骤</h1><h3 id="simplejson">simplejson</h3><p>先要安装simplejson</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install simplejson</span><br></pre></td></tr></table></figure>
-<h3 id="分析value">分析value</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printValue</span><span class="params">(key, value, prefix, substring)</span>:</span></span><br><span class="line">    left = <span class="string">'&#123;&#125;&#123;&#125;&#123;&#125;'</span>.format(prefix, key, <span class="string">' = '</span>)</span><br><span class="line">    right = <span class="string">''</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">'None'</span> <span class="keyword">in</span> substring:</span><br><span class="line">        right = <span class="string">'gLuaNULL.null'</span></span><br><span class="line">    <span class="keyword">elif</span> <span class="string">'True'</span> <span class="keyword">in</span> substring:</span><br><span class="line">        right = <span class="string">'true'</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        right = <span class="string">'"&#123;&#125;"'</span>.format(value)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'&#123;&#125;&#123;&#125;'</span>.format(left, right)</span><br></pre></td></tr></table></figure>
-<p>根据不同的值，转换成lua的结果。例如<code>None</code>对应的是<code>gLuaNULL.null</code>，<code>True</code>对应<code>true</code>,普通的值就等于’”json中的值”‘<br>例如<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">"GlossEntry": &#123;</span><br><span class="line">		"ID": "SGML"</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
-<p>转换成<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GlossEntry.ID = <span class="string">"SGML"</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="分析array">分析array</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"GlossSeeAlso": ["GML", "XML"]</span><br></pre></td></tr></table></figure>
-<p>类似于这样的，就要转换成<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GlossDef.GlossSeeAlso = &#123;<span class="string">"GML"</span>,<span class="string">"XML"</span>&#125;</span><br></pre></td></tr></table></figure></p>
-<p>python代码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printArray</span><span class="params">(key, value, prefix)</span>:</span></span><br><span class="line">    elements = <span class="string">'&#123;'</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> value:</span><br><span class="line">        elements += <span class="string">'"&#123;&#125;",'</span>.format(i)</span><br><span class="line">    elements = elements[:-<span class="number">1</span>]</span><br><span class="line">    elements += <span class="string">'&#125;'</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'&#123;&#125;&#123;&#125;&#123;&#125;&#123;&#125;'</span>.format(prefix, key, <span class="string">' = '</span>, elements)</span><br></pre></td></tr></table></figure></p>
-<h3 id="分析subitem">分析subitem</h3><p>需要用到递归，将item不停的传递下去，直到完成<br>不多解释了，直接看代码吧<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printSubItem</span><span class="params">(key, value, prefix)</span>:</span></span><br><span class="line">    <span class="comment">#print '&#123;&#125;11111111111'.format(key)</span></span><br><span class="line">    local = <span class="string">'local '</span> + key + <span class="string">' = &#123;&#125;'</span></span><br><span class="line">    <span class="keyword">print</span> local</span><br><span class="line">    parseJson(value, key+<span class="string">'.'</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'&#123;&#125;&#123;&#125; = &#123;&#125;'</span>.format(prefix, key, key)</span><br><span class="line">    <span class="comment">#print '&#123;&#125;22222222222'.format(key)</span></span><br></pre></td></tr></table></figure></p>
-<hr>
-<h1 id="代码链接">代码链接</h1><p>放在<a href="https://github.com/CodeJuan/python_convert_json2lua" target="_blank" rel="external">https://github.com/CodeJuan/python_convert_json2lua</a></p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>某需求要将json转换成lua代码，同事们的做法是人肉翻译，肉眼读json，然后一条条拷贝到lua，如果遇到嵌套多的情况，一不小心就搞错了。<br>即使没有出错，顺利翻译完成，一条简单的json将耗时半小时。如果是100条，将浪费50个小时，太恐怖了。</p>
-<p>我在翻译了一次之后，实在是无法接受，于是想通过python来解析json，然后按照格式生成lua代码，也就是<code>用代码写代码</code>。<br>这样可以避免机械劳动，不再浪费生命，可以从原来的半小时减少到1分钟，并且不容易出错。</p>]]>
-    
-    </summary>
-    
-      <category term="json" scheme="http://blog.decbug.com/tags/json/"/>
-    
-      <category term="lua" scheme="http://blog.decbug.com/tags/lua/"/>
-    
-      <category term="python" scheme="http://blog.decbug.com/tags/python/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
