@@ -61,7 +61,7 @@ docker push 刚build出来的镜像
 docker push 刚build出来的镜像
 构建日志，构建结果，入库
 返回 私有registry域名/用户名/镜像">
-<meta property="og:updated_time" content="2016-02-17T23:56:03.458Z">
+<meta property="og:updated_time" content="2016-02-17T23:59:16.558Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用go写的镜像构建微服务">
 <meta name="twitter:description" content="功能类似Daoloud的代码构建功能
@@ -315,6 +315,7 @@ docker push 刚build出来的镜像
 <h1 id="记录">记录</h1><p>终于用go写完了一个类似DaoCloud自动构建镜像的微服务，一边google一边写，全程都是用Docker来开发的，收获还是挺大的，简单记录下。</p>
 <ol>
 <li>基于golang1.5.3基础镜像，然后在代码里增加一个Godeps，把用到的库都放在Godeps，然后在Dockefile里r把Goeps加入到GOPATH环境变量</li>
+<li>参考了docker/distribution的Dockerfile，<a href="https://github.com/CodeJuan/distribution/blob/master/Dockerfile" target="_blank" rel="external">https://github.com/CodeJuan/distribution/blob/master/Dockerfile</a></li>
 <li>由于只提供restful，就用的gorilla/mux框架</li>
 <li>数据库MySQL，orm用的是gorm</li>
 <li>用到了sync,crypt等库</li>
