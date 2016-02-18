@@ -32,6 +32,10 @@ description:
 1. 由于只提供restful，就用的gorilla/mux框架
 1. 数据库MySQL，orm用的是gorm
 1. 用到了sync,crypt等库
+1. 在docker内使用宿主机docker daemon的方法
+   - RUN (wget "https://get.docker.com/builds/..." -O /usr/bin/docker &&\
+   - chmod +x /usr/bin/docker)
+   - 然后再启动的时候指定/var/run/docker.sock:/var/run/docker.sock
 1. 开发测试部署都是用的Docker，数据库也是Docker。大概流程是
     - 修改代码，build我的微服务镜像，push到我的私有registry
     - docker-compose从私有registry获取刚build的镜像，由于link了MySQL，就会先启动MySQL。
