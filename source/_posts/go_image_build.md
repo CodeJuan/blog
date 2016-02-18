@@ -27,6 +27,7 @@ description:
 # 记录
 终于用go写完了一个类似DaoCloud自动构建镜像的微服务，一边google一边写，全程都是用Docker来开发的，收获还是挺大的，简单记录下。
 1. 基于golang1.5.3基础镜像，然后在代码里增加一个Godeps，把用到的库都放在Godeps，然后在Dockefile里r把Goeps加入到GOPATH环境变量
+1. 参考了docker/distribution的Dockerfile，[https://github.com/CodeJuan/distribution/blob/master/Dockerfile](https://github.com/CodeJuan/distribution/blob/master/Dockerfile)
 1. 由于只提供restful，就用的gorilla/mux框架
 1. 数据库MySQL，orm用的是gorm
 1. 用到了sync,crypt等库
