@@ -12,7 +12,8 @@ description:
 ---
 
 # 功能
-类似Daoloud的代码构建功能
+前面已经把私有registry，镜像下载加速器([摸我](http://docs.alauda.cn/feature/accelerator.html)，其实就是基于registry官方镜像设置一个proxy，超级简单)完成了。
+这个时候就可以提供类似Daoloud的代码构建功能啦
 1. 用户点击构建按钮（或是其他触发方式）
 2. 我的镜像构建微服务收到请求后，就从内网github Clone代码
 3. 在刚Clone代码里找到Dockerfile

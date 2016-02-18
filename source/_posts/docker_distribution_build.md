@@ -89,6 +89,9 @@ time="2016-01-22T13:36:29Z" level=error msg="response completed with error" err.
 ```
 奇怪
 
+更新，搞定了，原因是在compose里写环境变量不管用，等在config.yml里加上proxy，参见
+[https://github.com/CodeJuan/private_registry/blob/master/mirror_config.yml](https://github.com/CodeJuan/private_registry/blob/master/mirror_config.yml)
+
 # 进展5：调通删除镜像API
 I sent the same request with @adolphlwq 's request, and got the same response
 ```
