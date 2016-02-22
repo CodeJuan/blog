@@ -554,7 +554,7 @@
 
       
         
-          <h1 id="个人资料">个人资料</h1><table>
+          <span itemprop="articleBody"><h1 id="个人资料">个人资料</h1><table>
 <thead>
 <tr>
 <th>标题</th>
@@ -564,15 +564,15 @@
 <tbody>
 <tr>
 <td>mail</td>
-<td><a href="mailto:xh@decbug.com">xh@decbug.com</a></td>
+<td><a href="mailto:xh@decbug.com" target="_blank" rel="external">xh@decbug.com</a></td>
 </tr>
 <tr>
 <td>github</td>
-<td><a href="http://github.com/codejuan">codejuan</a></td>
+<td><a href="http://github.com/codejuan" target="_blank" rel="external">codejuan</a></td>
 </tr>
 <tr>
 <td>stackoverflow</td>
-<td><a href="http://stackoverflow.com/users/2763396/codejuan">codejuan</a></td>
+<td><a href="http://stackoverflow.com/users/2763396/codejuan" target="_blank" rel="external">codejuan</a></td>
 </tr>
 <tr>
 <td>blog</td>
@@ -588,11 +588,83 @@
 </tr>
 </tbody>
 </table>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2014/01/01/x_resume/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+<h1 id="技能">技能</h1><ul>
+<li>全栈，需求、设计、编码、持续集成、测试、部署、运维</li>
+<li>人员培养、性能优化、敏捷、效率提升。</li>
+</ul>
+<h2 id="技术">技术</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>评分</th>
+<th>短评</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C/C++</td>
+<td>熟悉</td>
+<td>虽用的比较多，但实在不敢说精通</td>
+</tr>
+<tr>
+<td>JAVA/Python/Go/PowerShell/C#</td>
+<td>一般</td>
+<td></td>
+</tr>
+<tr>
+<td>lua/Shell</td>
+<td>了解</td>
+<td></td>
+</tr>
+<tr>
+<td>英语</td>
+<td>熟悉</td>
+<td>读：谷歌，看英文资料；听：不错；写说：一般</td>
+</tr>
+<tr>
+<td>windows</td>
+<td>熟悉</td>
+<td>对windows的消息，线程，进程，异常，windbg都比较熟悉</td>
+</tr>
+<tr>
+<td>linux</td>
+<td>熟悉</td>
+<td>看过内核的书，知道MMU，进程，锁，调度，中断，文件系统，IO等等</td>
+</tr>
+</tbody>
+</table>
+<h1 id="工作经历">工作经历</h1><h2 id="华为_2014年～至今">华为 2014年～至今</h2><ol>
+<li>云计算<ul>
+<li>Docker，企业私有镜像仓库及加速器，nginx+registry v2+自研DFS，目标是做一个DaoCloud</li>
+<li>OpenStack性能模拟器，测试各组件的性能。基于开源RabbitMQ客户端的C语言版本和lua实现，采用异步+状态机+责任链，仿真效果达到百万台虚拟机的水平</li>
+</ul>
+</li>
+<li>在一个数据挖掘的150人团队担任技术<code>砖家</code><ul>
+<li>业务代码C++，UI用C#，分析基站的通信log</li>
+<li>持续集成，将整个系统的构建时间由2小时缩短到0.5小时；搭建单元测试(关键代码全覆盖)，自动化测试框架，内存泄漏检测</li>
+<li>负责性能优化，总结出常见低性能C++代码案例，以及google perf tool+vs performance analyse使用方法</li>
+<li>采用STXXL+BOOST序列化，将非热点数据缓存至硬盘，在基本不需要改动代码的前提下，使得工具的数据处理能力由GB级别跃升至TB级别。没有用redis的原因是，对已有代码冲击太大。</li>
+<li>指导组内同事开发，解决各种疑难杂症，如CoreD，性能慢等</li>
+<li>招聘，负责技术面试；培训，STL用法，单元测试gtest用法等等</li>
+</ul>
+</li>
+</ol>
+<h2 id="Samsung_2013年～2014年">Samsung 2013年～2014年</h2><ul>
+<li>接触前端/数据库等等，丰富技能树</li>
+<li>软件生命周期管理系统，C#+SilverLight，Redmine/Jira做二次开发</li>
+<li>JAVA + SSH做了个xxx管理系统</li>
+</ul>
+<h2 id="中兴_2011年～2013年">中兴 2011年～2013年</h2><ul>
+<li>开发手机检测系统。Windows应用程序，C/S架构，C++，用到socket、USB等等</li>
+<li>有点手机/无线路由的硬件经验，了解高通调测指令及方法，了解Atheros,Broadcom的路由方案。</li>
+</ul>
+<h2 id="Giesecke&amp;Devrient_20xx年～20xx年">Giesecke&amp;Devrient 20xx年～20xx年</h2><ul>
+<li>由维修工转职为程序员，用过VB，C++，C#，奠定了啥都会一点的基础</li>
+<li>基于VB实现一套标签打印系统，并针对业务需求优化，效果胜于某商用标签打印软件</li>
+<li>基于VC，通过串口及并口操作设备，将生产过程自动化</li>
+<li>兼职过IT，会组装电脑，维修电脑，搭建局域网</li>
+</ul>
+</span>
         
       
     </div>
@@ -622,8 +694,8 @@
           
           
             
-              <a class="post-title-link" href="/2013/12/24/hello-world/" itemprop="url">
-                Hello World
+              <a class="post-title-link" href="/2014/01/01/x_simple_resume/" itemprop="url">
+                一页简历
               </a>
             
           
@@ -633,8 +705,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2013-12-24T23:30:09+08:00" content="2013-12-24">
-            2013-12-24
+          <time itemprop="dateCreated" datetime="2014-01-01T00:00:00+08:00" content="2014-01-01">
+            2014-01-01
           </time>
         </span>
 
@@ -643,8 +715,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
+                <a href="/categories/mumble/" itemprop="url" rel="index">
+                  <span itemprop="name">mumble</span>
                 </a>
               </span>
 
@@ -659,8 +731,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2013/12/24/hello-world/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/12/24/hello-world/" itemprop="commentsCount"></span>
+            <a href="/2014/01/01/x_simple_resume/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/01/01/x_simple_resume/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -675,12 +747,104 @@
 
       
         
-          <span itemprop="description">hello</span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2013/12/24/hello-world/">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          <span itemprop="articleBody"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mail</td>
+<td><a href="mailto:xh@decbug.com" target="_blank" rel="external">xh@decbug.com</a></td>
+</tr>
+<tr>
+<td>技术</td>
+<td><a href="http://github.com/codejuan" target="_blank" rel="external">github</a> 、 <a href="http://blog.decbug.com">blog</a> 、 <a href="http://stackoverflow.com/users/2763396/codejuan" target="_blank" rel="external">stackoverflow</a></td>
+</tr>
+<tr>
+<td>毕业学校</td>
+<td>南昌大学 自动化 20xx年～20xx年 本科</td>
+</tr>
+<tr>
+<td>手机号</td>
+<td><strong>个人隐私</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="技能">技能</h3><p>全栈，架构、编码、持续集成、测试、部署、运维；性能优化、敏捷、研发效率提升、人员培养<br>技术控，爱好折腾，善于解决各种疑难问题，尝试新技术</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>评分</th>
+<th>短评</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C/C++</td>
+<td>熟悉</td>
+<td>虽用的比较多，但实在不敢说精通</td>
+</tr>
+<tr>
+<td>JAVA/Python/Go/PowerShell/C#</td>
+<td>一般</td>
+<td></td>
+</tr>
+<tr>
+<td>lua/Shell/Node</td>
+<td>了解</td>
+<td></td>
+</tr>
+<tr>
+<td>英语</td>
+<td>熟悉</td>
+<td>读：只谷歌，看英文资料毫无压力；听：不错；写说：一般</td>
+</tr>
+<tr>
+<td>windows</td>
+<td>熟悉</td>
+<td>对windows的消息，线程，进程，异常，windbg都比较熟悉</td>
+</tr>
+<tr>
+<td>linux</td>
+<td>熟悉</td>
+<td>看过内核的书，MMU，进程，锁，调度，中断，文件系统，IO等</td>
+</tr>
+</tbody>
+</table>
+<h3 id="工作经历">工作经历</h3><h4 id="华为_2014年～至今">华为 2014年～至今</h4><ol>
+<li>云计算<ul>
+<li>Docker，企业私有镜像仓库及加速器，nginx+registry+自研DFS</li>
+<li>Docker镜像构建服务：基于Go <a href="https://github.com/gorilla/mux" target="_blank" rel="external">gorilla/mux</a>、MySQL、微服务、Restful，从开发测试部署都是Docker化模式</li>
+<li>OpenStack性能模拟器，测试各组件的性能。基于<a href="https://github.com/alanxz/rabbitmq-c" target="_blank" rel="external">RabbitMQ-C语言</a>实现AMQP协议，lua实现业务</li>
+</ul>
+</li>
+<li>数据挖掘<ul>
+<li>业务代码C++，UI用C#，分析基站产生的海量通信log</li>
+<li>作为技术专家，负责整体技术架构，性能优化、难点攻关、技术指导、CodeReviewa、重构、开发效率提升</li>
+<li>持续集成，将整个系统的构建时间由2小时缩短到0.5小时；搭建单元测试、自动化测试，覆盖到关键业务代码</li>
+<li>总结出常见低性能C++代码案例，以及google perf tool+vs performance analyse使用方法</li>
+<li>采用STXXL+BOOST序列化，将非热点数据存硬盘，仅需改动一点代码，使数据处理能力GB提升TB</li>
+<li>指导组内同事开发，解决各种疑难杂症，如CoreDump，性能慢等；招聘，负责技术面试；培训，STL用法，单元测试gtest用法等等</li>
+</ul>
+</li>
+</ol>
+<h4 id="Samsung_2013年～2014年">Samsung 2013年～2014年</h4><ul>
+<li>接触前端/数据库等等，丰富技能树</li>
+<li>开发软件生命周期管理系统，C#+SilverLight，Redmine/Jira做二次开发；JAVA + SSH做了个xxx管理系统</li>
+</ul>
+<h4 id="中兴_2011年～2013年">中兴 2011年～2013年</h4><ul>
+<li>开发手机检测系统。Windows应用程序，C/S架构，C++，用到socket、USB等等</li>
+<li>有手机/无线路由的硬件经验，了解高通调测指令及方法，了解Atheros,Broadcom的路由方案。</li>
+</ul>
+<h4 id="Giesecke&amp;Devrient_20xx年～2011年">Giesecke&amp;Devrient 20xx年～2011年</h4><ul>
+<li>由维修工转职为程序员，兼职过IT，组装电脑，维修电脑，用过VB，C++，C#，奠定了啥都会一点的基础</li>
+<li>基于VB实现一套标签打印系统，并针对业务需求优化，效果胜于某商用标签打印软件；基于VC，通过串口及并口操作设备，将生产过程自动化</li>
+</ul>
+</span>
         
       
     </div>
@@ -703,7 +867,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span>
+    <a class="extend prev" rel="prev" href="/page/11/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/13/">&raquo;</a>
   </nav>
 
  </div>
@@ -737,7 +901,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-count">61</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

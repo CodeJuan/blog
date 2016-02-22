@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2014/01/01/x_simple_resume/</loc>
+    <lastmod>2016-02-22T23:38:28.967Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.decbug.com/2014/01/01/x_resume/</loc>
+    <lastmod>2016-02-19T12:27:00.599Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2016/02/17/go_image_build/</loc>
     <lastmod>2016-02-18T00:16:40.666Z</lastmod>
   </url>
@@ -19,11 +29,6 @@
   <url>
     <loc>http://blog.decbug.com/2016/02/01/msg_arch/</loc>
     <lastmod>2016-02-02T00:22:21.314Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.decbug.com/2014/01/01/x_resume/</loc>
-    <lastmod>2016-01-31T23:51:47.372Z</lastmod>
   </url>
   
   <url>
@@ -237,12 +242,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
+    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/11/career_of_programmer/</loc>
+    <loc>http://blog.decbug.com/2014/11/19/CompareWinPE/</loc>
     <lastmod>2015-08-04T14:28:02.483Z</lastmod>
   </url>
   
@@ -272,12 +277,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
+    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
+    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
@@ -287,12 +292,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
+    <loc>http://blog.decbug.com/2015/01/12/jenkins/</loc>
     <lastmod>2015-08-04T14:28:02.455Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/01/12/jenkins/</loc>
+    <loc>http://blog.decbug.com/2015/07/25/install_centos/</loc>
     <lastmod>2015-08-04T14:28:02.455Z</lastmod>
   </url>
   
@@ -317,12 +322,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
+    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/07/06/dependency_in_sln/</loc>
+    <loc>http://blog.decbug.com/2014/12/24/CreateUTproject/</loc>
     <lastmod>2015-08-04T14:28:02.431Z</lastmod>
   </url>
   
