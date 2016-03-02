@@ -83,11 +83,17 @@ ansible-playbook -i hosts playbook.yml -K
 ## etcd
 ```sh
 curl -L  https://github.com/coreos/etcd/releases/download/v2.2.4/etcd-v2.2.4-linux-amd64.tar.gz -o etcd-v2.2.4-linux-amd64.tar.gz
-tar xzvf etcd-v2.2.4-linux-amd64.tar.gz
+tar -C /usr/local/ -xzvf etcd-v2.2.4-linux-amd64.tar.gz
 cd etcd-v2.2.4-linux-amd64
 ./etcd
 ```
 
+## k8s
+```sh
+sudo tar -C /usr/local/ -xvzf kubernetes.tar.gz
+```
+
+[http://kubernetes.io/v1.0/docs/getting-started-guides/ubuntu.html](http://kubernetes.io/v1.0/docs/getting-started-guides/ubuntu.html)
 
 
 ----------------------------
