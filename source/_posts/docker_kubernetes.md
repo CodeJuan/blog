@@ -98,9 +98,11 @@ sudo tar -C /usr/local/ -xvzf kubernetes.tar.gz
 ## 部署
 
 ```
-# 设置环境变量
+### 设置环境变量
 export FLANNEL_VERSION=0.5.5 && export ETCD_VERSION=2.2.5 && export KUBE_VERSION=1.1.8
 ```
+
+### build
 执行`kubernetes/cluster/ubuntu/build.sh`，会自动下载二进制，然而。。。。
 ```
 Prepare flannel 0.4.0 release ...
@@ -112,19 +114,36 @@ Prepare flannel 0.4.0 release ...
 ----------------------------
 又是S3，看来又要把路由的全局番茄打开。
 
+### 修改配置文件
 ```
 #  cluster/ubuntu/config-default.sh
 export nodes="vcap@10.10.103.250 vcap@10.10.103.162 vcap@10.10.103.223" #user@IP
-#export roles="ai i i"
+#export roles="ai i i" # 这里需要注意 role和上面的nodes一一对应，也就是说"第一个node对应第一个role，即ai，表示master+node"，后面的i就表示是node
 #export NUM_MINIONS=${NUM_MINIONS:-3}
 #export SERVICE_CLUSTER_IP_RANGE=192.168.1.0/16
 #export FLANNEL_NET=172.16.0.0/16
 ```
 
+### 开始部署
 ```
 /usr/local/kubernetes/cluster$ KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
 ```
+由于安装过程中老出错，再次部署的时候总提示文件被占用，服务正在运行，所以我写了个kill脚本，每次部署之前都kill一次
 
+### 部署完成
+部署完成之后
+```
+kubectl get nodes
+# 显示
+NAME            LABELS                                 STATUS    AGE
+192.168.1.148   kubernetes.io/hostname=192.168.1.148   Ready     6h
+192.168.1.173   kubernetes.io/hostname=192.168.1.173   Ready     6h
+192.168.1.241   kubernetes.io/hostname=192.168.1.241   Ready     6h
+192.168.1.245   kubernetes.io/hostname=192.168.1.245   Ready     6h
+
+```
+
+# hello world
 
 
 
