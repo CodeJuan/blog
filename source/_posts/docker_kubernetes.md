@@ -1,6 +1,6 @@
 ---
 title: docker(5)-kubernetes
-date: 2016-01-18 00:00:00
+date: 2016-02-28 00:00:00
 categories:
 - code
 tags: 
@@ -95,8 +95,39 @@ sudo tar -C /usr/local/ -xvzf kubernetes.tar.gz
 
 [http://kubernetes.io/v1.0/docs/getting-started-guides/ubuntu.html](http://kubernetes.io/v1.0/docs/getting-started-guides/ubuntu.html)
 
+## 部署
 
+```
+# 设置环境变量
+export FLANNEL_VERSION=0.5.5 && export ETCD_VERSION=2.2.5 && export KUBE_VERSION=1.1.8
+```
+执行`kubernetes/cluster/ubuntu/build.sh`，会自动下载二进制，然而。。。。
+```
+Prepare flannel 0.4.0 release ...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   608    0   608    0     0    542      0 --:--:--  0:00:01 --:--:--   543
+  0     0    0     0    0     0      0      0 --:--:--  0:02:08 --:--:--     0curl: (7) Failed to connect to github-cloud.s3.amazonaws.com port 443: Connection timed out
+```
 ----------------------------
+又是S3，看来又要把路由的全局番茄打开。
+
+```
+#  cluster/ubuntu/config-default.sh
+export nodes="vcap@10.10.103.250 vcap@10.10.103.162 vcap@10.10.103.223" #user@IP
+#export roles="ai i i"
+#export NUM_MINIONS=${NUM_MINIONS:-3}
+#export SERVICE_CLUSTER_IP_RANGE=192.168.1.0/16
+#export FLANNEL_NET=172.16.0.0/16
+```
+
+```
+/usr/local/kubernetes/cluster$ KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
+```
+
+
+
+
 
 `本博客欢迎转发,但请保留原作者信息`
 github:[codejuan](https://github.com/CodeJuan)
