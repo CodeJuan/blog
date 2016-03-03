@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="career," />
+  <meta name="keywords" content="docker,kubernetes," />
 
 
 
@@ -39,16 +39,17 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="总觉得今天才是2015的最后一天，那么就计划一下2016吧">
+<meta name="description" content="背景需要做一个容器云，有同事在撸mesos+marathon+chronos，我就顺便折腾下kubernetes。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2016学习计划">
-<meta property="og:url" content="http://blog.decbug.com/2016/01/31/planning2016/index.html">
+<meta property="og:title" content="docker(5)-kubernetes">
+<meta property="og:url" content="http://blog.decbug.com/2016/02/28/docker_kubernetes/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="总觉得今天才是2015的最后一天，那么就计划一下2016吧">
-<meta property="og:updated_time" content="2016-02-14T11:56:11.959Z">
+<meta property="og:description" content="背景需要做一个容器云，有同事在撸mesos+marathon+chronos，我就顺便折腾下kubernetes。">
+<meta property="og:image" content="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/docker/ansible_install_docker.png">
+<meta property="og:updated_time" content="2016-03-03T00:30:49.817Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2016学习计划">
-<meta name="twitter:description" content="总觉得今天才是2015的最后一天，那么就计划一下2016吧">
+<meta name="twitter:title" content="docker(5)-kubernetes">
+<meta name="twitter:description" content="背景需要做一个容器云，有同事在撸mesos+marathon+chronos，我就顺便折腾下kubernetes。">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -58,7 +59,7 @@
   };
 </script>
 
-  <title> 2016学习计划 | Continuous Learning </title>
+  <title> docker(5)-kubernetes | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -227,7 +228,7 @@
           
           
             
-              2016学习计划
+              docker(5)-kubernetes
             
           
         </h1>
@@ -236,8 +237,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-01-31T00:00:00+08:00" content="2016-01-31">
-            2016-01-31
+          <time itemprop="dateCreated" datetime="2016-02-28T00:00:00+08:00" content="2016-02-28">
+            2016-02-28
           </time>
         </span>
 
@@ -246,8 +247,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/planning/" itemprop="url" rel="index">
-                  <span itemprop="name">planning</span>
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
                 </a>
               </span>
 
@@ -262,8 +263,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2016/01/31/planning2016/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/01/31/planning2016/" itemprop="commentsCount"></span>
+            <a href="/2016/02/28/docker_kubernetes/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/02/28/docker_kubernetes/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -277,19 +278,31 @@
       
 
       
-        <span itemprop="articleBody"><p>总觉得今天才是2015的最后一天，那么就计划一下2016吧<br><a id="more"></a></p>
-<h1 id="英语">英语</h1><ol>
-<li>每天10个单词，要求能造句</li>
-<li>每天一篇技术文章，要求能复述</li>
-<li>继续每天一篇听力</li>
-<li>要多开口说了，2015说的太少</li>
-<li>已经可以在github上和<code>第一语言是英语的同僚</code>对话了，接下来要尝试用英文写博客</li>
-</ol>
-<h1 id="代码">代码</h1><ol>
-<li>虽然我很讨厌架构师这个头衔，因为太多嘴炮架构师，啥都不会光会吹。但是有时候为了展示自己的实力，不得不给自己也挂上</li>
-</ol>
-<p>…..</p>
+        <span itemprop="articleBody"><h1 id="背景">背景</h1><p>需要做一个容器云，有同事在撸mesos+marathon+chronos，我就顺便折腾下kubernetes。<br><a id="more"></a></p>
+<h1 id="kubernetes简介">kubernetes简介</h1><blockquote>
+<p>Kubernetes是Google开源的容器集群管理系统。它构建Ddocker技术之上，为容器化的应用提供资源调度、部署运行、服务发现、扩容缩容等整一套功能</p>
+<p>Kubernetes 是来自 Google 云平台的开源容器集群管理系统。基于 Docker 构建一个容器的调度服务。该系统可以自动在一个容器集群中选择一个工作容器供使用。</p>
+</blockquote>
+<p>感觉像是Docker版PaaS版的OpenStack。OpenStack对外提供VM，Kubernetes则对外提供基于docker的服务。</p>
+<h1 id="通过ansible装docker">通过ansible装docker</h1><p>机器多了，再手工装docker-engine就太麻烦了，所以写个playbook，给家里的机器统一安装。<br>代码放在<a href="https://github.com/CodeJuan/kubernetes_practice" target="_blank" rel="external">https://github.com/CodeJuan/kubernetes_practice</a></p>
+<h2 id="hosts">hosts</h2><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[master]</span><br><span class="line">i3	<span class="variable">ansible_user=</span>i3	<span class="variable">ansible_ssh_host=</span><span class="number">192.168</span>.<span class="number">1.245</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[million]</span><br><span class="line">g530	<span class="variable">ansible_user=</span>g530	<span class="variable">ansible_ssh_host=</span><span class="number">192.168</span>.<span class="number">1.173</span></span><br><span class="line">g540	<span class="variable">ansible_user=</span>g540	<span class="variable">ansible_ssh_host=</span><span class="number">192.168</span>.<span class="number">1.148</span></span><br><span class="line">g640	<span class="variable">ansible_user=</span>g640	<span class="variable">ansible_ssh_host=</span><span class="number">192.168</span>.<span class="number">1.241</span></span><br></pre></td></tr></table></figure>
+<p>如果没有添加SSH key，那么可以设置ansible_ssh_pass=xxxxxx</p>
+<p>这里说一个奇葩的事情，重装了系统之后，手动把maset的pubkey添加到agent的可信ssh里，然而在play的时候总提示<code>没有权限</code>，尝试了各种方法依旧无解。<br>最后死马当活马医，<code>pip uninstall ansible</code>再<code>pip install</code>，竟然就好了，实在是很无语。</p>
+<h2 id="playbooks">playbooks</h2><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">--</span><br><span class="line"></span>-<span class="ruby"> <span class="symbol">hosts:</span> all <span class="comment">#表示hosts里的所有agent都要装</span></span><br><span class="line"></span>  tasks:</span><br><span class="line">  -<span class="ruby"> <span class="symbol">name:</span> ping <span class="comment"># 先测试是否能ping通</span></span><br><span class="line"></span>    ping:</span><br><span class="line">  -<span class="ruby"> <span class="symbol">name:</span> add_docker_key <span class="comment"># 加入key</span></span><br><span class="line"></span>    sudo: yes</span><br><span class="line">    command: apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D</span><br><span class="line">  -<span class="ruby"> <span class="symbol">name:</span> update_apt_source <span class="comment"># 增加源</span></span><br><span class="line"></span>    sudo: yes</span><br><span class="line">    lineinfile:</span><br><span class="line">      dest=/etc/apt/sources.list.d/docker.list</span><br><span class="line">      create=yes</span><br><span class="line">      line="deb https://apt.dockerproject.org/repo ubuntu-trusty main"</span><br><span class="line">  -<span class="ruby"> <span class="symbol">name:</span> install docker</span><br><span class="line"></span>    sudo: yes</span><br><span class="line">    apt: name=docker-engine update_cache=yes</span><br></pre></td></tr></table></figure>
+<h2 id="执行">执行</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook -i hosts playbook.yml -K</span><br></pre></td></tr></table></figure>
+<p>其中-K表示，交互式的输入sudo密码<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/docker/ansible_install_docker.png" alt=""></p>
+<p>稍等片刻，每个agent的docker-engine就都安装好了。接下来就是安装kubernetes</p>
+<h1 id="安装kubernetes">安装kubernetes</h1><p><a href="http://kubernetes.io/v1.1/docs/getting-started-guides/locally.html#linux" target="_blank" rel="external">http://kubernetes.io/v1.1/docs/getting-started-guides/locally.html#linux</a><br>参照谷歌的文档安装一下。</p>
+<h2 id="安装go">安装go</h2><p><a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a><br>参考之前写的安装一下，要不要翻译成Ansible呢。。。。。。</p>
+<h2 id="etcd">etcd</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -L  https://github.com/coreos/etcd/releases/download/v2.<span class="number">2.4</span>/etcd-v2.<span class="number">2.4</span>-linux-amd64.tar.gz -o etcd-v2.<span class="number">2.4</span>-linux-amd64.tar.gz</span><br><span class="line">tar -C /usr/<span class="built_in">local</span>/ -xzvf etcd-v2.<span class="number">2.4</span>-linux-amd64.tar.gz</span><br><span class="line"><span class="built_in">cd</span> etcd-v2.<span class="number">2.4</span>-linux-amd64</span><br><span class="line">./etcd</span><br></pre></td></tr></table></figure>
+<h2 id="k8s">k8s</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tar -C /usr/<span class="built_in">local</span>/ -xvzf kubernetes.tar.gz</span><br></pre></td></tr></table></figure>
+<p><a href="http://kubernetes.io/v1.0/docs/getting-started-guides/ubuntu.html" target="_blank" rel="external">http://kubernetes.io/v1.0/docs/getting-started-guides/ubuntu.html</a></p>
+<h2 id="部署">部署</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line"><span class="built_in">export</span> FLANNEL_VERSION=<span class="number">0.5</span>.<span class="number">5</span> &amp;&amp; <span class="built_in">export</span> ETCD_VERSION=<span class="number">2.2</span>.<span class="number">5</span> &amp;&amp; <span class="built_in">export</span> KUBE_VERSION=<span class="number">1.1</span>.<span class="number">8</span></span><br></pre></td></tr></table></figure>
+<p>执行<code>kubernetes/cluster/ubuntu/build.sh</code>，会自动下载二进制，然而。。。。<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Prepare </span>flannel <span class="number">0</span>.<span class="number">4.0</span> release ...</span><br><span class="line">  % <span class="constant">Total </span>   % <span class="constant">Received </span>% <span class="constant">Xferd </span> <span class="constant">Average Speed </span>  <span class="constant">Time </span>   <span class="constant">Time </span>    <span class="constant">Time </span> <span class="constant">Current</span></span><br><span class="line">                                 <span class="constant">Dload </span> <span class="constant">Upload </span>  <span class="constant">Total </span>  <span class="constant">Spent </span>   <span class="constant">Left </span> <span class="constant">Speed</span></span><br><span class="line"><span class="number">100</span>   <span class="number">608</span>    <span class="number">0</span>   <span class="number">608</span>    <span class="number">0</span>     <span class="number">0</span>    <span class="number">542</span>      <span class="number">0</span> --<span class="symbol">:--</span><span class="symbol">:--</span>  <span class="number">0</span><span class="symbol">:</span><span class="number">00</span><span class="symbol">:</span><span class="number">01</span> --<span class="symbol">:--</span><span class="symbol">:--</span>   <span class="number">543</span></span><br><span class="line">  <span class="number">0</span>     <span class="number">0</span>    <span class="number">0</span>     <span class="number">0</span>    <span class="number">0</span>     <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span> --<span class="symbol">:--</span><span class="symbol">:--</span>  <span class="number">0</span><span class="symbol">:</span><span class="number">02</span><span class="symbol">:</span>08 --<span class="symbol">:--</span><span class="symbol">:--</span>     0<span class="symbol">curl:</span> (<span class="number">7</span>) <span class="constant">Failed </span>to connect to github-cloud.s3.amazonaws.com port <span class="number">443</span><span class="symbol">:</span> <span class="constant">Connection </span>timed out</span><br></pre></td></tr></table></figure></p>
 <hr>
+<p>又是S3，看来又要把路由的全局番茄打开。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#  cluster/ubuntu/config-default.sh</span></span><br><span class="line">export nodes=<span class="string">"vcap@10.10.103.250 vcap@10.10.103.162 vcap@10.10.103.223"</span> #user@IP</span><br><span class="line"><span class="preprocessor">#export roles="ai i i"</span></span><br><span class="line"><span class="preprocessor">#export NUM_MINIONS=$&#123;NUM_MINIONS:-3&#125;</span></span><br><span class="line"><span class="preprocessor">#export SERVICE_CLUSTER_IP_RANGE=192.168.1.0/16</span></span><br><span class="line"><span class="preprocessor">#export FLANNEL_NET=172.16.0.0/16</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="keyword">local</span>/kubernetes/<span class="keyword">cluster</span>$ KUBERNETES_PROVIDER=ubuntu ./kube-up.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
       
@@ -299,7 +312,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/career/" rel="tag">#career</a>
+            <a href="/tags/docker/" rel="tag">#docker</a>
+          
+            <a href="/tags/kubernetes/" rel="tag">#kubernetes</a>
           
         </div>
       
@@ -308,13 +323,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/02/01/msg_arch/" rel="prev">分布式消息系统架构图</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/01/13/docker_distribution_nexus/" rel="next">docker(4)-nexus3</a>
+              <a href="/2016/02/17/go_image_build/" rel="next">用go写的镜像构建微服务</a>
             
           </div>
         </div>
@@ -450,7 +463,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#英语"><span class="nav-number">1.</span> <span class="nav-text">英语</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kubernetes简介"><span class="nav-number">2.</span> <span class="nav-text">kubernetes简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#通过ansible装docker"><span class="nav-number">3.</span> <span class="nav-text">通过ansible装docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#hosts"><span class="nav-number">3.1.</span> <span class="nav-text">hosts</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#playbooks"><span class="nav-number">3.2.</span> <span class="nav-text">playbooks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行"><span class="nav-number">3.3.</span> <span class="nav-text">执行</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装kubernetes"><span class="nav-number">4.</span> <span class="nav-text">安装kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装go"><span class="nav-number">4.1.</span> <span class="nav-text">安装go</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etcd"><span class="nav-number">4.2.</span> <span class="nav-text">etcd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k8s"><span class="nav-number">4.3.</span> <span class="nav-text">k8s</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署"><span class="nav-number">4.4.</span> <span class="nav-text">部署</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -504,9 +517,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = '2016/01/31/planning2016/';
-      var disqus_title = '2016学习计划';
-      var disqus_url = 'http://blog.decbug.com/2016/01/31/planning2016/';
+      var disqus_identifier = '2016/02/28/docker_kubernetes/';
+      var disqus_title = 'docker(5)-kubernetes';
+      var disqus_url = 'http://blog.decbug.com/2016/02/28/docker_kubernetes/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
