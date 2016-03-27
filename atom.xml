@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2016-03-03T12:13:25.626Z</updated>
+  <updated>2016-03-27T10:18:16.369Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,79 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[docker(6)-swarm]]></title>
+    <link href="http://blog.decbug.com/2016/03/27/docker_swarm/"/>
+    <id>http://blog.decbug.com/2016/03/27/docker_swarm/</id>
+    <published>2016-03-26T16:00:00.000Z</published>
+    <updated>2016-03-27T10:18:16.369Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>正在自己的容器云，目前的业务不是复杂，所以做法比较土：自己管理集群，调用每个节点的docker daemon remote API来创建/启动/停止/删除镜像及容器，虽然简单，但是需要自己做集群管理（都还没上服务发现），比较麻烦。<br>此后打算用k8s，但由于其他原因，暂时搁置。后来咨询swarm的maintainer线超博，以及DaoCloud的高手们，决定采用swarm<br><a id="more"></a></p>
+<h1 id="采用swarm的原因">采用swarm的原因</h1><ol>
+<li>自带服务发现，不用我自己弄</li>
+<li>和docker daemon remote API的基本相同，仅有的差异请参照<a href="https://github.com/CodeJuan/swarm/blob/master/docs/swarm-api.md#endpoints-which-behave-differently" target="_blank" rel="external">官方文档</a>，基本可以复用用来的代码</li>
+</ol>
+<p>虽然这次用了swarm，但有机会的话我还是想会继续安利k8s，毕竟k8s更好玩一些</p>
+<h1 id="安装">安装</h1><h2 id="节点分配">节点分配</h2><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i3</td>
+<td>192.168.1.245</td>
+<td>sonsul,manage0,node</td>
+</tr>
+<tr>
+<td>g540</td>
+<td>192.168.1.148</td>
+<td>manage1,node</td>
+</tr>
+<tr>
+<td>g640</td>
+<td>192.168.1.241</td>
+<td>node</td>
+</tr>
+<tr>
+<td>g530</td>
+<td>192.168.1.173</td>
+<td>node</td>
+</tr>
+</tbody>
+</table>
+<p>这里的主机名，都是我的机器的CPU型号，这几台机器都是我收购来的二手台式机，IP是openwrt自动分配的，貌似是hash算出来的，是个固定值。</p>
+<h2 id="暴露docker_daemon的端口">暴露docker daemon的端口</h2><p>swarm应该也是调用每个节点的remote API吧，所以需要暴露端口</p>
+<p>打开<code>/etc/default/docker</code>，在<code>DOCKER_OPTS</code>加上<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby"><span class="constant">H</span> <span class="symbol">tcp:</span>/<span class="regexp">/0.0.0.0:4243 -H unix:/</span><span class="regexp">//var</span><span class="regexp">/run/docker</span>.sock</span></span><br></pre></td></tr></table></figure></p>
+<p>记住这个暴露的端口号，后面会用到，我这里是4243</p>
+<h2 id="启动consul">启动consul</h2><p>在i3上执行<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">run</span> --restart always -<span class="keyword">d</span> -p 8500:8500 --name=consul progrium/consul -server -<span class="keyword">bootstrap</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="启动manage0">启动manage0</h2><p>还是i3<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">run</span> --restart always -<span class="keyword">d</span> -p 4000:4000 swarm manage -<span class="keyword">H</span> :4000 --replication --advertise 192.168.1.245:4000 consul:<span class="comment">//192.168.1.245:8500</span></span><br></pre></td></tr></table></figure></p>
+<p>advertise的IP就是i3自身的IP，相当于告诉consul，我是manage，这是我的IP和端口<br>consul的IP就是consul_ip</p>
+<h2 id="启动manage1">启动manage1</h2><p>官网把这个叫<code>secondary Swarm manager</code>，领会精神即可<br>这次是在g540上执行<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">run</span> --restart always -<span class="keyword">d</span> swarm manage -<span class="keyword">H</span> :4000 --replication --advertise 192.168.1.148:4000 consul:<span class="comment">//192.168.1.245:8500</span></span><br></pre></td></tr></table></figure></p>
+<p>consul，就还是i3上运行的consul<br>advertise 是manager1，也就是自己的IP和端口</p>
+<h2 id="启动node">启动node</h2><p>在4个节点上分别运行<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --restart always -d swarm join --advertise=自己的<span class="string">IP:</span><span class="number">4243</span> <span class="string">consul:</span><span class="comment">//192.168.1.245:8500</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="在i3上查看info">在i3上查看info</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">docker</span> -H :<span class="number">4000</span> <span class="built_in">info</span></span><br></pre></td></tr></table></figure>
+<p>这里表示，docker会向本机的4000端口发请求，也就是我们最开始启动manager0的时候声明的端口。<br>可以看到<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">Containers:</span> <span class="number">19</span></span><br><span class="line"><span class="label"> Running:</span> <span class="number">19</span></span><br><span class="line"><span class="label"> Paused:</span> <span class="number">0</span></span><br><span class="line"><span class="label"> Stopped:</span> <span class="number">0</span></span><br><span class="line"><span class="string">Images:</span> <span class="number">26</span></span><br><span class="line">Server <span class="string">Version:</span> swarm/<span class="number">1.1</span>.3</span><br><span class="line"><span class="string">Role:</span> primary</span><br><span class="line"><span class="string">Strategy:</span> spread</span><br><span class="line"><span class="string">Filters:</span> health, port, dependency, affinity, constraint</span><br><span class="line"><span class="string">Nodes:</span> <span class="number">4</span></span><br><span class="line"><span class="label"> g530:</span> <span class="number">192.168</span>.1.173:<span class="number">4243</span></span><br><span class="line">  └ <span class="string">Status:</span> Healthy</span><br><span class="line">  └ <span class="string">Containers:</span> <span class="number">8</span></span><br><span class="line">  └ Reserved <span class="string">CPUs:</span> <span class="number">0</span> / <span class="number">2</span></span><br><span class="line">  └ Reserved <span class="string">Memory:</span> <span class="number">0</span> B / <span class="number">3.969</span> GiB</span><br><span class="line">  └ <span class="string">Labels:</span> executiondriver=native-<span class="number">0.2</span>, kernelversion=<span class="number">3.19</span>.0-<span class="number">25</span>-generic, operatingsystem=Ubuntu <span class="number">14.04</span>.3 LTS, storagedriver=aufs</span><br><span class="line">  └ <span class="string">Error:</span> (none)</span><br><span class="line">  └ <span class="string">UpdatedAt:</span> <span class="number">2016</span>-<span class="number">03</span>-<span class="number">27</span><span class="string">T09:</span><span class="number">46</span>:<span class="number">45</span>Z</span><br><span class="line"><span class="label"> g540:</span> <span class="number">192.168</span>.1.148:<span class="number">4243</span></span><br><span class="line">  └ <span class="string">Status:</span> Healthy</span><br><span class="line">  └ <span class="string">Containers:</span> <span class="number">4</span></span><br><span class="line">  └ Reserved <span class="string">CPUs:</span> <span class="number">0</span> / <span class="number">2</span></span><br><span class="line">  └ Reserved <span class="string">Memory:</span> <span class="number">0</span> B / <span class="number">3.93</span> GiB</span><br><span class="line">  └ <span class="string">Labels:</span> executiondriver=native-<span class="number">0.2</span>, kernelversion=<span class="number">3.19</span>.0-<span class="number">25</span>-generic, operatingsystem=Ubuntu <span class="number">14.04</span>.4 LTS, storagedriver=aufs</span><br><span class="line">  └ <span class="string">Error:</span> (none)</span><br><span class="line">  └ <span class="string">UpdatedAt:</span> <span class="number">2016</span>-<span class="number">03</span>-<span class="number">27</span><span class="string">T09:</span><span class="number">47</span>:<span class="number">02</span>Z</span><br><span class="line"><span class="label"> g640:</span> <span class="number">192.168</span>.1.241:<span class="number">4243</span></span><br><span class="line">  └ <span class="string">Status:</span> Healthy</span><br><span class="line">  └ <span class="string">Containers:</span> <span class="number">4</span></span><br><span class="line">  └ Reserved <span class="string">CPUs:</span> <span class="number">0</span> / <span class="number">2</span></span><br><span class="line">  └ Reserved <span class="string">Memory:</span> <span class="number">0</span> B / <span class="number">3.739</span> GiB</span><br><span class="line">  └ <span class="string">Labels:</span> executiondriver=native-<span class="number">0.2</span>, kernelversion=<span class="number">3.19</span>.0-<span class="number">25</span>-generic, operatingsystem=Ubuntu <span class="number">14.04</span>.4 LTS, storagedriver=aufs</span><br><span class="line">  └ <span class="string">Error:</span> (none)</span><br><span class="line">  └ <span class="string">UpdatedAt:</span> <span class="number">2016</span>-<span class="number">03</span>-<span class="number">27</span><span class="string">T09:</span><span class="number">46</span>:<span class="number">56</span>Z</span><br><span class="line"><span class="label"> i3:</span> <span class="number">192.168</span>.1.245:<span class="number">4243</span></span><br><span class="line">  └ <span class="string">Status:</span> Healthy</span><br><span class="line">  └ <span class="string">Containers:</span> <span class="number">3</span></span><br><span class="line">  └ Reserved <span class="string">CPUs:</span> <span class="number">0</span> / <span class="number">4</span></span><br><span class="line">  └ Reserved <span class="string">Memory:</span> <span class="number">0</span> B / <span class="number">16.12</span> GiB</span><br><span class="line">  └ <span class="string">Labels:</span> executiondriver=native-<span class="number">0.2</span>, kernelversion=<span class="number">3.19</span>.0-<span class="number">25</span>-generic, operatingsystem=Ubuntu <span class="number">14.04</span>.3 LTS, storagedriver=aufs</span><br><span class="line">  └ <span class="string">Error:</span> (none)</span><br><span class="line">  └ <span class="string">UpdatedAt:</span> <span class="number">2016</span>-<span class="number">03</span>-<span class="number">27</span><span class="string">T09:</span><span class="number">47</span>:<span class="number">17</span>Z</span><br><span class="line"><span class="string">Plugins:</span></span><br><span class="line"><span class="label"> Volume:</span></span><br><span class="line"><span class="label"> Network:</span></span><br><span class="line">Kernel <span class="string">Version:</span> <span class="number">3.19</span>.0-<span class="number">25</span>-generic</span><br><span class="line">Operating <span class="string">System:</span> linux</span><br><span class="line"><span class="string">Architecture:</span> amd64</span><br><span class="line"><span class="string">CPUs:</span> <span class="number">10</span></span><br><span class="line">Total <span class="string">Memory:</span> <span class="number">27.76</span> GiB</span><br></pre></td></tr></table></figure></p>
+<p>很帅吧</p>
+<h1 id="测试">测试</h1><p>启动一个容器试试</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>正在自己的容器云，目前的业务不是复杂，所以做法比较土：自己管理集群，调用每个节点的docker daemon remote API来创建/启动/停止/删除镜像及容器，虽然简单，但是需要自己做集群管理（都还没上服务发现），比较麻烦。<br>此后打算用k8s，但由于其他原因，暂时搁置。后来咨询swarm的maintainer线超博，以及DaoCloud的高手们，决定采用swarm<br>]]>
+    
+    </summary>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="docker-swarm" scheme="http://blog.decbug.com/tags/docker-swarm/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[docker(5)-kubernetes]]></title>
@@ -830,37 +903,6 @@
     </summary>
     
       <category term="golang" scheme="http://blog.decbug.com/tags/golang/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[virtualbox共享文件夹]]></title>
-    <link href="http://blog.decbug.com/2015/11/24/virtualbox_share/"/>
-    <id>http://blog.decbug.com/2015/11/24/virtualbox_share/</id>
-    <published>2015-11-23T16:00:00.000Z</published>
-    <updated>2015-11-24T12:57:50.114Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>我的日常系统是ubuntu，但由于特殊国情，很多事情在只能在windows上面才能做。<br>所以呢，只好用virtualbox弄了xp，专门用来做见不得人之事，比如用迅雷下载某些资源。<br>下载完成之后，得把东西拷回到ubuntu吧，这个时候就可以通过共享文件夹的方式来做。</p>
-<a id="more"></a>
-<hr>
-<h1 id="步骤">步骤</h1><h2 id="设置共享文件夹">设置共享文件夹</h2><p>点击virtualbox的菜单，选择devices-shared folders settings<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/virtualbox/1.png" alt=""></p>
-<h2 id="选中host上的一个文件夹">选中host上的一个文件夹</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/virtualbox/2.png" alt=""></p>
-<h2 id="安装virtualbox插件">安装virtualbox插件</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/virtualbox/3.png" alt=""><br>会提示没有插件什么什么的，一路点next就行<br>装完之后需要重启</p>
-<h2 id="映射host共享文件夹">映射host共享文件夹</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net use x: \\vboxsvr\share</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/virtualbox/4.png" alt=""></p>
-<p>然后在网络驱动器就会出现一个X盘，之后就能通过它来传文件了。</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>我的日常系统是ubuntu，但由于特殊国情，很多事情在只能在windows上面才能做。<br>所以呢，只好用virtualbox弄了xp，专门用来做见不得人之事，比如用迅雷下载某些资源。<br>下载完成之后，得把东西拷回到ubuntu吧，这个时候就可以通过共享文件夹的方式来做。</p>]]>
-    
-    </summary>
-    
-      <category term="share" scheme="http://blog.decbug.com/tags/share/"/>
-    
-      <category term="virtualbox" scheme="http://blog.decbug.com/tags/virtualbox/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
