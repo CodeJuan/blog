@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2016-03-27T11:31:52.281Z</updated>
+  <updated>2016-04-29T13:02:02.591Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,59 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[各种锁:自旋锁/互斥锁/读写锁/分布式锁]]></title>
+    <link href="http://blog.decbug.com/2016/04/29/lock/"/>
+    <id>http://blog.decbug.com/2016/04/29/lock/</id>
+    <published>2016-04-28T16:00:00.000Z</published>
+    <updated>2016-04-29T13:02:02.591Z</updated>
+    <content type="html"><![CDATA[<h1 id="锁">锁</h1><p>锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。<br>举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。<br>在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。</p>
+<a id="more"></a>
+<h1 id="自旋锁vs互斥锁">自旋锁vs互斥锁</h1><h2 id="举个例子">举个例子</h2><ul>
+<li>互斥锁：假如说你想进入一个房间，但是这个房间里已经有人了。那么就进不去，这个时候你就先睡一觉，等里边的人出来把你叫醒，然后你再进去。</li>
+<li>自旋锁：还是这个房间，房间里有人，你不会睡着，只会每过一分钟就看房间里的人出来了么，如果没出来，那么就继续不停查看。如果出来了，你就进去。</li>
+</ul>
+<p>对应到系统，就是你这个线程想获取这个锁，但是这个锁被别的线程持有了，那么你这个线程就得休眠，等待锁释放后再被唤醒。要知道，休眠再唤醒的开销很大，所以就出了自旋锁。自旋锁不会休眠，会不停的尝试。</p>
+<table>
+<thead>
+<tr>
+<th>类</th>
+<th>特征</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自旋</td>
+<td>不会休眠，不停重试，直到获得锁</td>
+<td>锁住的代码执行时间很短。因为休眠再唤醒的开销很大。如果时间短，那么自旋的开销就很小</td>
+</tr>
+<tr>
+<td>互斥</td>
+<td>休眠，等锁被释放才会被唤醒</td>
+<td>锁住的代码要执行很久，如果是自旋锁，就会不停尝试，被锁住的代码分不到足够的时间片，但是性能下降</td>
+</tr>
+</tbody>
+</table>
+<h1 id="读写锁">读写锁</h1><p>场景：读多写少<br>条件：</p>
+<ul>
+<li>只要没有写锁，就能获取到读锁</li>
+<li>只有没有任锁，才能获取到写锁</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="锁">锁</h1><p>锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。<br>举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。<br>在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。</p>]]>
+    
+    </summary>
+    
+      <category term="lock" scheme="http://blog.decbug.com/tags/lock/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[docker(6)-swarm]]></title>
@@ -302,6 +355,38 @@
   </entry>
   
   <entry>
+    <title><![CDATA[docker(3)-distribution分析]]></title>
+    <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
+    <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
+    <published>2016-01-11T16:00:00.000Z</published>
+    <updated>2016-01-13T07:12:13.286Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry" target="_blank" rel="external">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution" target="_blank" rel="external">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br><a id="more"></a></p>
+<h1 id="通过docker运行">通过docker运行</h1><p>先尝试一个简单的用法，即直接pull一个registry好了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从DaoCloud pull一个registry镜像</span></span><br><span class="line">docker pull daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker run -p <span class="number">5000</span>:<span class="number">5000</span> --name registry daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker pull golang:<span class="number">1.5</span>.<span class="number">2</span></span><br><span class="line">docker tag golang:<span class="number">1.5</span>.<span class="number">2</span> localhost:<span class="number">5000</span>/golang</span><br><span class="line">docker push localhost:<span class="number">5000</span>/golang</span><br></pre></td></tr></table></figure></p>
+<p>通过查看源码中的Dockerfile，有一句<code>VOLUME [&quot;/var/lib/registry&quot;]</code>，那么这个路径就是docker里存放push上来的镜像的路径<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 获取registry的ID</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 进入docker中调试,31f029b39e3c就是上一条命令获取到的ID</span></span><br><span class="line">docker exec -it <span class="number">31</span>f029b39e3c bash</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 这个路径下就有一个golang的文件夹</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/registry/docker/registry/v2/repositories</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 退出docker</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在宿主机中查看路径</span></span><br><span class="line">docker inspect <span class="number">31</span>f029b39e3c</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 查看Mounts字段</span></span><br><span class="line"><span class="preprocessor"># /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/docker/volumes/<span class="number">3</span>bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 果然也有docker/registry/v2/repositories/golang</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="源码运行">源码运行</h1><h2 id="下载并安装源码">下载并安装源码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:docker/distribution.git</span><br><span class="line"><span class="built_in">cd</span> distribution</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过查看distribution的Dockerfile，发现需要把$PWD/Godeps/_workspace添加到GOPATH</span></span><br><span class="line"><span class="comment"># 不然就会编译不过，会报缺少一堆库。当然，如果不嫌麻烦的话，也可以把缺失的库都go get下来</span></span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$GOPATH</span>:<span class="variable">$PWD</span>/Godeps/_workspace</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dockerfile添加了DOCKER_BUILDTAGS，在make时会用到</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_BUILDTAGS=<span class="string">"include_rados include_oss include_gcs"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要安装</span></span><br><span class="line">sudo yum install librados2-devel</span><br><span class="line">sudo yum install httpd-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># make</span></span><br><span class="line">make clean binaries</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">bin/registry --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动，也是查看Dockerfile</span></span><br><span class="line"><span class="comment"># ENTRYPOINT ["registry"] CMD ["/etc/docker/registry/config.yml"]</span></span><br><span class="line"><span class="comment"># 而这个config.yml又是从cmd/registry/config-dev.yml拷贝过去的</span></span><br><span class="line"><span class="comment"># 所以，我们这里直接用cmd/registry/config-dev.yml</span></span><br><span class="line">bin/registry cmd/registry/config-dev.yml</span><br></pre></td></tr></table></figure>
+<p>这样就运行起来了，但是仅仅是运行还不够，还得深入了解一下原理</p>
+<h1 id="源码分析">源码分析</h1><h2 id="makefile">makefile</h2><p>在上一节中，输入了<code>make clean binaries</code>构建出binaries，那么这个binaries就会build<br><code>${PREFIX}/bin/registry ${PREFIX}/bin/digest ${PREFIX}/bin/registry-api-descriptor-template</code><br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$&#123;PREFIX&#125;/bin/registry: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/registry</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/digest: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/digest</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/registry-api-descriptor-template: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -o $@ $&#123;GO_LDFLAGS&#125; $&#123;GO_GCFLAGS&#125; ./cmd/registry-api-descriptor-template</span><br></pre></td></tr></table></figure></p>
+<p>结合前面的启动命令<code>bin/registry cmd/registry/config-dev.yml</code>，就找到了registry的程序入口，就是<code>cmd/registry/main.go</code></p>
+<h2 id="流程">流程</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd<span class="regexp">/registry/</span>main.go<span class="regexp">/main -&gt; registry/</span>registry.go/<span class="string">Cmd:</span>Excute</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br>]]>
+    
+    </summary>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
+    
+      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[docker(3)-搭建registry,nginx,mirror]]></title>
     <link href="http://blog.decbug.com/2016/01/12/docker_distribution_build/"/>
     <id>http://blog.decbug.com/2016/01/12/docker_distribution_build/</id>
@@ -349,38 +434,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="背景">背景</h1><p>关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry<br>]]>
-    
-    </summary>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
-    
-      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[docker(3)-distribution分析]]></title>
-    <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
-    <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
-    <published>2016-01-11T16:00:00.000Z</published>
-    <updated>2016-01-13T07:12:13.286Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry" target="_blank" rel="external">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution" target="_blank" rel="external">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br><a id="more"></a></p>
-<h1 id="通过docker运行">通过docker运行</h1><p>先尝试一个简单的用法，即直接pull一个registry好了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从DaoCloud pull一个registry镜像</span></span><br><span class="line">docker pull daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker run -p <span class="number">5000</span>:<span class="number">5000</span> --name registry daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker pull golang:<span class="number">1.5</span>.<span class="number">2</span></span><br><span class="line">docker tag golang:<span class="number">1.5</span>.<span class="number">2</span> localhost:<span class="number">5000</span>/golang</span><br><span class="line">docker push localhost:<span class="number">5000</span>/golang</span><br></pre></td></tr></table></figure></p>
-<p>通过查看源码中的Dockerfile，有一句<code>VOLUME [&quot;/var/lib/registry&quot;]</code>，那么这个路径就是docker里存放push上来的镜像的路径<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 获取registry的ID</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 进入docker中调试,31f029b39e3c就是上一条命令获取到的ID</span></span><br><span class="line">docker exec -it <span class="number">31</span>f029b39e3c bash</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 这个路径下就有一个golang的文件夹</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/registry/docker/registry/v2/repositories</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 退出docker</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在宿主机中查看路径</span></span><br><span class="line">docker inspect <span class="number">31</span>f029b39e3c</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 查看Mounts字段</span></span><br><span class="line"><span class="preprocessor"># /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/docker/volumes/<span class="number">3</span>bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 果然也有docker/registry/v2/repositories/golang</span></span><br></pre></td></tr></table></figure></p>
-<h1 id="源码运行">源码运行</h1><h2 id="下载并安装源码">下载并安装源码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:docker/distribution.git</span><br><span class="line"><span class="built_in">cd</span> distribution</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过查看distribution的Dockerfile，发现需要把$PWD/Godeps/_workspace添加到GOPATH</span></span><br><span class="line"><span class="comment"># 不然就会编译不过，会报缺少一堆库。当然，如果不嫌麻烦的话，也可以把缺失的库都go get下来</span></span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$GOPATH</span>:<span class="variable">$PWD</span>/Godeps/_workspace</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dockerfile添加了DOCKER_BUILDTAGS，在make时会用到</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_BUILDTAGS=<span class="string">"include_rados include_oss include_gcs"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要安装</span></span><br><span class="line">sudo yum install librados2-devel</span><br><span class="line">sudo yum install httpd-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># make</span></span><br><span class="line">make clean binaries</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">bin/registry --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动，也是查看Dockerfile</span></span><br><span class="line"><span class="comment"># ENTRYPOINT ["registry"] CMD ["/etc/docker/registry/config.yml"]</span></span><br><span class="line"><span class="comment"># 而这个config.yml又是从cmd/registry/config-dev.yml拷贝过去的</span></span><br><span class="line"><span class="comment"># 所以，我们这里直接用cmd/registry/config-dev.yml</span></span><br><span class="line">bin/registry cmd/registry/config-dev.yml</span><br></pre></td></tr></table></figure>
-<p>这样就运行起来了，但是仅仅是运行还不够，还得深入了解一下原理</p>
-<h1 id="源码分析">源码分析</h1><h2 id="makefile">makefile</h2><p>在上一节中，输入了<code>make clean binaries</code>构建出binaries，那么这个binaries就会build<br><code>${PREFIX}/bin/registry ${PREFIX}/bin/digest ${PREFIX}/bin/registry-api-descriptor-template</code><br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$&#123;PREFIX&#125;/bin/registry: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/registry</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/digest: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/digest</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/registry-api-descriptor-template: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -o $@ $&#123;GO_LDFLAGS&#125; $&#123;GO_GCFLAGS&#125; ./cmd/registry-api-descriptor-template</span><br></pre></td></tr></table></figure></p>
-<p>结合前面的启动命令<code>bin/registry cmd/registry/config-dev.yml</code>，就找到了registry的程序入口，就是<code>cmd/registry/main.go</code></p>
-<h2 id="流程">流程</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd<span class="regexp">/registry/</span>main.go<span class="regexp">/main -&gt; registry/</span>registry.go/<span class="string">Cmd:</span>Excute</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br>]]>
     
     </summary>
     
@@ -858,57 +911,6 @@
       <category term="monitoring" scheme="http://blog.decbug.com/tags/monitoring/"/>
     
       <category term="ops" scheme="http://blog.decbug.com/tags/ops/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[学golang(1):初学]]></title>
-    <link href="http://blog.decbug.com/2015/11/28/golang/"/>
-    <id>http://blog.decbug.com/2015/11/28/golang/</id>
-    <published>2015-11-27T16:00:00.000Z</published>
-    <updated>2015-12-28T11:28:09.858Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>最近经常听到有同事在安利golang，颇为心动。恰巧又看到这篇文章<a href="http://blog.parse.com/learn/how-we-moved-our-api-from-ruby-to-go-and-saved-our-sanity/" target="_blank" rel="external">How We Moved Our API From Ruby to Go and Saved Our Sanity</a>，于是便忍不住了，打算试试。<br>毕竟是谷歌亲儿子，想必会有一番不错的表现。</p>
-<a id="more"></a>
-<hr>
-<h1 id="安装go">安装go</h1><p>原本以为需要用源码来安装，上网查了一下，得知centos7可以直接<code>yum</code>安装，so easy。</p>
-<h2 id="还是通过二进制安装一下吧">还是通过二进制安装一下吧</h2><p>yum安装的版本太低了，还是得自己安装1.5<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget https:<span class="comment">//storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz</span></span><br><span class="line">tar -C /usr/local -xzf go1.<span class="number">5.1</span><span class="class">.linux-amd64</span><span class="class">.tar</span><span class="class">.gz</span></span><br><span class="line">echo <span class="string">'export GOROOT="/usr/local/go"'</span> &gt;&gt; ~/<span class="class">.bashrc</span></span><br><span class="line">echo <span class="string">'export PATH=$PATH:$GOROOT/bin'</span> &gt;&gt; ~/<span class="class">.bashrc</span></span><br><span class="line">echo <span class="string">'export GOPATH="$HOME/code/go_code"'</span> &gt;&gt; ~/<span class="class">.bashrc</span></span><br><span class="line">echo <span class="string">'export PATH=$PATH:$GOROOT/bin'</span> &gt;&gt; ~/<span class="class">.bashrc</span></span><br><span class="line">. ~/.bashrc</span><br></pre></td></tr></table></figure></p>
-<hr>
-<h1 id="golang_plugin_for_idea">golang plugin for idea</h1><p>作为idea的用户，自然首选的IDE还是idea，所以得装一个golang的插件<a href="https://github.com/go-lang-plugin-org/go-lang-idea-plugin" target="_blank" rel="external">https://github.com/go-lang-plugin-org/go-lang-idea-plugin</a><br>然后参考<a href="https://www.jetbrains.com/idea/help/managing-enterprise-plugin-repositories.html" target="_blank" rel="external">https://www.jetbrains.com/idea/help/managing-enterprise-plugin-repositories.html</a>进行安装即可</p>
-<ol>
-<li>file-settings-plugins</li>
-<li>Browse repo</li>
-<li>Manage repo</li>
-<li>Custom plugin</li>
-<li>add url <code>https://plugins.jetbrains.com/plugins/nightly/5047</code>，这个nightly不错，我先试试</li>
-<li>一路ok/close</li>
-<li>然后在file-settings-plugins输入go,选择安装。</li>
-</ol>
-<p>接下来就创建一个新的go工程，SDK就选择之前解压出来的<code>/usr/local/go</code></p>
-<hr>
-<h1 id="hello_world">hello world</h1><p>创建一个hello.go，内容如下<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line">     fmt.Println(<span class="string">"Hello, World!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后go run hello.go<br>也可以打包成一个可执行文件，go build hello.go</p>
-<h1 id="simple_http_server">simple http server</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> handler(w http.ResponseWriter, r *http.Request) &#123;</span><br><span class="line">	fmt.Fprintf(w, <span class="string">"Hi there, I love %s!"</span>, r.URL.Path[<span class="number">1</span>:])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line">	http.HandleFunc(<span class="string">"/"</span>, handler)</span><br><span class="line">	http.ListenAndServe(<span class="string">":8080"</span>, <span class="constant">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="传说中的routine">传说中的routine</h1><p>大概说一下我的理解，由于线程的切换成本较高，上下文，栈恢复之类的，所以需要考虑其他办法。<br>多个routine，可以粗略的理解为共用一个线程，其CPU的抢占都是由routine自身来决定。由于只有一个线程，所以免去了切换的开销。<br>感觉还是怪怪的，就先简单理解为routine的开销较小，可以有更高的并发数吧。</p>
-<hr>
-<h1 id="web_frame">web frame</h1><p>打算试试revel<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/revel/cmd/revel</span><br></pre></td></tr></table></figure></p>
-<p>提示<code>package golang.org/x/net/websocket: unrecognized import path &quot;golang.org/x/net/websocket&quot;</code></p>
-<p>我只在我的办公机上装了SS，其他的几台挖掘机都没装，所以下不了。。<br>看来我真的得把我的openwrt的路由弄好，用来全局Fxxk了。<br>心情不好，今天就玩到这吧，擦擦擦！</p>
-<blockquote>
-<p>把内啥路由搞好了，HOHO，链接<a href="http://blog.decbug.com/2015/12/03/openwrt/">http://blog.decbug.com/2015/12/03/openwrt/</a>。搞好了三台，网件WNDR4300、华为HG225D和DB120，搞挂了一个迅捷171。继续开搞吧</p>
-</blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get revel framework</span></span><br><span class="line">go get github.com/revel/revel</span><br><span class="line"></span><br><span class="line"><span class="comment"># get 'revel' command</span></span><br><span class="line">go get github.com/revel/cmd/revel</span><br><span class="line"></span><br><span class="line"><span class="comment"># get samples and run chat app</span></span><br><span class="line">go get github.com/revel/samples</span><br><span class="line">vi src/github.com/codejuan/my-app/conf/app.conf <span class="comment">#8080</span></span><br><span class="line">sudo /sbin/iptables -I INPUT -p tcp -m tcp --dport <span class="number">8080</span> -j ACCEPT</span><br><span class="line">revel run github.com/revel/samples/chat</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>最近经常听到有同事在安利golang，颇为心动。恰巧又看到这篇文章<a href="http://blog.parse.com/learn/how-we-moved-our-api-from-ruby-to-go-and-saved-our-sanity/">How We Moved Our API From Ruby to Go and Saved Our Sanity</a>，于是便忍不住了，打算试试。<br>毕竟是谷歌亲儿子，想必会有一番不错的表现。</p>]]>
-    
-    </summary>
-    
-      <category term="golang" scheme="http://blog.decbug.com/tags/golang/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     

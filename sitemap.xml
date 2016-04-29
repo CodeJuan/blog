@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2016/04/29/lock/</loc>
+    <lastmod>2016-04-29T13:02:02.591Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2016/03/27/docker_swarm/</loc>
     <lastmod>2016-03-27T11:31:52.281Z</lastmod>
   </url>
