@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.decbug.com/2016/05/09/tinyhttpd/</loc>
+    <lastmod>2016-05-10T00:24:46.826Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.decbug.com/2016/05/03/architectrue_kevin/</loc>
     <lastmod>2016-05-10T00:14:48.378Z</lastmod>
   </url>
@@ -297,12 +302,12 @@
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
+    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.decbug.com/2014/04/06/memory/</loc>
+    <loc>http://blog.decbug.com/2015/06/22/Pelican_hexo/</loc>
     <lastmod>2015-08-04T14:28:02.463Z</lastmod>
   </url>
   
