@@ -207,6 +207,280 @@
           
           
             
+              <a class="post-title-link" href="/2014/12/01/Vld2CI/" itemprop="url">
+                VLD集成到CI自动化检测内存泄露
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2014-12-01T00:00:00+08:00" content="2014-12-01">
+            2014-12-01
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2014/12/01/Vld2CI/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/12/01/Vld2CI/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="VLD简介">VLD简介</h1><blockquote>
+<p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
+</blockquote>
+<p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/">codeplex</a></p>
+<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2014/12/01/Vld2CI/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2014/11/29/gtest_gmock/" itemprop="url">
+                学习gtest&gmock
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2014-11-29T00:00:00+08:00" content="2014-11-29">
+            2014-11-29
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2014/11/29/gtest_gmock/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/29/gtest_gmock/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h3 id="UT">UT</h3><p>单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。</p>
+<p>所以，作为码农，必须掌握单元测试的方法，并将UT集成到本地构建及CI服务器上，这样无论是新开发，还是维护重构等等，都能对我们的改动进行检测，及时反馈。</p>
+<p>以前用过JUnit和CppUnit，已不太适合当前开发。很多同僚都推荐gtest，我自然不能错过。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2014/11/29/gtest_gmock/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2014/11/26/test_gcc_gdb/" itemprop="url">
+                学习GCC & GDB
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2014-11-26T00:00:00+08:00" content="2014-11-26">
+            2014-11-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2014/11/26/test_gcc_gdb/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/26/test_gcc_gdb/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h3 id="前言">前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
+<h3 id="GCC">GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
+<blockquote>
+<p>gcc -E  test.c -o test.i 中间文件<br>gcc -S test.i -o test.s  ASM<br>gcc -c test.s -o test.o  OBJ<br>gcc test.o -o test       可执行文件</p>
+</blockquote>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2014/11/26/test_gcc_gdb/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2014/11/19/CompareWinPE/" itemprop="url">
                 比较WinPE文件(忽略时间戳)
               </a>
@@ -380,296 +654,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2014/04/06/memory/" itemprop="url">
-                内存基础知识
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2014-04-06T00:00:00+08:00" content="2014-04-06">
-            2014-04-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2014/04/06/memory/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/04/06/memory/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h3 id="当前问题">当前问题</h3><p>目前有一个日志分析程序，随着数据的膨胀，工具的运行性能越来越差，甚至运行过程中出现申请不到内存的情况。在任务管理器里可以看到，还有足够的内存，可是却申请不到。由于程序在运行过程中，有许多次new/delete的操作，据此推测是有太多的内存碎片，导致无法申请到足够大的连续内存。 </p>
-<h3 id="基础知识">基础知识</h3><p>new/delete做了什么？有哪些开销<br>slab<br>锁-查找空闲-找到合适大小连续的-分配-解锁。delete相反</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2014/04/06/memory/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2014/01/01/x_resume/" itemprop="url">
-                不完整的简历
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2014-01-01T00:00:00+08:00" content="2014-01-01">
-            2014-01-01
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/mumble/" itemprop="url" rel="index">
-                  <span itemprop="name">mumble</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2014/01/01/x_resume/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/01/01/x_resume/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="个人资料">个人资料</h1>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2014/01/01/x_resume/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2014/01/01/x_simple_resume/" itemprop="url">
-                一页简历
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2014-01-01T00:00:00+08:00" content="2014-01-01">
-            2014-01-01
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/mumble/" itemprop="url" rel="index">
-                  <span itemprop="name">mumble</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2014/01/01/x_simple_resume/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/01/01/x_simple_resume/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <table>
-<thead>
-<tr>
-<th>项目</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>mail</td>
-<td><a href="mailto:xh@decbug.com">xh@decbug.com</a></td>
-</tr>
-<tr>
-<td>技术</td>
-<td><a href="http://github.com/codejuan">github</a> 、 <a href="http://blog.decbug.com">blog</a> 、 <a href="http://stackoverflow.com/users/2763396/codejuan">stackoverflow</a></td>
-</tr>
-<tr>
-<td>毕业学校</td>
-<td>南昌大学 自动化 20xx年～20xx年 本科</td>
-</tr>
-<tr>
-<td>手机号</td>
-<td><strong>个人隐私</strong></td>
-</tr>
-</tbody>
-</table>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2014/01/01/x_simple_resume/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -708,7 +692,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">66</span>
+              <span class="site-state-item-count">69</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -722,7 +706,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">101</span>
+              <span class="site-state-item-count">104</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

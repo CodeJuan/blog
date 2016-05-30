@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2016-05-10T00:24:46.826Z</updated>
+  <updated>2016-05-30T00:15:06.745Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[一切脱离业务的设计都是YY]]></title>
+    <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
+    <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
+    <published>2016-05-28T16:00:00.000Z</published>
+    <updated>2016-05-30T00:15:06.745Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。<br>然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。</p>
+<a id="more"></a>
+<h1 id="业务">业务</h1><p>又到了一年一度组里领导和专家们YY方案的时候。在他们做4月份里程碑的时候，我就提出，这个方案不靠谱，甚至采用了不参与架构设计不参与开发来威胁，然而还是没有挡住。<br>因为这个方案，都是基于他们的YY，完全脱离了业务。<br>果然，等到验收的时候，业务完全不认可，只能推倒重来。</p>
+<h1 id="互联网公司的工具团队">互联网公司的工具团队</h1><p>曾看过知乎，豆瓣，滴滴，京东的工具，他们都是属于平台部门，里边都是高手。给全公司提供监控，部署，性能优化，日志分析，以及各种牛逼中间件。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。<br>然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。</p>]]>
+    
+    </summary>
+    
+      <category term="business" scheme="http://blog.decbug.com/tags/business/"/>
+    
+      <category term="requirement" scheme="http://blog.decbug.com/tags/requirement/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[读tinyhttpd源码笔记]]></title>
@@ -167,6 +193,127 @@
     </summary>
     
       <category term="lock" scheme="http://blog.decbug.com/tags/lock/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[阿里面试经历]]></title>
+    <link href="http://blog.decbug.com/2016/04/11/interview_aliyun/"/>
+    <id>http://blog.decbug.com/2016/04/11/interview_aliyun/</id>
+    <published>2016-04-10T16:00:00.000Z</published>
+    <updated>2016-05-30T00:26:10.941Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>之前一直都在通信行业撸代码，做的都是单机类或者小web系统，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。<br>于是在拉勾上投了阿里云。</p>
+<a id="more"></a>
+<h1 id="阿里云面试记录">阿里云面试记录</h1><p>三轮（也许可以算四轮）技术面，一轮boss面，一轮hr，据说还有一轮hr的大boss价值观面试</p>
+<h1 id="一轮">一轮</h1><p>感觉是一位管理者，可能脱离技术一段时间，问的问题都是根据简历来的。</p>
+<ul>
+<li>先是问项目经验，期间问到几次，为啥要重复造轮子。</li>
+<li>docker run的原理，流程</li>
+<li>dockerfile，docker build原理</li>
+<li>C++虚函数，引用指针，</li>
+<li>手写HashMap</li>
+<li>AngularJS绑定的原理</li>
+<li>并发，我说锁啊，然后忽悠一大堆。后问如何提高性能，我说如果业务允许，应该让每个执行实例独立，不要共享资源，减少竞争</li>
+<li>弹性伸缩</li>
+<li>一致性</li>
+</ul>
+<h1 id="二轮">二轮</h1><p>好像是一位P8，曾在外面看过这个名字，title是高级专家</p>
+<ul>
+<li>聊我之前的一个项目，关于我做的一个数据挖掘工具的消息推送模块的优化讨论，消息队列，锁</li>
+<li>STL remove和erase的区别</li>
+<li>vector构造析构</li>
+<li>HIVE HBASE</li>
+<li>我说给测试团队写过自动化测试框架，质疑说为啥需要自己写。我说业务啊，windows的啊，环境啊等等</li>
+<li>基于一个<code>随机读，追加写的文件系统</code>，做一个KV存储系统，有增删改查的功能。这个比较好玩。</li>
+</ul>
+<ol>
+<li>我说如果不考虑性能的话，我第一版会采用，每个K就对应一个文件，把V写到这个文件里，先实现功能，交付出去，接口调通，之后再进行优化。面试官说，快速完成的想法不错，那么后面该如何优化呢</li>
+<li>第二版，增加索引，保存K，V的长度，V到数据文件，保存K，该K对应V在数据文件中的偏移到索引文件，面试官说如果有改的请求，就需要重写整个索引文件，性能会差。我说，是的，接下来我会继续优化。</li>
+<li>第三版，如果内存够大，或者数据不会太多，那么把索引保存到内存中，省去重建索引文件的性能损耗。面试官说，内存不会太大。</li>
+<li>第四版，针对K进行hash，每个hash对应一个文件夹，文件夹里是索引文件和数据文件，通过hash可缩短搜索路径。</li>
+<li>第五版，可以把索引放到redis中，面试官说，不能用redis。我就说定时把索引文件快照到磁盘，面试官说不行，掉电就还是会丢数据。</li>
+<li>数据文件中保存K L V，只有数据文件写入成功，才更新内存中的索引。即使掉电了，也能从数据文件中重建索引。</li>
+<li>增加缓存，把热点索引保存在内存中，如内存未命中，则根据用户传入的K，从数据文件中恢复索引到内存中，冷索引则从内存中剔除。</li>
+</ol>
+<ul>
+<li>go中map中 map[a].b = 1能生效吗，我说我不记得了，但如果你这么问，那么肯定是不能，因为可能是值，不是引用，指向的不是内存。</li>
+</ul>
+<p>面完之后，让我等消息</p>
+<h1 id="三轮">三轮</h1><p>之前两轮面试说我技术不错，能力不错，经验不错，对技术也有热情，可惜工作经验不匹配，所以把我推荐到别的组，于是需要再做一轮技术面试。</p>
+<ul>
+<li>PHP，我说我用过wordpress和phpwind，且做一个小的图片生成系统</li>
+<li>python，django和flask</li>
+<li>如何监控很多台机器，我说我看过小米open falcon的实现，在每台机器上装个agent</li>
+<li>如何控制很多台机器，我说可以参考ansible，添加到ssh的可信里，然后通过ssh来控制</li>
+<li>spring的原理</li>
+<li>linux熟不熟，问了几个命令</li>
+<li>问我会哪些脚本语言，都用来做过啥。我说shell powershell python</li>
+<li>给出一个场景，分析并解决。场景好像很简单，我一下就解决了。我在此基础上发挥了一下，提出要总结，下次遇到类似问题的时候就可以很快查到。还可以给用户提供一键式解决办法，这样可以一劳永逸。</li>
+<li>因为之前两轮技术面都太惨烈，所以这一轮似乎没问太多复杂的问题。这一轮基本上没啥问题了，后面就是BOSS和HR了</li>
+<li>后来又面了一次，主要是谈了一些产品方面的问题，还有我的技术爱好</li>
+</ul>
+<h1 id="部门BOSS">部门BOSS</h1><ul>
+<li>主要是问当前工作，手下带了几个兄弟，我说之前是带100多，但我只需要管技术，不用管理。今年开始独立带人，组建团队。感觉很痛苦，要招聘，要带徒弟，要规划产品，还要写代码。</li>
+<li>在产品开发运营过程中的难题，我说最难的就是如何抓住用户的痛点，用平滑的方式解决痛点，不能让用户抵触。</li>
+<li>以及问了我对阿里云某些产品的看法，然后我就说了下对于学习aws的一些心得，顺便吐槽了阿里云。</li>
+<li>再就是介绍他的团队以及产品，还有未来的规划。说了优点也说了缺点，而不像以前接触过的一些光吹牛的面试官。</li>
+</ul>
+<h1 id="HR">HR</h1><p>问工作经历，之前每次跳槽的原因。为何想来阿里之类的。</p>
+<h1 id="HR的BOSS">HR的BOSS</h1><p>有点像背景调查，问是否统招啊之类的</p>
+<h1 id="offer">offer</h1><p>拿下</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>之前一直都在通信行业撸代码，做的都是单机类或者小web系统，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。<br>于是在拉勾上投了阿里云。</p>]]>
+    
+    </summary>
+    
+      <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
+    
+      <category term="interview" scheme="http://blog.decbug.com/tags/interview/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[京东面试经历]]></title>
+    <link href="http://blog.decbug.com/2016/04/10/interview_jd/"/>
+    <id>http://blog.decbug.com/2016/04/10/interview_jd/</id>
+    <published>2016-04-09T16:00:00.000Z</published>
+    <updated>2016-05-30T00:25:04.673Z</updated>
+    <content type="html"><![CDATA[<h1 id="京东云面试记录">京东云面试记录</h1><p>从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。<br>于是在拉勾投了京东云。<br>面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。<br><a id="more"></a></p>
+<p>总体感觉，面试官都很友善，我平时比较不善言语，这次在面试官的引导之下，交流比较顺畅。</p>
+<h1 id="架构师">架构师</h1><p>先开始闲聊，平时看哪些技术网站啊，我说我是面向GitHub so 谷歌编程，然后聊了聊番茄手段，我说自己弄vps ，家里的路由。之后进入正题，问的问题比较偏原理。比如</p>
+<ol>
+<li>linux的文件权限是如何实现的，</li>
+<li>一个hello world程序是如何运行起来的（我回答先把可执行文件加载到进程的代码段，之后执行，然后我讲了讲进程地址空间的一些事，感觉面试官对我的回答不太满意。经提醒，我才明白是要讲fork，我大概说了下，可惜忘了说写时复制。</li>
+<li>磁盘空间有空余，然而创建文件失败，是什么原因。我开始没答上来，然后就提示我是否知道，我说可以理解为索引。但还没答上来，后来架构师告诉我是inode space 不足。</li>
+<li>设计一个系统，restful 接口，｛num ，返回对应的斐波纳契数组。我说先实现功能，不能用递归，栈溢出就惨了。日志的话，我说可以玩elk（因为我刚在家玩了下），但面试官想听到日志轮转，我回答一般日志库都可以设置单个文件上限，达到这个值就会创建新文件。还有选型，我说最近用了gorilla mux 。经提醒，我还忘了异常保护。还忘了，可以把每次结果缓存到redis中，如果下次有同样的请求，就可以从redis中直接取值并返回，这样性能会高。</li>
+</ol>
+<p>总体来说，我没答好。但好在我在提醒之下都能跟上思路，所以勉强过关了吧。</p>
+<h1 id="部门老大">部门老大</h1><p>先是简单聊了聊之前的项目经验，这个就不赘述了。之后是两个系统设计问题</p>
+<ol>
+<li>设计一个用户登录注册系统。我说先来一个最简单的，单表单应用。当用户多了，就水平扩展服务，把服务发现做好，因为服务是无状态的。如果数据库有压力，就分表。由于用户系统可能是读取多于写入，所以可以搞写库，多个读库。写库可以加主备。最好再加个用户登录行为分析，如果突然变了地理位置，可以警告。这个是我看到的常用套路，也不知道面试官是否满意。</li>
+<li>设计一个电梯系统。我说我做开发的一般喜欢先用一个简单粗暴的方法完成功能。我说记录每个电梯的运行状态，以及个楼层有坐电梯的请求，是到哪一层，可以放到请求列表。遍历列表，找到最近的电梯，然后调度过来。之后再统计电梯的运行数据，找出规律，比如上班高峰期，下班高峰期该如何调度。后来面试官问到如何让电梯的运行负载都均衡，我说暂时没有好的办法，我会给每个电梯设置一个角色，然后每天定时给电梯的角色互换。虽然某一天某个电梯会特别忙，但总体来看，负载会是均衡的。<br>偏理论的东西居多，我看过的书也发挥作用了。对了，最后还问我最近看了啥书，我说正在读第二遍性能之巅。</li>
+</ol>
+<h1 id="大boss">大boss</h1><p>问的问题是偏团队管理，人员培养，以及产品落地的问题。<br>我说我觉得招聘很难，招到合适的人不容易，招人的标准已经降低了，只要脑子灵活，工作认真，就可以。因为一个人工作不负责，就需要周围的人给他填坑，严重影响团队。关于人员培养，我说我喜欢主动学习，独立解决问题的人，并且会分享的同学，这样团队的技术氛围好了，大家水平提高很快，刻意的培训其实价值不大。产品落地，需要抓住用户的痛点，我们的产品能给用户带来收益，大家双赢。后来问我最近工作中的困惑，我说最近对于项目进度的把控做的不好，组里小伙子干活比较慢，我前端不熟，对于这个进度不知是否合理，我不喜欢逼着小伙子们加班，说白了还是我的技术水平不够，还需要积累。如果我确定这个速度不合理，就可以硬下心肠给小伙子们压力了。</p>
+<h1 id="hr">hr</h1><p>问工作经历，教育背景，离职原因，当前薪资，期望薪资等等</p>
+<h1 id="offer">offer</h1><p>拿下。<br>然后之前一直都是通信行业，写C写C++，虽然号称全栈，会很多语言，做过很多领域。但和互联网产品的差异还是很大的，没有相关工作背景，被压价是不可避免的。还得继续努力啊。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="京东云面试记录">京东云面试记录</h1><p>从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。<br>于是在拉勾投了京东云。<br>面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。<br>]]>
+    
+    </summary>
+    
+      <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
+    
+      <category term="interview" scheme="http://blog.decbug.com/tags/interview/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
@@ -459,6 +606,38 @@
   </entry>
   
   <entry>
+    <title><![CDATA[docker(3)-distribution分析]]></title>
+    <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
+    <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
+    <published>2016-01-11T16:00:00.000Z</published>
+    <updated>2016-01-13T07:12:13.286Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry" target="_blank" rel="external">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution" target="_blank" rel="external">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br><a id="more"></a></p>
+<h1 id="通过docker运行">通过docker运行</h1><p>先尝试一个简单的用法，即直接pull一个registry好了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从DaoCloud pull一个registry镜像</span></span><br><span class="line">docker pull daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker run -p <span class="number">5000</span>:<span class="number">5000</span> --name registry daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker pull golang:<span class="number">1.5</span>.<span class="number">2</span></span><br><span class="line">docker tag golang:<span class="number">1.5</span>.<span class="number">2</span> localhost:<span class="number">5000</span>/golang</span><br><span class="line">docker push localhost:<span class="number">5000</span>/golang</span><br></pre></td></tr></table></figure></p>
+<p>通过查看源码中的Dockerfile，有一句<code>VOLUME [&quot;/var/lib/registry&quot;]</code>，那么这个路径就是docker里存放push上来的镜像的路径<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 获取registry的ID</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 进入docker中调试,31f029b39e3c就是上一条命令获取到的ID</span></span><br><span class="line">docker exec -it <span class="number">31</span>f029b39e3c bash</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 这个路径下就有一个golang的文件夹</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/registry/docker/registry/v2/repositories</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 退出docker</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在宿主机中查看路径</span></span><br><span class="line">docker inspect <span class="number">31</span>f029b39e3c</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 查看Mounts字段</span></span><br><span class="line"><span class="preprocessor"># /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/docker/volumes/<span class="number">3</span>bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 果然也有docker/registry/v2/repositories/golang</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="源码运行">源码运行</h1><h2 id="下载并安装源码">下载并安装源码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:docker/distribution.git</span><br><span class="line"><span class="built_in">cd</span> distribution</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过查看distribution的Dockerfile，发现需要把$PWD/Godeps/_workspace添加到GOPATH</span></span><br><span class="line"><span class="comment"># 不然就会编译不过，会报缺少一堆库。当然，如果不嫌麻烦的话，也可以把缺失的库都go get下来</span></span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$GOPATH</span>:<span class="variable">$PWD</span>/Godeps/_workspace</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dockerfile添加了DOCKER_BUILDTAGS，在make时会用到</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_BUILDTAGS=<span class="string">"include_rados include_oss include_gcs"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要安装</span></span><br><span class="line">sudo yum install librados2-devel</span><br><span class="line">sudo yum install httpd-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># make</span></span><br><span class="line">make clean binaries</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">bin/registry --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动，也是查看Dockerfile</span></span><br><span class="line"><span class="comment"># ENTRYPOINT ["registry"] CMD ["/etc/docker/registry/config.yml"]</span></span><br><span class="line"><span class="comment"># 而这个config.yml又是从cmd/registry/config-dev.yml拷贝过去的</span></span><br><span class="line"><span class="comment"># 所以，我们这里直接用cmd/registry/config-dev.yml</span></span><br><span class="line">bin/registry cmd/registry/config-dev.yml</span><br></pre></td></tr></table></figure>
+<p>这样就运行起来了，但是仅仅是运行还不够，还得深入了解一下原理</p>
+<h1 id="源码分析">源码分析</h1><h2 id="makefile">makefile</h2><p>在上一节中，输入了<code>make clean binaries</code>构建出binaries，那么这个binaries就会build<br><code>${PREFIX}/bin/registry ${PREFIX}/bin/digest ${PREFIX}/bin/registry-api-descriptor-template</code><br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$&#123;PREFIX&#125;/bin/registry: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/registry</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/digest: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/digest</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/registry-api-descriptor-template: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -o $@ $&#123;GO_LDFLAGS&#125; $&#123;GO_GCFLAGS&#125; ./cmd/registry-api-descriptor-template</span><br></pre></td></tr></table></figure></p>
+<p>结合前面的启动命令<code>bin/registry cmd/registry/config-dev.yml</code>，就找到了registry的程序入口，就是<code>cmd/registry/main.go</code></p>
+<h2 id="流程">流程</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd<span class="regexp">/registry/</span>main.go<span class="regexp">/main -&gt; registry/</span>registry.go/<span class="string">Cmd:</span>Excute</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br>]]>
+    
+    </summary>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
+    
+      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[docker(3)-搭建registry,nginx,mirror]]></title>
     <link href="http://blog.decbug.com/2016/01/12/docker_distribution_build/"/>
     <id>http://blog.decbug.com/2016/01/12/docker_distribution_build/</id>
@@ -506,38 +685,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="背景">背景</h1><p>关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry<br>]]>
-    
-    </summary>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
-    
-      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[docker(3)-distribution分析]]></title>
-    <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
-    <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
-    <published>2016-01-11T16:00:00.000Z</published>
-    <updated>2016-01-13T07:12:13.286Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry" target="_blank" rel="external">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution" target="_blank" rel="external">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br><a id="more"></a></p>
-<h1 id="通过docker运行">通过docker运行</h1><p>先尝试一个简单的用法，即直接pull一个registry好了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从DaoCloud pull一个registry镜像</span></span><br><span class="line">docker pull daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker run -p <span class="number">5000</span>:<span class="number">5000</span> --name registry daocloud.io/library/registry:<span class="number">2.2</span>.<span class="number">1</span></span><br><span class="line">docker pull golang:<span class="number">1.5</span>.<span class="number">2</span></span><br><span class="line">docker tag golang:<span class="number">1.5</span>.<span class="number">2</span> localhost:<span class="number">5000</span>/golang</span><br><span class="line">docker push localhost:<span class="number">5000</span>/golang</span><br></pre></td></tr></table></figure></p>
-<p>通过查看源码中的Dockerfile，有一句<code>VOLUME [&quot;/var/lib/registry&quot;]</code>，那么这个路径就是docker里存放push上来的镜像的路径<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 获取registry的ID</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 进入docker中调试,31f029b39e3c就是上一条命令获取到的ID</span></span><br><span class="line">docker exec -it <span class="number">31</span>f029b39e3c bash</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 这个路径下就有一个golang的文件夹</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/registry/docker/registry/v2/repositories</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 退出docker</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在宿主机中查看路径</span></span><br><span class="line">docker inspect <span class="number">31</span>f029b39e3c</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 查看Mounts字段</span></span><br><span class="line"><span class="preprocessor"># /var/lib/docker/volumes/3bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span></span><br><span class="line">cd /<span class="keyword">var</span>/lib/docker/volumes/<span class="number">3</span>bd3f857da3e887fd5d890066b1065450751aa3daf0d405e472e2d31abf44a61/_data</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 果然也有docker/registry/v2/repositories/golang</span></span><br></pre></td></tr></table></figure></p>
-<h1 id="源码运行">源码运行</h1><h2 id="下载并安装源码">下载并安装源码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:docker/distribution.git</span><br><span class="line"><span class="built_in">cd</span> distribution</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过查看distribution的Dockerfile，发现需要把$PWD/Godeps/_workspace添加到GOPATH</span></span><br><span class="line"><span class="comment"># 不然就会编译不过，会报缺少一堆库。当然，如果不嫌麻烦的话，也可以把缺失的库都go get下来</span></span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$GOPATH</span>:<span class="variable">$PWD</span>/Godeps/_workspace</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dockerfile添加了DOCKER_BUILDTAGS，在make时会用到</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_BUILDTAGS=<span class="string">"include_rados include_oss include_gcs"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要安装</span></span><br><span class="line">sudo yum install librados2-devel</span><br><span class="line">sudo yum install httpd-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># make</span></span><br><span class="line">make clean binaries</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">bin/registry --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动，也是查看Dockerfile</span></span><br><span class="line"><span class="comment"># ENTRYPOINT ["registry"] CMD ["/etc/docker/registry/config.yml"]</span></span><br><span class="line"><span class="comment"># 而这个config.yml又是从cmd/registry/config-dev.yml拷贝过去的</span></span><br><span class="line"><span class="comment"># 所以，我们这里直接用cmd/registry/config-dev.yml</span></span><br><span class="line">bin/registry cmd/registry/config-dev.yml</span><br></pre></td></tr></table></figure>
-<p>这样就运行起来了，但是仅仅是运行还不够，还得深入了解一下原理</p>
-<h1 id="源码分析">源码分析</h1><h2 id="makefile">makefile</h2><p>在上一节中，输入了<code>make clean binaries</code>构建出binaries，那么这个binaries就会build<br><code>${PREFIX}/bin/registry ${PREFIX}/bin/digest ${PREFIX}/bin/registry-api-descriptor-template</code><br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$&#123;PREFIX&#125;/bin/registry: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/registry</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/digest: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -tags <span class="string">"$&#123;DOCKER_BUILDTAGS&#125;"</span> -o $@ $&#123;GO_LDFLAGS&#125;  $&#123;GO_GCFLAGS&#125; ./cmd/digest</span><br><span class="line"></span><br><span class="line">$&#123;PREFIX&#125;/bin/registry-api-descriptor-template: version/version.go $(shell find . -type f -name '*.go')</span><br><span class="line">	@echo <span class="string">"+ $@"</span></span><br><span class="line">	@go build -o $@ $&#123;GO_LDFLAGS&#125; $&#123;GO_GCFLAGS&#125; ./cmd/registry-api-descriptor-template</span><br></pre></td></tr></table></figure></p>
-<p>结合前面的启动命令<code>bin/registry cmd/registry/config-dev.yml</code>，就找到了registry的程序入口，就是<code>cmd/registry/main.go</code></p>
-<h2 id="流程">流程</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd<span class="regexp">/registry/</span>main.go<span class="regexp">/main -&gt; registry/</span>registry.go/<span class="string">Cmd:</span>Excute</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>要搞自己的容器云了，那么就得有自己的docker hub，于是采用<a href="https://github.com/docker/docker-registry">docker/registry V1</a>。<br>但由于registry V1荒废许久，所以最后决定采用<a href="https://github.com/docker/distribution">docker/distribution</a><br>鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。<br>]]>
     
     </summary>
     
@@ -727,119 +874,6 @@
       <category term="mongoDB" scheme="http://blog.decbug.com/tags/mongoDB/"/>
     
       <category term="nodejs" scheme="http://blog.decbug.com/tags/nodejs/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[尝试travis CI]]></title>
-    <link href="http://blog.decbug.com/2015/12/23/travisci/"/>
-    <id>http://blog.decbug.com/2015/12/23/travisci/</id>
-    <published>2015-12-22T16:00:00.000Z</published>
-    <updated>2015-12-23T13:17:48.723Z</updated>
-    <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>看到别的开源软件的ReadMe上总一些build success的图标，感觉很帅，也想尝试一下。</p>
-<a id="more"></a>
-<h1 id="步骤">步骤</h1><ul>
-<li>首先，用github帐号登录<a href="https://travis-ci.org/" target="_blank" rel="external">https://travis-ci.org/</a></li>
-<li>把某个工程打开，我选的工程是<a href="https://github.com/CodeJuan/python_convert_json2lua" target="_blank" rel="external">https://github.com/CodeJuan/python_convert_json2lua</a></li>
-<li><p>创建’.travis.yml’，根据<a href="https://docs.travis-ci.com/user/languages/python" target="_blank" rel="external">https://docs.travis-ci.com/user/languages/python</a>填写一个python的yml</p>
-<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">language:</span> python</span><br><span class="line"><span class="label">python:</span></span><br><span class="line">  - <span class="string">"2.7"</span></span><br><span class="line"><span class="preprocessor"># command to install dependencies</span></span><br><span class="line"><span class="label">install:</span> <span class="string">"pip install simplejson"</span></span><br><span class="line"><span class="preprocessor"># command to run tests</span></span><br><span class="line"><span class="label">script:</span> python go.py</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>点击工程的status图标，拷贝链接<br><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/travisci/travis_status.png" alt=""></p>
-</li>
-<li><p>在readme加上</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="link_label">![Build Status</span>](<span class="link_url">https://travis-ci.org/CodeJuan/python_convert_json2lua.svg?branch=master</span>)](<span class="link_url">https://travis-ci.org/CodeJuan/python_convert_json2lua</span>)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>效果如图</p>
-</li>
-</ul>
-<p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/travisci/demo.png" alt=""></p>
-<h1 id="感想">感想</h1><ul>
-<li>有提交就触发，很方便</li>
-<li>log很完整</li>
-<li>可以自由配置环境</li>
-<li>省去自己搭建jenkins的步骤</li>
-</ul>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="前言">前言</h1><p>看到别的开源软件的ReadMe上总一些build success的图标，感觉很帅，也想尝试一下。</p>]]>
-    
-    </summary>
-    
-      <category term="travisCI" scheme="http://blog.decbug.com/tags/travisCI/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[学golang(2):web框架]]></title>
-    <link href="http://blog.decbug.com/2015/12/15/golang_revel/"/>
-    <id>http://blog.decbug.com/2015/12/15/golang_revel/</id>
-    <published>2015-12-14T16:00:00.000Z</published>
-    <updated>2015-12-28T12:09:50.226Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，</p>
-<p><a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a></p>
-<a id="more"></a>
-<h1 id="beego">beego</h1><p>接下来就要深入学习一下了，用revel弄一个restful api玩玩。然而由于revel写restful api太难了，于是改为使用比较出名的<code>beego</code>，国人出品的框架，不知效果如何。</p>
-<p>老规矩，从hello world开始</p>
-<h2 id="安装">安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装框架</span></span><br><span class="line">go get github.com/astaxie/beego</span><br><span class="line"><span class="comment"># 安装工具</span></span><br><span class="line">go get github.com/beego/bee</span><br></pre></td></tr></table></figure>
-<h2 id="建立工程">建立工程</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$GOPATH</span>/src</span><br><span class="line">bee new <span class="built_in">test</span>_beego</span><br></pre></td></tr></table></figure>
-<h2 id="运行">运行</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="built_in">test</span>_beego</span><br><span class="line">bee run</span><br></pre></td></tr></table></figure>
-<p><img src="http://beego.me/docs/images/beerun.png" alt=""></p>
-<h1 id="Restful_API">Restful API</h1><h2 id="安装mysql">安装mysql</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum -y install mariadb-server mariadb</span><br><span class="line">systemctl start mariadb.service</span><br><span class="line">systemctl <span class="built_in">enable</span> mariadb.service</span><br><span class="line">mysql_secure_installation</span><br></pre></td></tr></table></figure>
-<h2 id="生成代码">生成代码</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bee generate scaffold post -fields=<span class="string">"title:string,body:text"</span></span><br></pre></td></tr></table></figure>
-<h2 id="在server后台运行bee_run">在server后台运行bee run</h2><p>在todo工程里运行<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bee run</span><br></pre></td></tr></table></figure></p>
-<h2 id="添加路由">添加路由</h2><p>在main.go添加路由<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">beego.Router(<span class="string">"/post/"</span>, &amp;controllers.PostController&#123;&#125;, <span class="string">"get:GetAll;post:Post"</span>)</span><br><span class="line">beego.Router(<span class="string">"/post/:id:int"</span>, &amp;controllers.PostController&#123;&#125;, <span class="string">"get:GetOne;put:Put;delete:Delete"</span>)</span><br></pre></td></tr></table></figure></p>
-<h2 id="注册数据库">注册数据库</h2><p>提示没有default数据库，所以需要注册一下<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"github.com/astaxie/beego"</span></span><br><span class="line">	<span class="string">"github.com/beego/samples/todo/controllers"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 导入orm和mysql驱动</span></span><br><span class="line">	<span class="string">"github.com/astaxie/beego/orm"</span></span><br><span class="line">	_ <span class="string">"github.com/go-sql-driver/mysql"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在init时注册</span></span><br><span class="line"><span class="keyword">func</span> init() &#123;</span><br><span class="line">orm.RegisterDriver(<span class="string">"mysql"</span>, orm.DR_MySQL)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注意第三个参数连接字符串</span></span><br><span class="line">orm.RegisterDataBase(<span class="string">"default"</span>, <span class="string">"mysql"</span>, <span class="string">"root:@/test?charset=utf8"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line">	beego.Router(<span class="string">"/"</span>, &amp;controllers.MainController&#123;&#125;)</span><br><span class="line">	beego.Router(<span class="string">"/task/"</span>, &amp;controllers.TaskController&#123;&#125;, <span class="string">"get:ListTasks;post:NewTask"</span>)</span><br><span class="line">	beego.Router(<span class="string">"/task/:id:int"</span>, &amp;controllers.TaskController&#123;&#125;, <span class="string">"get:GetTask;put:UpdateTask"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加post路由</span></span><br><span class="line">	beego.Router(<span class="string">"/post/"</span>, &amp;controllers.PostController&#123;&#125;, <span class="string">"get:GetAll;post:Post"</span>)</span><br><span class="line">	beego.Run()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="改index">改index</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">'container'</span> <span class="attribute">ng-controller</span>=<span class="value">'PostCtrl'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">h1</span> <span class="attribute">class</span>=<span class="value">'charcoal rounded-box'</span>&gt;</span>Blog<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">h2</span>&gt;</span>Posts<span class="tag">&lt;/<span class="title">h2</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">ul</span> <span class="attribute">class</span>=<span class="value">'grey rounded-box'</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">li</span> <span class="attribute">ng-repeat</span>=<span class="value">'t in posts'</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">span</span> <span class="attribute">class</span>=<span class="value">'checkbox'</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span>&#123;&#123;t.Id&#125;&#125;,&#123;&#123;t.Title&#125;&#125;,&#123;&#123;t.Body&#125;&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">form</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">'text'</span> <span class="attribute">class</span>=<span class="value">'rounded-box'</span> <span class="attribute">placeholder</span>=<span class="value">'add new post here'</span> <span class="attribute">ng-model</span>=<span class="value">'postText'</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">'grey rounded-box'</span> <span class="attribute">ng-click</span>=<span class="value">'addPost()'</span>&gt;</span>New Post<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">'grey rounded-box'</span> <span class="attribute">ng-click</span>=<span class="value">'delPost()'</span>&gt;</span>Delete Post<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">button</span> <span class="attribute">class</span>=<span class="value">'grey rounded-box'</span> <span class="attribute">ng-click</span>=<span class="value">'updatePost()'</span>&gt;</span>Update Post<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="改angularjs，增加PostCtrl">改angularjs，增加PostCtrl</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">PostCtrl</span>(<span class="params">$scope, $http</span>) </span>&#123;</span><br><span class="line">  $scope.posts = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> logError = <span class="function"><span class="keyword">function</span>(<span class="params">data, status</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'code '</span>+status+<span class="string">': '</span>+data);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> refresh = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $http.get(<span class="string">'/post/'</span>).</span><br><span class="line">      success(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123; $scope.posts = data; &#125;).</span><br><span class="line">      error(logError);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  $scope.addPost = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    $http.post(<span class="string">'/post/'</span>, &#123;Title: $scope.postText&#125;).</span><br><span class="line">      error(logError).</span><br><span class="line">      success(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  $scope.delPost = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      $http.delete(<span class="string">'/post/'</span>+$scope.postText).</span><br><span class="line">        error(logError).</span><br><span class="line">        success(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    $scope.updatePost = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        $http.put(<span class="string">'/post/'</span>+$scope.postText, &#123;Body: <span class="string">"hahaha"</span>&#125;).</span><br><span class="line">          error(logError).</span><br><span class="line">          success(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;;</span><br><span class="line"></span><br><span class="line">  refresh().then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="sqlite">sqlite</h2><hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>上回已经把revel下载好了，顺利搞出个hello world，</p>
-<p><a href="http://blog.decbug.com/2015/11/28/golang/">http://blog.decbug.com/2015/11/28/golang/</a></p>]]>
-    
-    </summary>
-    
-      <category term="golang" scheme="http://blog.decbug.com/tags/golang/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[一次去中心化的性能优化]]></title>
-    <link href="http://blog.decbug.com/2015/12/15/decentralized/"/>
-    <id>http://blog.decbug.com/2015/12/15/decentralized/</id>
-    <published>2015-12-14T16:00:00.000Z</published>
-    <updated>2015-12-15T12:43:28.345Z</updated>
-    <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>一个分布式计算系统，在数据量越来越大的情况下，处理时间太久，不符合用户需求，需要优化。</p>
-<p>经过分析，发现有一个从存储节点把数据拷贝到计算节点的动作，这个过程比较耗时间。如果能把这个拷贝过程去掉，对于系统的整体性能将会有很大提升。</p>
-<a id="more"></a>
-<h1 id="过程">过程</h1><h2 id="原来的流程">原来的流程</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/decentralized/data2compute.jpg" alt=""></p>
-<p>如图，为简化流程，只画了一个存储节点和计算节点<code>典型的数据向计算迁移</code>，当数据特别大（数十G～百G）的时候，从存储节点拷贝到计算节点将特别耗时间。</p>
-<p>而计算工具的身材特别苗条，几百M而已，拷贝过去也就是分分钟的事，如果能把计算工具放到存储节点，拷贝的时间就可以忽略不计，这个方法叫<code>计算向数据迁移</code></p>
-<h2 id="优化后的流程">优化后的流程</h2><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/decentralized/compute2data.jpg" alt=""></p>
-<p>只是把百兆的计算工具拷过去，省去以前拷贝几百G数据的步骤～</p>
-<h1 id="结论">结论</h1><p>虽然不是什么很新的技术，但是简单几步就解决了业务问题，还是比较值得高兴一下的。</p>
-<p>后面如果能把计算工具封装成docker，放到docker registry上去，每次计算的时候，存储节点把镜像pull过来，应该会比较好玩吧～</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="前言">前言</h1><p>一个分布式计算系统，在数据量越来越大的情况下，处理时间太久，不符合用户需求，需要优化。</p>
-<p>经过分析，发现有一个从存储节点把数据拷贝到计算节点的动作，这个过程比较耗时间。如果能把这个拷贝过程去掉，对于系统的整体性能将会有很大提升。</p>]]>
-    
-    </summary>
-    
-      <category term="decentralized" scheme="http://blog.decbug.com/tags/decentralized/"/>
-    
-      <category term="optimization" scheme="http://blog.decbug.com/tags/optimization/"/>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     

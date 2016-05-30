@@ -207,6 +207,290 @@
           
           
             
+              <a class="post-title-link" href="/2015/09/07/multi_thread_rsync/" itemprop="url">
+                多线程同步镜像
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
+            2015-09-07
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/09/07/multi_thread_rsync/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/multi_thread_rsync/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h2 id="背景">背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
+<h2 id="大概的思路">大概的思路</h2><ul>
+<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
+<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
+<li>记录每个href的同步状态</li>
+<li>汇总全部状态，看所有href是否都同步成功
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/09/07/multi_thread_rsync/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/08/23/fake_unit_test/" itemprop="url">
+                指标下的单元测试
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-08-23T00:00:00+08:00" content="2015-08-23">
+            2015-08-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/08/23/fake_unit_test/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/23/fake_unit_test/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="前言">前言</h1><blockquote>
+<p>最近领导强推单元测试覆盖率，要求达到80%。我打探了一下，据说覆盖率是更上层领导的考核指标，所以今年我们组一大任务就是这。没几个人觉得写好单元测试是为了提升软件质量，提高自己的代码水平。<br>可以预见的是，有人会<code>为了提高覆盖率，写一堆无效代码</code>。 “上有所好，下必甚焉”。</p>
+</blockquote>
+<p>距离我上一次吐槽已经过去了半年，我们的单元测试变成了什么情况呢？<br>半年前我的猜测是<code>为了提高覆盖率，写一堆无效代码</code>，然而实际情况却比这更糟糕。</p>
+<ul>
+<li>有人的测试函数的末尾始终是<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPECT_EQ(TRUE=TRUE)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样每个用例都是绿的</p>
+<ul>
+<li>还有人这么写<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//init module</span></span><br><span class="line"><span class="comment">//run module</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>测试的是整个模块的输入输出，这样可以保证覆盖率</p>
+<p>领导看到用例一片绿，覆盖率90%，觉得我们的代码质量很高。</p>
+<p>然而，这并没有什么卵用！！！<br>这真的没有什么卵用！<br>这真的没有什么卵用！<br>这真的没有什么卵用！</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/08/23/fake_unit_test/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/08/23/docker_tutorial/" itemprop="url">
+                docker(1)-初学
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-08-23T00:00:00+08:00" content="2015-08-23">
+            2015-08-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/08/23/docker_tutorial/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/23/docker_tutorial/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h2 id="背景">背景</h2><p>虽然久闻docker大名，但一直没有尝试过，固然可以说是比较忙的原因，但忙不是我们不学习新技术的借口。<br>也许以后工作可能会用到docker，我得未雨绸缪，提前准备，开始学docker了</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/08/23/docker_tutorial/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/08/06/handle_leak/" itemprop="url">
                 抄代码引发的句柄泄漏
               </a>
@@ -380,277 +664,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/25/install_centos/" itemprop="url">
-                在家里玩分布式(1)install centos
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-07-25T00:00:00+08:00" content="2015-07-25">
-            2015-07-25
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/07/25/install_centos/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/25/install_centos/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="扯淡">扯淡</h1><p>自己在家玩，买了一堆二手配件，整了4个台式机，打算</p>
-<pre><code>-<span class="ruby"> 弄个scrapy爬数据
-</span>-<span class="ruby"> 存到分布式内存数据库(redis吧)
-</span>-<span class="ruby"> 再存到分布式文件系统(打算用fastdfs)
-</span>-<span class="ruby"> 同时用storm流计算，弄个什么东西挖掘一下
-</span>-<span class="ruby"> 最后用<span class="constant">PHP</span>展示</span>
-</code></pre><p>也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/07/25/install_centos/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/06/dependency_in_sln/" itemprop="url">
-                自动生成sln中各project依赖图
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-07-06T00:00:00+08:00" content="2015-07-06">
-            2015-07-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/07/06/dependency_in_sln/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/06/dependency_in_sln/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="前言">前言</h1><p>为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。</p>
-<p>写好的代码放在<a href="https://github.com/CodeJuan/dependency_in_sln">https://github.com/CodeJuan/dependency_in_sln</a>，使用方法也很简单。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/07/06/dependency_in_sln/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/06/22/Pelican_hexo/" itemprop="url">
-                hexo and pelican
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-06-22T00:00:00+08:00" content="2015-06-22">
-            2015-06-22
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/06/22/Pelican_hexo/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/22/Pelican_hexo/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="description">用pelican或hexo建一个漂亮的博客</span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/06/22/Pelican_hexo/">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -689,7 +702,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">66</span>
+              <span class="site-state-item-count">69</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -703,7 +716,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">101</span>
+              <span class="site-state-item-count">104</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
