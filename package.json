@@ -19,6 +19,7 @@
     "hexo-server": "^0.2.0",
     "hexo-generator-feed": "^1.0.2",
     "hexo-tag-emojis": "^1.1.2",
+    "hexo-generator-sitemap": "^1.0.1",
     "hexo-util": "^0.1.7"
   }
 }
