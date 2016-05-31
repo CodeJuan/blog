@@ -12,6 +12,7 @@ before_install:
 
 install:
 - npm install
+- npm install -g hexo-renderer-marked
 
 # Notice: Replace 'YOUR NAME' and 'YOUR EMAIL'
 before_script:
