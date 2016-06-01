@@ -8,7 +8,10 @@ branches:
   - master
 
 before_install:
-- - export TZ=Asia/Shanghai
+#- export TZ=Asia/Shanghai
+
+env:
+  - TZ="Asia/Shanghai"
 
 install:
 - npm install
