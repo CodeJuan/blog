@@ -89,7 +89,7 @@ plugins:
  - hexo-generator-feed
 # - hexo-tag-emojis
 ## Themes: http://hexo.io/themes/
-theme: next1
+theme: next
 stylus:
   compress: true
 
