@@ -8,7 +8,7 @@ branches:
   - master
 
 before_install:
-- npm install -g hexo@3.1.1
+- npm install hexo@3.1.1 -g
 - hexo v
 
 install:
