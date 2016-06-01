@@ -35,4 +35,4 @@ after_success:
 - git add -A .
 - git commit -m 'Site updated'
 - git branch -m gh-pages
-#- git push -q -u origin gh-pages
+- git push -q -u origin gh-pages
