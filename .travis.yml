@@ -1,18 +1,17 @@
 language: node_js
 
 node_js:
-- "0.12"
+- "5"
 
 branches:
   only:
   - master
 
 before_install:
-- npm install -g hexo-cli
+- npm install -g hexo
 
 install:
 - npm install
-- npm install -g hexo-renderer-marked
 
 # Notice: Replace 'YOUR NAME' and 'YOUR EMAIL'
 before_script:
