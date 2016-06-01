@@ -21,7 +21,7 @@ github pages支持jekyll自动发布，只要修改了post的md，就会自动�
 2. 在博客repo编写.travis.yml，用于编排
 3. 在github-setting-personal token-生成一个只能访问public repo的token
 4. 在travis ci的Repositories添加环境变量DEPLOY_REPO， https://{token}@github.com/{你的用户名}/{你的repo名}.git
-5. git clone --depth 1 --branch gh-pages --single-branch $DEPLOY_REPO . || (git init && git remote add -t gh-pages origin $DEPLOY_REPO)
+5. `git clone --depth 1 --branch gh-pages --single-branch $DEPLOY_REPO . || (git init && git remote add -t gh-pages origin $DEPLOY_REPO)`
 
 
 PS: travis ci的日志放在aws s3上，所以要先番茄才能看到日志哦
