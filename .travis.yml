@@ -8,11 +8,11 @@ branches:
   - master
 
 before_install:
-- npm install hexo@3.1.1 -g
+#- npm install hexo@3.1.1 -g
 
 install:
 - npm install
-- npm install hexo-generator-feed --save
+#- npm install hexo-generator-feed --save
 
 # Notice: Replace 'YOUR NAME' and 'YOUR EMAIL'
 before_script:
@@ -21,7 +21,7 @@ before_script:
 
 script:
 - pwd
-- hexo v
+- hexo version
 - hexo clean
 - hexo generate
 
