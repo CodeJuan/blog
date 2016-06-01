@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://blog.decbug.com/2016/05/30/hexo_travis/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。之前用过Travis ci，感觉不错，打算继续用它。">
-<meta property="og:updated_time" content="2016-06-01T13:05:26.947Z">
+<meta property="og:updated_time" content="2016-06-01T13:17:08.841Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hexo通过travis CI自动发布">
 <meta name="twitter:description" content="背景github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。之前用过Travis ci，感觉不错，打算继续用它。">
@@ -263,7 +263,8 @@
 <li>在博客repo编写.travis.yml，用于编排</li>
 <li>在github-setting-personal token-生成一个只能访问public repo的token</li>
 <li>在travis ci的Repositories添加环境变量DEPLOY_REPO， <a href="https://{token}@github.com/{你的用户名}/{你的repo名}.git" target="_blank" rel="external">https://{token}@github.com/{你的用户名}/{你的repo名}.git</a></li>
-<li><code>git clone --depth 1 --branch gh-pages --single-branch $DEPLOY_REPO . || (git init &amp;&amp; git remote add -t gh-pages origin $DEPLOY_REPO)</code></li>
+<li><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth <span class="number">1</span> --branch gh-pages --single-branch <span class="variable">$DEPLOY</span>_REPO . || (git init &amp;&amp; git remote add -t gh-pages origin <span class="variable">$DEPLOY</span>_REPO)</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
 <p>PS: travis ci的日志放在aws s3上，所以要先番茄才能看到日志哦</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.jianshu.com/p/e22c13d85659" target="_blank" rel="external">http://www.jianshu.com/p/e22c13d85659</a></p>
