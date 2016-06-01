@@ -9,7 +9,6 @@ branches:
 
 before_install:
 - npm install hexo@3.1.1 -g
-- hexo v
 
 install:
 - npm install
@@ -21,6 +20,8 @@ before_script:
 - git config --global user.email 'xh@decbug.com'
 
 script:
+- pwd
+- hexo v
 - hexo clean
 - hexo generate
 
