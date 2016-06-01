@@ -5,7 +5,7 @@
   <subtitle><![CDATA[浮云一别后，流水十年间]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.decbug.com//"/>
-  <updated>2016-05-30T00:15:06.745Z</updated>
+  <updated>2016-06-01T12:01:13.963Z</updated>
   <id>http://blog.decbug.com//</id>
   
   <author>
@@ -14,6 +14,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[hexo通过travis CI自动发布]]></title>
+    <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
+    <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
+    <published>2016-05-30T16:00:00.000Z</published>
+    <updated>2016-06-01T12:01:13.963Z</updated>
+    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。<br>之前用过Travis ci，感觉不错，打算继续用它。</p>
+<a id="more"></a>
+<ol>
+<li>通过github帐号登录travis ci，把博客的repo加入到左边的My Repositories</li>
+<li>在博客repo编写.travis.yml，用于编排</li>
+<li>在github-setting-personal token-生成一个只能访问public repo的token</li>
+<li>在travis ci的Repositories添加环境变量DEPLOY_REPO， <a href="https://{token}@github.com/{你的用户名}/{你的repo名}.git" target="_blank" rel="external">https://{token}@github.com/{你的用户名}/{你的repo名}.git</a></li>
+<li>git clone —depth 1 —branch gh-pages —single-branch $DEPLOY_REPO . || (git init &amp;&amp; git remote add -t gh-pages origin $DEPLOY_REPO)</li>
+</ol>
+<p>PS: travis ci的日志放在aws s3上，所以要先番茄才能看到日志哦</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="背景">背景</h1><p>github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。<br>之前用过Travis ci，感觉不错，打算继续用它。</p>]]>
+    
+    </summary>
+    
+      <category term="blog" scheme="http://blog.decbug.com/tags/blog/"/>
+    
+      <category term="travis" scheme="http://blog.decbug.com/tags/travis/"/>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[一切脱离业务的设计都是YY]]></title>
@@ -846,36 +878,6 @@
       <category term="feedback" scheme="http://blog.decbug.com/tags/feedback/"/>
     
       <category term="SoftwareEngineering" scheme="http://blog.decbug.com/categories/SoftwareEngineering/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[nodejs(MEAN)]]></title>
-    <link href="http://blog.decbug.com/2015/12/28/mean/"/>
-    <id>http://blog.decbug.com/2015/12/28/mean/</id>
-    <published>2015-12-27T16:00:00.000Z</published>
-    <updated>2015-12-29T13:28:58.495Z</updated>
-    <content type="html"><![CDATA[<h1 id="背景">背景</h1><p>刚试过了golang+beego+angularjs做restful api，还挺好用的，只是orm不是特别方便。所以呢，试试传说中性能也很强大的nodejs，正好MEAN比较火，那么就试试吧</p>
-<a id="more"></a>
-<h1 id="安装">安装</h1><h2 id="通过binary安装nodejs">通过binary安装nodejs</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v5.<span class="number">3.0</span>/node-v5.<span class="number">3.0</span>.tar.gz</span><br><span class="line">tar -zxf node-v5.<span class="number">3.0</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> node-v5.<span class="number">3.0</span></span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-<h2 id="安装MEAN">安装MEAN</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g mean-cli</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="背景">背景</h1><p>刚试过了golang+beego+angularjs做restful api，还挺好用的，只是orm不是特别方便。所以呢，试试传说中性能也很强大的nodejs，正好MEAN比较火，那么就试试吧</p>]]>
-    
-    </summary>
-    
-      <category term="angular" scheme="http://blog.decbug.com/tags/angular/"/>
-    
-      <category term="express" scheme="http://blog.decbug.com/tags/express/"/>
-    
-      <category term="mongoDB" scheme="http://blog.decbug.com/tags/mongoDB/"/>
-    
-      <category term="nodejs" scheme="http://blog.decbug.com/tags/nodejs/"/>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
   </entry>
   
