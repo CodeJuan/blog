@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://blog.decbug.com/2015/06/13/Premature_Optimization/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景组里小伙要对他们的代码进行优化，分析之后，觉得没有什么拖慢性能的代码，于是决定多开几个线程。我得知之后，与他进行了一番对话，终于说服了他在动手优化之前进行充分测量，找出瓶颈再有针对性的优化。">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.435Z">
+<meta property="og:updated_time" content="2016-06-01T12:58:15.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="身边的过早优化事件">
 <meta name="twitter:description" content="背景组里小伙要对他们的代码进行优化，分析之后，觉得没有什么拖慢性能的代码，于是决定多开几个线程。我得知之后，与他进行了一番对话，终于说服了他在动手优化之前进行充分测量，找出瓶颈再有针对性的优化。">
@@ -215,7 +215,7 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-06-13T23:30:09+08:00" content="2015-06-13">
+          <time itemprop="dateCreated" datetime="2015-06-13T15:30:09+00:00" content="2015-06-13">
             2015-06-13
           </time>
         </span>
@@ -256,7 +256,7 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="背景">背景</h2><p>组里小伙要对他们的代码进行优化，分析之后，觉得没有什么拖慢性能的代码，于是决定多开几个线程。我得知之后，与他进行了一番对话，终于说服了他在动手优化之前进行充分测量，找出瓶颈再有针对性的优化。</p>
+        <span itemprop="articleBody"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>组里小伙要对他们的代码进行优化，分析之后，觉得没有什么拖慢性能的代码，于是决定多开几个线程。我得知之后，与他进行了一番对话，终于说服了他在动手优化之前进行充分测量，找出瓶颈再有针对性的优化。</p>
 <a id="more"></a>
 <ul>
 <li>对话如下：</li>
@@ -273,7 +273,7 @@
 </ul>
 <p>然后我把使用文档给他，他照着文档用性能分析工具跑了一下代码，果然找到了瓶颈代码，在一个循环里用一个vector对另外一个vector赋值，如你所知，会产生NNNN多次的构造析构，不慢才怪。修改之后，性能瞬间提升1倍，达成了目标。</p>
 <p>坦白说，这是一个很低级的错误，我曾在编码tips里提过多次，然而并没有什么卵用。周围的小伙子们依旧如故，有时候真的挺失望的，一定要通过领导来施压，他们才愿意遵守吗？其实我特别不想通过行政手段来实现目标，低效且低级的手段。当然，这是另一件事，这里就不吐槽了。</p>
-<h2 id="过早优化是万恶之源">过早优化是万恶之源</h2><ul>
+<h2 id="过早优化是万恶之源"><a href="#过早优化是万恶之源" class="headerlink" title="过早优化是万恶之源"></a>过早优化是万恶之源</h2><ul>
 <li>Donald Knuth曾经曰过：Don’t Cut Yourself: Code Optimization as a Double-Edged Sword。</li>
 <li>中文翻译：过早优化是万恶之源。 </li>
 <li>1  究竟要优化什么？ </li>
@@ -285,13 +285,13 @@
 <li>7  优化不是万金油 </li>
 </ul>
 <p>大道理，我们都懂，然而却过不好这一生。这句话我们经常听到，但是在实际工作中却对自己过于自信。</p>
-<h2 id="总结">总结</h2><p>我的优化流程：</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我的优化流程：</p>
 <ul>
 <li>先对当前代码profile，多采集几次，有足够的样本。</li>
 <li>针对热点进行分析，尽量用小的改动，实现大的提升。</li>
 <li>改一点，验证一点，并记录下优化后的数据。如此往复。</li>
 </ul>
-<h2 id="PS">PS</h2><ul>
+<h2 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h2><ul>
 <li>一直以来，这个小伙都比较傲娇，都不怎么听周围的人的意见，也不怎么听我的（后来才知道，因为之前有人谣传我是91年的，而他是89年的，所以他觉得我比较菜。。。。。）自从这件事之后，他对我的态度明显好多了。码农圈子还是要用技术说话啊，吹的天花乱坠都没用。</li>
 <li>和别人沟通（也许可以算是辩论）的时候，一定面带微笑，降低语速，摆事实讲道理表明自己的意见。越是意见不一致，就越需要控制语气。舒适的对话，是达成共识的基础。</li>
 </ul>
@@ -316,7 +316,7 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/22/Pelican_hexo/" rel="prev">hexo and pelican</a>
+              <a href="/2015/06/21/Pelican_hexo/" rel="prev">hexo and pelican</a>
             
           </div>
 

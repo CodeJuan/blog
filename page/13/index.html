@@ -260,8 +260,8 @@
 
       
         
-          <h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
-<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
+<h2 id="人肉创建"><a href="#人肉创建" class="headerlink" title="人肉创建"></a>人肉创建</h2><p>验证此方法是否可行</p>
 <ol>
 <li>把某工程的vcxproj及filter拷贝到UT目录</li>
 <li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
@@ -306,7 +306,7 @@
           
           
             
-              <a class="post-title-link" href="/2014/12/01/Vld2CI/" itemprop="url">
+              <a class="post-title-link" href="/2014/11/30/Vld2CI/" itemprop="url">
                 VLD集成到CI自动化检测内存泄露
               </a>
             
@@ -343,8 +343,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2014/12/01/Vld2CI/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/12/01/Vld2CI/" itemprop="commentsCount"></span>
+            <a href="/2014/11/30/Vld2CI/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/30/Vld2CI/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -359,13 +359,13 @@
 
       
         
-          <h1 id="VLD简介">VLD简介</h1><blockquote>
+          <h1 id="VLD简介"><a href="#VLD简介" class="headerlink" title="VLD简介"></a>VLD简介</h1><blockquote>
 <p>Visual Leak Detector is a free, robust, open-source memory leak detection system for Visual C++. </p>
 </blockquote>
 <p>windows下VC常用开源内存泄露检测工具，代码在<a href="http://vld.codeplex.com/">codeplex</a></p>
-<h2 id="原理">原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>代码中include了vld.h，在开始运行时构建一个VisualLeakDetector g_vld的全局变量，接管申请内存和释放内存的操作。<br>此后会记录每次申请内存，并将地址及call stack存到一个set；<br>释放内存时会删除set中与之相匹配的内存申请记录。<br>在程序结束时，vld会遍历此set，如果set不为空，说明有内存泄露，会将泄露地址及call stack输出到report中。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/12/01/Vld2CI/#more" rel="contents">
+            <a class="btn" href="/2014/11/30/Vld2CI/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -398,7 +398,7 @@
           
           
             
-              <a class="post-title-link" href="/2014/11/29/gtest_gmock/" itemprop="url">
+              <a class="post-title-link" href="/2014/11/28/gtest_gmock/" itemprop="url">
                 学习gtest&gmock
               </a>
             
@@ -435,8 +435,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2014/11/29/gtest_gmock/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/29/gtest_gmock/" itemprop="commentsCount"></span>
+            <a href="/2014/11/28/gtest_gmock/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/28/gtest_gmock/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -451,11 +451,11 @@
 
       
         
-          <h3 id="UT">UT</h3><p>单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。</p>
+          <h3 id="UT"><a href="#UT" class="headerlink" title="UT"></a>UT</h3><p>单元测试是代码的第一道防线，尽量将问题在前期暴露出来，发现越早，解决的成本就越低。</p>
 <p>所以，作为码农，必须掌握单元测试的方法，并将UT集成到本地构建及CI服务器上，这样无论是新开发，还是维护重构等等，都能对我们的改动进行检测，及时反馈。</p>
 <p>以前用过JUnit和CppUnit，已不太适合当前开发。很多同僚都推荐gtest，我自然不能错过。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/29/gtest_gmock/#more" rel="contents">
+            <a class="btn" href="/2014/11/28/gtest_gmock/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -488,7 +488,7 @@
           
           
             
-              <a class="post-title-link" href="/2014/11/26/test_gcc_gdb/" itemprop="url">
+              <a class="post-title-link" href="/2014/11/25/test_gcc_gdb/" itemprop="url">
                 学习GCC & GDB
               </a>
             
@@ -525,8 +525,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2014/11/26/test_gcc_gdb/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/26/test_gcc_gdb/" itemprop="commentsCount"></span>
+            <a href="/2014/11/25/test_gcc_gdb/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/25/test_gcc_gdb/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -541,13 +541,13 @@
 
       
         
-          <h3 id="前言">前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
-<h3 id="GCC">GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
+<h3 id="GCC"><a href="#GCC" class="headerlink" title="GCC"></a>GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
 <blockquote>
 <p>gcc -E  test.c -o test.i 中间文件<br>gcc -S test.i -o test.s  ASM<br>gcc -c test.s -o test.o  OBJ<br>gcc test.o -o test       可执行文件</p>
 </blockquote>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/26/test_gcc_gdb/#more" rel="contents">
+            <a class="btn" href="/2014/11/25/test_gcc_gdb/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -580,7 +580,7 @@
           
           
             
-              <a class="post-title-link" href="/2014/11/19/CompareWinPE/" itemprop="url">
+              <a class="post-title-link" href="/2014/11/18/CompareWinPE/" itemprop="url">
                 比较WinPE文件(忽略时间戳)
               </a>
             
@@ -617,8 +617,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2014/11/19/CompareWinPE/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/19/CompareWinPE/" itemprop="commentsCount"></span>
+            <a href="/2014/11/18/CompareWinPE/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/18/CompareWinPE/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -633,11 +633,11 @@
 
       
         
-          <h2 id="背景">背景</h2><p>项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。<br>因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是有几个字节不相同。于是向我求助。</p>
-<h2 id="过程">过程</h2><p>我曾看过windows的PE文件结构，依稀记得里边会有几个字节存放TimeStamp和CheckSum，所以会有这么几个字节的差异。为避免误人子弟，特找来微软的定义看看：</p>
+          <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>项目组出现过比较有意思的情况：在同一台持续集成服务器，从同一个SVN上取指定版本的代码进行打包，但生成的两个版本有差异，即有DLL不相同导致运行结果不正确。经过定位，推测可能是update代码的过程中出现了异常，没有获取到期望的代码。<br>因此，CI工程师需要一种方法能够对DLL，EXE等二进制文件进行比对，以验证其正确性。但是即使用普通二进制比较工具（BeyondCompare）进行比较，发现总是有几个字节不相同。于是向我求助。</p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>我曾看过windows的PE文件结构，依稀记得里边会有几个字节存放TimeStamp和CheckSum，所以会有这么几个字节的差异。为避免误人子弟，特找来微软的定义看看：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _IMAGE_NT_HEADERS &#123;  </span><br><span class="line">    DWORD Signature;  </span><br><span class="line">    IMAGE_FILE_HEADER FileHeader;  </span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 OptionalHeader;  </span><br><span class="line">&#125; IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32;</span><br></pre></td></tr></table></figure>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/19/CompareWinPE/#more" rel="contents">
+            <a class="btn" href="/2014/11/18/CompareWinPE/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

@@ -1,0 +1,779 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="C++,handle,leak,process," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Continuous Learning" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="背景现象主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。
+心急的朋友可以直接看原理:https://github.com/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="抄代码引发的句柄泄漏">
+<meta property="og:url" content="http://blog.decbug.com/2015/08/05/handle_leak/index.html">
+<meta property="og:site_name" content="Continuous Learning">
+<meta property="og:description" content="背景现象主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。
+心急的朋友可以直接看原理:https://github.com/">
+<meta property="og:image" content="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak1.JPG">
+<meta property="og:image" content="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak2.JPG">
+<meta property="og:image" content="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak3.JPG">
+<meta property="og:image" content="https://github.com/CodeJuan/HandleLeak/raw/master/pic/CloseHandle.JPG">
+<meta property="og:updated_time" content="2016-06-01T12:58:15.940Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="抄代码引发的句柄泄漏">
+<meta name="twitter:description" content="背景现象主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。
+心急的朋友可以直接看原理:https://github.com/">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+  <title> 抄代码引发的句柄泄漏 | Continuous Learning </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-57346409-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Continuous Learning</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-twitter">
+          <a href="/twitter" rel="section">
+            <i class="menu-item-icon icon-next-twitter"></i> <br />
+            碎念
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            <i class="menu-item-icon icon-next-book"></i> <br />
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            <i class="menu-item-icon icon-next-commonweal"></i> <br />
+            404
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              抄代码引发的句柄泄漏
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-08-05T16:00:00+00:00" content="2015-08-06">
+            2015-08-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/08/05/handle_leak/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/05/handle_leak/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>主进程不断调用7z.exe进行解压，当文件数量较小时，顺利运行。当文件数量达到几十万的时候，运行过程中7z报错，fatal error 2。<br>网上很多同僚说这是由于系统资源不足造成的。观察此时的内存及磁盘使用情况，都很充裕，但为何还说资源不足呢？于是开启了蛋疼的定位之旅，至于为什么说很蛋疼呢，这是因为是一个低级错误导致的问题。</p>
+<p>心急的朋友可以直接看原理:<a href="https://github.com/CodeJuan/HandleLeak" target="_blank" rel="external">https://github.com/CodeJuan/HandleLeak</a></p>
+<p>不着急的朋友可以慢慢看定位过程</p>
+<a id="more"></a>
+<h1 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h1><h2 id="句柄泄漏"><a href="#句柄泄漏" class="headerlink" title="句柄泄漏"></a>句柄泄漏</h2><p>鉴于内存及硬盘都充足，那么猜测可能算句柄泄漏。先简单说下句柄泄漏的概念：</p>
+<ul>
+<li>句柄，可以简单理解为某个资源的名字。</li>
+<li>泄漏，跟内存泄漏一个泄漏，用了忘记释放，导致可用资源越来越少。</li>
+<li>A handle leak is a type of software bug that occurs when a computer program asks for a handle to a resource but does not free the handle when it is no longer used. If this occurs frequently or repeatedly over an extended period of time, a large number of handles may be marked in-use and thus unavailable, causing performance problems or a crash.</li>
+</ul>
+<h2 id="验证泄漏"><a href="#验证泄漏" class="headerlink" title="验证泄漏"></a>验证泄漏</h2><p>把有问题的代码抠出来，写一个demo，循环跑。观察句柄情况。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">    SHELLEXECUTEINFO ShExecInfo = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    ShExecInfo.cbSize = <span class="keyword">sizeof</span>(SHELLEXECUTEINFO);</span><br><span class="line">    ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;</span><br><span class="line">    ShExecInfo.hwnd = <span class="literal">NULL</span>;</span><br><span class="line">    ShExecInfo.lpVerb = _T(<span class="string">"open"</span>);</span><br><span class="line">    ShExecInfo.lpFile = _T(<span class="string">"cmd"</span>);</span><br><span class="line">    ShExecInfo.lpParameters = _T(<span class="string">"/c echo 111"</span>);</span><br><span class="line">    ShExecInfo.lpDirectory = <span class="literal">NULL</span>;</span><br><span class="line">    ShExecInfo.nShow = SW_HIDE;</span><br><span class="line">    ShExecInfo.hInstApp = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    ShellExecuteEx(&amp;ShExecInfo);</span><br><span class="line"></span><br><span class="line">    WaitForSingleObject(ShExecInfo.hProcess,INFINITE); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看任务管理器中性能页显示的总句柄数，果然是不停在上涨，说明猜测成立</p>
+<h2 id="7z泄漏？"><a href="#7z泄漏？" class="headerlink" title="7z泄漏？"></a>7z泄漏？</h2><p>猜测可能算7z自身有泄漏，然而很快又否决了。<br>就像内存泄漏一样，当进程结束的时候，所有资源都会被系统回收，不会继续作恶下去。</p>
+<blockquote>
+<p>When the program terminates, all its open handles are closed<br>Yes, a “memory leak” is simply memory that a process no longer has a reference to, and thus can no longer free. The OS still keeps track of all the memory allocated to a process, and will free it when that process terminates.</p>
+</blockquote>
+<p>说明只是我们自己的主进程有泄漏</p>
+<h2 id="查看主进程句柄"><a href="#查看主进程句柄" class="headerlink" title="查看主进程句柄"></a>查看主进程句柄</h2><p>通过任务管理器查看进程的句柄数，方法<code>选项-查看列-选中句柄计数</code></p>
+<p>句柄情况如图所示</p>
+<p>运行一段时间后400+句柄</p>
+<p><img src="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak1.JPG" alt=""></p>
+<p>再过一段时间1000+句柄</p>
+<p><img src="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak2.JPG" alt=""></p>
+<p>接下来2000+句柄</p>
+<p><img src="https://github.com/CodeJuan/HandleLeak/raw/master/pic/Leak3.JPG" alt=""></p>
+<p>看来真的是泄漏了</p>
+<h2 id="查看代码"><a href="#查看代码" class="headerlink" title="查看代码"></a>查看代码</h2><p>看一下<code>SHELLEXECUTEINFOW</code>的定义<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _SHELLEXECUTEINFOW</span><br><span class="line">&#123;</span><br><span class="line">    DWORD cbSize;               <span class="comment">// in, required, sizeof of this structure</span></span><br><span class="line">    ULONG fMask;                <span class="comment">// in, SEE_MASK_<span class="label">XXX values</span></span></span><br><span class="line">    HWND hwnd;                  <span class="comment">// in, optional</span></span><br><span class="line">    LPCWSTR  lpVerb;            <span class="comment">// in, optional when unspecified the default verb is choosen</span></span><br><span class="line">    LPCWSTR  lpFile;            <span class="comment">// in, either this value or lpIDList must be specified</span></span><br><span class="line">    LPCWSTR  lpParameters;      <span class="comment">// in, optional</span></span><br><span class="line">    LPCWSTR  lpDirectory;       <span class="comment">// in, optional</span></span><br><span class="line">    <span class="keyword">int</span> nShow;                  <span class="comment">// in, required</span></span><br><span class="line">    HINSTANCE hInstApp;         <span class="comment">// out when SEE_MASK_NOCLOSEPROCESS is specified</span></span><br><span class="line">    <span class="keyword">void</span> *lpIDList;             <span class="comment">// in, valid when SEE_MASK_IDLIST is specified, PCIDLIST_ABSOLUTE, for use with SEE_MASK_IDLIST &amp; SEE_MASK_INVOKEIDLIST</span></span><br><span class="line">    LPCWSTR  lpClass;           <span class="comment">// in, valid when SEE_MASK_CLASSNAME is specified</span></span><br><span class="line">    HKEY hkeyClass;             <span class="comment">// in, valid when SEE_MASK_CLASSKEY is specified</span></span><br><span class="line">    DWORD dwHotKey;             <span class="comment">// in, valid when SEE_MASK_HOTKEY is specified</span></span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    &#123;</span><br><span class="line">        HANDLE hIcon;           <span class="comment">// not used</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">if</span> (NTDDI_VERSION &gt;= NTDDI_WIN2K)</span></span><br><span class="line">        HANDLE hMonitor;        <span class="comment">// in, valid when SEE_MASK_HMONITOR specified</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span> <span class="comment">// (NTDDI_VERSION &gt;= NTDDI_WIN2K)</span></span></span><br><span class="line">    &#125; DUMMYUNIONNAME;</span><br><span class="line">    HANDLE hProcess;            <span class="comment">// out, valid when SEE_MASK_NOCLOSEPROCESS specified</span></span><br><span class="line">&#125; SHELLEXECUTEINFOW, *LPSHELLEXECUTEINFOW;</span><br></pre></td></tr></table></figure></p>
+<p>注意看<code>HANDLE hProcess;// out, valid when SEE_MASK_NOCLOSEPROCESS specified</code></p>
+<p>也就是说，如果指定了<code>SEE_MASK_NOCLOSEPROCESS</code>，<code>hProcess</code>就是返回的句柄。如果不关闭，就会造成句柄泄漏。</p>
+<p>我们的代码为了等待进程结束，设置了<code>SEE_MASK_NOCLOSEPROCESS</code>，然后WaitForSingleObject(<code>ShExecInfo.hProcess</code>,INFINITE); </p>
+<p>然后又没有关闭<code>ShExecInfo.hProcess</code>，导致句柄不断上涨</p>
+<h2 id="CloseHandle"><a href="#CloseHandle" class="headerlink" title="CloseHandle"></a>CloseHandle</h2><p>加上<code>CloseHandle</code>之后<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CloseHandle(ShExecInfo.hProcess);</span><br></pre></td></tr></table></figure></p>
+<p>句柄始终保持在100左右</p>
+<p><img src="https://github.com/CodeJuan/HandleLeak/raw/master/pic/CloseHandle.JPG" alt=""></p>
+<p>修改正式代码，运行50万次依旧稳定，问题解决。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>询问组内同事，说这段代码是从CSDN上抄来的，没有深入了解代码的意思，没有注意到<code>SEE_MASK_NOCLOSEPROCESS</code>。</p>
+<ol>
+<li>抄代码一定要小心谨慎，需要仔细阅读官方说明，把参数的意义都理解清楚</li>
+<li>仅仅跑起来，凑合着用是不够的，需要做一做压力测试</li>
+<li>这次看句柄的方式比较落伍，需要整理一下如何用windbg查句柄泄漏的方法，下一篇就写这个吧。</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://en.wikipedia.org/wiki/Handle_leak" target="_blank" rel="external">HandleLeak</a><br><a href="http://blogs.technet.com/b/markrussinovich/archive/2009/09/29/3283844.aspx" target="_blank" rel="external">Pushing the Limits of Windows: Handles</a><br><a href="http://stackoverflow.com/questions/2975831/is-leaked-memory-freed-up-when-the-program-exits" target="_blank" rel="external">Is leaked memory freed up when the program exits?</a></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag">#C++</a>
+          
+            <a href="/tags/handle/" rel="tag">#handle</a>
+          
+            <a href="/tags/leak/" rel="tag">#leak</a>
+          
+            <a href="/tags/process/" rel="tag">#process</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/22/docker_tutorial/" rel="prev">docker(1)-初学</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/25/pe_depen/" rel="next">自动生成软件中模块依赖图</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/5423628?v=3&s=460" alt="CodeJuan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">CodeJuan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">70</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">105</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/codejuan" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/decbug" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://stackoverflow.com/users/2763396/codejuan" target="_blank">stackoverflow</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://blog.decbug.com/" target="_blank">decbug</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#现象"><span class="nav-number">1.1.</span> <span class="nav-text">现象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#过程"><span class="nav-number">2.</span> <span class="nav-text">过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#句柄泄漏"><span class="nav-number">2.1.</span> <span class="nav-text">句柄泄漏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证泄漏"><span class="nav-number">2.2.</span> <span class="nav-text">验证泄漏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7z泄漏？"><span class="nav-number">2.3.</span> <span class="nav-text">7z泄漏？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看主进程句柄"><span class="nav-number">2.4.</span> <span class="nav-text">查看主进程句柄</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看代码"><span class="nav-number">2.5.</span> <span class="nav-text">查看代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CloseHandle"><span class="nav-number">2.6.</span> <span class="nav-text">CloseHandle</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结论"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CodeJuan</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'codejuan';
+      var disqus_identifier = '2015/08/05/handle_leak/';
+      var disqus_title = '抄代码引发的句柄泄漏';
+      var disqus_url = 'http://blog.decbug.com/2015/08/05/handle_leak/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

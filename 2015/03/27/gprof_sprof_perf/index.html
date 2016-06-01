@@ -49,7 +49,7 @@
 <meta property="og:description" content="前言上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。
 此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。
 每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.447Z">
+<meta property="og:updated_time" content="2016-06-01T12:58:15.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux C++性能调优笔记">
 <meta name="twitter:description" content="前言上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。
@@ -221,7 +221,7 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-03-27T23:30:09+08:00" content="2015-03-27">
+          <time itemprop="dateCreated" datetime="2015-03-27T15:30:09+00:00" content="2015-03-27">
             2015-03-27
           </time>
         </span>
@@ -262,14 +262,14 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="前言">前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
+        <span itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
 <p>此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。</p>
 <p>每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。</p>
 <a id="more"></a>
-<h2 id="profiler">profiler</h2><p>当系统的性能不能满足要求的时候，便要对其进行调优。方法有千千万万种，但无论如何，我们都要想办法精确识别到瓶颈，然后有的放矢进行优化。如何精确识别呢？这个时候profiler就闪亮登场了。</p>
+<h2 id="profiler"><a href="#profiler" class="headerlink" title="profiler"></a>profiler</h2><p>当系统的性能不能满足要求的时候，便要对其进行调优。方法有千千万万种，但无论如何，我们都要想办法精确识别到瓶颈，然后有的放矢进行优化。如何精确识别呢？这个时候profiler就闪亮登场了。</p>
 <p><em>尝试了很多profiler之后，最终还是决定使用google perf tools</em></p>
-<h3 id="linux常用profiler">linux常用profiler</h3><p>gprofile &amp; perf &amp; sprof</p>
-<h4 id="gprofile">gprofile</h4><p>老牌劲旅，长久不衰，很多人用，功能也比较强大，使用简单。</p>
+<h3 id="linux常用profiler"><a href="#linux常用profiler" class="headerlink" title="linux常用profiler"></a>linux常用profiler</h3><p>gprofile &amp; perf &amp; sprof</p>
+<h4 id="gprofile"><a href="#gprofile" class="headerlink" title="gprofile"></a>gprofile</h4><p>老牌劲旅，长久不衰，很多人用，功能也比较强大，使用简单。</p>
 <ul>
 <li>在编译时加入参数 -pg就可以打开GProfile的开关</li>
 <li>运行你的可执行文件，结束后会生成一个gmon.out</li>
@@ -277,22 +277,22 @@
 <li>会按函数热度进行排序，百分比越大的函数就越热，可以针对TOPN函数进行分析。</li>
 </ul>
 <p>但是由于我开发的是一个so，被其他进程调用。虽然在so的编译时加上了-pg，并且通过标志位将进程用exit退出，但是还是没有生成gmon.out，不知道怎么回事，姑且先放下，有机会再研究。</p>
-<h4 id="perf">perf</h4><p>perf功能很强大，而且被收录到内核(2.6.31)，可以记录page fault， cache miss，看起来真的很不错。</p>
+<h4 id="perf"><a href="#perf" class="headerlink" title="perf"></a>perf</h4><p>perf功能很强大，而且被收录到内核(2.6.31)，可以记录page fault， cache miss，看起来真的很不错。</p>
 <p>可惜我们的目标机内核版本太老，2.6.17，stackoverflow上有人回答说无法安装，</p>
 <blockquote>
 <p>Q: Does the old linux kernel support perf.</p>
 <p>A: No, it does not. The performance counters subsystem has undergone significant recent changes, and you are exceedingly unlikely to get perf working on any kernel below 2.6.31.</p>
 </blockquote>
 <p>只好就此作罢。以后有机会再尝试。</p>
-<h4 id="sprof">sprof</h4><p>继续搜索’Profiling shared library’，找到sprof。看了下简介，大概能满足需求，先拿来用用。</p>
+<h4 id="sprof"><a href="#sprof" class="headerlink" title="sprof"></a>sprof</h4><p>继续搜索’Profiling shared library’，找到sprof。看了下简介，大概能满足需求，先拿来用用。</p>
 <p>首先创建一个so，里边写一段比较耗时的代码</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "lib.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;unistd.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;vector&gt;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> A::work(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">	<span class="keyword">while</span>(a &lt; <span class="number">10</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		b += a;</span><br><span class="line">		++a;</span><br><span class="line">		v.push_back(a);</span><br><span class="line">		sleep(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"work"</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"lib.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> A::work(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">	<span class="keyword">while</span>(a &lt; <span class="number">10</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		b += a;</span><br><span class="line">		++a;</span><br><span class="line">		v.push_back(a);</span><br><span class="line">		sleep(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"work"</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ll : libso</span><br><span class="line">	g++ -L ./ -Wall -o test main.cpp -llib</span><br><span class="line"></span><br><span class="line">libso : libo</span><br><span class="line">	g++ -shared -o liblib.so liblib.o</span><br><span class="line"></span><br><span class="line">libo : lib.cpp</span><br><span class="line">	g++ -Wall -Werror -fpic -c lib.cpp -o liblib.o</span><br><span class="line"></span><br><span class="line"><span class="title">clean:</span></span><br><span class="line">	rm -f test</span><br><span class="line"></span><br><span class="line"><span class="comment"># export LD_LIBRARY_PATH=/home/username/foo:$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#set the environment variable LD_PROFILE to the name of the shared obj</span></span><br><span class="line"><span class="built_in">export</span> LD_PROFILE=my_obj</span><br><span class="line"><span class="comment">#run your application</span></span><br><span class="line">my_app</span><br><span class="line"><span class="comment">#this should create a file /var/tmp/my_sobj.profile</span></span><br><span class="line"><span class="comment">#now run sprof</span></span><br><span class="line">sprof my_sobj my_sobj.profile</span><br></pre></td></tr></table></figure>
 <p>查了一下，sprof只能采集可执行文件的性能，无法采集so的，还是需要放弃。</p>
-<h3 id="gperf-tools">gperf-tools</h3><p>内网的文章带不出来，只能简单回忆，记录一下。<br>继续折腾之下，找到了google-perf-tools，功能很强大，可以采集so的性能，还能采集内存。</p>
+<h3 id="gperf-tools"><a href="#gperf-tools" class="headerlink" title="gperf-tools"></a>gperf-tools</h3><p>内网的文章带不出来，只能简单回忆，记录一下。<br>继续折腾之下，找到了google-perf-tools，功能很强大，可以采集so的性能，还能采集内存。</p>
 <p>决定结合gtest，用采用单元测试来测性能内存。</p>
-<h4 id="为什么要用单元测试呢？">为什么要用单元测试呢？</h4><ol>
+<h4 id="为什么要用单元测试呢？"><a href="#为什么要用单元测试呢？" class="headerlink" title="为什么要用单元测试呢？"></a>为什么要用单元测试呢？</h4><ol>
 <li><p>以前的做法比较麻烦。需要运行服务，然后kill平台进程等一系列操作。</p>
 </li>
 <li><p>方便。项目已有单元测试框架，可以根据我们的需要自由组合场景，对外部环境依赖较小。</p>
@@ -302,11 +302,11 @@
 <li><p>如果使用得当，可能做到自动化。</p>
 </li>
 </ol>
-<h4 id="安装libunwind">安装libunwind</h4><h4 id="安装gperftools">安装gperftools</h4><h4 id="设置环境变量">设置环境变量</h4><p>CPUPROFILE; exprot</p>
-<h4 id="enable单元测试">enable单元测试</h4><h4 id="改makefile">改makefile</h4><p>在单元测试可执行文件tester的makefile和我们so的makefile加上</p>
+<h4 id="安装libunwind"><a href="#安装libunwind" class="headerlink" title="安装libunwind"></a>安装libunwind</h4><h4 id="安装gperftools"><a href="#安装gperftools" class="headerlink" title="安装gperftools"></a>安装gperftools</h4><h4 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h4><p>CPUPROFILE; exprot</p>
+<h4 id="enable单元测试"><a href="#enable单元测试" class="headerlink" title="enable单元测试"></a>enable单元测试</h4><h4 id="改makefile"><a href="#改makefile" class="headerlink" title="改makefile"></a>改makefile</h4><p>在单元测试可执行文件tester的makefile和我们so的makefile加上</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="constant">CXXFLAGS</span> += -g</span><br><span class="line"></span><br><span class="line"><span class="constant">LIBRARY</span> += profiler</span><br></pre></td></tr></table></figure>
 <p>然后make</p>
-<h4 id="写测试代码">写测试代码</h4><ol>
+<h4 id="写测试代码"><a href="#写测试代码" class="headerlink" title="写测试代码"></a>写测试代码</h4><ol>
 <li><p>增加一个TEST，执行需要测性能的代码</p>
 </li>
 <li><p>在setup里加上profilerStart</p>
@@ -314,8 +314,8 @@
 <li><p>在teardown加上profilerstop</p>
 </li>
 </ol>
-<h4 id="运行，然后分析结果">运行，然后分析结果</h4><p>用 pprof —text (PATH OF TESTER) (CPUPROFILER执行的log)，得到文本格式的分析，包括每个函数的时间占有比例</p>
-<p>用 pprof —callgrind可以生成图形化，很炫目。</p>
+<h4 id="运行，然后分析结果"><a href="#运行，然后分析结果" class="headerlink" title="运行，然后分析结果"></a>运行，然后分析结果</h4><p>用 pprof –text (PATH OF TESTER) (CPUPROFILER执行的log)，得到文本格式的分析，包括每个函数的时间占有比例</p>
+<p>用 pprof –callgrind可以生成图形化，很炫目。</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>

@@ -89,7 +89,7 @@ E5505
 
 
 某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（打开3G开关后就会是3G，但是不建议打开）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？真的是内存碎片造">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.479Z">
+<meta property="og:updated_time" content="2016-06-01T12:58:15.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="真的是内存碎片吗">
 <meta name="twitter:description" content="背景
@@ -281,7 +281,7 @@ E5505
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-01-15T23:30:09+08:00" content="2015-01-15">
+          <time itemprop="dateCreated" datetime="2015-01-15T15:30:09+00:00" content="2015-01-15">
             2015-01-15
           </time>
         </span>
@@ -322,7 +322,7 @@ E5505
       
 
       
-        <span itemprop="articleBody"><h2 id="背景">背景</h2><table>
+        <span itemprop="articleBody"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><table>
 <thead>
 <tr>
 <th>配置</th>
@@ -346,13 +346,13 @@ E5505
 </table>
 <p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>
 <a id="more"></a>
-<h2 id="调查">调查</h2><p>运行两次，在不同的地方crash，抓到两个dump，用windbg简单分析一下。</p>
-<h3 id="Crash_1_:_vector-push_back">Crash 1 : vector.push_back</h3><p>异常链:  <code>push_back -&gt; allovator -&gt; new -&gt; MemoryException</code>。说明是在<code>push_back</code>申请内存时抛出的内存异常。简单回忆一下vector的内存分配机制，vector是连续存储的容器，它在新插入一个元素的时候，如果发现当前持有的<em>内存</em>放不下，那么就会再申请一块更大的内存（内存分配策略有差异，可以简单视为两倍），然后将旧内存中的元素复制到新内存中，并释放旧内存中的元素，再插入新的元素。<br>由此猜测，push_back时vector里是不是有很多元素，使得此次会申请很大的一块连续内存，而系统没有合适的内存空间，然后申请失败抛出异常呢？<br>查看代码，并询问开发小伙，得知crash时vector中元素个数不多，push_back时申请的不会是一块很大的连续内存，难道是真的是传说中的碎片？</p>
-<h3 id="Crash_12:_CString-AppendFormat">Crash 12: CString.AppendFormat</h3><p>异常链:  <code>AppendFormat -&gt; PrepareWrite -&gt; Reallocate -&gt; MemoryException</code>。<br>有<code>allocate</code>的字样，看起来又像是在申请内存。查看一下微软CString的源码，在preparewrite函数中实现了这么一个内存算法：</p>
+<h2 id="调查"><a href="#调查" class="headerlink" title="调查"></a>调查</h2><p>运行两次，在不同的地方crash，抓到两个dump，用windbg简单分析一下。</p>
+<h3 id="Crash-1-vector-push-back"><a href="#Crash-1-vector-push-back" class="headerlink" title="Crash 1 : vector.push_back"></a>Crash 1 : vector.push_back</h3><p>异常链:  <code>push_back -&gt; allovator -&gt; new -&gt; MemoryException</code>。说明是在<code>push_back</code>申请内存时抛出的内存异常。简单回忆一下vector的内存分配机制，vector是连续存储的容器，它在新插入一个元素的时候，如果发现当前持有的<em>内存</em>放不下，那么就会再申请一块更大的内存（内存分配策略有差异，可以简单视为两倍），然后将旧内存中的元素复制到新内存中，并释放旧内存中的元素，再插入新的元素。<br>由此猜测，push_back时vector里是不是有很多元素，使得此次会申请很大的一块连续内存，而系统没有合适的内存空间，然后申请失败抛出异常呢？<br>查看代码，并询问开发小伙，得知crash时vector中元素个数不多，push_back时申请的不会是一块很大的连续内存，难道是真的是传说中的碎片？</p>
+<h3 id="Crash-12-CString-AppendFormat"><a href="#Crash-12-CString-AppendFormat" class="headerlink" title="Crash 12: CString.AppendFormat"></a>Crash 12: CString.AppendFormat</h3><p>异常链:  <code>AppendFormat -&gt; PrepareWrite -&gt; Reallocate -&gt; MemoryException</code>。<br>有<code>allocate</code>的字样，看起来又像是在申请内存。查看一下微软CString的源码，在preparewrite函数中实现了这么一个内存算法：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//凭印象写的，领会精神</span></span><br><span class="line">PrepareWrite()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (current_len &lt; <span class="number">1</span>G)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//小于1G，每次都是申请1.5倍</span></span><br><span class="line">		new_len = current_len * <span class="number">1.5</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//大于1G，每次加1M</span></span><br><span class="line">		new_len = current_len + <span class="number">1</span>M;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PrepareWrite()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (current_len &lt; <span class="number">1</span>G)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//小于1G，每次都是申请1.5倍</span></span><br><span class="line">		new_len = current_len * <span class="number">1.5</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//大于1G，每次加1M</span></span><br><span class="line">		new_len = current_len + <span class="number">1</span>M;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>查看了当前string的长度，几百几千个字符而已，也就只申请几K内存。只是申请这么小的内存，怎么也申请失败了？</p>
-<h2 id="简单分析">简单分析</h2><p>查了下微软的一些文档</p>
+<h2 id="简单分析"><a href="#简单分析" class="headerlink" title="简单分析"></a>简单分析</h2><p>查了下微软的一些文档</p>
 <blockquote>
 <p>.Net application, 32-bit process, 32-bit OS, 800-1200 MB</p>
 </blockquote>
@@ -362,7 +362,7 @@ E5505
 </blockquote>
 <p>微软建议虽然win32进程可以用2G，但最好是低于1G，否则可能会许多奇怪问题，有时就是内存碎片引起的。</p>
 <p>如此，可能真的是碎片引起的。</p>
-<h2 id="初步解决方法">初步解决方法</h2><p>将前面的内存降下去，就能顺利申请到内存，正常运行。但还是不能确定真的是内存碎片引起的。<br>As a modern OS, the strategy of memory allocation so sucks? I don’t think so. The  failure of memory allocattion caused by fragment. And The fragment should be caused by memory leak..</p>
+<h2 id="初步解决方法"><a href="#初步解决方法" class="headerlink" title="初步解决方法"></a>初步解决方法</h2><p>将前面的内存降下去，就能顺利申请到内存，正常运行。但还是不能确定真的是内存碎片引起的。<br>As a modern OS, the strategy of memory allocation so sucks? I don’t think so. The  failure of memory allocattion caused by fragment. And The fragment should be caused by memory leak..</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -526,7 +526,7 @@ E5505
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调查"><span class="nav-number">2.</span> <span class="nav-text">调查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Crash_1_:_vector-push_back"><span class="nav-number">2.1.</span> <span class="nav-text">Crash 1 : vector.push_back</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crash_12:_CString-AppendFormat"><span class="nav-number">2.2.</span> <span class="nav-text">Crash 12: CString.AppendFormat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单分析"><span class="nav-number">3.</span> <span class="nav-text">简单分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初步解决方法"><span class="nav-number">4.</span> <span class="nav-text">初步解决方法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调查"><span class="nav-number">2.</span> <span class="nav-text">调查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Crash-1-vector-push-back"><span class="nav-number">2.1.</span> <span class="nav-text">Crash 1 : vector.push_back</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crash-12-CString-AppendFormat"><span class="nav-number">2.2.</span> <span class="nav-text">Crash 12: CString.AppendFormat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单分析"><span class="nav-number">3.</span> <span class="nav-text">简单分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初步解决方法"><span class="nav-number">4.</span> <span class="nav-text">初步解决方法</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

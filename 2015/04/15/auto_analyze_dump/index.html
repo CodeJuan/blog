@@ -49,7 +49,7 @@
 <meta property="og:description" content="前言最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入!analyze -v就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。
 老夫一怒之下，就开始反思。是我的文档写的不够清晰？还是操作太繁琐了？其实都不是，说白了就是现在的年轻人都太懒了。
 竟然都这么懒惰，那么我只好想出个更简便的方法来分析dump，一键式傻">
-<meta property="og:updated_time" content="2015-10-11T06:22:10.027Z">
+<meta property="og:updated_time" content="2016-06-01T12:58:15.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自动调用windbg分析dump">
 <meta name="twitter:description" content="前言最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入!analyze -v就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。
@@ -221,7 +221,7 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-04-15T23:30:09+08:00" content="2015-04-15">
+          <time itemprop="dateCreated" datetime="2015-04-15T15:30:09+00:00" content="2015-04-15">
             2015-04-15
           </time>
         </span>
@@ -262,16 +262,16 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="前言">前言</h2><p>最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入<code>!analyze -v</code>就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。</p>
+        <span itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入<code>!analyze -v</code>就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。</p>
 <p>老夫一怒之下，就开始反思。是我的文档写的不够清晰？还是操作太繁琐了？其实都不是，说白了就是现在的年轻人都太懒了。</p>
 <p>竟然都这么懒惰，那么我只好想出个更简便的方法来分析dump，一键式傻瓜操作，这样应该可以了吧。</p>
 <a id="more"></a>
-<h2 id="初稿">初稿</h2><p>通过powershell启动windbg，然后调用sendwait输入<code>!analyze -v</code></p>
+<h2 id="初稿"><a href="#初稿" class="headerlink" title="初稿"></a>初稿</h2><p>通过powershell启动windbg，然后调用sendwait输入<code>!analyze -v</code></p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[System.Reflection.Assembly]::LoadWithPartialName(<span class="string">"'Microsoft.VisualBasic"</span>)</span><br><span class="line">start-process windbg.exe -z <span class="string">"dump file 路径"</span></span><br><span class="line"><span class="comment"># &#123;~&#125;表示ENTER </span></span><br><span class="line">[System.Windows.Forms.SendKeys]::SendWait(<span class="string">"!analyze -v&#123;~&#125;"</span>)</span><br></pre></td></tr></table></figure>
 <p>通过模拟键盘消息实现，在输入过程中必须保持焦点在windbg上，不允许动键盘鼠标，不够人性化。</p>
 <p>还需要进一步完善</p>
-<h2 id="完善">完善</h2><p>微软关于windbg命令行的说明<a href="https://msdn.microsoft.com/zh-cn/library/ff561306" target="_blank" rel="external">https://msdn.microsoft.com/zh-cn/library/ff561306</a></p>
-<h3 id="initial_command_-c">initial command -c</h3><p><code>-c command</code>可以给windbg设置启动后的初始命令。</p>
+<h2 id="完善"><a href="#完善" class="headerlink" title="完善"></a>完善</h2><p>微软关于windbg命令行的说明<a href="https://msdn.microsoft.com/zh-cn/library/ff561306" target="_blank" rel="external">https://msdn.microsoft.com/zh-cn/library/ff561306</a></p>
+<h3 id="initial-command-c"><a href="#initial-command-c" class="headerlink" title="initial command -c"></a>initial command -c</h3><p><code>-c command</code>可以给windbg设置启动后的初始命令。</p>
 <ul>
 <li>Specifies the initial debugger command to run at start-up. </li>
 <li>Multiple commands can be separated with semicolons.</li>
@@ -279,7 +279,7 @@
 <p>既然可以设置命令，那么就可以抛弃powershell发键盘消息的方式了，直接写个batch搞定。</p>
 <p>脚本</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;&#23433;&#35013;&#30446;&#24405;\windbg.exe&#34; -z &#34;dump file &#36335;&#24452;&#34; -c &#34;!analyze -v&#34;</span><br></pre></td></tr></table></figure>
-<h3 id="logo">logo</h3><p>有时候需要保存log，以前的做法是选中windbg的output，然后CTRL+C，CTRL+V到一个文本里。多次键盘鼠标操作，太麻烦，看看能否有命令行可以实现。</p>
+<h3 id="logo"><a href="#logo" class="headerlink" title="logo"></a>logo</h3><p>有时候需要保存log，以前的做法是选中windbg的output，然后CTRL+C，CTRL+V到一个文本里。多次键盘鼠标操作，太麻烦，看看能否有命令行可以实现。</p>
 <p>找到一个<code>-log{o|a} LogFile</code></p>
 <ul>
 <li>Begins logging information to a log file. </li>
@@ -288,7 +288,7 @@
 </ul>
 <p>脚本升级为</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;&#23433;&#35013;&#30446;&#24405;\windbg.exe&#34; -z &#34;dump file &#36335;&#24452;&#34; -c &#34;!analyze -v&#34; -logo &#34;dump file &#36335;&#24452;.log&#34;</span><br></pre></td></tr></table></figure>
-<h2 id="效果">效果</h2><p>每人每天分析3次dump，每次敲命令+拷贝log需要花1~3分钟的时间，团队里共有150个开发，一天就能节省150人<em>3次</em>2分钟=900分钟。</p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>每人每天分析3次dump，每次敲命令+拷贝log需要花1~3分钟的时间，团队里共有150个开发，一天就能节省150人<em>3次</em>2分钟=900分钟。</p>
 <p>很可观的收益啊，不由得老怀大慰。</p>
 <p>程序员就是要从机械繁琐的工作中超脱出来，投入到更有意义的事情上去。</p>
 <hr>
@@ -456,7 +456,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初稿"><span class="nav-number">2.</span> <span class="nav-text">初稿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完善"><span class="nav-number">3.</span> <span class="nav-text">完善</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#initial_command_-c"><span class="nav-number">3.1.</span> <span class="nav-text">initial command -c</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#logo"><span class="nav-number">3.2.</span> <span class="nav-text">logo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#效果"><span class="nav-number">4.</span> <span class="nav-text">效果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初稿"><span class="nav-number">2.</span> <span class="nav-text">初稿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完善"><span class="nav-number">3.</span> <span class="nav-text">完善</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#initial-command-c"><span class="nav-number">3.1.</span> <span class="nav-text">initial command -c</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#logo"><span class="nav-number">3.2.</span> <span class="nav-text">logo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#效果"><span class="nav-number">4.</span> <span class="nav-text">效果</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

@@ -54,7 +54,7 @@
 
 取得构建包列表。下载没有测试过的最新的包。">
 <meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/jenkins/jenkins_welcome.png">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.455Z">
+<meta property="og:updated_time" content="2016-06-01T12:58:15.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用jenkins监控程序内存CPU">
 <meta name="twitter:description" content="背景组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。
@@ -228,7 +228,7 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-01-12T23:30:09+08:00" content="2015-01-12">
+          <time itemprop="dateCreated" datetime="2015-01-12T15:30:09+00:00" content="2015-01-12">
             2015-01-12
           </time>
         </span>
@@ -269,7 +269,7 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="背景">背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
+        <span itemprop="articleBody"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
 <p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
 <p>大概原理：写个脚本</p>
 <ol>
@@ -280,8 +280,8 @@
 <li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
 </ol>
 <a id="more"></a>
-<h2 id="安装">安装</h2><h3 id="windows">windows</h3><p>此项目是开发windows应用程序，正好在<a href="http://www.onlinedown.net/soft/172085.htm" target="_blank" rel="external">华军</a>有1.575的安装版，安装后就能用，省去不少事，访问<a href="http://localhost:8080/" target="_blank" rel="external">http://你的IP:8080/</a>就能看到jenkins的dashboard。</p>
-<h3 id="ubuntu">ubuntu</h3><p>家里木有windows，只能在ubuntu上安装一份，用于截图了。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h3><p>此项目是开发windows应用程序，正好在<a href="http://www.onlinedown.net/soft/172085.htm" target="_blank" rel="external">华军</a>有1.575的安装版，安装后就能用，省去不少事，访问<a href="http://localhost:8080/" target="_blank" rel="external">http://你的IP:8080/</a>就能看到jenkins的dashboard。</p>
+<h3 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h3><p>家里木有windows，只能在ubuntu上安装一份，用于截图了。</p>
 <ul>
 <li>JAVA，TOMCAT自然是少不了的。</li>
 <li>在<a href="http://jenkins-ci.org/" target="_blank" rel="external">官网</a>下载Jenkins.war，然后拷贝到你的tomcat的webapps下。</li>
@@ -289,7 +289,7 @@
 <li>进入<a href="http://localhost:8080/jenkins/" target="_blank" rel="external">http://localhost:8080/jenkins/</a>，熟悉的dashboard又出现了。</li>
 </ul>
 <p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/jenkins/jenkins_welcome.png" alt=""></p>
-<h2 id="开工">开工</h2><h3 id="下载插件">下载插件</h3><p>由于公司坑爹的网络设置，无法直接在线更新，只能采用手动下载。以Build Pipeline Plugin为例示范一下</p>
+<h2 id="开工"><a href="#开工" class="headerlink" title="开工"></a>开工</h2><h3 id="下载插件"><a href="#下载插件" class="headerlink" title="下载插件"></a>下载插件</h3><p>由于公司坑爹的网络设置，无法直接在线更新，只能采用手动下载。以Build Pipeline Plugin为例示范一下</p>
 <ul>
 <li>进入 plugin manager，找到并点击<a href="https://wiki.jenkins-ci.org/display/JENKINS/Build+Pipeline+Plugin" target="_blank" rel="external">Build Pipeline Plugin</a></li>
 <li>在表格左上角找到Lastest Release，点击<a href="http://updates.jenkins-ci.org/download/plugins/build-pipeline-plugin/" target="_blank" rel="external">archives</a>，下载你喜欢的版本即可。</li>

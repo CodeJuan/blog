@@ -54,7 +54,7 @@
 把某工程的vcxproj及filter拷贝到UT目录
 替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径">
 <meta property="og:image" content="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/ut_migrate/UT_gtest.png">
-<meta property="og:updated_time" content="2015-08-04T14:28:02.431Z">
+<meta property="og:updated_time" content="2016-06-01T12:58:15.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一键式给VC工程创建UT工程">
 <meta name="twitter:description" content="前言项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。
@@ -228,7 +228,7 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2014-12-24T23:30:09+08:00" content="2014-12-24">
+          <time itemprop="dateCreated" datetime="2014-12-24T15:30:09+00:00" content="2014-12-24">
             2014-12-24
           </time>
         </span>
@@ -269,8 +269,8 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="前言">前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
-<h2 id="人肉创建">人肉创建</h2><p>验证此方法是否可行</p>
+        <span itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>项目组要求给已有的几十个VC工程添加配套的UT工程，需要覆盖到每个类(即每个CPP都要有对应的TEST)。简单观察了一下，还是选用add existing item to project添加.cpp.h的方法最为简单。</p>
+<h2 id="人肉创建"><a href="#人肉创建" class="headerlink" title="人肉创建"></a>人肉创建</h2><p>验证此方法是否可行</p>
 <ol>
 <li>把某工程的vcxproj及filter拷贝到UT目录</li>
 <li>替换掉vcxproj里的CIinclude, resourceInclude的路径为相对路径</li>
@@ -282,16 +282,16 @@
 <li>gtest gmock的runtime lib都改为/mdd</li>
 </ol>
 <a id="more"></a>
-<h4 id="果然可以">果然可以</h4><p>效果如图</p>
+<h4 id="果然可以"><a href="#果然可以" class="headerlink" title="果然可以"></a>果然可以</h4><p>效果如图</p>
 <p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/ut_migrate/UT_gtest.png" alt=""></p>
-<h2 id="powershell_脚本">powershell 脚本</h2><p>说白了就是用脚本处理vcxproj(其实就xml)，把上文提到的几个步骤都用脚本实现。</p>
+<h2 id="powershell-脚本"><a href="#powershell-脚本" class="headerlink" title="powershell 脚本"></a>powershell 脚本</h2><p>说白了就是用脚本处理vcxproj(其实就xml)，把上文提到的几个步骤都用脚本实现。</p>
 <pre><code class="powershell"><span class="variable">$path</span>= gi .\abc.xml
 <span class="variable">$xmldata</span> = [xml](<span class="built_in">Get-Content</span> <span class="variable">$path</span>)
 <span class="variable">$xmldata</span>.rss.channel.title
 <span class="variable">$xmldata</span>.rss.channel.title=<span class="string">"abc"</span>
 <span class="variable">$xmldata</span>.save(<span class="variable">$path</span>.fullname)
 </code></pre>
-<h2 id="conclusion">conclusion</h2><p>花了半天的时间把创建方法及脚本写好，省去N个人的重复劳动。通过脚本实现，还不容易出错。<br>YEAH!!</p>
+<h2 id="conclusion"><a href="#conclusion" class="headerlink" title="conclusion"></a>conclusion</h2><p>花了半天的时间把创建方法及脚本写好，省去N个人的重复劳动。通过脚本实现，还不容易出错。<br>YEAH!!</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -319,7 +319,7 @@
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2014/12/01/Vld2CI/" rel="next">VLD集成到CI自动化检测内存泄露</a>
+              <a href="/2014/11/30/Vld2CI/" rel="next">VLD集成到CI自动化检测内存泄露</a>
             
           </div>
         </div>
@@ -455,7 +455,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#人肉创建"><span class="nav-number">2.</span> <span class="nav-text">人肉创建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#果然可以"><span class="nav-number">2.0.1.</span> <span class="nav-text">果然可以</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#powershell_脚本"><span class="nav-number">3.</span> <span class="nav-text">powershell 脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conclusion"><span class="nav-number">4.</span> <span class="nav-text">conclusion</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#人肉创建"><span class="nav-number">2.</span> <span class="nav-text">人肉创建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#果然可以"><span class="nav-number">2.0.1.</span> <span class="nav-text">果然可以</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#powershell-脚本"><span class="nav-number">3.</span> <span class="nav-text">powershell 脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conclusion"><span class="nav-number">4.</span> <span class="nav-text">conclusion</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
