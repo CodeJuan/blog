@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-06-04T10:41:19.816Z</updated>
+  <updated>2016-06-13T12:05:37.726Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
     <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
     <published>2016-05-30T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。&lt;br&gt;之前用过Travis ci，感觉不错，打算继续用它。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -58,7 +58,7 @@
     <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
     <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
     <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.722Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。&lt;br&gt;然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -88,7 +88,7 @@
     <link href="http://blog.decbug.com/2016/05/09/tinyhttpd/"/>
     <id>http://blog.decbug.com/2016/05/09/tinyhttpd/</id>
     <published>2016-05-08T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.820Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;C语言实现的http server，代码简短，看完可以明了原理。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -127,7 +127,7 @@
     <link href="http://blog.decbug.com/2016/05/04/memcache/"/>
     <id>http://blog.decbug.com/2016/05/04/memcache/</id>
     <published>2016-05-03T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.820Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -165,7 +165,7 @@
     <link href="http://blog.decbug.com/2016/05/03/architectrue_kevin/"/>
     <id>http://blog.decbug.com/2016/05/03/architectrue_kevin/</id>
     <published>2016-05-02T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.722Z</updated>
     
     <content type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。&lt;br&gt;于是再读几遍，记录一下感想。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -204,7 +204,7 @@
     <link href="http://blog.decbug.com/2016/04/29/lock/"/>
     <id>http://blog.decbug.com/2016/04/29/lock/</id>
     <published>2016-04-28T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.820Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;锁&quot;&gt;&lt;a href=&quot;#锁&quot; class=&quot;headerlink&quot; title=&quot;锁&quot;&gt;&lt;/a&gt;锁&lt;/h1&gt;&lt;p&gt;锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。&lt;br&gt;举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。&lt;br&gt;在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。首先在业务层面进行分隔，尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -261,7 +261,7 @@
     <link href="http://blog.decbug.com/2016/04/11/interview_aliyun/"/>
     <id>http://blog.decbug.com/2016/04/11/interview_aliyun/</id>
     <published>2016-04-10T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.820Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。&lt;br&gt;于是在拉勾上投了阿里云。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -346,7 +346,7 @@
     <link href="http://blog.decbug.com/2016/04/10/interview_jd/"/>
     <id>http://blog.decbug.com/2016/04/10/interview_jd/</id>
     <published>2016-04-09T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.820Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;京东云面试记录&quot;&gt;&lt;a href=&quot;#京东云面试记录&quot; class=&quot;headerlink&quot; title=&quot;京东云面试记录&quot;&gt;&lt;/a&gt;京东云面试记录&lt;/h1&gt;&lt;p&gt;从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。&lt;br&gt;于是在拉勾投了京东云。&lt;br&gt;面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;总体感觉，面试官都很友善，我平时比较不善言语，这次在面试官的引导之下，交流比较顺畅。&lt;/p&gt;
@@ -390,7 +390,7 @@
     <link href="http://blog.decbug.com/2016/03/27/docker_swarm/"/>
     <id>http://blog.decbug.com/2016/03/27/docker_swarm/</id>
     <published>2016-03-26T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;正在撸自己的容器云，目前的业务不是复杂，所以做法比较土：自己管理集群，调用每个节点的docker daemon remote API来创建/启动/停止/删除镜像及容器，虽然简单，但是需要自己做集群管理（都还没上服务发现），比较麻烦。&lt;br&gt;此后打算用k8s，但由于其他原因，暂时搁置。后来咨询swarm的maintainer线超博，以及DaoCloud的高手们，决定采用swarm&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;采用swarm的原因&quot;&gt;&lt;a href=&quot;#采用swarm的原因&quot; class=&quot;headerlink&quot; title=&quot;采用swarm的原因&quot;&gt;&lt;/a&gt;采用swarm的原因&lt;/h1&gt;&lt;ol&gt;
@@ -473,7 +473,7 @@
     <link href="http://blog.decbug.com/2016/02/28/docker_kubernetes/"/>
     <id>http://blog.decbug.com/2016/02/28/docker_kubernetes/</id>
     <published>2016-02-27T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;需要做一个容器云，有同事在撸mesos+marathon+chronos，我就顺便折腾下kubernetes。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;kubernetes简介&quot;&gt;&lt;a href=&quot;#kubernetes简介&quot; class=&quot;headerlink&quot; title=&quot;kubernetes简介&quot;&gt;&lt;/a&gt;kubernetes简介&lt;/h1&gt;&lt;blockquote&gt;
@@ -525,7 +525,7 @@
     <link href="http://blog.decbug.com/2016/02/17/go_image_build/"/>
     <id>http://blog.decbug.com/2016/02/17/go_image_build/</id>
     <published>2016-02-16T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;功能&quot;&gt;&lt;a href=&quot;#功能&quot; class=&quot;headerlink&quot; title=&quot;功能&quot;&gt;&lt;/a&gt;功能&lt;/h1&gt;&lt;p&gt;前面已经把私有registry，镜像下载加速器(&lt;a href=&quot;http://docs.alauda.cn/feature/accelerator.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;摸我&lt;/a&gt;，其实就是基于registry官方镜像设置一个proxy，超级简单)完成了。&lt;br&gt;这个时候就可以提供类似Daoloud的代码构建功能啦&lt;/p&gt;
 &lt;ol&gt;
@@ -599,7 +599,7 @@
     <link href="http://blog.decbug.com/2016/02/01/msg_arch/"/>
     <id>http://blog.decbug.com/2016/02/01/msg_arch/</id>
     <published>2016-01-31T17:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.820Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;哈哈哈&quot;&gt;&lt;a href=&quot;#哈哈哈&quot; class=&quot;headerlink&quot; title=&quot;哈哈哈&quot;&gt;&lt;/a&gt;哈哈哈&lt;/h1&gt;&lt;p&gt;手画的架构图&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -628,7 +628,7 @@
     <link href="http://blog.decbug.com/2016/01/31/planning2016/"/>
     <id>http://blog.decbug.com/2016/01/31/planning2016/</id>
     <published>2016-01-30T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.820Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;p&gt;总觉得今天才是2015的最后一天，那么就计划一下2016吧&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;英语&quot;&gt;&lt;a href=&quot;#英语&quot; class=&quot;headerlink&quot; title=&quot;英语&quot;&gt;&lt;/a&gt;英语&lt;/h1&gt;&lt;ol&gt;
@@ -664,7 +664,7 @@
     <link href="http://blog.decbug.com/2016/01/13/docker_distribution_nexus/"/>
     <id>http://blog.decbug.com/2016/01/13/docker_distribution_nexus/</id>
     <published>2016-01-12T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;前面说到要搭建自己的私有docker云，尝试了registry，感觉还不错。&lt;br&gt;不过，今天有大神推荐nexus3，说很方便。所以呢，我就尝试一下。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;下载安装nexu3-repo-manager-oss&quot;&gt;&lt;a href=&quot;#下载安装nexu3-repo-manager-oss&quot; class=&quot;headerlink&quot; title=&quot;下载安装nexu3 repo manager oss&quot;&gt;&lt;/a&gt;下载安装nexu3 repo manager oss&lt;/h1&gt;&lt;p&gt;下载链接&lt;a href=&quot;https://support.sonatype.com/hc/en-us/articles/213466018-Nexus-Repository-Manager-3-0-Technology-Preview-Milestone-6-Release-&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://support.sonatype.com/hc/en-us/articles/213466018-Nexus-Repository-Manager-3-0-Technology-Preview-Milestone-6-Release-&lt;/a&gt;&lt;br&gt;我选择了&lt;a href=&quot;http://download.sonatype.com/nexus/oss/nexus-installer-3.0.0-m6-unix-archive.tar.gz&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Unix bundle&lt;/a&gt;&lt;br&gt;&lt;figure class=&quot;highlight sh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;wget http://download.sonatype.com/nexus/oss/nexus-installer-&lt;span class=&quot;number&quot;&gt;3.0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;-m6-unix-archive.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;tar -zxf nexus-installer-&lt;span class=&quot;number&quot;&gt;3.0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;-m6-unix-archive.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;cd&lt;/span&gt; nexus-installer-&lt;span class=&quot;number&quot;&gt;3.0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;-m6-unix-archive&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;cd&lt;/span&gt; bin&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;./nexus run&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
@@ -700,7 +700,7 @@
     <link href="http://blog.decbug.com/2016/01/12/docker_distribution/"/>
     <id>http://blog.decbug.com/2016/01/12/docker_distribution/</id>
     <published>2016-01-11T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;要搞自己的容器云了，那么就得有自己的docker hub，于是采用&lt;a href=&quot;https://github.com/docker/docker-registry&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;docker/registry V1&lt;/a&gt;。&lt;br&gt;但由于registry V1荒废许久，所以最后决定采用&lt;a href=&quot;https://github.com/docker/distribution&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;docker/distribution&lt;/a&gt;&lt;br&gt;鉴于很多地方称呼distribution为registry V2，我这里就不区分版本了，都叫做registry好了。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;通过docker运行&quot;&gt;&lt;a href=&quot;#通过docker运行&quot; class=&quot;headerlink&quot; title=&quot;通过docker运行&quot;&gt;&lt;/a&gt;通过docker运行&lt;/h1&gt;&lt;p&gt;先尝试一个简单的用法，即直接pull一个registry好了&lt;br&gt;&lt;figure class=&quot;highlight sh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 从DaoCloud pull一个registry镜像&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;docker pull daocloud.io/library/registry:&lt;span class=&quot;number&quot;&gt;2.2&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;docker run -p &lt;span class=&quot;number&quot;&gt;5000&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;5000&lt;/span&gt; --name registry daocloud.io/library/registry:&lt;span class=&quot;number&quot;&gt;2.2&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;docker pull golang:&lt;span class=&quot;number&quot;&gt;1.5&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;docker tag golang:&lt;span class=&quot;number&quot;&gt;1.5&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; localhost:&lt;span class=&quot;number&quot;&gt;5000&lt;/span&gt;/golang&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;docker push localhost:&lt;span class=&quot;number&quot;&gt;5000&lt;/span&gt;/golang&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
@@ -736,7 +736,7 @@
     <link href="http://blog.decbug.com/2016/01/12/docker_distribution_build/"/>
     <id>http://blog.decbug.com/2016/01/12/docker_distribution_build/</id>
     <published>2016-01-11T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;架构&quot;&gt;&lt;a href=&quot;#架构&quot; class=&quot;headerlink&quot; title=&quot;架构&quot;&gt;&lt;/a&gt;架构&lt;/h1&gt;&lt;p&gt;&lt;img src=&quot;http://dockerone.com/uploads/article/20150512/1e111941614512fcc0bdeb2e80ee9384.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
@@ -801,7 +801,7 @@
     <link href="http://blog.decbug.com/2016/01/11/docker_compose/"/>
     <id>http://blog.decbug.com/2016/01/11/docker_compose/</id>
     <published>2016-01-10T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;之前已经把docker的常用命令都试了一遍，也通过命令启动了一个django+mysql+redis的应用。需要敲很多行命令才能完成，感觉还是有些麻烦。&lt;br&gt;有鉴于此，正好可以尝试一下docker-compose，通过一个yml文件，就能启动一个服务。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;docker-compose简介&quot;&gt;&lt;a href=&quot;#docker-compose简介&quot; class=&quot;headerlink&quot; title=&quot;docker-compose简介&quot;&gt;&lt;/a&gt;docker-compose简介&lt;/h1&gt;&lt;blockquote&gt;
@@ -848,7 +848,7 @@
     <link href="http://blog.decbug.com/2016/01/05/django/"/>
     <id>http://blog.decbug.com/2016/01/05/django/</id>
     <published>2016-01-04T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;开始撸django&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;figure class=&quot;highlight sh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;python manage.py startapp products&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#rm migrate&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;python manage.py sql products&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;python manage.py syncdb&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -876,7 +876,7 @@
     <link href="http://blog.decbug.com/2015/12/31/kpi/"/>
     <id>http://blog.decbug.com/2015/12/31/kpi/</id>
     <published>2015-12-30T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.820Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;有同僚吐槽KPI，言语犀利，直指要害，发人深省。&lt;br&gt;余读毕，久久不能释怀，便手抄一份置于键盘边，每日提醒自己，莫要堕落，莫要成为KPI的奴隶。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -903,7 +903,7 @@
     <link href="http://blog.decbug.com/2015/12/29/feedback_software/"/>
     <id>http://blog.decbug.com/2015/12/29/feedback_software/</id>
     <published>2015-12-28T16:00:00.000Z</published>
-    <updated>2016-06-04T10:41:19.816Z</updated>
+    <updated>2016-06-13T12:05:37.726Z</updated>
     
     <content type="html">&lt;h1 id=&quot;现实中的反馈&quot;&gt;&lt;a href=&quot;#现实中的反馈&quot; class=&quot;headerlink&quot; title=&quot;现实中的反馈&quot;&gt;&lt;/a&gt;现实中的反馈&lt;/h1&gt;&lt;p&gt;反馈，即信息的返回。在现实生活中，有很多反馈控制系统，系统的控制器会根据系统的输出进行调整，以期得到正确的输出。&lt;/p&gt;
 &lt;h2 id=&quot;一个小实验&quot;&gt;&lt;a href=&quot;#一个小实验&quot; class=&quot;headerlink&quot; title=&quot;一个小实验&quot;&gt;&lt;/a&gt;一个小实验&lt;/h2&gt;&lt;p&gt;试想，有如下三个场景&lt;/p&gt;
