@@ -4,8 +4,8 @@ date: 2016-06-20 00:00:00
 categories:
 - code
 tags: 
-- cache
-- storage
+- openstack
+- kvm
 mathjax: true
 description: 
 ---
