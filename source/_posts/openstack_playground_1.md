@@ -122,6 +122,7 @@ SPICE_REPO=http://git.trystack.cn/git/spice/spice-html5.git
 bash /stack.sh
 ```
 
+参考[http://blog.csdn.net/u011521019/article/details/51114681](http://blog.csdn.net/u011521019/article/details/51114681)
 
 ----------------------------
 
