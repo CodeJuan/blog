@@ -41,13 +41,15 @@
 
 <meta name="description" content="背景要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。那么从KVM开始，是一个不错的选择。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习KVM">
+<meta property="og:title" content="学习KVM与网络虚拟化">
 <meta property="og:url" content="http://blog.decbug.com/2016/06/20/kvm/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。那么从KVM开始，是一个不错的选择。">
-<meta property="og:updated_time" content="2016-06-20T16:12:25.096Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/network_virtualization/nat_br.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/network_virtualization/vlan.jpg">
+<meta property="og:updated_time" content="2016-06-21T11:15:18.417Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习KVM">
+<meta name="twitter:title" content="学习KVM与网络虚拟化">
 <meta name="twitter:description" content="背景要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。那么从KVM开始，是一个不错的选择。">
 
 
@@ -58,7 +60,7 @@
   };
 </script>
 
-  <title> 学习KVM | Continuous Learning </title>
+  <title> 学习KVM与网络虚拟化 | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -206,7 +208,7 @@
           
           
             
-              学习KVM
+              学习KVM与网络虚拟化
             
           
         </h1>
@@ -266,6 +268,8 @@
 <h1 id="安装KVM"><a href="#安装KVM" class="headerlink" title="安装KVM"></a>安装KVM</h1><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install qemu-kvm qemu-system libvirt-bin virt-manager bridge-utils vlan</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否支持虚拟化，要返回vmx</span></span><br><span class="line">egrep -o '(vmx|svm)' /<span class="keyword">proc</span>/cpuinfo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否安装成功</span></span><br><span class="line">sudo service libvirt-bin status</span><br></pre></td></tr></table></figure>
 <h1 id="启动虚拟机"><a href="#启动虚拟机" class="headerlink" title="启动虚拟机"></a>启动虚拟机</h1><p>下载镜像<a href="http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img" target="_blank" rel="external">cirros-0.3.4-x86_64-disk.img</a>，拷贝到<code>cp cirros-0.3.4-x86_64-disk.img /var/lib/libvirt/images/</code></p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">sudo</span> virt-manager</span><br><span class="line"></span><br><span class="line"><span class="comment"># 图形界面，创建虚拟机</span></span><br></pre></td></tr></table></figure>
+<h1 id="网络虚拟化"><a href="#网络虚拟化" class="headerlink" title="网络虚拟化"></a>网络虚拟化</h1><h2 id="nat和br"><a href="#nat和br" class="headerlink" title="nat和br"></a>nat和br</h2><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/network_virtualization/nat_br.jpg" alt=""></p>
+<h2 id="vlan"><a href="#vlan" class="headerlink" title="vlan"></a>vlan</h2><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/network_virtualization/vlan.jpg" alt=""></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -287,7 +291,7 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/06/21/essay20160620/" rel="prev">2016上半年随笔</a>
+              <a href="/2016/06/21/openstack_playground_1/" rel="prev">玩openstack:1</a>
             
           </div>
 
@@ -359,7 +363,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-count">74</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -373,7 +377,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">107</span>
+              <span class="site-state-item-count">108</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -429,7 +433,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVM基础概念"><span class="nav-number">2.</span> <span class="nav-text">KVM基础概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装KVM"><span class="nav-number">3.</span> <span class="nav-text">安装KVM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动虚拟机"><span class="nav-number">4.</span> <span class="nav-text">启动虚拟机</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVM基础概念"><span class="nav-number">2.</span> <span class="nav-text">KVM基础概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装KVM"><span class="nav-number">3.</span> <span class="nav-text">安装KVM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动虚拟机"><span class="nav-number">4.</span> <span class="nav-text">启动虚拟机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络虚拟化"><span class="nav-number">5.</span> <span class="nav-text">网络虚拟化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nat和br"><span class="nav-number">5.1.</span> <span class="nav-text">nat和br</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vlan"><span class="nav-number">5.2.</span> <span class="nav-text">vlan</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -484,7 +488,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
       var disqus_identifier = '2016/06/20/kvm/';
-      var disqus_title = '学习KVM';
+      var disqus_title = '学习KVM与网络虚拟化';
       var disqus_url = 'http://blog.decbug.com/2016/06/20/kvm/';
 
       function run_disqus_script(disqus_script){
