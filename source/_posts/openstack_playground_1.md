@@ -15,6 +15,7 @@ description:
 要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。
 昨天搞整了一下KVM和vlan，[http://blog.decbug.com/2016/06/20/kvm/](http://blog.decbug.com/2016/06/20/kvm/)
 今天就要在家搞一套openstack开发环境
+<!--more-->
 
 # devstack
 devstack是一个一键式搭建open stack环境的脚本，如官网所说`DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.`
@@ -41,7 +42,7 @@ su stack
 ```
 
 参照[官网](http://docs.openstack.org/developer/devstack/guides/neutron.html#id3)在`/opt/stack/devstack`创建local.conf，内容是
-
+记得改host_ip,service_host,PUBLIC_INTERFACE
 ## controller
 ```
 [[local|localrc]]
