@@ -1,5 +1,5 @@
 ---
-title: 学习KVM
+title: 学习KVM与网络虚拟化
 date: 2016-06-20 00:00:00
 categories:
 - code
@@ -43,6 +43,14 @@ sudo virt-manager
 # 图形界面，创建虚拟机
 
 ```
+
+# 网络虚拟化
+
+## nat和br
+![](https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/network_virtualization/nat_br.jpg)
+
+## vlan
+![](https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/network_virtualization/vlan.jpg)
 
 
 ----------------------------
