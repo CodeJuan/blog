@@ -123,7 +123,27 @@ bash /stack.sh
 ```
 
 参考[http://blog.csdn.net/u011521019/article/details/51114681](http://blog.csdn.net/u011521019/article/details/51114681)
+改成我的实际IP
+提示
+```
+2016-06-21 14:07:28.255 | ovs-ofctl: br-int is not a bridge or a socket
+2016-06-21 14:07:28.262 | ovs-ofctl: br-tun is not a bridge or a socket
+2016-06-21 14:07:28.269 | ovs-ofctl: br-ex is not a bridge or a socket
+2016-06-21 14:07:28.277 | ovs-ofctl: br-int is not a bridge or a socket
+2016-06-21 14:07:28.284 | ovs-ofctl: br-tun is not a bridge or a socket
+2016-06-21 14:07:28.292 | ovs-ofctl: br-ex is not a bridge or a socket
+2016-06-21 14:07:28.446 | +^[[3242mstack.sh:exit_trap:498                   ^[(B^[[m exit 1
 
+```
+说要unstack.sh，然后reboot，再stack.sh，然而还是一样的错
+
+
+```
+# minimal config
+# devstack generate-subunit fail
+sudo apt-get install python-pip
+sudo pip install --upgrade pip
+```
 ----------------------------
 
 `本博客欢迎转发,但请保留原作者信息`
