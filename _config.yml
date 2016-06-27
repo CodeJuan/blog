@@ -87,6 +87,7 @@ pagination_dir: page
 plugins:
  - hexo-generator-sitemap
  - hexo-generator-feed
+ - hexo-tag-plantuml
 # - hexo-tag-emojis
 ## Themes: http://hexo.io/themes/
 theme: next1
