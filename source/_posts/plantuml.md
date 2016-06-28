@@ -10,7 +10,7 @@ description:
 ---
 
 # 概念
-
+架构图即代码
 PlantUML is a open-source tool that allows to quickly write :
 - Sequence diagram,
 - Usecase diagram,
