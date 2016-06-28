@@ -1,6 +1,6 @@
 ---
 title: kubernetes自定义admission插件
-date: 2015-12-14 00:00:00
+date: 2016-06-28 00:00:00
 categories:
 - code
 tags: 
