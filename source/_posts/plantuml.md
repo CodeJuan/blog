@@ -129,7 +129,7 @@ hexo clean && hexo generate && hexo server
 
 ## 选型
 其实也没啥选的，由于linux机器都被回收，只有自己用的windows办公机，所以只能用windows了。
-前端用bootstrap+angularjs，好吧，我成人我是前端小白，其实我就只会这哥俩
+前端用bootstrap+angularjs，好吧，我承认我是前端小白，其实我就只会这哥俩
 后端就用go的gin框架，原因就是之前用gin写了个玩具，基本可以复用
 
 ## 准备工作
