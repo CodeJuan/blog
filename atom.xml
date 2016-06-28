@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-06-27T23:42:14.282Z</updated>
+  <updated>2016-06-28T15:07:33.888Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,46 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>kubernetes自定义admission插件</title>
+    <link href="http://blog.decbug.com/2016/06/28/k8s_admission/"/>
+    <id>http://blog.decbug.com/2016/06/28/k8s_admission/</id>
+    <published>2016-06-27T16:00:00.000Z</published>
+    <updated>2016-06-28T15:07:33.888Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;h2 id=&quot;quota&quot;&gt;&lt;a href=&quot;#quota&quot; class=&quot;headerlink&quot; title=&quot;quota&quot;&gt;&lt;/a&gt;quota&lt;/h2&gt;&lt;p&gt;k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。&lt;br&gt;为了实现更细粒度的quota，有必要自制一个admission插件。&lt;/p&gt;
+&lt;h2 id=&quot;ABAC&quot;&gt;&lt;a href=&quot;#ABAC&quot; class=&quot;headerlink&quot; title=&quot;ABAC&quot;&gt;&lt;/a&gt;ABAC&lt;/h2&gt;&lt;p&gt;由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;分析源码&quot;&gt;&lt;a href=&quot;#分析源码&quot; class=&quot;headerlink&quot; title=&quot;分析源码&quot;&gt;&lt;/a&gt;分析源码&lt;/h1&gt;&lt;p&gt;代码在plugin/pkg/admission，已有admit, deny, resourcequota等插件。&lt;br&gt;有两个函数需要重点关注&lt;/p&gt;
+&lt;h2 id=&quot;init&quot;&gt;&lt;a href=&quot;#init&quot; class=&quot;headerlink&quot; title=&quot;init&quot;&gt;&lt;/a&gt;init&lt;/h2&gt;&lt;figure class=&quot;highlight autoit&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	admission.RegisterPlugin(&lt;span class=&quot;string&quot;&gt;&quot;AlwaysAdmit&quot;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(client clientset.Interface, config io.Reader)&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(admission.Interface, error)&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; NewAlwaysAdmit(), nil&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;注册&lt;code&gt;AlwaysAdmit&lt;/code&gt;，返回值是&lt;code&gt;admission.Interface&lt;/code&gt;，注意看admit函数&lt;/p&gt;
+&lt;h2 id=&quot;admit&quot;&gt;&lt;a href=&quot;#admit&quot; class=&quot;headerlink&quot; title=&quot;admit&quot;&gt;&lt;/a&gt;admit&lt;/h2&gt;&lt;figure class=&quot;highlight autoit&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(alwaysAdmit)&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Admit&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(a admission.Attributes)&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(err error)&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; nil&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h1 id=&quot;自定义插件&quot;&gt;&lt;a href=&quot;#自定义插件&quot; class=&quot;headerlink&quot; title=&quot;自定义插件&quot;&gt;&lt;/a&gt;自定义插件&lt;/h1&gt;&lt;p&gt;也要实现一个init，用于注册及返回Interface。然后完成admit函数&lt;br&gt;&lt;figure class=&quot;highlight autoit&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(l *myadmission)&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Admit&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(a admission.Attributes)&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(err error)&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    // 加上我的判断逻辑&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; allow &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; nil&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; admission.NewForbidden()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;code&gt;本博客欢迎转发,但请保留原作者信息&lt;/code&gt;&lt;br&gt;github:&lt;a href=&quot;https://github.com/CodeJuan&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;codejuan&lt;/a&gt;&lt;br&gt;博客地址:&lt;a href=&quot;http://blog.decbug.com/&quot;&gt;http://blog.decbug.com/&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;h2 id=&quot;quota&quot;&gt;&lt;a href=&quot;#quota&quot; class=&quot;headerlink&quot; title=&quot;quota&quot;&gt;&lt;/a&gt;quota&lt;/h2&gt;&lt;p&gt;k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。&lt;br&gt;为了实现更细粒度的quota，有必要自制一个admission插件。&lt;/p&gt;
+&lt;h2 id=&quot;ABAC&quot;&gt;&lt;a href=&quot;#ABAC&quot; class=&quot;headerlink&quot; title=&quot;ABAC&quot;&gt;&lt;/a&gt;ABAC&lt;/h2&gt;&lt;p&gt;由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="kubernetes" scheme="http://blog.decbug.com/tags/kubernetes/"/>
+    
+  </entry>
+  
+  <entry>
     <title>plantuml</title>
     <link href="http://blog.decbug.com/2016/06/27/plantuml/"/>
     <id>http://blog.decbug.com/2016/06/27/plantuml/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.892Z</updated>
     
     <content type="html">&lt;h1 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot; title=&quot;概念&quot;&gt;&lt;/a&gt;概念&lt;/h1&gt;&lt;p&gt;架构图即代码&lt;br&gt;PlantUML is a open-source tool that allows to quickly write :&lt;/p&gt;
 &lt;ul&gt;
@@ -44,7 +79,7 @@
 &lt;h3 id=&quot;test-1&quot;&gt;&lt;a href=&quot;#test-1&quot; class=&quot;headerlink&quot; title=&quot;test&quot;&gt;&lt;/a&gt;test&lt;/h3&gt;&lt;figure class=&quot;highlight axapta&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;hexo clean &amp;amp;&amp;amp; hexo generate &amp;amp;&amp;amp; hexo &lt;span class=&quot;keyword&quot;&gt;server&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;h3 id=&quot;效果-1&quot;&gt;&lt;a href=&quot;#效果-1&quot; class=&quot;headerlink&quot; title=&quot;效果&quot;&gt;&lt;/a&gt;效果&lt;/h3&gt;&lt;img src=&quot;http://www.plantuml.com/plantuml/svg/SyfFqhLppCbCJbMmKiX8pSd91m00&quot;&gt;
 &lt;h1 id=&quot;公司内网搭建plantuml服务&quot;&gt;&lt;a href=&quot;#公司内网搭建plantuml服务&quot; class=&quot;headerlink&quot; title=&quot;公司内网搭建plantuml服务&quot;&gt;&lt;/a&gt;公司内网搭建plantuml服务&lt;/h1&gt;&lt;p&gt;虽然&lt;a href=&quot;http://plantuml.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://plantuml.com/&lt;/a&gt;提供了online server，但是由于信息安全问题，不能直接把代码贴到那生成图片，所以需要自己在内网建一个.&lt;/p&gt;
-&lt;h2 id=&quot;选型&quot;&gt;&lt;a href=&quot;#选型&quot; class=&quot;headerlink&quot; title=&quot;选型&quot;&gt;&lt;/a&gt;选型&lt;/h2&gt;&lt;p&gt;其实也没啥选的，由于linux机器都被回收，只有自己用的windows办公机，所以只能用windows了。&lt;br&gt;前端用bootstrap+angularjs，好吧，我成人我是前端小白，其实我就只会这哥俩&lt;br&gt;后端就用go的gin框架，原因就是之前用gin写了个玩具，基本可以复用&lt;/p&gt;
+&lt;h2 id=&quot;选型&quot;&gt;&lt;a href=&quot;#选型&quot; class=&quot;headerlink&quot; title=&quot;选型&quot;&gt;&lt;/a&gt;选型&lt;/h2&gt;&lt;p&gt;其实也没啥选的，由于linux机器都被回收，只有自己用的windows办公机，所以只能用windows了。&lt;br&gt;前端用bootstrap+angularjs，好吧，我承认我是前端小白，其实我就只会这哥俩&lt;br&gt;后端就用go的gin框架，原因就是之前用gin写了个玩具，基本可以复用&lt;/p&gt;
 &lt;h2 id=&quot;准备工作&quot;&gt;&lt;a href=&quot;#准备工作&quot; class=&quot;headerlink&quot; title=&quot;准备工作&quot;&gt;&lt;/a&gt;准备工作&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;plantuml需要jdk&lt;/li&gt;
 &lt;li&gt;下载plantuml.jar，进入&lt;a href=&quot;http://plantuml.com/download.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://plantuml.com/download.html&lt;/a&gt;，下载last version，&lt;a href=&quot;http://sourceforge.net/projects/plantuml/files/plantuml.jar/download&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://sourceforge.net/projects/plantuml/files/plantuml.jar/download&lt;/a&gt;&lt;/li&gt;
@@ -94,7 +129,7 @@
     <link href="http://blog.decbug.com/2016/06/23/flannel/"/>
     <id>http://blog.decbug.com/2016/06/23/flannel/</id>
     <published>2016-06-22T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;p&gt;正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -153,7 +188,7 @@
     <link href="http://blog.decbug.com/2016/06/21/openstack_playground_1/"/>
     <id>http://blog.decbug.com/2016/06/21/openstack_playground_1/</id>
     <published>2016-06-21T11:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.892Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。&lt;br&gt;昨天搞整了一下KVM和vlan，&lt;a href=&quot;http://blog.decbug.com/2016/06/20/kvm/&quot;&gt;http://blog.decbug.com/2016/06/20/kvm/&lt;/a&gt;&lt;br&gt;今天就要在家搞一套openstack开发环境&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;devstack&quot;&gt;&lt;a href=&quot;#devstack&quot; class=&quot;headerlink&quot; title=&quot;devstack&quot;&gt;&lt;/a&gt;devstack&lt;/h1&gt;&lt;p&gt;devstack是一个一键式搭建open stack环境的脚本，如官网所说&lt;code&gt;DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.&lt;/code&gt;&lt;br&gt;&lt;figure class=&quot;highlight stata&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;git clone https:&lt;span class=&quot;comment&quot;&gt;//github.com/openstack-dev/devstack.git&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;cd&lt;/span&gt; devstack/&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# 切换到&lt;span class=&quot;keyword&quot;&gt;m&lt;/span&gt;版本分支&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;git co stable/mitaka&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;cd&lt;/span&gt; tools&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# 创建&lt;span class=&quot;keyword&quot;&gt;stack&lt;/span&gt;用户&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo bash create-&lt;span class=&quot;keyword&quot;&gt;stack&lt;/span&gt;-user.&lt;span class=&quot;keyword&quot;&gt;sh&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# &lt;span class=&quot;keyword&quot;&gt;cd&lt;/span&gt; ../../&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo mv devstack /opt/&lt;span class=&quot;keyword&quot;&gt;stack&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo chown -R &lt;span class=&quot;keyword&quot;&gt;stack&lt;/span&gt;:&lt;span class=&quot;keyword&quot;&gt;stack&lt;/span&gt; /opt/&lt;span class=&quot;keyword&quot;&gt;stack&lt;/span&gt;/devstack&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# switch to &lt;span class=&quot;keyword&quot;&gt;stack&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo -&lt;span class=&quot;literal&quot;&gt;i&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;su&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;stack&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
@@ -188,7 +223,7 @@
     <link href="http://blog.decbug.com/2016/06/21/blog_huawei/"/>
     <id>http://blog.decbug.com/2016/06/21/blog_huawei/</id>
     <published>2016-06-20T18:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.278Z</updated>
+    <updated>2016-06-28T15:07:33.884Z</updated>
     
     <content type="html">&lt;h1 id=&quot;说明&quot;&gt;&lt;a href=&quot;#说明&quot; class=&quot;headerlink&quot; title=&quot;说明&quot;&gt;&lt;/a&gt;说明&lt;/h1&gt;&lt;p&gt;在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;install&quot;&gt;&lt;a href=&quot;#install&quot; class=&quot;headerlink&quot; title=&quot;install&quot;&gt;&lt;/a&gt;install&lt;/h1&gt;&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/7.jpeg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
@@ -220,7 +255,7 @@
     <link href="http://blog.decbug.com/2016/06/21/essay20160620/"/>
     <id>http://blog.decbug.com/2016/06/21/essay20160620/</id>
     <published>2016-06-20T17:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;p&gt;时间已经来到2016的6月底，是时候回顾这上半年的收获与教训&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;工作&quot;&gt;&lt;a href=&quot;#工作&quot; class=&quot;headerlink&quot; title=&quot;工作&quot;&gt;&lt;/a&gt;工作&lt;/h1&gt;&lt;ul&gt;
@@ -284,7 +319,7 @@
     <link href="http://blog.decbug.com/2016/06/20/kvm/"/>
     <id>http://blog.decbug.com/2016/06/20/kvm/</id>
     <published>2016-06-19T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。&lt;br&gt;那么从KVM开始，是一个不错的选择。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -322,7 +357,7 @@
     <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
     <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
     <published>2016-05-30T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。&lt;br&gt;之前用过Travis ci，感觉不错，打算继续用它。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -360,7 +395,7 @@
     <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
     <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
     <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.278Z</updated>
+    <updated>2016-06-28T15:07:33.884Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。&lt;br&gt;然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -390,7 +425,7 @@
     <link href="http://blog.decbug.com/2016/05/09/tinyhttpd/"/>
     <id>http://blog.decbug.com/2016/05/09/tinyhttpd/</id>
     <published>2016-05-08T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.892Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;C语言实现的http server，代码简短，看完可以明了原理。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -429,7 +464,7 @@
     <link href="http://blog.decbug.com/2016/05/04/memcache/"/>
     <id>http://blog.decbug.com/2016/05/04/memcache/</id>
     <published>2016-05-03T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -467,7 +502,7 @@
     <link href="http://blog.decbug.com/2016/05/03/architectrue_kevin/"/>
     <id>http://blog.decbug.com/2016/05/03/architectrue_kevin/</id>
     <published>2016-05-02T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.278Z</updated>
+    <updated>2016-06-28T15:07:33.884Z</updated>
     
     <content type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。&lt;br&gt;于是再读几遍，记录一下感想。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -506,7 +541,7 @@
     <link href="http://blog.decbug.com/2016/04/29/lock/"/>
     <id>http://blog.decbug.com/2016/04/29/lock/</id>
     <published>2016-04-28T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;锁&quot;&gt;&lt;a href=&quot;#锁&quot; class=&quot;headerlink&quot; title=&quot;锁&quot;&gt;&lt;/a&gt;锁&lt;/h1&gt;&lt;p&gt;锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。&lt;br&gt;举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。&lt;br&gt;在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。首先在业务层面进行分隔，尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -563,7 +598,7 @@
     <link href="http://blog.decbug.com/2016/04/11/interview_aliyun/"/>
     <id>http://blog.decbug.com/2016/04/11/interview_aliyun/</id>
     <published>2016-04-10T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。&lt;br&gt;于是在拉勾上投了阿里云。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -648,7 +683,7 @@
     <link href="http://blog.decbug.com/2016/04/10/interview_jd/"/>
     <id>http://blog.decbug.com/2016/04/10/interview_jd/</id>
     <published>2016-04-09T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;京东云面试记录&quot;&gt;&lt;a href=&quot;#京东云面试记录&quot; class=&quot;headerlink&quot; title=&quot;京东云面试记录&quot;&gt;&lt;/a&gt;京东云面试记录&lt;/h1&gt;&lt;p&gt;从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。&lt;br&gt;于是在拉勾投了京东云。&lt;br&gt;面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;总体感觉，面试官都很友善，我平时比较不善言语，这次在面试官的引导之下，交流比较顺畅。&lt;/p&gt;
@@ -692,7 +727,7 @@
     <link href="http://blog.decbug.com/2016/03/27/docker_swarm/"/>
     <id>http://blog.decbug.com/2016/03/27/docker_swarm/</id>
     <published>2016-03-26T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;正在撸自己的容器云，目前的业务不是复杂，所以做法比较土：自己管理集群，调用每个节点的docker daemon remote API来创建/启动/停止/删除镜像及容器，虽然简单，但是需要自己做集群管理（都还没上服务发现），比较麻烦。&lt;br&gt;此后打算用k8s，但由于其他原因，暂时搁置。后来咨询swarm的maintainer线超博，以及DaoCloud的高手们，决定采用swarm&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;采用swarm的原因&quot;&gt;&lt;a href=&quot;#采用swarm的原因&quot; class=&quot;headerlink&quot; title=&quot;采用swarm的原因&quot;&gt;&lt;/a&gt;采用swarm的原因&lt;/h1&gt;&lt;ol&gt;
@@ -775,7 +810,7 @@
     <link href="http://blog.decbug.com/2016/02/28/docker_kubernetes/"/>
     <id>http://blog.decbug.com/2016/02/28/docker_kubernetes/</id>
     <published>2016-02-27T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;需要做一个容器云，有同事在撸mesos+marathon+chronos，我就顺便折腾下kubernetes。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;kubernetes简介&quot;&gt;&lt;a href=&quot;#kubernetes简介&quot; class=&quot;headerlink&quot; title=&quot;kubernetes简介&quot;&gt;&lt;/a&gt;kubernetes简介&lt;/h1&gt;&lt;blockquote&gt;
@@ -827,7 +862,7 @@
     <link href="http://blog.decbug.com/2016/02/17/go_image_build/"/>
     <id>http://blog.decbug.com/2016/02/17/go_image_build/</id>
     <published>2016-02-16T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;功能&quot;&gt;&lt;a href=&quot;#功能&quot; class=&quot;headerlink&quot; title=&quot;功能&quot;&gt;&lt;/a&gt;功能&lt;/h1&gt;&lt;p&gt;前面已经把私有registry，镜像下载加速器(&lt;a href=&quot;http://docs.alauda.cn/feature/accelerator.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;摸我&lt;/a&gt;，其实就是基于registry官方镜像设置一个proxy，超级简单)完成了。&lt;br&gt;这个时候就可以提供类似Daoloud的代码构建功能啦&lt;/p&gt;
 &lt;ol&gt;
@@ -901,7 +936,7 @@
     <link href="http://blog.decbug.com/2016/02/01/msg_arch/"/>
     <id>http://blog.decbug.com/2016/02/01/msg_arch/</id>
     <published>2016-01-31T17:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.888Z</updated>
     
     <content type="html">&lt;h1 id=&quot;哈哈哈&quot;&gt;&lt;a href=&quot;#哈哈哈&quot; class=&quot;headerlink&quot; title=&quot;哈哈哈&quot;&gt;&lt;/a&gt;哈哈哈&lt;/h1&gt;&lt;p&gt;手画的架构图&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -930,7 +965,7 @@
     <link href="http://blog.decbug.com/2016/01/31/planning2016/"/>
     <id>http://blog.decbug.com/2016/01/31/planning2016/</id>
     <published>2016-01-30T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
+    <updated>2016-06-28T15:07:33.892Z</updated>
     
     <content type="html">&lt;p&gt;总觉得今天才是2015的最后一天，那么就计划一下2016吧&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;英语&quot;&gt;&lt;a href=&quot;#英语&quot; class=&quot;headerlink&quot; title=&quot;英语&quot;&gt;&lt;/a&gt;英语&lt;/h1&gt;&lt;ol&gt;
@@ -958,42 +993,6 @@
     
     
       <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>docker(4)-nexus3</title>
-    <link href="http://blog.decbug.com/2016/01/13/docker_distribution_nexus/"/>
-    <id>http://blog.decbug.com/2016/01/13/docker_distribution_nexus/</id>
-    <published>2016-01-12T16:00:00.000Z</published>
-    <updated>2016-06-27T23:42:14.282Z</updated>
-    
-    <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;前面说到要搭建自己的私有docker云，尝试了registry，感觉还不错。&lt;br&gt;不过，今天有大神推荐nexus3，说很方便。所以呢，我就尝试一下。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;h1 id=&quot;下载安装nexu3-repo-manager-oss&quot;&gt;&lt;a href=&quot;#下载安装nexu3-repo-manager-oss&quot; class=&quot;headerlink&quot; title=&quot;下载安装nexu3 repo manager oss&quot;&gt;&lt;/a&gt;下载安装nexu3 repo manager oss&lt;/h1&gt;&lt;p&gt;下载链接&lt;a href=&quot;https://support.sonatype.com/hc/en-us/articles/213466018-Nexus-Repository-Manager-3-0-Technology-Preview-Milestone-6-Release-&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://support.sonatype.com/hc/en-us/articles/213466018-Nexus-Repository-Manager-3-0-Technology-Preview-Milestone-6-Release-&lt;/a&gt;&lt;br&gt;我选择了&lt;a href=&quot;http://download.sonatype.com/nexus/oss/nexus-installer-3.0.0-m6-unix-archive.tar.gz&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Unix bundle&lt;/a&gt;&lt;br&gt;&lt;figure class=&quot;highlight sh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;wget http://download.sonatype.com/nexus/oss/nexus-installer-&lt;span class=&quot;number&quot;&gt;3.0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;-m6-unix-archive.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;tar -zxf nexus-installer-&lt;span class=&quot;number&quot;&gt;3.0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;-m6-unix-archive.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;cd&lt;/span&gt; nexus-installer-&lt;span class=&quot;number&quot;&gt;3.0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;-m6-unix-archive&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;cd&lt;/span&gt; bin&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;./nexus run&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;时间会比较久，直到出现&lt;strong&gt;Started Nexus Repository Manager 3.0.0-xxxxxxx&lt;/strong&gt;&lt;br&gt;然后访问&lt;a href=&quot;http://192.168.1.173:8081/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://192.168.1.173:8081/&lt;/a&gt;，其中的IP换成安装nexus3机器的IP&lt;/p&gt;
-&lt;h1 id=&quot;配置https&quot;&gt;&lt;a href=&quot;#配置https&quot; class=&quot;headerlink&quot; title=&quot;配置https&quot;&gt;&lt;/a&gt;配置https&lt;/h1&gt;&lt;p&gt;registry V2需要https，参考这里进行配置&lt;a href=&quot;https://books.sonatype.com/nexus-book/3.0/reference/security.html#ssl-inbound&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://books.sonatype.com/nexus-book/3.0/reference/security.html#ssl-inbound&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;还有这位印度GG的视频&lt;a href=&quot;http://www.sonatype.org/nexus/2015/09/22/docker-and-nexus-3-ready-set-action/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.sonatype.org/nexus/2015/09/22/docker-and-nexus-3-ready-set-action/&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;按照&lt;a href=&quot;http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html&lt;/a&gt;生成不了jdx，奇怪&lt;/p&gt;
-&lt;p&gt;个人感觉还是nexus比原生的registry好用，希望能搞定&lt;/p&gt;
-&lt;p&gt;累成狗了，明天继续&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;&lt;code&gt;本博客欢迎转发,但请保留原作者信息&lt;/code&gt;&lt;br&gt;github:&lt;a href=&quot;https://github.com/CodeJuan&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;codejuan&lt;/a&gt;&lt;br&gt;博客地址:&lt;a href=&quot;http://blog.decbug.com/&quot;&gt;http://blog.decbug.com/&lt;/a&gt;&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;前面说到要搭建自己的私有docker云，尝试了registry，感觉还不错。&lt;br&gt;不过，今天有大神推荐nexus3，说很方便。所以呢，我就尝试一下。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="docker-distribution" scheme="http://blog.decbug.com/tags/docker-distribution/"/>
-    
-      <category term="docker-registry" scheme="http://blog.decbug.com/tags/docker-registry/"/>
     
   </entry>
   

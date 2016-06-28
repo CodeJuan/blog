@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="CPU,jenkins,memory," />
+  <meta name="keywords" content="docker,kubernetes," />
 
 
 
@@ -39,29 +39,19 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="背景组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。
-老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。
-大概原理：写个脚本
-
-取得构建包列表。下载没有测试过的最新的包。">
+<meta name="description" content="背景quotak8s的resourcequota的粒度太粗，只能针对namespace级进行quota。为了实现更细粒度的quota，有必要自制一个admission插件。
+ABAC由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用jenkins监控程序内存CPU">
-<meta property="og:url" content="http://blog.decbug.com/2015/01/12/jenkins/index.html">
+<meta property="og:title" content="kubernetes自定义admission插件">
+<meta property="og:url" content="http://blog.decbug.com/2016/06/28/k8s_admission/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="背景组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。
-老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。
-大概原理：写个脚本
-
-取得构建包列表。下载没有测试过的最新的包。">
-<meta property="og:image" content="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/jenkins/jenkins_welcome.png">
+<meta property="og:description" content="背景quotak8s的resourcequota的粒度太粗，只能针对namespace级进行quota。为了实现更细粒度的quota，有必要自制一个admission插件。
+ABAC由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd">
 <meta property="og:updated_time" content="2016-06-28T15:07:33.888Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用jenkins监控程序内存CPU">
-<meta name="twitter:description" content="背景组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。
-老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。
-大概原理：写个脚本
-
-取得构建包列表。下载没有测试过的最新的包。">
+<meta name="twitter:title" content="kubernetes自定义admission插件">
+<meta name="twitter:description" content="背景quotak8s的resourcequota的粒度太粗，只能针对namespace级进行quota。为了实现更细粒度的quota，有必要自制一个admission插件。
+ABAC由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -71,7 +61,7 @@
   };
 </script>
 
-  <title> 用jenkins监控程序内存CPU | Continuous Learning </title>
+  <title> kubernetes自定义admission插件 | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -219,7 +209,7 @@
           
           
             
-              用jenkins监控程序内存CPU
+              kubernetes自定义admission插件
             
           
         </h1>
@@ -228,8 +218,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-01-12T23:30:09+08:00" content="2015-01-12">
-            2015-01-12
+          <time itemprop="dateCreated" datetime="2016-06-28T00:00:00+08:00" content="2016-06-28">
+            2016-06-28
           </time>
         </span>
 
@@ -254,8 +244,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/01/12/jenkins/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/12/jenkins/" itemprop="commentsCount"></span>
+            <a href="/2016/06/28/k8s_admission/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/06/28/k8s_admission/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -269,32 +259,14 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
-<p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
-<p>大概原理：写个脚本</p>
-<ol>
-<li>取得构建包列表。下载没有测试过的最新的包。</li>
-<li>读配置文件，获取测试用例，期望运行时间，期望内存峰值及均值。</li>
-<li>自动运行程序，每1s采样一次进程内存大小，记录在日志里。</li>
-<li>当程序结束时，计算运行时间间隔，与期望值比较，如果超出，则红。</li>
-<li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
-</ol>
+        <span itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h2><p>k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。<br>为了实现更细粒度的quota，有必要自制一个admission插件。</p>
+<h2 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h2><p>由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd</p>
 <a id="more"></a>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h3><p>此项目是开发windows应用程序，正好在<a href="http://www.onlinedown.net/soft/172085.htm" target="_blank" rel="external">华军</a>有1.575的安装版，安装后就能用，省去不少事，访问<a href="http://localhost:8080/" target="_blank" rel="external">http://你的IP:8080/</a>就能看到jenkins的dashboard。</p>
-<h3 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h3><p>家里木有windows，只能在ubuntu上安装一份，用于截图了。</p>
-<ul>
-<li>JAVA，TOMCAT自然是少不了的。</li>
-<li>在<a href="http://jenkins-ci.org/" target="_blank" rel="external">官网</a>下载Jenkins.war，然后拷贝到你的tomcat的webapps下。</li>
-<li>启动tomcat，运行tomcat/bin下destartup，命令： sudo sh startup.sh。</li>
-<li>进入<a href="http://localhost:8080/jenkins/" target="_blank" rel="external">http://localhost:8080/jenkins/</a>，熟悉的dashboard又出现了。</li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/jenkins/jenkins_welcome.png" alt=""></p>
-<h2 id="开工"><a href="#开工" class="headerlink" title="开工"></a>开工</h2><h3 id="下载插件"><a href="#下载插件" class="headerlink" title="下载插件"></a>下载插件</h3><p>由于公司坑爹的网络设置，无法直接在线更新，只能采用手动下载。以Build Pipeline Plugin为例示范一下</p>
-<ul>
-<li>进入 plugin manager，找到并点击<a href="https://wiki.jenkins-ci.org/display/JENKINS/Build+Pipeline+Plugin" target="_blank" rel="external">Build Pipeline Plugin</a></li>
-<li>在表格左上角找到Lastest Release，点击<a href="http://updates.jenkins-ci.org/download/plugins/build-pipeline-plugin/" target="_blank" rel="external">archives</a>，下载你喜欢的版本即可。</li>
-</ul>
-<p>未完待续</p>
+<h1 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h1><p>代码在plugin/pkg/admission，已有admit, deny, resourcequota等插件。<br>有两个函数需要重点关注</p>
+<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span> &#123;</span></span><br><span class="line">	admission.RegisterPlugin(<span class="string">"AlwaysAdmit"</span>, <span class="function"><span class="keyword">func</span><span class="params">(client clientset.Interface, config io.Reader)</span> <span class="params">(admission.Interface, error)</span> &#123;</span></span><br><span class="line">		<span class="keyword">return</span> NewAlwaysAdmit(), nil</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注册<code>AlwaysAdmit</code>，返回值是<code>admission.Interface</code>，注意看admit函数</p>
+<h2 id="admit"><a href="#admit" class="headerlink" title="admit"></a>admit</h2><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(alwaysAdmit)</span> <span class="title">Admit</span><span class="params">(a admission.Attributes)</span> <span class="params">(err error)</span> &#123;</span></span><br><span class="line">	<span class="keyword">return</span> nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="自定义插件"><a href="#自定义插件" class="headerlink" title="自定义插件"></a>自定义插件</h1><p>也要实现一个init，用于注册及返回Interface。然后完成admit函数<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *myadmission)</span> <span class="title">Admit</span><span class="params">(a admission.Attributes)</span> <span class="params">(err error)</span> &#123;</span></span><br><span class="line">    // 加上我的判断逻辑</span><br><span class="line">    <span class="keyword">if</span> allow &#123;</span><br><span class="line">        <span class="keyword">return</span> nil</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> admission.NewForbidden()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -305,11 +277,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/CPU/" rel="tag">#CPU</a>
+            <a href="/tags/docker/" rel="tag">#docker</a>
           
-            <a href="/tags/jenkins/" rel="tag">#jenkins</a>
-          
-            <a href="/tags/memory/" rel="tag">#memory</a>
+            <a href="/tags/kubernetes/" rel="tag">#kubernetes</a>
           
         </div>
       
@@ -318,13 +288,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/01/15/fragment/" rel="prev">真的是内存碎片吗</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2014/12/27/understand_code/" rel="next">understand your code</a>
+              <a href="/2016/06/27/plantuml/" rel="next">plantuml</a>
             
           </div>
         </div>
@@ -460,7 +428,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#windows"><span class="nav-number">2.1.</span> <span class="nav-text">windows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ubuntu"><span class="nav-number">2.2.</span> <span class="nav-text">ubuntu</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开工"><span class="nav-number">3.</span> <span class="nav-text">开工</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载插件"><span class="nav-number">3.1.</span> <span class="nav-text">下载插件</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#quota"><span class="nav-number">1.1.</span> <span class="nav-text">quota</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ABAC"><span class="nav-number">1.2.</span> <span class="nav-text">ABAC</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析源码"><span class="nav-number">2.</span> <span class="nav-text">分析源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#init"><span class="nav-number">2.1.</span> <span class="nav-text">init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#admit"><span class="nav-number">2.2.</span> <span class="nav-text">admit</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义插件"><span class="nav-number">3.</span> <span class="nav-text">自定义插件</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -514,9 +482,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = '2015/01/12/jenkins/';
-      var disqus_title = '用jenkins监控程序内存CPU';
-      var disqus_url = 'http://blog.decbug.com/2015/01/12/jenkins/';
+      var disqus_identifier = '2016/06/28/k8s_admission/';
+      var disqus_title = 'kubernetes自定义admission插件';
+      var disqus_url = 'http://blog.decbug.com/2016/06/28/k8s_admission/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

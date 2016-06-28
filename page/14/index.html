@@ -207,6 +207,103 @@
           
           
             
+              <a class="post-title-link" href="/2015/01/12/jenkins/" itemprop="url">
+                用jenkins监控程序内存CPU
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-01-12T23:30:09+08:00" content="2015-01-12">
+            2015-01-12
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/01/12/jenkins/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/12/jenkins/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>组里有许多初学C++的小朋友，对于STL及算法的时间/空间复杂度的敏感性不强，写出来的代码虽然完成了功能，但是运行时间过长，占用内存都过大。</p>
+<p>老夫虽给小朋友们科普过几次，但效果还不是特别理想，有道是不掉坑，不长记性，古人诚不欺我。可势必不能把性能问题流到后端，老夫不得不在持续集成上增加一道小菜——检测运行时间、内存峰值及均值。</p>
+<p>大概原理：写个脚本</p>
+<ol>
+<li>取得构建包列表。下载没有测试过的最新的包。</li>
+<li>读配置文件，获取测试用例，期望运行时间，期望内存峰值及均值。</li>
+<li>自动运行程序，每1s采样一次进程内存大小，记录在日志里。</li>
+<li>当程序结束时，计算运行时间间隔，与期望值比较，如果超出，则红。</li>
+<li>分析之前记录的内存日志，求出峰值和均值，如果超出期望，也红。</li>
+</ol>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/01/12/jenkins/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2014/12/27/understand_code/" itemprop="url">
                 understand your code
               </a>
@@ -563,98 +660,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2014/11/26/test_gcc_gdb/" itemprop="url">
-                学习GCC & GDB
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2014-11-26T00:00:00+08:00" content="2014-11-26">
-            2014-11-26
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2014/11/26/test_gcc_gdb/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/11/26/test_gcc_gdb/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>工作是在windows下开发，业余时间才能玩自己喜欢的东东，一段时间不用就会生疏。随便写两段，加深记忆。</p>
-<h3 id="GCC"><a href="#GCC" class="headerlink" title="GCC"></a>GCC</h3><p>从代码到可执行文件，会经历四个阶段，对应的命令是</p>
-<blockquote>
-<p>gcc -E  test.c -o test.i 中间文件<br>gcc -S test.i -o test.s  ASM<br>gcc -c test.s -o test.o  OBJ<br>gcc test.o -o test       可执行文件</p>
-</blockquote>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/26/test_gcc_gdb/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -693,7 +698,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">76</span>
+              <span class="site-state-item-count">77</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
