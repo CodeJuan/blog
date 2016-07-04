@@ -1,5 +1,5 @@
 ---
-title: kubernetes: pod内IPC
+title: kubernetes:pod内IPC
 date: 2016-07-03 00:00:00
 categories:
 - code
@@ -24,6 +24,9 @@ cp kubernetes.tar.gz ~/code/kubernetes/cluster/kubernetes.tar.gz
 cp easy-rsa.tar.gz ~/code/kubernetes/cluster/easy-rsa.tar.gz
 ```
 
+
+
+----------------------------
 
 `本博客欢迎转发,但请保留原作者信息`
 github:[codejuan](https://github.com/CodeJuan)
