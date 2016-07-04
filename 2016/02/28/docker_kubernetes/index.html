@@ -46,7 +46,7 @@
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景需要做一个容器云，有同事在撸mesos+marathon+chronos，我就顺便折腾下kubernetes。">
 <meta property="og:image" content="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/docker/ansible_install_docker.png">
-<meta property="og:updated_time" content="2016-07-04T15:57:45.299Z">
+<meta property="og:updated_time" content="2016-07-04T16:08:38.302Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker(5)-kubernetes">
 <meta name="twitter:description" content="背景需要做一个容器云，有同事在撸mesos+marathon+chronos，我就顺便折腾下kubernetes。">
@@ -284,7 +284,8 @@
 <h3 id="开始部署"><a href="#开始部署" class="headerlink" title="开始部署"></a>开始部署</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="keyword">local</span>/kubernetes/<span class="keyword">cluster</span>$ KUBERNETES_PROVIDER=ubuntu ./kube-up.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure>
 <p>由于安装过程中老出错，再次部署的时候总提示文件被占用，服务正在运行，所以我写了个kill脚本，每次部署之前都kill一次</p>
 <h3 id="部署完成"><a href="#部署完成" class="headerlink" title="部署完成"></a>部署完成</h3><p>部署完成之后<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kubectl get nodes</span><br><span class="line"><span class="preprocessor"># 显示</span></span><br><span class="line">NAME            LABELS                                 STATUS    AGE</span><br><span class="line"><span class="number">192.168</span><span class="number">.1</span><span class="number">.148</span>   kubernetes.io/hostname=<span class="number">192.168</span><span class="number">.1</span><span class="number">.148</span>   Ready     <span class="number">6</span>h</span><br><span class="line"><span class="number">192.168</span><span class="number">.1</span><span class="number">.173</span>   kubernetes.io/hostname=<span class="number">192.168</span><span class="number">.1</span><span class="number">.173</span>   Ready     <span class="number">6</span>h</span><br><span class="line"><span class="number">192.168</span><span class="number">.1</span><span class="number">.241</span>   kubernetes.io/hostname=<span class="number">192.168</span><span class="number">.1</span><span class="number">.241</span>   Ready     <span class="number">6</span>h</span><br><span class="line"><span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span>   kubernetes.io/hostname=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span>   Ready     <span class="number">6</span>h</span><br></pre></td></tr></table></figure></p>
-<h1 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h1><p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+<h1 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h1><hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
       
     </div>
@@ -376,7 +377,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">77</span>
+              <span class="site-state-item-count">78</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
