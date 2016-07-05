@@ -71,6 +71,73 @@ KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
 #192.168.1.245   Ready     123d
 ```
 
+安装DNS和UI
+```
+cd cluster/ubuntu
+$ KUBERNETES_PROVIDER=ubuntu ./deployAddons.sh
+```
+
+创建两个容器的pod
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ipc2
+  labels:
+    app: web
+spec:
+  containers:
+    - name: registry
+      image: registry
+      ports:
+        - containerPort: 5000
+    - name: nginx
+      image: nginx:1.9
+      ports:
+        - containerPort: 80
+```
+
+查看
+```
+./kubectl exec -it ipc2 bash
+
+# 看进程
+ps aux
+# 结果，只能看到registry的进程
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.4  53228 15992 ?        Ss   14:56   0:00 /usr/bin/python
+root        13  1.0  1.0 110492 39600 ?        S    14:56   0:03 /usr/bin/python
+root        14  1.0  0.9 110256 38804 ?        S    14:56   0:03 /usr/bin/python
+root        17  0.9  0.9 110272 38820 ?        S    14:56   0:03 /usr/bin/python
+root        18  1.0  0.9 110276 38816 ?        S    14:56   0:03 /usr/bin/python
+root        44  0.0  0.0  18148  3364 ?        Ss+  15:00   0:00 bash
+root        60  2.0  0.0  18152  3192 ?        Ss   15:01   0:00 bash
+root        74  0.0  0.0  15572  2164 ?        R+   15:01   0:00 ps aux
+
+# 看端口
+root@ipc2:/# netstat -anplt
+# 结果，网络共享了
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:5000            0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      -
+```
+
+```
+# 进入nginx容器看看进程
+docker exec -it k8s_nginx.fb0f31c6_ipc2_default_82fd2fb7-42c0-11e6-a4f1-d43d7e2c2527_c689aa68 bash
+root@ipc2:/# ps axu
+
+# 只能看到nginx的进程
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.1  31684  5100 ?        Ss   14:57   0:00 nginx: master process nginx -g daemon off;
+nginx        5  0.0  0.0  32068  2904 ?        S    14:57   0:00 nginx: worker process
+root         6  0.0  0.0  20224  3272 ?        Ss   15:00   0:00 bash
+root        19  0.0  0.0  17500  2096 ?        R+   15:09   0:00 ps axu
+```
+
+同一POD内网络是通的，但是进程不通？
+
 ----------------------------
 
 `本博客欢迎转发,但请保留原作者信息`
