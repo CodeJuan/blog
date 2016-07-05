@@ -137,6 +137,10 @@ root        19  0.0  0.0  17500  2096 ?        R+   15:09   0:00 ps axu
 ```
 
 同一POD内网络是通的，但是进程不通？
+可是文档说
+> Containers within a pod share an IP address and port space, and can find each other via localhost. They can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. Containers in different pods have distinct IP addresses and can not communicate by IPC
+
+奇怪
 
 ----------------------------
 
