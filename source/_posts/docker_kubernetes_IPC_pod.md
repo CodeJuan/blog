@@ -39,12 +39,37 @@ roles=${roles:-"ai i i i"}
 export NUM_NODES=${NUM_NODES:-4}
 ```
 
-in cluster/
+清理环境，在master和node上都执行
+```
+sudo rm -rf /opt/bin/etcd* /opt/bin/flanneld*
+sudo rm -rf /opt/bin/kube*
+sudo service etcd stop
+sudo service flanneld stop
+sudo service kube-apiserver stop
+sudo service --status-all
+sudo service kube-apiserver status
+sudo service kube-controller-manager stop
+sudo service kube-proxy stop
+sudo service kube-scheduler stop
+sudo service kubelet stop
+```
+
+在master上的kubernetes/cluster/路径执行
 
 ```
 KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
 ```
 
+输入密码，最后完成
+```
+./kubectl get nodes
+返回结果
+#NAME            STATUS    AGE
+#192.168.1.148   Ready     123d
+#192.168.1.173   Ready     123d
+#192.168.1.241   Ready     123d
+#192.168.1.245   Ready     123d
+```
 
 ----------------------------
 
