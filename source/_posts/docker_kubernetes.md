@@ -22,130 +22,86 @@ description:
 感觉像是Docker版PaaS版的OpenStack。OpenStack对外提供VM，Kubernetes则对外提供基于docker的服务。
 
 
-# 通过ansible装docker
-机器多了，再手工装docker-engine就太麻烦了，所以写个playbook，给家里的机器统一安装。
-代码放在[https://github.com/CodeJuan/kubernetes_practice](https://github.com/CodeJuan/kubernetes_practice)
+# 安装
 
-## hosts
+## 下载包
+由于被墙，所以先把这几个包下载下来
 ```
-[master]
-i3	ansible_user=i3	ansible_ssh_host=192.168.1.245
+wget https://github.com/coreos/etcd/releases/download/v3.0.1/etcd-v3.0.1-linux-amd64.tar.gz
+wget https://github.com/coreos/flannel/releases/download/v0.5.5/flannel-0.5.5-linux-amd64.tar.gz
+wget https://github.com/kubernetes/kubernetes/releases/download/v1.3.0/kubernetes.tar.gz
+wget https://storage.googleapis.com/kubernetes-release/easy-rsa/easy-rsa.tar.gz
 
+cp etcd-v3.0.1-linux-amd64.tar.gz ~/code/kubernetes/cluster/ubuntu/etcd.tar.gz
+cp flannel-0.5.5-linux-amd64.tar.gz ~/code/kubernetes/cluster/ubuntu/flannel.tar.gz
+cp kubernetes.tar.gz ~/code/kubernetes/cluster/ubuntu/kubernetes.tar.gz
+cp easy-rsa.tar.gz ~/code/kubernetes/cluster/ubuntu/easy-rsa.tar.gz
 
-[million]
-g530	ansible_user=g530	ansible_ssh_host=192.168.1.173
-g540	ansible_user=g540	ansible_ssh_host=192.168.1.148
-g640	ansible_user=g640	ansible_ssh_host=192.168.1.241
-```
-如果没有添加SSH key，那么可以设置ansible_ssh_pass=xxxxxx
+export KUBE_VERSION=1.3.0 && export FLANNEL_VERSION=0.5.5 && export ETCD_VERSION=3.0.1
 
-这里说一个奇葩的事情，重装了系统之后，手动把maset的pubkey添加到agent的可信ssh里，然而在play的时候总提示`没有权限`，尝试了各种方法依旧无解。
-最后死马当活马医，`pip uninstall ansible`再`pip install`，竟然就好了，实在是很无语。
-
-## playbooks
-```
----
-- hosts: all #表示hosts里的所有agent都要装
-  tasks:
-  - name: ping # 先测试是否能ping通
-    ping:
-  - name: add_docker_key # 加入key
-    sudo: yes
-    command: apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-  - name: update_apt_source # 增加源
-    sudo: yes
-    lineinfile:
-      dest=/etc/apt/sources.list.d/docker.list
-      create=yes
-      line="deb https://apt.dockerproject.org/repo ubuntu-trusty main"
-  - name: install docker
-    sudo: yes
-    apt: name=docker-engine update_cache=yes
-```
-## 执行
-```sh
-ansible-playbook -i hosts playbook.yml -K
-```
-其中-K表示，交互式的输入sudo密码
-![](https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/docker/ansible_install_docker.png)
-
-稍等片刻，每个agent的docker-engine就都安装好了。接下来就是安装kubernetes
-
-# 安装kubernetes
-[http://kubernetes.io/v1.1/docs/getting-started-guides/locally.html#linux](http://kubernetes.io/v1.1/docs/getting-started-guides/locally.html#linux)
-参照谷歌的文档安装一下。
-
-## 安装go
-
-[http://blog.decbug.com/2015/11/28/golang/](http://blog.decbug.com/2015/11/28/golang/)
-参考之前写的安装一下，要不要翻译成Ansible呢。。。。。。
-
-## etcd
-```sh
-curl -L  https://github.com/coreos/etcd/releases/download/v2.2.4/etcd-v2.2.4-linux-amd64.tar.gz -o etcd-v2.2.4-linux-amd64.tar.gz
-tar -C /usr/local/ -xzvf etcd-v2.2.4-linux-amd64.tar.gz
-cd etcd-v2.2.4-linux-amd64
-./etcd
-```
-
-## k8s
-```sh
-sudo tar -C /usr/local/ -xvzf kubernetes.tar.gz
-```
-
-[http://kubernetes.io/v1.0/docs/getting-started-guides/ubuntu.html](http://kubernetes.io/v1.0/docs/getting-started-guides/ubuntu.html)
-
-## 部署
-
-```
-### 设置环境变量
-export FLANNEL_VERSION=0.5.5 && export ETCD_VERSION=2.2.5 && export KUBE_VERSION=1.1.8
-```
-
-### build
-执行`kubernetes/cluster/ubuntu/build.sh`，会自动下载二进制，然而。。。。
-```
-Prepare flannel 0.4.0 release ...
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   608    0   608    0     0    542      0 --:--:--  0:00:01 --:--:--   543
-  0     0    0     0    0     0      0      0 --:--:--  0:02:08 --:--:--     0curl: (7) Failed to connect to github-cloud.s3.amazonaws.com port 443: Connection timed out
-```
-----------------------------
-又是S3，看来又要把路由的全局番茄打开。
-
-### 修改配置文件
-```
-#  cluster/ubuntu/config-default.sh
-export nodes="vcap@10.10.103.250 vcap@10.10.103.162 vcap@10.10.103.223" #user@IP
-#export roles="ai i i" # 这里需要注意 role和上面的nodes一一对应，也就是说"第一个node对应第一个role，即ai，表示master+node"，后面的i就表示是node
-#export NUM_MINIONS=${NUM_MINIONS:-3}
-#export SERVICE_CLUSTER_IP_RANGE=192.168.1.0/16
-#export FLANNEL_NET=172.16.0.0/16
-```
-
-### 开始部署
-```
-/usr/local/kubernetes/cluster$ KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
-```
-由于安装过程中老出错，再次部署的时候总提示文件被占用，服务正在运行，所以我写了个kill脚本，每次部署之前都kill一次
-
-### 部署完成
-部署完成之后
-```
-kubectl get nodes
-# 显示
-NAME            LABELS                                 STATUS    AGE
-192.168.1.148   kubernetes.io/hostname=192.168.1.148   Ready     6h
-192.168.1.173   kubernetes.io/hostname=192.168.1.173   Ready     6h
-192.168.1.241   kubernetes.io/hostname=192.168.1.241   Ready     6h
-192.168.1.245   kubernetes.io/hostname=192.168.1.245   Ready     6h
 
 ```
 
-# hello world
 
 
+## 修改ubuntu/config-default
+```
+# 由于被墙，修改ubuntu/download-release.sh和ubuntu/util.sh，注释掉curl。因为提前下载了
+
+# 用户名@ip
+export nodes=${nodes:-"i3@192.168.1.245 530@192.168.1.173 g640@192.168.1.241 g540@192.168.1.148"}
+
+# a表示master，i表示node，ai表示master+node
+roles=${roles:-"ai i i i"}
+
+# 4个node
+export NUM_NODES=${NUM_NODES:-4}
+```
+
+## 清理环境
+由于我之前安装过，所以还是清理一下，在master和node上都执行
+```
+sudo rm -rf /opt/bin/etcd* /opt/bin/flanneld*
+sudo rm -rf /opt/bin/kube*
+sudo service etcd stop
+sudo service flanneld stop
+sudo service kube-apiserver stop
+sudo service --status-all
+sudo service kube-apiserver status
+sudo service kube-controller-manager stop
+sudo service kube-proxy stop
+sudo service kube-scheduler stop
+sudo service kubelet stop
+```
+
+## 开始部署
+在master上的kubernetes/cluster/路径执行
+
+```
+KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
+```
+
+输入密码，最后完成
+```
+./kubectl get nodes
+返回结果
+#NAME            STATUS    AGE
+#192.168.1.148   Ready     123d
+#192.168.1.173   Ready     123d
+#192.168.1.241   Ready     123d
+#192.168.1.245   Ready     123d
+```
+
+## 安装DNS和UI
+```
+cd cluster/ubuntu
+$ KUBERNETES_PROVIDER=ubuntu ./deployAddons.sh
+```
+
+## 然后查看ui
+打开master上的ui，[http://<masterip>:8080/ui](http://<masterip>:8080/ui)
+
+![](https://github.com/CodeJuan/blog/raw/master/source/image/k8s/kube_ui.png)
 
 ----------------------------
 
