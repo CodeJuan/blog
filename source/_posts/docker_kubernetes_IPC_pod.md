@@ -11,74 +11,28 @@ description:
 ---
 
 
+要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。
+现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。
+恰好业务是跑在k8s上，k8s关于pod的文档上说
+> Containers within a pod share an IP address and port space, and can find each other via localhost. They can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. Containers in different pods have distinct IP addresses and can not communicate by IPC
 
-```
-wget https://github.com/coreos/etcd/releases/download/v3.0.1/etcd-v3.0.1-linux-amd64.tar.gz
-wget https://github.com/coreos/flannel/releases/download/v0.5.5/flannel-0.5.5-linux-amd64.tar.gz
-wget https://github.com/kubernetes/kubernetes/releases/download/v1.3.0/kubernetes.tar.gz
-wget https://storage.googleapis.com/kubernetes-release/easy-rsa/easy-rsa.tar.gz
-
-cp etcd-v3.0.1-linux-amd64.tar.gz ~/code/kubernetes/cluster/ubuntu/etcd.tar.gz
-cp flannel-0.5.5-linux-amd64.tar.gz ~/code/kubernetes/cluster/ubuntu/flannel.tar.gz
-cp kubernetes.tar.gz ~/code/kubernetes/cluster/ubuntu/kubernetes.tar.gz
-cp easy-rsa.tar.gz ~/code/kubernetes/cluster/ubuntu/easy-rsa.tar.gz
-
-export KUBE_VERSION=1.3.0 && export FLANNEL_VERSION=0.5.5 && export ETCD_VERSION=3.0.1
-
-# 由于被墙，修改ubuntu/download-release.sh和ubuntu/util.sh，注释掉curl。因为提前下载了
-```
+如果同一个pod里的进程，可以互相看到对方，那么就可以不用修改，直接把现有一个容器拆成两个容器了。
 
 <!--more-->
 
-修改ubuntu/config-default
-```
-export nodes=${nodes:-"i3@192.168.1.245 530@192.168.1.173 g640@192.168.1.241 g540@192.168.1.148"}
+提前剧透一下结论，是看不到的。因为
 
-roles=${roles:-"ai i i i"}
+> The context of the pod can be defined as the conjunction of several Linux namespaces:
+- PID namespace (applications within the pod can see each other's processes)
+- network namespace (applications within the pod have access to the same IP and port space)
+- IPC namespace (applications within the pod can use SystemV IPC or POSIX message queues to communicate)
+- UTS namespace (applications within the pod share a hostname)
 
-export NUM_NODES=${NUM_NODES:-4}
-```
+> In terms of Docker constructs, a pod consists of a colocated group of Docker containers with shared volumes. PID namespace sharing is not yet implemented with Docker.
 
-清理环境，在master和node上都执行
-```
-sudo rm -rf /opt/bin/etcd* /opt/bin/flanneld*
-sudo rm -rf /opt/bin/kube*
-sudo service etcd stop
-sudo service flanneld stop
-sudo service kube-apiserver stop
-sudo service --status-all
-sudo service kube-apiserver status
-sudo service kube-controller-manager stop
-sudo service kube-proxy stop
-sudo service kube-scheduler stop
-sudo service kubelet stop
-```
-
-在master上的kubernetes/cluster/路径执行
-
-```
-KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
-```
-
-输入密码，最后完成
-```
-./kubectl get nodes
-返回结果
-#NAME            STATUS    AGE
-#192.168.1.148   Ready     123d
-#192.168.1.173   Ready     123d
-#192.168.1.241   Ready     123d
-#192.168.1.245   Ready     123d
-```
-
-安装DNS和UI
-```
-cd cluster/ubuntu
-$ KUBERNETES_PROVIDER=ubuntu ./deployAddons.sh
-```
-
+# 创建pod
 创建两个容器的pod
-```yml
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -97,7 +51,7 @@ spec:
         - containerPort: 80
 ```
 
-查看
+# 进入其中一个ps和netstat
 ```
 ./kubectl exec -it ipc2 bash
 
@@ -123,8 +77,9 @@ tcp        0      0 0.0.0.0:5000            0.0.0.0:*               LISTEN      
 tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      -
 ```
 
+# 进入另一个容器
+进入nginx容器看看进程
 ```
-# 进入nginx容器看看进程
 docker exec -it k8s_nginx.fb0f31c6_ipc2_default_82fd2fb7-42c0-11e6-a4f1-d43d7e2c2527_c689aa68 bash
 root@ipc2:/# ps axu
 
@@ -136,11 +91,8 @@ root         6  0.0  0.0  20224  3272 ?        Ss   15:00   0:00 bash
 root        19  0.0  0.0  17500  2096 ?        R+   15:09   0:00 ps axu
 ```
 
-同一POD内网络是通的，但是进程不通？
-可是文档说
-> Containers within a pod share an IP address and port space, and can find each other via localhost. They can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. Containers in different pods have distinct IP addresses and can not communicate by IPC
-
-奇怪
+# 结论
+网络、UTC、IPC都共享，但是PID不能共享。
 
 ----------------------------
 
