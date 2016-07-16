@@ -12,6 +12,8 @@ description:
 由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。
 由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder
 
+<!--more-->
+
 # 方法
 
 ## 安装依赖
