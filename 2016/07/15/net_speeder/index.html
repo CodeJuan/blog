@@ -39,22 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="背景由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder
-方法安装依赖1234#安装libnet-dev：apt-get install libnet1-dev#安装libpcap-dev：apt-get install libpcap0.8-dev
-安装n">
+<meta name="description" content="背景由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder">
 <meta property="og:type" content="article">
 <meta property="og:title" content="net-speeder番茄加速">
 <meta property="og:url" content="http://blog.decbug.com/2016/07/15/net_speeder/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="背景由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder
-方法安装依赖1234#安装libnet-dev：apt-get install libnet1-dev#安装libpcap-dev：apt-get install libpcap0.8-dev
-安装n">
-<meta property="og:updated_time" content="2016-07-15T15:15:22.950Z">
+<meta property="og:description" content="背景由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder">
+<meta property="og:updated_time" content="2016-07-16T02:50:38.925Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="net-speeder番茄加速">
-<meta name="twitter:description" content="背景由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder
-方法安装依赖1234#安装libnet-dev：apt-get install libnet1-dev#安装libpcap-dev：apt-get install libpcap0.8-dev
-安装n">
+<meta name="twitter:description" content="背景由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -263,6 +257,7 @@
 
       
         <span itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
+<a id="more"></a>
 <h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#安装libnet-<span class="built_in">dev</span>：</span><br><span class="line">apt-<span class="built_in">get</span> install libnet1-<span class="built_in">dev</span></span><br><span class="line">#安装libpcap-<span class="built_in">dev</span>：</span><br><span class="line">apt-<span class="built_in">get</span> install libpcap0<span class="number">.8</span>-<span class="built_in">dev</span></span><br></pre></td></tr></table></figure>
 <h2 id="安装net-speeder"><a href="#安装net-speeder" class="headerlink" title="安装net-speeder"></a>安装net-speeder</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https:<span class="comment">//github.com/snooda/net-speeder/archive/master.zip</span></span><br><span class="line">unzip master.<span class="keyword">zip</span></span><br><span class="line"><span class="keyword">cd</span> <span class="keyword">net</span>-speeder-master</span><br><span class="line"># openvz 用这个命令make</span><br><span class="line"><span class="keyword">sh</span> build.<span class="keyword">sh</span> -DCOOKED</span><br></pre></td></tr></table></figure>
 <h2 id="添加开机启动"><a href="#添加开机启动" class="headerlink" title="添加开机启动"></a>添加开机启动</h2><p>打开/etc/local.rc，加上<br><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[net_speeder安装目录]</span>/net_speeder venet0:<span class="number">0</span> <span class="string">"ip"</span></span><br></pre></td></tr></table></figure></p>
