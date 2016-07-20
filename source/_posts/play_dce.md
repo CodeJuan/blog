@@ -10,22 +10,24 @@ tags:
 mathjax: true
 description: 
 ---
-## 背景
+# 背景
 DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。
 
 <!--more-->
 
-## 创建机器
+# 创建机器
 在DigitalOcean创建两台最低配.
 
-## 开始安装
+# 开始安装
 
+## 控制节点
+也就是master
 一条命令搞定
 ```
 bash -c "$(docker run -i --rm daocloud.io/daocloud/dce install)"
 ```
 
-竟然内存太小，好吧，要resize到1G了
+竟然内存太小，凑着着用
 ```
 Verifying System compatibility...
 Requirement              Value                          Note
@@ -49,8 +51,14 @@ SELinux                  permissive                     SELinux has been disable
 
 ```
 
+## 容器节点
+也就是slave
+看起来像是swarm join
+在另一台机器上运行
 
-
+```
+bash -c "$(docker run -i --rm daocloud.io/daocloud/dce join {你的控制器IP})"
+```
 
 -----------------------
 
