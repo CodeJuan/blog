@@ -1,10 +1,12 @@
 ---
-title: 比较WinPE文件(忽略时间戳)
-date: 2014-11-19 00:00:00
+title: 在家玩DaoCloud企业版
+date: 2016-07-20 00:00:00
 categories:
 - code
 tags: 
-- WinPE
+- docker
+- swarm
+- DaoCloud
 mathjax: true
 description: 
 ---
