@@ -135,6 +135,14 @@ end note
 ![](https://cloud.githubusercontent.com/assets/5423628/16990645/4d744da8-4ecb-11e6-9f34-b052a0ba5cc6.png)
 这个特性很不错啊，registry有了新的更新，就notify到ui的notification，根据配置的策略，是否要备份到远端registry
 
+# LDAP
+用的是open LDAP
+LDAP_BASE_DN 这个还不会配置
+
+# RBAC
+Role Based Access Control
+`service/token/authutils.go的FilterAccess`，通过token里的scope获取action，再到数据库里查询是否有权限
+
 -----------------------
 
 `本博客欢迎转发,但请保留原作者信息`
