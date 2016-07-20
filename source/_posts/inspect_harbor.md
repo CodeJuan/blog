@@ -137,6 +137,7 @@ end note
 
 # LDAP
 用的是open LDAP
+代码在auth/ldap/ldap.go
 LDAP_BASE_DN 这个还不会配置
 
 # RBAC
