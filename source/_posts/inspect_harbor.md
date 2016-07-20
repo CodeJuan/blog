@@ -45,8 +45,8 @@ docker-compose up -d
 
 # 架构图
 
-![架构图](http://dockerone.com/uploads/article/20160331/d9f81c0cdcc4f7b7af42d27d030cf381.png)
-来自[dockone](http://dockone.io/article/1179)
+![来自[dockone的架构图](http://dockone.io/article/1179)](http://dockerone.com/uploads/article/20160331/d9f81c0cdcc4f7b7af42d27d030cf381.png)
+
 
 {% plantuml %}
 interface "client" as C
@@ -72,6 +72,7 @@ note top of [registry]
   当需要鉴权时就调用auth
 end note
 {% endplantuml %}
+我画的架构图
 
 # 代码结构
 通过`tree -d ./`生成，略去部分不重要代码
