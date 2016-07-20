@@ -12,7 +12,7 @@ mathjax: true
 description: 
 ---
 # 背景
-之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vwmare开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。
+之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。
 
 <!--more-->
 
