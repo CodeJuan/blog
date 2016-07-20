@@ -59,6 +59,9 @@ SELinux                  permissive                     SELinux has been disable
 ```
 bash -c "$(docker run -i --rm daocloud.io/daocloud/dce join {你的控制器IP})"
 ```
+# 效果
+![image](https://cloud.githubusercontent.com/assets/5423628/16971073/34dce8c2-4e53-11e6-8e40-1dd8e292dcfa.png)
+![image](https://cloud.githubusercontent.com/assets/5423628/16971113/921cf004-4e53-11e6-8c9f-02c7eaca1105.png)
 
 -----------------------
 
