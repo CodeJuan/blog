@@ -48,7 +48,7 @@
 <meta property="og:image" content="http://dockerone.com/uploads/article/20160331/d9f81c0cdcc4f7b7af42d27d030cf381.png">
 <meta property="og:image" content="http://www.plantuml.com/plantuml/svg/oymhIIrAIqnELL1ApibCpIjHKaWiLd3cuaf9B4bCIYm6YljM1XVcA2bKSzLoSQNbvwIa5YaeXNg211I083etCJCl5i9CB2t9W3BpyaioqpAJ4qioyy6oGBtE2hf0yVJCl8fOBYYjeATdfn1Tb9gUMLnIL1chOALGMfJpRCRw1FqoemHKHM1ha1G0fH7wm2h0jWDLbEHdf-PXoA8u2AWAcSyLwWbM1FQfLKeI5nTGDXLeK852VXgI-u3-UDamw_dyfKytR7pQF_5fnmOKKnGKdkwT_79EmujbZIyxjpoRs_ni-ZQWoXSRcfzFMG5o7LTgNWh8ubG0">
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/16990645/4d744da8-4ecb-11e6-9f34-b052a0ba5cc6.png">
-<meta property="og:updated_time" content="2016-07-20T16:01:09.878Z">
+<meta property="og:updated_time" content="2016-07-20T16:11:49.711Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="看harbor源码">
 <meta name="twitter:description" content="背景之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vwmare开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。">
@@ -283,6 +283,8 @@
 <li><code>auth/authenticator.go</code>接口，有本地db和LDAP两种实现，在init时会registrer，根据配置选择用哪个实现。</li>
 </ul>
 <h1 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/16990645/4d744da8-4ecb-11e6-9f34-b052a0ba5cc6.png" alt=""><br>这个特性很不错啊，registry有了新的更新，就notify到ui的notification，根据配置的策略，是否要备份到远端registry</p>
+<h1 id="LDAP"><a href="#LDAP" class="headerlink" title="LDAP"></a>LDAP</h1><p>用的是open LDAP<br>LDAP_BASE_DN 这个还不会配置</p>
+<h1 id="RBAC"><a href="#RBAC" class="headerlink" title="RBAC"></a>RBAC</h1><p>Role Based Access Control<br><code>service/token/authutils.go的FilterAccess</code>，通过token里的scope获取action，再到数据库里查询是否有权限</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -448,7 +450,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署"><span class="nav-number">2.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方方法"><span class="nav-number">2.1.</span> <span class="nav-text">官方方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特殊国情下的模式"><span class="nav-number">2.2.</span> <span class="nav-text">特殊国情下的模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#离线模式"><span class="nav-number">2.3.</span> <span class="nav-text">离线模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#架构图"><span class="nav-number">3.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码结构"><span class="nav-number">4.</span> <span class="nav-text">代码结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#备份策略"><span class="nav-number">5.</span> <span class="nav-text">备份策略</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署"><span class="nav-number">2.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方方法"><span class="nav-number">2.1.</span> <span class="nav-text">官方方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特殊国情下的模式"><span class="nav-number">2.2.</span> <span class="nav-text">特殊国情下的模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#离线模式"><span class="nav-number">2.3.</span> <span class="nav-text">离线模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#架构图"><span class="nav-number">3.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码结构"><span class="nav-number">4.</span> <span class="nav-text">代码结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#备份策略"><span class="nav-number">5.</span> <span class="nav-text">备份策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LDAP"><span class="nav-number">6.</span> <span class="nav-text">LDAP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RBAC"><span class="nav-number">7.</span> <span class="nav-text">RBAC</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
