@@ -1,6 +1,6 @@
 ---
-title: harbor源码分析
-date: 2016-07-20 00:00:00
+title: 看harbor源码
+date: 2016-07-20 20:00:00
 categories:
 - code
 tags: 
@@ -33,37 +33,44 @@ docker-compose up -d
 ```
 
 ## 特殊国情下的模式
+不建议用，最好还是番茄自己build
+因为Daoloud和CaiCloud的版本都太老，很多新特性都没有。
 
-具体看[https://github.com/vmware/harbor/blob/master/docs/image_pulling_chinese_user.md](https://github.com/vmware/harbor/blob/master/docs/image_pulling_chinese_user.md)
-需要注意的是，Daoloud上的registry:2.3已经失效，需要修改以下compose.yml，修改registry.image
-```
-  registry:
-    # 注意改image
-    image: registry:2.3.0
-    volumes:
-      - /data/registry:/storage
-      - ./config/registry/:/etc/registry/
-    ports:
-      - 5001:5001
-    command:
-      /etc/registry/config.yml
-    depends_on:
-      - log
-    logging:
-      driver: "syslog"
-      options:
-        syslog-address: "tcp://127.0.0.1:1514"
-        syslog-tag: "registry"
-```
 
 ## 离线模式
 由于公司坑爹的模式，很多镜像下载不了，只好在家pull下来，然后save成tar，再到公司load
 具体看这[链接](https://github.com/vmware/harbor/releases/download/0.3.0/harbor-0.3.0.tgz)
 
-# 源码
 
-## 代码结构
-通过`tree -d ./`生成
+
+# 架构图
+
+![架构图](http://dockerone.com/uploads/article/20160331/d9f81c0cdcc4f7b7af42d27d030cf381.png)
+来自[dockone](http://dockone.io/article/1179)
+
+{% plantuml %}
+interface "client" as C
+
+folder "UI" {
+    [main]
+    [auth]
+    [notification]
+  }
+
+C - [nginx]
+[nginx] ..> [registry] : url是`/v2`
+[nginx] ..> [main] : url是`/`
+[registry] ..> [auth] : token
+[registry] ..> [notification] : notification
+
+note top of [registry]
+  通知就发到notification
+  当需要鉴权时就调用auth
+end note
+{% endplantuml %}
+
+# 代码结构
+通过`tree -d ./`生成，略去部分不重要代码
 ```
 ├── api
 │   └── jobs
@@ -100,39 +107,27 @@ docker-compose up -d
 │   ├── cache
 │   ├── token
 │   └── utils
-├── static
-│   ├── i18n
-│   ├── resources
-│   │   ├── css
-│   │   ├── img
-│   │   └── js
-│   │       ├── components
-│   │       ├── layout
-│   │       ├── services
-│   │       └── session
-│   └── vendors
-│       ├── angularjs
-│       ├── eonasdan-bootstrap-datetimepicker
-│       │   └── build
-│       │       ├── css
-│       │       └── js
-│       └── moment
-│           └── min
+├── static前端
 ├── tests
-│   └── apitests
-│       └── apilib
 ├── ui
-├── utils
-│   ├── log
-│   └── registry
-│       ├── auth
-│       └── error
-├── vendor
-│   ├── 三方库
+├── utils共用组件
+├── vendor三方库
 └── views
-    └── sections
 ```
 
+对应架构图来看
+- proxy就是nginx，`Deploy/config/nginx/nginx.conf`
+- UI就是`ui/main.go`
+- token就是`service/token/token.go`
+- registry的webhook就是`Deploy/templates/registry/config.yml`的notifications和auth
+  - auth指向`beego.Router("/service/token", &token.Handler{})`，`service/token/token.go`
+  - notification指向`beego.Router("/service/notifications", &service.NotificationHandler{})`，用来同步备份到远端仓库。`service/notification.go`
+- `auth/authenticator.go`接口，有本地db和LDAP两种实现，在init时会registrer，根据配置选择用哪个实现。
+
+
+
+# 备份策略
+![](https://cloud.githubusercontent.com/assets/5423628/16990645/4d744da8-4ecb-11e6-9f34-b052a0ba5cc6.png)
 -----------------------
 
 `本博客欢迎转发,但请保留原作者信息`
