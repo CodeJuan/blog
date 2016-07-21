@@ -101,6 +101,26 @@ print "restore"
 r = requests.put(registry + image + "/manifests/" + tag, data=data, verify=False)
 print r.status_code
 ```
+# 时序图
+
+{% plantuml %}
+autonumber "<font color=blue><b> 0.  "
+
+client->gateway
+gateway->registry: get manifest
+registry-->gateway: return manifest
+gateway->trash: insert image name+tag to trash
+gateway->registry: delete
+registry-->gateway: return result
+gateway->trash: save result
+gateway-->client: result
+
+database trash
+
+box "DB" #LightGray
+	participant trash
+end box
+{% endplantuml %}
 
 -----------------------
 
