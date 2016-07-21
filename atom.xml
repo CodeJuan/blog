@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-07-20T16:24:54.372Z</updated>
+  <updated>2016-07-21T17:20:13.963Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,49 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>删除恢复docker registry中的镜像</title>
+    <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
+    <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
+    <published>2016-07-20T16:00:00.000Z</published>
+    <updated>2016-07-21T17:20:13.963Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
+<a id="more"></a>
+<h1 id="官方不建议删除镜像"><a href="#官方不建议删除镜像" class="headerlink" title="官方不建议删除镜像"></a>官方不建议删除镜像</h1><p>因为<a href="https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes" target="_blank" rel="external">https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes</a></p>
+<blockquote>
+<p>NOTE: Deletes are a much asked for feature. Before requesting this feature or participating in discussion, we ask that you read this section in full and understand the problems behind deletes.</p>
+</blockquote>
+<p>删除固然简单，删除manifest和blob就行。但是，blob是分层的，可能是多个镜像共用的，如果在删除某个blob的时候，其他人正在使用这个blob，那么就麻烦了。</p>
+<h1 id="其实是有删除接口的"><a href="#其实是有删除接口的" class="headerlink" title="其实是有删除接口的"></a>其实是有删除接口的</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DELETE /v2/<span class="tag">&lt;<span class="title">name</span>&gt;</span>/manifests/<span class="tag">&lt;<span class="title">reference</span>&gt;</span></span><br><span class="line">Host: <span class="tag">&lt;<span class="title">registry</span> <span class="attribute">host</span>&gt;</span></span><br><span class="line">Authorization: <span class="tag">&lt;<span class="title">scheme</span>&gt;</span> <span class="tag">&lt;<span class="title">token</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">version</span>: <span class="number">0.1</span></span><br><span class="line"><span class="attribute">log</span>:</span><br><span class="line">  <span class="attribute">fields</span>:</span><br><span class="line">    <span class="attribute">service</span>: registry</span><br><span class="line"><span class="attribute">storage</span>:</span><br><span class="line">    <span class="attribute">cache</span>:</span><br><span class="line">        <span class="attribute">blobdescriptor</span>: inmemory</span><br><span class="line">    <span class="attribute">filesystem</span>:</span><br><span class="line">        <span class="attribute">rootdirectory</span>: /var/lib/registry</span><br><span class="line"># 这里需要把delelte设置为true</span><br><span class="line">    <span class="attribute">delete</span>:</span><br><span class="line">        <span class="attribute">enabled</span>: true</span><br><span class="line"><span class="attribute">http</span>:</span><br><span class="line">    <span class="attribute">addr</span>: :<span class="number">5000</span></span><br><span class="line">    <span class="attribute">headers</span>:</span><br><span class="line">        <span class="attribute">X-Content-Type-Options</span>: [nosniff]</span><br><span class="line"><span class="attribute">health</span>:</span><br><span class="line">  <span class="attribute">storagedriver</span>:</span><br><span class="line">    <span class="attribute">enabled</span>: true</span><br><span class="line">    <span class="attribute">interval</span>: <span class="number">10s</span></span><br><span class="line">    <span class="attribute">threshold</span>: <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h1 id="用python写的测试代码"><a href="#用python写的测试代码" class="headerlink" title="用python写的测试代码"></a>用python写的测试代码</h1><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> simplejson <span class="keyword">as</span> json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">registry = <span class="string">"http://192.168.1.245:25678/v2/"</span></span><br><span class="line">image = <span class="string">"test/consul"</span></span><br><span class="line">tag = <span class="string">"latest"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">r = requests.get(registry + <span class="string">"_catalog/"</span>, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.text</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">headers = &#123;<span class="string">'Accept'</span>: <span class="string">'application/vnd.docker.distribution.manifest.v2+json'</span>&#125;</span><br><span class="line">r = requests.get(registry + image + <span class="string">"/manifests/"</span> + tag, headers=headers, verify=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取manifest</span></span><br><span class="line">manifest = r.headers[<span class="string">'Docker-Content-Digest'</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">"manifest: "</span> + manifest</span><br><span class="line"></span><br><span class="line">data = r.text</span><br><span class="line"><span class="keyword">print</span> data</span><br><span class="line"><span class="comment"># for blob in data['fsLayers']:</span></span><br><span class="line"><span class="comment">#     blob_digest = blob['blobSum']</span></span><br><span class="line"><span class="comment">#     print blob_digest</span></span><br><span class="line"><span class="comment">#     r = requests.delete(registry + "v2/xx/hello/blobs/" + blob_digest, verify=False)</span></span><br><span class="line"><span class="comment">#     print r</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"delete"</span></span><br><span class="line">r = requests.delete(registry + image + <span class="string">"/manifests/"</span> + manifest, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.status_code</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"restore"</span></span><br><span class="line">r = requests.put(registry + image + <span class="string">"/manifests/"</span> + tag, data=data, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.status_code</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="image" scheme="http://blog.decbug.com/tags/image/"/>
+    
+      <category term="registry" scheme="http://blog.decbug.com/tags/registry/"/>
+    
+  </entry>
+  
+  <entry>
     <title>看harbor源码</title>
     <link href="http://blog.decbug.com/2016/07/20/inspect_harbor/"/>
     <id>http://blog.decbug.com/2016/07/20/inspect_harbor/</id>
     <published>2016-07-20T12:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。</p>
 <a id="more"></a>
@@ -76,7 +114,7 @@
     <link href="http://blog.decbug.com/2016/07/20/play_dce/"/>
     <id>http://blog.decbug.com/2016/07/20/play_dce/</id>
     <published>2016-07-19T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。</p>
 <a id="more"></a>
@@ -112,7 +150,7 @@
     <link href="http://blog.decbug.com/2016/07/15/net_speeder/"/>
     <id>http://blog.decbug.com/2016/07/15/net_speeder/</id>
     <published>2016-07-14T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
 <a id="more"></a>
@@ -142,7 +180,7 @@
     <link href="http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/"/>
     <id>http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/</id>
     <published>2016-07-02T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.368Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<p>要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。<br>现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。<br>恰好业务是跑在k8s上，k8s关于pod的文档上说</p>
 <blockquote>
@@ -193,7 +231,7 @@
     <link href="http://blog.decbug.com/2016/06/28/k8s_admission/"/>
     <id>http://blog.decbug.com/2016/06/28/k8s_admission/</id>
     <published>2016-06-27T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h2><p>k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。<br>为了实现更细粒度的quota，有必要自制一个admission插件。</p>
 <h2 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h2><p>由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd</p>
@@ -228,7 +266,7 @@
     <link href="http://blog.decbug.com/2016/06/27/plantuml/"/>
     <id>http://blog.decbug.com/2016/06/27/plantuml/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>架构图即代码<br>PlantUML is a open-source tool that allows to quickly write :</p>
 <ul>
@@ -302,7 +340,7 @@
     <link href="http://blog.decbug.com/2016/06/23/flannel/"/>
     <id>http://blog.decbug.com/2016/06/23/flannel/</id>
     <published>2016-06-22T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.368Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<p>正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理</p>
 <a id="more"></a>
@@ -361,7 +399,7 @@
     <link href="http://blog.decbug.com/2016/06/21/openstack_playground_1/"/>
     <id>http://blog.decbug.com/2016/06/21/openstack_playground_1/</id>
     <published>2016-06-21T11:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>昨天搞整了一下KVM和vlan，<a href="http://blog.decbug.com/2016/06/20/kvm/">http://blog.decbug.com/2016/06/20/kvm/</a><br>今天就要在家搞一套openstack开发环境<br><a id="more"></a></p>
 <h1 id="devstack"><a href="#devstack" class="headerlink" title="devstack"></a>devstack</h1><p>devstack是一个一键式搭建open stack环境的脚本，如官网所说<code>DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.</code><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/openstack-dev/devstack.git</span></span><br><span class="line"><span class="keyword">cd</span> devstack/</span><br><span class="line"></span><br><span class="line"># 切换到<span class="keyword">m</span>版本分支</span><br><span class="line">git co stable/mitaka</span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> tools</span><br><span class="line"></span><br><span class="line"># 创建<span class="keyword">stack</span>用户</span><br><span class="line">sudo bash create-<span class="keyword">stack</span>-user.<span class="keyword">sh</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">cd</span> ../../</span><br><span class="line">sudo mv devstack /opt/<span class="keyword">stack</span></span><br><span class="line">sudo chown -R <span class="keyword">stack</span>:<span class="keyword">stack</span> /opt/<span class="keyword">stack</span>/devstack</span><br><span class="line"></span><br><span class="line"># switch to <span class="keyword">stack</span></span><br><span class="line">sudo -<span class="literal">i</span></span><br><span class="line"><span class="keyword">su</span> <span class="keyword">stack</span></span><br></pre></td></tr></table></figure></p>
@@ -396,7 +434,7 @@
     <link href="http://blog.decbug.com/2016/06/21/blog_huawei/"/>
     <id>http://blog.decbug.com/2016/06/21/blog_huawei/</id>
     <published>2016-06-20T18:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.368Z</updated>
+    <updated>2016-07-21T17:20:13.963Z</updated>
     
     <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/7.jpeg" alt=""></p>
@@ -428,7 +466,7 @@
     <link href="http://blog.decbug.com/2016/06/21/essay20160620/"/>
     <id>http://blog.decbug.com/2016/06/21/essay20160620/</id>
     <published>2016-06-20T17:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.368Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<p>时间已经来到2016的6月底，是时候回顾这上半年的收获与教训<br><a id="more"></a></p>
 <h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><ul>
@@ -492,7 +530,7 @@
     <link href="http://blog.decbug.com/2016/06/20/kvm/"/>
     <id>http://blog.decbug.com/2016/06/20/kvm/</id>
     <published>2016-06-19T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>那么从KVM开始，是一个不错的选择。</p>
 <a id="more"></a>
@@ -530,7 +568,7 @@
     <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
     <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
     <published>2016-05-30T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。<br>之前用过Travis ci，感觉不错，打算继续用它。</p>
 <a id="more"></a>
@@ -568,7 +606,7 @@
     <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
     <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
     <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.368Z</updated>
+    <updated>2016-07-21T17:20:13.963Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。<br>然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。</p>
 <a id="more"></a>
@@ -598,7 +636,7 @@
     <link href="http://blog.decbug.com/2016/05/09/tinyhttpd/"/>
     <id>http://blog.decbug.com/2016/05/09/tinyhttpd/</id>
     <published>2016-05-08T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>C语言实现的http server，代码简短，看完可以明了原理。</p>
 <a id="more"></a>
@@ -637,7 +675,7 @@
     <link href="http://blog.decbug.com/2016/05/04/memcache/"/>
     <id>http://blog.decbug.com/2016/05/04/memcache/</id>
     <published>2016-05-03T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。</p>
 <a id="more"></a>
@@ -675,7 +713,7 @@
     <link href="http://blog.decbug.com/2016/05/03/architectrue_kevin/"/>
     <id>http://blog.decbug.com/2016/05/03/architectrue_kevin/</id>
     <published>2016-05-02T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.368Z</updated>
+    <updated>2016-07-21T17:20:13.963Z</updated>
     
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。<br>于是再读几遍，记录一下感想。</p>
 <a id="more"></a>
@@ -714,7 +752,7 @@
     <link href="http://blog.decbug.com/2016/04/29/lock/"/>
     <id>http://blog.decbug.com/2016/04/29/lock/</id>
     <published>2016-04-28T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。<br>举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。<br>在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。首先在业务层面进行分隔，尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。</p>
 <a id="more"></a>
@@ -771,7 +809,7 @@
     <link href="http://blog.decbug.com/2016/04/11/interview_aliyun/"/>
     <id>http://blog.decbug.com/2016/04/11/interview_aliyun/</id>
     <published>2016-04-10T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。<br>于是在拉勾上投了阿里云。</p>
 <a id="more"></a>
@@ -856,7 +894,7 @@
     <link href="http://blog.decbug.com/2016/04/10/interview_jd/"/>
     <id>http://blog.decbug.com/2016/04/10/interview_jd/</id>
     <published>2016-04-09T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.372Z</updated>
+    <updated>2016-07-21T17:20:13.967Z</updated>
     
     <content type="html"><![CDATA[<h1 id="京东云面试记录"><a href="#京东云面试记录" class="headerlink" title="京东云面试记录"></a>京东云面试记录</h1><p>从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。<br>于是在拉勾投了京东云。<br>面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。<br><a id="more"></a></p>
 <p>总体感觉，面试官都很友善，我平时比较不善言语，这次在面试官的引导之下，交流比较顺畅。</p>
@@ -892,89 +930,6 @@
       <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
     
       <category term="interview" scheme="http://blog.decbug.com/tags/interview/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>docker(6)-swarm</title>
-    <link href="http://blog.decbug.com/2016/03/27/docker_swarm/"/>
-    <id>http://blog.decbug.com/2016/03/27/docker_swarm/</id>
-    <published>2016-03-26T16:00:00.000Z</published>
-    <updated>2016-07-20T16:24:54.368Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>正在撸自己的容器云，目前的业务不是复杂，所以做法比较土：自己管理集群，调用每个节点的docker daemon remote API来创建/启动/停止/删除镜像及容器，虽然简单，但是需要自己做集群管理（都还没上服务发现），比较麻烦。<br>此后打算用k8s，但由于其他原因，暂时搁置。后来咨询swarm的maintainer线超博，以及DaoCloud的高手们，决定采用swarm<br><a id="more"></a></p>
-<h1 id="采用swarm的原因"><a href="#采用swarm的原因" class="headerlink" title="采用swarm的原因"></a>采用swarm的原因</h1><ol>
-<li>自带服务发现，不用我自己弄</li>
-<li>和docker daemon remote API的基本相同，仅有的差异请参照<a href="https://github.com/CodeJuan/swarm/blob/master/docs/swarm-api.md#endpoints-which-behave-differently" target="_blank" rel="external">官方文档</a>，基本可以复用原来的代码</li>
-</ol>
-<p>虽然这次用了swarm，但有机会的话我还是想会继续安利k8s，毕竟k8s更好玩一些</p>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="节点分配"><a href="#节点分配" class="headerlink" title="节点分配"></a>节点分配</h2><table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>IP</th>
-<th>角色</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>i3</td>
-<td>192.168.1.245</td>
-<td>sonsul,manage0,node</td>
-</tr>
-<tr>
-<td>g540</td>
-<td>192.168.1.148</td>
-<td>manage1,node</td>
-</tr>
-<tr>
-<td>g640</td>
-<td>192.168.1.241</td>
-<td>node</td>
-</tr>
-<tr>
-<td>g530</td>
-<td>192.168.1.173</td>
-<td>node</td>
-</tr>
-</tbody>
-</table>
-<p>这里的主机名，都是我的机器的CPU型号，这几台机器都是我收购来的二手台式机，IP是openwrt自动分配的，貌似是hash算出来的，是个固定值。</p>
-<h2 id="暴露docker-daemon的端口"><a href="#暴露docker-daemon的端口" class="headerlink" title="暴露docker daemon的端口"></a>暴露docker daemon的端口</h2><p>swarm应该也是调用每个节点的remote API吧，所以需要暴露端口</p>
-<p>打开<code>/etc/default/docker</code>，在<code>DOCKER_OPTS</code>加上<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby"><span class="constant">H</span> <span class="symbol">tcp:</span>/<span class="regexp">/0.0.0.0:4243 -H unix:/</span><span class="regexp">//var</span><span class="regexp">/run/docker</span>.sock</span></span><br></pre></td></tr></table></figure></p>
-<p>记住这个暴露的端口号，后面会用到，我这里是4243</p>
-<h2 id="启动consul"><a href="#启动consul" class="headerlink" title="启动consul"></a>启动consul</h2><p>在i3上执行<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">run</span> --restart always -<span class="keyword">d</span> -p 8500:8500 --name=consul progrium/consul -server -<span class="keyword">bootstrap</span></span><br></pre></td></tr></table></figure></p>
-<p>启动consul，端口是8500</p>
-<h2 id="启动manager0"><a href="#启动manager0" class="headerlink" title="启动manager0"></a>启动manager0</h2><p>还是i3<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --restart always -d -p <span class="number">4000</span>:<span class="number">4000</span> swarm manage -H :<span class="number">4000</span> --replication --advertise <span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span>:<span class="number">4000</span> consul:<span class="comment">//192.168.1.245:8500</span></span><br></pre></td></tr></table></figure></p>
-<p>advertise的IP就是i3自身的IP，相当于告诉consul，我是manage，这是我的IP和端口<br>consul就是之前在i3上创建的consul的IP和端口</p>
-<h2 id="启动manager1"><a href="#启动manager1" class="headerlink" title="启动manager1"></a>启动manager1</h2><p>官网把这个叫<code>secondary Swarm manager</code>，领会精神即可<br>这次是在g540上执行<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --restart always -d swarm manage -H :<span class="number">4000</span> --replication --advertise <span class="number">192.168</span><span class="number">.1</span><span class="number">.148</span>:<span class="number">4000</span> consul:<span class="comment">//192.168.1.245:8500</span></span><br></pre></td></tr></table></figure></p>
-<p>consul，还是i3上运行的consul<br>advertise 是manager1，也就是自己的IP和端口</p>
-<h2 id="启动node"><a href="#启动node" class="headerlink" title="启动node"></a>启动node</h2><p>在4个节点上分别运行<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --restart always -d swarm join --advertise=自己的<span class="string">IP:</span><span class="number">4243</span> <span class="string">consul:</span><span class="comment">//192.168.1.245:8500</span></span><br></pre></td></tr></table></figure></p>
-<p>这里的4243就是之前暴露的docker daemon的端口了</p>
-<h2 id="在i3上查看info"><a href="#在i3上查看info" class="headerlink" title="在i3上查看info"></a>在i3上查看info</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">docker</span> -H :<span class="number">4000</span> <span class="built_in">info</span></span><br></pre></td></tr></table></figure>
-<p>这里表示，docker会向本机的4000端口发请求，也就是我们最开始启动manager0的时候声明的端口。<br>可以看到<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Containers: <span class="number">19</span></span><br><span class="line"> Running: <span class="number">19</span></span><br><span class="line"> Paused: <span class="number">0</span></span><br><span class="line"> Stopped: <span class="number">0</span></span><br><span class="line">Images: <span class="number">26</span></span><br><span class="line">Server Version: swarm/<span class="number">1.1</span><span class="number">.3</span></span><br><span class="line">Role: primary</span><br><span class="line">Strategy: spread</span><br><span class="line">Filters: health, port, dependency, affinity, constraint</span><br><span class="line">Nodes: <span class="number">4</span></span><br><span class="line"> g530: <span class="number">192.168</span><span class="number">.1</span><span class="number">.173</span>:<span class="number">4243</span></span><br><span class="line">  └ Status: Healthy</span><br><span class="line">  └ Containers: <span class="number">8</span></span><br><span class="line">  └ Reserved CPUs: <span class="number">0</span> / <span class="number">2</span></span><br><span class="line">  └ Reserved Memory: <span class="number">0</span> B / <span class="number">3.969</span> GiB</span><br><span class="line">  └ Labels: executiondriver=native-<span class="number">0.2</span>, kernelversion=<span class="number">3.19</span><span class="number">.0</span>-<span class="number">25</span>-generic, operatingsystem=Ubuntu <span class="number">14.04</span><span class="number">.3</span> LTS, storagedriver=aufs</span><br><span class="line">  └ Error: (none)</span><br><span class="line">  └ UpdatedAt: <span class="number">2016</span>-<span class="number">03</span>-<span class="number">27</span>T09:<span class="number">46</span>:<span class="number">45</span>Z</span><br><span class="line"> g540: <span class="number">192.168</span><span class="number">.1</span><span class="number">.148</span>:<span class="number">4243</span></span><br><span class="line">  └ Status: Healthy</span><br><span class="line">  └ Containers: <span class="number">4</span></span><br><span class="line">  └ Reserved CPUs: <span class="number">0</span> / <span class="number">2</span></span><br><span class="line">  └ Reserved Memory: <span class="number">0</span> B / <span class="number">3.93</span> GiB</span><br><span class="line">  └ Labels: executiondriver=native-<span class="number">0.2</span>, kernelversion=<span class="number">3.19</span><span class="number">.0</span>-<span class="number">25</span>-generic, operatingsystem=Ubuntu <span class="number">14.04</span><span class="number">.4</span> LTS, storagedriver=aufs</span><br><span class="line">  └ Error: (none)</span><br><span class="line">  └ UpdatedAt: <span class="number">2016</span>-<span class="number">03</span>-<span class="number">27</span>T09:<span class="number">47</span>:<span class="number">02</span>Z</span><br><span class="line"> g640: <span class="number">192.168</span><span class="number">.1</span><span class="number">.241</span>:<span class="number">4243</span></span><br><span class="line">  └ Status: Healthy</span><br><span class="line">  └ Containers: <span class="number">4</span></span><br><span class="line">  └ Reserved CPUs: <span class="number">0</span> / <span class="number">2</span></span><br><span class="line">  └ Reserved Memory: <span class="number">0</span> B / <span class="number">3.739</span> GiB</span><br><span class="line">  └ Labels: executiondriver=native-<span class="number">0.2</span>, kernelversion=<span class="number">3.19</span><span class="number">.0</span>-<span class="number">25</span>-generic, operatingsystem=Ubuntu <span class="number">14.04</span><span class="number">.4</span> LTS, storagedriver=aufs</span><br><span class="line">  └ Error: (none)</span><br><span class="line">  └ UpdatedAt: <span class="number">2016</span>-<span class="number">03</span>-<span class="number">27</span>T09:<span class="number">46</span>:<span class="number">56</span>Z</span><br><span class="line"> i3: <span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span>:<span class="number">4243</span></span><br><span class="line">  └ Status: Healthy</span><br><span class="line">  └ Containers: <span class="number">3</span></span><br><span class="line">  └ Reserved CPUs: <span class="number">0</span> / <span class="number">4</span></span><br><span class="line">  └ Reserved Memory: <span class="number">0</span> B / <span class="number">16.12</span> GiB</span><br><span class="line">  └ Labels: executiondriver=native-<span class="number">0.2</span>, kernelversion=<span class="number">3.19</span><span class="number">.0</span>-<span class="number">25</span>-generic, operatingsystem=Ubuntu <span class="number">14.04</span><span class="number">.3</span> LTS, storagedriver=aufs</span><br><span class="line">  └ Error: (none)</span><br><span class="line">  └ UpdatedAt: <span class="number">2016</span>-<span class="number">03</span>-<span class="number">27</span>T09:<span class="number">47</span>:<span class="number">17</span>Z</span><br><span class="line">Plugins:</span><br><span class="line"> Volume:</span><br><span class="line"> Network:</span><br><span class="line">Kernel Version: <span class="number">3.19</span><span class="number">.0</span>-<span class="number">25</span>-generic</span><br><span class="line">Operating System: linux</span><br><span class="line">Architecture: amd64</span><br><span class="line">CPUs: <span class="number">10</span></span><br><span class="line">Total Memory: <span class="number">27.76</span> GiB</span><br></pre></td></tr></table></figure></p>
-<p>很帅吧</p>
-<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><h2 id="获取当前正在运行的容器"><a href="#获取当前正在运行的容器" class="headerlink" title="获取当前正在运行的容器"></a>获取当前正在运行的容器</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET <span class="string">http:</span><span class="comment">//192.168.1.245:4000/containers/json</span></span><br></pre></td></tr></table></figure>
-<p>返回<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        "<span class="attribute">Id</span>":<span class="value"><span class="string">"b7919e7e49b1fc580f046734ab6eba53435200a9b07a1f75b176afe6663ee573"</span></span>,</span><br><span class="line">        "<span class="attribute">Names</span>":<span class="value">[</span><br><span class="line">            <span class="string">"/i3/consul"</span></span><br><span class="line">        ]</span>,</span><br><span class="line">        "<span class="attribute">Image</span>":<span class="value"><span class="string">"progrium/consul"</span></span>,</span><br><span class="line">        "<span class="attribute">Command</span>":<span class="value"><span class="string">"/bin/start -server -bootstrap"</span></span>,</span><br><span class="line">        "<span class="attribute">Created</span>":<span class="value"><span class="number">1459070754</span></span>,</span><br><span class="line">        "<span class="attribute">Status</span>":<span class="value"><span class="string">"Up About an hour"</span></span>,</span><br><span class="line">        "<span class="attribute">Ports</span>":<span class="value">[</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">8301</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"udp"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">"192.168.1.245"</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">8500</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">8500</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"tcp"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">8301</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"tcp"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">8302</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"udp"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">8300</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"tcp"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">53</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"tcp"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">53</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"udp"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">8400</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"tcp"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">IP</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                "<span class="attribute">PrivatePort</span>":<span class="value"><span class="number">8302</span></span>,</span><br><span class="line">                "<span class="attribute">PublicPort</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">Type</span>":<span class="value"><span class="string">"tcp"</span></span><br><span class="line">            </span>&#125;</span><br><span class="line">        ]</span>,</span><br><span class="line">        "<span class="attribute">SizeRw</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">        "<span class="attribute">SizeRootFs</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">        "<span class="attribute">Labels</span>":<span class="value">&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span>,</span><br><span class="line">        "<span class="attribute">NetworkSettings</span>":<span class="value">&#123;</span><br><span class="line">            "<span class="attribute">Networks</span>":<span class="value">&#123;</span><br><span class="line">                "<span class="attribute">bridge</span>":<span class="value">&#123;</span><br><span class="line">                    "<span class="attribute">IPAMConfig</span>":<span class="value"><span class="literal">null</span></span>,</span><br><span class="line">                    "<span class="attribute">Links</span>":<span class="value"><span class="literal">null</span></span>,</span><br><span class="line">                    "<span class="attribute">Aliases</span>":<span class="value"><span class="literal">null</span></span>,</span><br><span class="line">                    "<span class="attribute">NetworkID</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                    "<span class="attribute">EndpointID</span>":<span class="value"><span class="string">"3527825ec17c51e77cfe005a7bf364e2d2b8777dc500cd7554309e855fcc5395"</span></span>,</span><br><span class="line">                    "<span class="attribute">Gateway</span>":<span class="value"><span class="string">"172.17.0.1"</span></span>,</span><br><span class="line">                    "<span class="attribute">IPAddress</span>":<span class="value"><span class="string">"172.17.0.2"</span></span>,</span><br><span class="line">                    "<span class="attribute">IPPrefixLen</span>":<span class="value"><span class="number">16</span></span>,</span><br><span class="line">                    "<span class="attribute">IPv6Gateway</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                    "<span class="attribute">GlobalIPv6Address</span>":<span class="value"><span class="string">""</span></span>,</span><br><span class="line">                    "<span class="attribute">GlobalIPv6PrefixLen</span>":<span class="value"><span class="number">0</span></span>,</span><br><span class="line">                    "<span class="attribute">MacAddress</span>":<span class="value"><span class="string">"02:42:ac:11:00:02"</span></span><br><span class="line">                </span>&#125;</span><br><span class="line">            </span>&#125;</span><br><span class="line">        </span>&#125;</span><br><span class="line">    </span>&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
-<p>可以看到，和以前的remote API获取到的基本相同，只是在IP那里，从<code>0.0.0.0</code>变成了实际的IP</p>
-<h2 id="pull一个镜像"><a href="#pull一个镜像" class="headerlink" title="pull一个镜像"></a>pull一个镜像</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">http:</span><span class="comment">//192.168.1.245:4000/images/create?fromImage=ubuntu</span></span><br></pre></td></tr></table></figure>
-<h2 id="整一个容器试试"><a href="#整一个容器试试" class="headerlink" title="整一个容器试试"></a>整一个容器试试</h2><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 创建</span><br><span class="line">curl -X POST -H "Content-Type: application/json" -d '&#123;"Image":"registry:2.2.1"&#125;' http://<span class="number">192.168.1.245</span>:4000/containers/create</span><br><span class="line"></span><br><span class="line"># 记录返回的id</span><br><span class="line"></span><br><span class="line"># 启动</span><br><span class="line">#curl -X POST http://<span class="number">192.168.1.245</span>:4000/containers/(id)/start</span><br><span class="line">curl -X POST http://<span class="number">192.168.1.245</span>:4000/containers/<span class="number">69e61f836</span>c2fad4cf<span class="number">29a0f37c2</span>b<span class="number">4575e267</span>b<span class="number">45c2931737152</span>ef<span class="number">6f40a9d8</span>a4279/start</span><br><span class="line"></span><br><span class="line"># stop</span><br><span class="line">curl -X POST http://<span class="number">192.168.1.245</span>:4000/containers/<span class="number">69e61f836</span>c2fad4cf<span class="number">29a0f37c2</span>b<span class="number">4575e267</span>b<span class="number">45c2931737152</span>ef<span class="number">6f40a9d8</span>a4279/stop</span><br><span class="line"></span><br><span class="line"># remove</span><br><span class="line">curl -X DELETE http://<span class="number">192.168.1.245</span>:4000/containers/<span class="number">69e61f836</span>c2fad4cf<span class="number">29a0f37c2</span>b<span class="number">4575e267</span>b<span class="number">45c2931737152</span>ef<span class="number">6f40a9d8</span>a4279?v=1</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;正在撸自己的容器云，目前的业务不是复杂，所以做法比较土：自己管理集群，调用每个节点的docker daemon remote API来创建/启动/停止/删除镜像及容器，虽然简单，但是需要自己做集群管理（都还没上服务发现），比较麻烦。&lt;br&gt;此后打算用k8s，但由于其他原因，暂时搁置。后来咨询swarm的maintainer线超博，以及DaoCloud的高手们，决定采用swarm&lt;br&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="docker-swarm" scheme="http://blog.decbug.com/tags/docker-swarm/"/>
     
   </entry>
   
