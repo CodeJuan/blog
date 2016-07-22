@@ -37,7 +37,7 @@ docker inspect 3a9d50c216de
 
 ![get](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get.png)
 
-![get response](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get_rsp.png.png)
+![get response](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get_rsp.png)
 
 获取镜像信息，应该是把返回的body都保存下来了
 
