@@ -15,6 +15,51 @@ description:
 
 <!--more-->
 
+# 抓包分析有容云
+## 抓包
+1. 因为容器间通信肯定会经过docker0，所以抓docker0就够了
+```
+tcpdump -i docker0 -w del_restore.cap
+```
+2. 查看AppHouse的registry容器的IP
+```
+docker ps | grep app
+# 得到registry的container ID
+
+docker inspect 3a9d50c216de
+#找到IP "IPAddress": "172.16.52.3"
+```
+3. wireshark加上条件`(ip.src == 172.16.52.3) || (ip.dst == 172.16.52.3) && tcp.port ==5002 && http`
+
+## 分析包
+
+### 获取镜像信息
+
+![get](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get.png)
+
+![get response](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get_rsp.png.png)
+
+获取镜像信息，应该是把返回的body都保存下来了
+
+### 删除镜像
+
+![delete](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del.png)
+
+![delete response](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del_rsp.png)
+
+这个没啥好说
+
+### 恢复镜像
+
+
+![put](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put.png)
+
+![put response](https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put_rsp.png)
+
+应该是把之前保存的body又再put进去
+
+
+
 
 # 官方不建议删除镜像
 因为[https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes](https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes)
