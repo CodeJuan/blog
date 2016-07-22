@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-07-22T00:22:25.338Z</updated>
+  <updated>2016-07-22T00:26:36.870Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>删除恢复docker registry中的镜像</title>
+    <title>高级docker镜像仓库之删除镜像与恢复镜像</title>
     <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
     <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
     <published>2016-07-20T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
 <a id="more"></a>
@@ -78,7 +78,7 @@
     <link href="http://blog.decbug.com/2016/07/20/inspect_harbor/"/>
     <id>http://blog.decbug.com/2016/07/20/inspect_harbor/</id>
     <published>2016-07-20T12:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。</p>
 <a id="more"></a>
@@ -134,7 +134,7 @@
     <link href="http://blog.decbug.com/2016/07/20/play_dce/"/>
     <id>http://blog.decbug.com/2016/07/20/play_dce/</id>
     <published>2016-07-19T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.874Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。</p>
 <a id="more"></a>
@@ -170,7 +170,7 @@
     <link href="http://blog.decbug.com/2016/07/15/net_speeder/"/>
     <id>http://blog.decbug.com/2016/07/15/net_speeder/</id>
     <published>2016-07-14T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
 <a id="more"></a>
@@ -200,7 +200,7 @@
     <link href="http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/"/>
     <id>http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/</id>
     <published>2016-07-02T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<p>要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。<br>现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。<br>恰好业务是跑在k8s上，k8s关于pod的文档上说</p>
 <blockquote>
@@ -251,7 +251,7 @@
     <link href="http://blog.decbug.com/2016/06/28/k8s_admission/"/>
     <id>http://blog.decbug.com/2016/06/28/k8s_admission/</id>
     <published>2016-06-27T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h2><p>k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。<br>为了实现更细粒度的quota，有必要自制一个admission插件。</p>
 <h2 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h2><p>由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd</p>
@@ -286,7 +286,7 @@
     <link href="http://blog.decbug.com/2016/06/27/plantuml/"/>
     <id>http://blog.decbug.com/2016/06/27/plantuml/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.874Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>架构图即代码<br>PlantUML is a open-source tool that allows to quickly write :</p>
 <ul>
@@ -360,7 +360,7 @@
     <link href="http://blog.decbug.com/2016/06/23/flannel/"/>
     <id>http://blog.decbug.com/2016/06/23/flannel/</id>
     <published>2016-06-22T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<p>正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理</p>
 <a id="more"></a>
@@ -419,7 +419,7 @@
     <link href="http://blog.decbug.com/2016/06/21/openstack_playground_1/"/>
     <id>http://blog.decbug.com/2016/06/21/openstack_playground_1/</id>
     <published>2016-06-21T11:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.874Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>昨天搞整了一下KVM和vlan，<a href="http://blog.decbug.com/2016/06/20/kvm/">http://blog.decbug.com/2016/06/20/kvm/</a><br>今天就要在家搞一套openstack开发环境<br><a id="more"></a></p>
 <h1 id="devstack"><a href="#devstack" class="headerlink" title="devstack"></a>devstack</h1><p>devstack是一个一键式搭建open stack环境的脚本，如官网所说<code>DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.</code><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/openstack-dev/devstack.git</span></span><br><span class="line"><span class="keyword">cd</span> devstack/</span><br><span class="line"></span><br><span class="line"># 切换到<span class="keyword">m</span>版本分支</span><br><span class="line">git co stable/mitaka</span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> tools</span><br><span class="line"></span><br><span class="line"># 创建<span class="keyword">stack</span>用户</span><br><span class="line">sudo bash create-<span class="keyword">stack</span>-user.<span class="keyword">sh</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">cd</span> ../../</span><br><span class="line">sudo mv devstack /opt/<span class="keyword">stack</span></span><br><span class="line">sudo chown -R <span class="keyword">stack</span>:<span class="keyword">stack</span> /opt/<span class="keyword">stack</span>/devstack</span><br><span class="line"></span><br><span class="line"># switch to <span class="keyword">stack</span></span><br><span class="line">sudo -<span class="literal">i</span></span><br><span class="line"><span class="keyword">su</span> <span class="keyword">stack</span></span><br></pre></td></tr></table></figure></p>
@@ -454,7 +454,7 @@
     <link href="http://blog.decbug.com/2016/06/21/blog_huawei/"/>
     <id>http://blog.decbug.com/2016/06/21/blog_huawei/</id>
     <published>2016-06-20T18:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/7.jpeg" alt=""></p>
@@ -486,7 +486,7 @@
     <link href="http://blog.decbug.com/2016/06/21/essay20160620/"/>
     <id>http://blog.decbug.com/2016/06/21/essay20160620/</id>
     <published>2016-06-20T17:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<p>时间已经来到2016的6月底，是时候回顾这上半年的收获与教训<br><a id="more"></a></p>
 <h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><ul>
@@ -550,7 +550,7 @@
     <link href="http://blog.decbug.com/2016/06/20/kvm/"/>
     <id>http://blog.decbug.com/2016/06/20/kvm/</id>
     <published>2016-06-19T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>那么从KVM开始，是一个不错的选择。</p>
 <a id="more"></a>
@@ -588,7 +588,7 @@
     <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
     <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
     <published>2016-05-30T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。<br>之前用过Travis ci，感觉不错，打算继续用它。</p>
 <a id="more"></a>
@@ -626,7 +626,7 @@
     <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
     <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
     <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。<br>然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。</p>
 <a id="more"></a>
@@ -656,7 +656,7 @@
     <link href="http://blog.decbug.com/2016/05/09/tinyhttpd/"/>
     <id>http://blog.decbug.com/2016/05/09/tinyhttpd/</id>
     <published>2016-05-08T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.874Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>C语言实现的http server，代码简短，看完可以明了原理。</p>
 <a id="more"></a>
@@ -695,7 +695,7 @@
     <link href="http://blog.decbug.com/2016/05/04/memcache/"/>
     <id>http://blog.decbug.com/2016/05/04/memcache/</id>
     <published>2016-05-03T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。</p>
 <a id="more"></a>
@@ -733,7 +733,7 @@
     <link href="http://blog.decbug.com/2016/05/03/architectrue_kevin/"/>
     <id>http://blog.decbug.com/2016/05/03/architectrue_kevin/</id>
     <published>2016-05-02T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.334Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。<br>于是再读几遍，记录一下感想。</p>
 <a id="more"></a>
@@ -772,7 +772,7 @@
     <link href="http://blog.decbug.com/2016/04/29/lock/"/>
     <id>http://blog.decbug.com/2016/04/29/lock/</id>
     <published>2016-04-28T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。<br>举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。<br>在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。首先在业务层面进行分隔，尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。</p>
 <a id="more"></a>
@@ -829,7 +829,7 @@
     <link href="http://blog.decbug.com/2016/04/11/interview_aliyun/"/>
     <id>http://blog.decbug.com/2016/04/11/interview_aliyun/</id>
     <published>2016-04-10T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。<br>于是在拉勾上投了阿里云。</p>
 <a id="more"></a>
@@ -914,7 +914,7 @@
     <link href="http://blog.decbug.com/2016/04/10/interview_jd/"/>
     <id>http://blog.decbug.com/2016/04/10/interview_jd/</id>
     <published>2016-04-09T16:00:00.000Z</published>
-    <updated>2016-07-22T00:22:25.338Z</updated>
+    <updated>2016-07-22T00:26:36.870Z</updated>
     
     <content type="html"><![CDATA[<h1 id="京东云面试记录"><a href="#京东云面试记录" class="headerlink" title="京东云面试记录"></a>京东云面试记录</h1><p>从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。<br>于是在拉勾投了京东云。<br>面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。<br><a id="more"></a></p>
 <p>总体感觉，面试官都很友善，我平时比较不善言语，这次在面试官的引导之下，交流比较顺畅。</p>
