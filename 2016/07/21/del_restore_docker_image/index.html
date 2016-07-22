@@ -45,8 +45,14 @@
 <meta property="og:url" content="http://blog.decbug.com/2016/07/21/del_restore_docker_image/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能">
+<meta property="og:image" content="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get.png">
+<meta property="og:image" content="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get_rsp.png.png">
+<meta property="og:image" content="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del.png">
+<meta property="og:image" content="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del_rsp.png">
+<meta property="og:image" content="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put.png">
+<meta property="og:image" content="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put_rsp.png">
 <meta property="og:image" content="http://www.plantuml.com/plantuml/svg/VP3DRW8n38JFpLDOox5QrFCASgWgSU4bdDqXHCeco77uUVkkoa8bG9mi-HjxxE6gETNHGQXPxN9IwdFCidQnmgwSfQybKMDC7mEIjjQpuiGNCzVM2dmeAfUEF9H6Jc67ekRMRkyZ7GcqIlhNt7UeSDbt55A1A8MHFIZnY4zbJvhfZx-o712XU6ScA3K-MnK-uf6rzlfaTmDcO6N71VC1nkKpDJ_V3IssmUzr8rCG7mSM3Nquy9JTLOSqq2Jz1G00">
-<meta property="og:updated_time" content="2016-07-21T17:33:08.060Z">
+<meta property="og:updated_time" content="2016-07-22T00:20:48.097Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="删除恢复docker registry中的镜像">
 <meta name="twitter:description" content="背景看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能">
@@ -259,6 +265,25 @@
       
         <span itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
 <a id="more"></a>
+<h1 id="抓包分析有容云"><a href="#抓包分析有容云" class="headerlink" title="抓包分析有容云"></a>抓包分析有容云</h1><h2 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h2><ol>
+<li><p>因为容器间通信肯定会经过docker0，所以抓docker0就够了</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -<span class="tag">i</span> docker0 -w del_restore.cap</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看AppHouse的registry容器的IP</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker ps | grep app</span><br><span class="line"><span class="preprocessor"># 得到registry的container ID</span></span><br><span class="line"></span><br><span class="line">docker inspect <span class="number">3</span>a9d50c216de</span><br><span class="line"><span class="preprocessor">#找到IP <span class="string">"IPAddress"</span>: <span class="string">"172.16.52.3"</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>wireshark加上条件<code>(ip.src == 172.16.52.3) || (ip.dst == 172.16.52.3) &amp;&amp; tcp.port ==5002 &amp;&amp; http</code></p>
+</li>
+</ol>
+<h2 id="分析包"><a href="#分析包" class="headerlink" title="分析包"></a>分析包</h2><h3 id="获取镜像信息"><a href="#获取镜像信息" class="headerlink" title="获取镜像信息"></a>获取镜像信息</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get.png" alt="get"></p>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get_rsp.png.png" alt="get response"></p>
+<p>获取镜像信息，应该是把返回的body都保存下来了</p>
+<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del.png" alt="delete"></p>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del_rsp.png" alt="delete response"></p>
+<p>这个没啥好说</p>
+<h3 id="恢复镜像"><a href="#恢复镜像" class="headerlink" title="恢复镜像"></a>恢复镜像</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put.png" alt="put"></p>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put_rsp.png" alt="put response"></p>
+<p>应该是把之前保存的body又再put进去</p>
 <h1 id="官方不建议删除镜像"><a href="#官方不建议删除镜像" class="headerlink" title="官方不建议删除镜像"></a>官方不建议删除镜像</h1><p>因为<a href="https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes" target="_blank" rel="external">https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes</a></p>
 <blockquote>
 <p>NOTE: Deletes are a much asked for feature. Before requesting this feature or participating in discussion, we ask that you read this section in full and understand the problems behind deletes.</p>
@@ -431,7 +456,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#官方不建议删除镜像"><span class="nav-number">2.</span> <span class="nav-text">官方不建议删除镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其实是有删除接口的"><span class="nav-number">3.</span> <span class="nav-text">其实是有删除接口的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置文件"><span class="nav-number">4.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用python写的测试代码"><span class="nav-number">5.</span> <span class="nav-text">用python写的测试代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#时序图"><span class="nav-number">6.</span> <span class="nav-text">时序图</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#抓包分析有容云"><span class="nav-number">2.</span> <span class="nav-text">抓包分析有容云</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#抓包"><span class="nav-number">2.1.</span> <span class="nav-text">抓包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析包"><span class="nav-number">2.2.</span> <span class="nav-text">分析包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取镜像信息"><span class="nav-number">2.2.1.</span> <span class="nav-text">获取镜像信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除镜像"><span class="nav-number">2.2.2.</span> <span class="nav-text">删除镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#恢复镜像"><span class="nav-number">2.2.3.</span> <span class="nav-text">恢复镜像</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#官方不建议删除镜像"><span class="nav-number">3.</span> <span class="nav-text">官方不建议删除镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其实是有删除接口的"><span class="nav-number">4.</span> <span class="nav-text">其实是有删除接口的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置文件"><span class="nav-number">5.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用python写的测试代码"><span class="nav-number">6.</span> <span class="nav-text">用python写的测试代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#时序图"><span class="nav-number">7.</span> <span class="nav-text">时序图</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Continuous Learning</title>
+  <subtitle>浮云一别后，流水十年间</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://blog.decbug.com/"/>
+  <updated>2016-07-22T00:20:48.097Z</updated>
+  <id>http://blog.decbug.com/</id>
+  
+  <author>
+    <name>CodeJuan</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>删除恢复docker registry中的镜像</title>
+    <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
+    <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
+    <published>2016-07-20T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
+<a id="more"></a>
+<h1 id="抓包分析有容云"><a href="#抓包分析有容云" class="headerlink" title="抓包分析有容云"></a>抓包分析有容云</h1><h2 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h2><ol>
+<li><p>因为容器间通信肯定会经过docker0，所以抓docker0就够了</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -<span class="tag">i</span> docker0 -w del_restore.cap</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看AppHouse的registry容器的IP</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker ps | grep app</span><br><span class="line"><span class="preprocessor"># 得到registry的container ID</span></span><br><span class="line"></span><br><span class="line">docker inspect <span class="number">3</span>a9d50c216de</span><br><span class="line"><span class="preprocessor">#找到IP <span class="string">"IPAddress"</span>: <span class="string">"172.16.52.3"</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>wireshark加上条件<code>(ip.src == 172.16.52.3) || (ip.dst == 172.16.52.3) &amp;&amp; tcp.port ==5002 &amp;&amp; http</code></p>
+</li>
+</ol>
+<h2 id="分析包"><a href="#分析包" class="headerlink" title="分析包"></a>分析包</h2><h3 id="获取镜像信息"><a href="#获取镜像信息" class="headerlink" title="获取镜像信息"></a>获取镜像信息</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get.png" alt="get"></p>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get_rsp.png.png" alt="get response"></p>
+<p>获取镜像信息，应该是把返回的body都保存下来了</p>
+<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del.png" alt="delete"></p>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del_rsp.png" alt="delete response"></p>
+<p>这个没啥好说</p>
+<h3 id="恢复镜像"><a href="#恢复镜像" class="headerlink" title="恢复镜像"></a>恢复镜像</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put.png" alt="put"></p>
+<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put_rsp.png" alt="put response"></p>
+<p>应该是把之前保存的body又再put进去</p>
+<h1 id="官方不建议删除镜像"><a href="#官方不建议删除镜像" class="headerlink" title="官方不建议删除镜像"></a>官方不建议删除镜像</h1><p>因为<a href="https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes" target="_blank" rel="external">https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes</a></p>
+<blockquote>
+<p>NOTE: Deletes are a much asked for feature. Before requesting this feature or participating in discussion, we ask that you read this section in full and understand the problems behind deletes.</p>
+</blockquote>
+<p>删除固然简单，删除manifest和blob就行。但是，blob是分层的，可能是多个镜像共用的，如果在删除某个blob的时候，其他人正在使用这个blob，那么就麻烦了。</p>
+<h1 id="其实是有删除接口的"><a href="#其实是有删除接口的" class="headerlink" title="其实是有删除接口的"></a>其实是有删除接口的</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DELETE /v2/<span class="tag">&lt;<span class="title">name</span>&gt;</span>/manifests/<span class="tag">&lt;<span class="title">reference</span>&gt;</span></span><br><span class="line">Host: <span class="tag">&lt;<span class="title">registry</span> <span class="attribute">host</span>&gt;</span></span><br><span class="line">Authorization: <span class="tag">&lt;<span class="title">scheme</span>&gt;</span> <span class="tag">&lt;<span class="title">token</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">version</span>: <span class="number">0.1</span></span><br><span class="line"><span class="attribute">log</span>:</span><br><span class="line">  <span class="attribute">fields</span>:</span><br><span class="line">    <span class="attribute">service</span>: registry</span><br><span class="line"><span class="attribute">storage</span>:</span><br><span class="line">    <span class="attribute">cache</span>:</span><br><span class="line">        <span class="attribute">blobdescriptor</span>: inmemory</span><br><span class="line">    <span class="attribute">filesystem</span>:</span><br><span class="line">        <span class="attribute">rootdirectory</span>: /var/lib/registry</span><br><span class="line"># 这里需要把delelte设置为true</span><br><span class="line">    <span class="attribute">delete</span>:</span><br><span class="line">        <span class="attribute">enabled</span>: true</span><br><span class="line"><span class="attribute">http</span>:</span><br><span class="line">    <span class="attribute">addr</span>: :<span class="number">5000</span></span><br><span class="line">    <span class="attribute">headers</span>:</span><br><span class="line">        <span class="attribute">X-Content-Type-Options</span>: [nosniff]</span><br><span class="line"><span class="attribute">health</span>:</span><br><span class="line">  <span class="attribute">storagedriver</span>:</span><br><span class="line">    <span class="attribute">enabled</span>: true</span><br><span class="line">    <span class="attribute">interval</span>: <span class="number">10s</span></span><br><span class="line">    <span class="attribute">threshold</span>: <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h1 id="用python写的测试代码"><a href="#用python写的测试代码" class="headerlink" title="用python写的测试代码"></a>用python写的测试代码</h1><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> simplejson <span class="keyword">as</span> json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">registry = <span class="string">"http://192.168.1.245:25678/v2/"</span></span><br><span class="line">image = <span class="string">"test/consul"</span></span><br><span class="line">tag = <span class="string">"latest"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">r = requests.get(registry + <span class="string">"_catalog/"</span>, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.text</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">headers = &#123;<span class="string">'Accept'</span>: <span class="string">'application/vnd.docker.distribution.manifest.v2+json'</span>&#125;</span><br><span class="line">r = requests.get(registry + image + <span class="string">"/manifests/"</span> + tag, headers=headers, verify=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取manifest</span></span><br><span class="line">manifest = r.headers[<span class="string">'Docker-Content-Digest'</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">"manifest: "</span> + manifest</span><br><span class="line"></span><br><span class="line">data = r.text</span><br><span class="line"><span class="keyword">print</span> data</span><br><span class="line"><span class="comment"># for blob in data['fsLayers']:</span></span><br><span class="line"><span class="comment">#     blob_digest = blob['blobSum']</span></span><br><span class="line"><span class="comment">#     print blob_digest</span></span><br><span class="line"><span class="comment">#     r = requests.delete(registry + "v2/xx/hello/blobs/" + blob_digest, verify=False)</span></span><br><span class="line"><span class="comment">#     print r</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"delete"</span></span><br><span class="line">r = requests.delete(registry + image + <span class="string">"/manifests/"</span> + manifest, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.status_code</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"restore"</span></span><br><span class="line">r = requests.put(registry + image + <span class="string">"/manifests/"</span> + tag, data=data, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.status_code</span><br></pre></td></tr></table></figure>
+<h1 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h1><img src="http://www.plantuml.com/plantuml/svg/VP3DRW8n38JFpLDOox5QrFCASgWgSU4bdDqXHCeco77uUVkkoa8bG9mi-HjxxE6gETNHGQXPxN9IwdFCidQnmgwSfQybKMDC7mEIjjQpuiGNCzVM2dmeAfUEF9H6Jc67ekRMRkyZ7GcqIlhNt7UeSDbt55A1A8MHFIZnY4zbJvhfZx-o712XU6ScA3K-MnK-uf6rzlfaTmDcO6N71VC1nkKpDJ_V3IssmUzr8rCG7mSM3Nquy9JTLOSqq2Jz1G00">
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="image" scheme="http://blog.decbug.com/tags/image/"/>
+    
+      <category term="registry" scheme="http://blog.decbug.com/tags/registry/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>看harbor源码</title>
+    <link href="http://blog.decbug.com/2016/07/20/inspect_harbor/"/>
+    <id>http://blog.decbug.com/2016/07/20/inspect_harbor/</id>
+    <published>2016-07-20T12:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。</p>
+<a id="more"></a>
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><h2 id="官方方法"><a href="#官方方法" class="headerlink" title="官方方法"></a>官方方法</h2><blockquote>
+<p>Install Harbor with the following commands. Note that the docker-compose process can take a while.<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd Deploy</span><br><span class="line"></span><br><span class="line">$ ./<span class="operator"><span class="keyword">prepare</span></span><br><span class="line"><span class="keyword">Generated</span> configuration <span class="keyword">file</span>: ./config/ui/env</span><br><span class="line"><span class="keyword">Generated</span> configuration <span class="keyword">file</span>: ./config/ui/app.conf</span><br><span class="line"><span class="keyword">Generated</span> configuration <span class="keyword">file</span>: ./config/registry/config.yml</span><br><span class="line"><span class="keyword">Generated</span> configuration <span class="keyword">file</span>: ./config/db/env</span><br><span class="line"></span><br><span class="line">docker-compose up -<span class="keyword">d</span></span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="特殊国情下的模式"><a href="#特殊国情下的模式" class="headerlink" title="特殊国情下的模式"></a>特殊国情下的模式</h2><p>不建议用，最好还是番茄自己build<br>因为Daoloud和CaiCloud的版本都太老，很多新特性都没有。</p>
+<h2 id="离线模式"><a href="#离线模式" class="headerlink" title="离线模式"></a>离线模式</h2><p>由于公司坑爹的模式，很多镜像下载不了，只好在家pull下来，然后save成tar，再到公司load<br>具体看这<a href="https://github.com/vmware/harbor/releases/download/0.3.0/harbor-0.3.0.tgz" target="_blank" rel="external">链接</a></p>
+<h1 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h1><p><img src="http://dockerone.com/uploads/article/20160331/d9f81c0cdcc4f7b7af42d27d030cf381.png" alt="来自[dockone的架构图](http://dockone.io/article/1179)"></p>
+<img src="http://www.plantuml.com/plantuml/svg/oymhIIrAIqnELL1ApibCpIjHKaWiLd3cuaf9B4bCIYm6YljM1XVcA2bKSzLoSQNbvwIa5YaeXNg211I083etCJCl5i9CB2t9W3BpyaioqpAJ4qioyy6oGBtE2hf0yVJCl8fOBYYjeATdfn1Tb9gUMLnIL1chOALGMfJpRCRw1FqoemHKHM1ha1G0fH7wm2h0jWDLbEHdf-PXoA8u2AWAcSyLwWbM1FQfLKeI5nTGDXLeK852VXgI-u3-UDamw_dyfKytR7pQF_5fnmOKKnGKdkwT_79EmujbZIyxjpoRs_ni-ZQWoXSRcfzFMG5o7LTgNWh8ubG0">
+<p>我画的架构图</p>
+<h1 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h1><p>通过<code>tree -d ./</code>生成，略去部分不重要代码<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">├── api</span><br><span class="line">│   └── jobs</span><br><span class="line">├── auth</span><br><span class="line">│   ├── <span class="keyword">db</span></span><br><span class="line">│   └── ldap</span><br><span class="line">├── contrib</span><br><span class="line">├── controllers</span><br><span class="line">├── dao</span><br><span class="line">├── Deploy</span><br><span class="line">│   ├── config</span><br><span class="line">│   │   ├── <span class="keyword">db</span></span><br><span class="line">│   │   ├── jobservice</span><br><span class="line">│   │   ├── nginx</span><br><span class="line">│   │   │   └── cert</span><br><span class="line">│   │   ├── registry</span><br><span class="line">│   │   └── ui</span><br><span class="line">│   ├── <span class="keyword">db</span></span><br><span class="line">│   ├── kubernetes</span><br><span class="line">│   │   └── dockerfiles</span><br><span class="line">│   ├── <span class="literal">log</span></span><br><span class="line">│   └── templates</span><br><span class="line">│       ├── <span class="keyword">db</span></span><br><span class="line">│       ├── jobservice</span><br><span class="line">│       ├── registry</span><br><span class="line">│       └── ui</span><br><span class="line">├── job</span><br><span class="line">│   ├── config</span><br><span class="line">│   ├── replication</span><br><span class="line">│   └── utils</span><br><span class="line">├── jobservice</span><br><span class="line">├── models</span><br><span class="line">├── service</span><br><span class="line">│   ├── cache</span><br><span class="line">│   ├── <span class="keyword">token</span></span><br><span class="line">│   └── utils</span><br><span class="line">├── static前端</span><br><span class="line">├── tests</span><br><span class="line">├── ui</span><br><span class="line">├── utils共用组件</span><br><span class="line">├── vendor三方库</span><br><span class="line">└── views</span><br></pre></td></tr></table></figure></p>
+<p>对应架构图来看</p>
+<ul>
+<li>proxy就是nginx，<code>Deploy/config/nginx/nginx.conf</code></li>
+<li>UI就是<code>ui/main.go</code></li>
+<li>token就是<code>service/token/token.go</code></li>
+<li>registry的webhook就是<code>Deploy/templates/registry/config.yml</code>的notifications和auth<ul>
+<li>auth指向<code>beego.Router(&quot;/service/token&quot;, &amp;token.Handler{})</code>，<code>service/token/token.go</code></li>
+<li>notification指向<code>beego.Router(&quot;/service/notifications&quot;, &amp;service.NotificationHandler{})</code>，用来同步备份到远端仓库。<code>service/notification.go</code></li>
+</ul>
+</li>
+<li><code>auth/authenticator.go</code>接口，有本地db和LDAP两种实现，在init时会registrer，根据配置选择用哪个实现。</li>
+</ul>
+<h1 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/16990645/4d744da8-4ecb-11e6-9f34-b052a0ba5cc6.png" alt=""><br>这个特性很不错啊，registry有了新的更新，就notify到ui的notification，根据配置的策略，是否要备份到远端registry</p>
+<h1 id="LDAP"><a href="#LDAP" class="headerlink" title="LDAP"></a>LDAP</h1><p>用的是open LDAP<br>代码在auth/ldap/ldap.go<br>LDAP_BASE_DN 这个还不会配置</p>
+<h1 id="RBAC"><a href="#RBAC" class="headerlink" title="RBAC"></a>RBAC</h1><p>Role Based Access Control<br><code>service/token/authutils.go的FilterAccess</code>，通过token里的scope获取action，再到数据库里查询是否有权限</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="harbor" scheme="http://blog.decbug.com/tags/harbor/"/>
+    
+      <category term="registry" scheme="http://blog.decbug.com/tags/registry/"/>
+    
+      <category term="vmware" scheme="http://blog.decbug.com/tags/vmware/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在家玩DaoCloud企业版</title>
+    <link href="http://blog.decbug.com/2016/07/20/play_dce/"/>
+    <id>http://blog.decbug.com/2016/07/20/play_dce/</id>
+    <published>2016-07-19T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.101Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。</p>
+<a id="more"></a>
+<h1 id="创建机器"><a href="#创建机器" class="headerlink" title="创建机器"></a>创建机器</h1><p>在DigitalOcean创建两台最低配.</p>
+<h1 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h1><h2 id="控制节点"><a href="#控制节点" class="headerlink" title="控制节点"></a>控制节点</h2><p>也就是master<br>一条命令搞定<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bash </span>-c <span class="string">"$(docker run -i --rm daocloud.io/daocloud/dce install)"</span></span><br></pre></td></tr></table></figure></p>
+<p>竟然内存太小，凑着着用<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Verifying System compatibility...</span><br><span class="line">Requirement              Value                          Note</span><br><span class="line">-----------------------  -----------------------------  -------------------------------------------------------</span><br><span class="line">CPU                      <span class="number">1</span>                              Recommended more than <span class="number">4</span> CPU Core.</span><br><span class="line">Memory                   <span class="number">489.9921875</span> MiB                WARN: Should be installed where more than <span class="number">1</span>G memory.</span><br><span class="line">Storage For Docker       <span class="number">16.7933425903</span> GiB              Recommended more than <span class="number">30</span>GB.</span><br><span class="line">Network to Controller    OK                             OK</span><br><span class="line">Network from Controller  OK                             OK</span><br><span class="line">Operating System         Ubuntu <span class="number">14.04</span><span class="number">.4</span> LTS             WARN: Recommended Ubuntu <span class="number">16.04</span>.</span><br><span class="line">Linux Kernel             <span class="number">3.13</span><span class="number">.0</span>-<span class="number">85</span>-generic              Recommended the latest maintained version Linux kernel.</span><br><span class="line">Docker Version           <span class="number">1.11</span><span class="number">.2</span>                         OK</span><br><span class="line">Docker Storage Driver    aufs                           OK</span><br><span class="line">Docker Feature           All Supported                  OK</span><br><span class="line">Docker ID                MIM2:DL6F:WVJN:UDDF:...        OK</span><br><span class="line">Firewalld                UnKnown                        Make sure the firewalld has been closed.</span><br><span class="line">Host Name                docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>           OK</span><br><span class="line">Port                     <span class="number">80</span>,<span class="number">443</span>,<span class="number">2375</span>,<span class="number">12376</span>,<span class="number">12380</span>,<span class="number">12379</span>  OK</span><br><span class="line">Time                     <span class="number">0</span>ms                            OK</span><br><span class="line">SELinux                  permissive                     SELinux has been disabled.</span><br></pre></td></tr></table></figure></p>
+<h2 id="容器节点"><a href="#容器节点" class="headerlink" title="容器节点"></a>容器节点</h2><p>也就是slave<br>看起来像是swarm join<br>在另一台机器上运行</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bash </span>-c <span class="string">"$(docker run -i --rm daocloud.io/daocloud/dce join &#123;你的控制器IP&#125;)"</span></span><br></pre></td></tr></table></figure>
+<h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/16971073/34dce8c2-4e53-11e6-8e40-1dd8e292dcfa.png" alt="image"><br><img src="https://cloud.githubusercontent.com/assets/5423628/16971113/921cf004-4e53-11e6-8c9f-02c7eaca1105.png" alt="image"></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="DaoCloud" scheme="http://blog.decbug.com/tags/DaoCloud/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="swarm" scheme="http://blog.decbug.com/tags/swarm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>net-speeder番茄加速</title>
+    <link href="http://blog.decbug.com/2016/07/15/net_speeder/"/>
+    <id>http://blog.decbug.com/2016/07/15/net_speeder/</id>
+    <published>2016-07-14T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
+<a id="more"></a>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#安装libnet-<span class="built_in">dev</span>：</span><br><span class="line">apt-<span class="built_in">get</span> install libnet1-<span class="built_in">dev</span></span><br><span class="line">#安装libpcap-<span class="built_in">dev</span>：</span><br><span class="line">apt-<span class="built_in">get</span> install libpcap0<span class="number">.8</span>-<span class="built_in">dev</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装net-speeder"><a href="#安装net-speeder" class="headerlink" title="安装net-speeder"></a>安装net-speeder</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https:<span class="comment">//github.com/snooda/net-speeder/archive/master.zip</span></span><br><span class="line">unzip master.<span class="keyword">zip</span></span><br><span class="line"><span class="keyword">cd</span> <span class="keyword">net</span>-speeder-master</span><br><span class="line"># openvz 用这个命令make</span><br><span class="line"><span class="keyword">sh</span> build.<span class="keyword">sh</span> -DCOOKED</span><br></pre></td></tr></table></figure>
+<h2 id="添加开机启动"><a href="#添加开机启动" class="headerlink" title="添加开机启动"></a>添加开机启动</h2><p>打开/etc/local.rc，加上<br><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[net_speeder安装目录]</span>/net_speeder venet0:<span class="number">0</span> <span class="string">"ip"</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h1><p>不知是不算心理作用，果然不那么卡了</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。&lt;br&gt;由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="番茄" scheme="http://blog.decbug.com/tags/%E7%95%AA%E8%8C%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kubernetes:pod内IPC</title>
+    <link href="http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/"/>
+    <id>http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/</id>
+    <published>2016-07-02T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<p>要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。<br>现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。<br>恰好业务是跑在k8s上，k8s关于pod的文档上说</p>
+<blockquote>
+<p>Containers within a pod share an IP address and port space, and can find each other via localhost. They can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. Containers in different pods have distinct IP addresses and can not communicate by IPC</p>
+</blockquote>
+<p>如果同一个pod里的进程，可以互相看到对方，那么就可以不用修改，直接把现有一个容器拆成两个容器了。</p>
+<a id="more"></a>
+<p>提前剧透一下结论，是看不到的。因为</p>
+<blockquote>
+<p>The context of the pod can be defined as the conjunction of several Linux namespaces:</p>
+<ul>
+<li>PID namespace (applications within the pod can see each other’s processes)</li>
+<li>network namespace (applications within the pod have access to the same IP and port space)</li>
+<li>IPC namespace (applications within the pod can use SystemV IPC or POSIX message queues to communicate)</li>
+<li>UTS namespace (applications within the pod share a hostname)</li>
+</ul>
+<p>In terms of Docker constructs, a pod consists of a colocated group of Docker containers with shared volumes. PID namespace sharing is not yet implemented with Docker.</p>
+</blockquote>
+<h1 id="创建pod"><a href="#创建pod" class="headerlink" title="创建pod"></a>创建pod</h1><p>创建两个容器的pod<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: v1</span><br><span class="line"><span class="attribute">kind</span>: Pod</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: ipc2</span><br><span class="line">  <span class="attribute">labels</span>:</span><br><span class="line">    <span class="attribute">app</span>: web</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">containers</span>:</span><br><span class="line">    - <span class="attribute">name</span>: registry</span><br><span class="line">      <span class="attribute">image</span>: registry</span><br><span class="line">      <span class="attribute">ports</span>:</span><br><span class="line">        - <span class="attribute">containerPort</span>: <span class="number">5000</span></span><br><span class="line">    - <span class="attribute">name</span>: nginx</span><br><span class="line">      <span class="attribute">image</span>: <span class="attribute">nginx</span>:<span class="number">1.9</span></span><br><span class="line">      <span class="attribute">ports</span>:</span><br><span class="line">        - <span class="attribute">containerPort</span>: <span class="number">80</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="进入其中一个ps和netstat"><a href="#进入其中一个ps和netstat" class="headerlink" title="进入其中一个ps和netstat"></a>进入其中一个ps和netstat</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">./<span class="tag">kubectl</span> <span class="tag">exec</span> <span class="tag">-it</span> <span class="tag">ipc2</span> <span class="tag">bash</span></span><br><span class="line"></span><br><span class="line"># 看进程</span><br><span class="line"><span class="tag">ps</span> <span class="tag">aux</span></span><br><span class="line"># 结果，只能看到<span class="tag">registry</span>的进程</span><br><span class="line"><span class="tag">USER</span>       <span class="tag">PID</span> %<span class="tag">CPU</span> %<span class="tag">MEM</span>    <span class="tag">VSZ</span>   <span class="tag">RSS</span> <span class="tag">TTY</span>      <span class="tag">STAT</span> <span class="tag">START</span>   <span class="tag">TIME</span> <span class="tag">COMMAND</span></span><br><span class="line"><span class="tag">root</span>         <span class="tag">1</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.4</span>  <span class="tag">53228</span> <span class="tag">15992</span> ?        <span class="tag">Ss</span>   <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:00</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">13</span>  <span class="tag">1</span><span class="class">.0</span>  <span class="tag">1</span><span class="class">.0</span> <span class="tag">110492</span> <span class="tag">39600</span> ?        <span class="tag">S</span>    <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:03</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">14</span>  <span class="tag">1</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.9</span> <span class="tag">110256</span> <span class="tag">38804</span> ?        <span class="tag">S</span>    <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:03</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">17</span>  <span class="tag">0</span><span class="class">.9</span>  <span class="tag">0</span><span class="class">.9</span> <span class="tag">110272</span> <span class="tag">38820</span> ?        <span class="tag">S</span>    <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:03</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">18</span>  <span class="tag">1</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.9</span> <span class="tag">110276</span> <span class="tag">38816</span> ?        <span class="tag">S</span>    <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:03</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">44</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">18148</span>  <span class="tag">3364</span> ?        <span class="tag">Ss</span>+  <span class="tag">15</span><span class="pseudo">:00</span>   <span class="tag">0</span><span class="pseudo">:00</span> <span class="tag">bash</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">60</span>  <span class="tag">2</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">18152</span>  <span class="tag">3192</span> ?        <span class="tag">Ss</span>   <span class="tag">15</span><span class="pseudo">:01</span>   <span class="tag">0</span><span class="pseudo">:00</span> <span class="tag">bash</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">74</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">15572</span>  <span class="tag">2164</span> ?        <span class="tag">R</span>+   <span class="tag">15</span><span class="pseudo">:01</span>   <span class="tag">0</span><span class="pseudo">:00</span> <span class="tag">ps</span> <span class="tag">aux</span></span><br><span class="line"></span><br><span class="line"># 看端口</span><br><span class="line"><span class="tag">root</span>@<span class="tag">ipc2</span>:/# <span class="tag">netstat</span> <span class="tag">-anplt</span></span><br><span class="line"># 结果，网络共享了</span><br><span class="line"><span class="tag">Active</span> <span class="tag">Internet</span> <span class="tag">connections</span> (servers and established)</span><br><span class="line"><span class="tag">Proto</span> <span class="tag">Recv-Q</span> <span class="tag">Send-Q</span> <span class="tag">Local</span> <span class="tag">Address</span>           <span class="tag">Foreign</span> <span class="tag">Address</span>         <span class="tag">State</span>       <span class="tag">PID</span>/<span class="tag">Program</span> <span class="tag">name</span></span><br><span class="line"><span class="tag">tcp</span>        <span class="tag">0</span>      <span class="tag">0</span> <span class="tag">0</span><span class="class">.0</span><span class="class">.0</span><span class="class">.0</span><span class="pseudo">:5000</span>            <span class="tag">0</span><span class="class">.0</span><span class="class">.0</span><span class="class">.0</span>:*               <span class="tag">LISTEN</span>      <span class="tag">-</span></span><br><span class="line"><span class="tag">tcp</span>        <span class="tag">0</span>      <span class="tag">0</span> <span class="tag">0</span><span class="class">.0</span><span class="class">.0</span><span class="class">.0</span><span class="pseudo">:80</span>              <span class="tag">0</span><span class="class">.0</span><span class="class">.0</span><span class="class">.0</span>:*               <span class="tag">LISTEN</span>      <span class="tag">-</span></span><br></pre></td></tr></table></figure>
+<h1 id="进入另一个容器"><a href="#进入另一个容器" class="headerlink" title="进入另一个容器"></a>进入另一个容器</h1><p>进入nginx容器看看进程<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it k8s_nginx.fb0f31c6_ipc2_default_82fd2fb7-<span class="number">42</span>c0-<span class="number">11e6</span>-a4f1-d43d7e2c2527_c689aa68 bash</span><br><span class="line">root@ipc2:/<span class="preprocessor"># ps axu</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 只能看到nginx的进程</span></span><br><span class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span><br><span class="line">root         <span class="number">1</span>  <span class="number">0.0</span>  <span class="number">0.1</span>  <span class="number">31684</span>  <span class="number">5100</span> ?        Ss   <span class="number">14</span>:<span class="number">57</span>   <span class="number">0</span>:<span class="number">00</span> nginx: master process nginx -g daemon off;</span><br><span class="line">nginx        <span class="number">5</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">32068</span>  <span class="number">2904</span> ?        S    <span class="number">14</span>:<span class="number">57</span>   <span class="number">0</span>:<span class="number">00</span> nginx: worker process</span><br><span class="line">root         <span class="number">6</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">20224</span>  <span class="number">3272</span> ?        Ss   <span class="number">15</span>:<span class="number">00</span>   <span class="number">0</span>:<span class="number">00</span> bash</span><br><span class="line">root        <span class="number">19</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">17500</span>  <span class="number">2096</span> ?        R+   <span class="number">15</span>:<span class="number">09</span>   <span class="number">0</span>:<span class="number">00</span> ps axu</span><br></pre></td></tr></table></figure></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>网络、UTC、IPC都共享，但是PID不能共享。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。&lt;br&gt;现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。&lt;br&gt;恰好业务是跑在k8s上，k8s关于pod的文档上说&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Containers within a pod share an IP address and port space, and can find each other via localhost. They can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. Containers in different pods have distinct IP addresses and can not communicate by IPC&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果同一个pod里的进程，可以互相看到对方，那么就可以不用修改，直接把现有一个容器拆成两个容器了。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="kubernetes" scheme="http://blog.decbug.com/tags/kubernetes/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kubernetes自定义admission插件</title>
+    <link href="http://blog.decbug.com/2016/06/28/k8s_admission/"/>
+    <id>http://blog.decbug.com/2016/06/28/k8s_admission/</id>
+    <published>2016-06-27T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h2><p>k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。<br>为了实现更细粒度的quota，有必要自制一个admission插件。</p>
+<h2 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h2><p>由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd</p>
+<a id="more"></a>
+<h1 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h1><p>代码在plugin/pkg/admission，已有admit, deny, resourcequota等插件。<br>有两个函数需要重点关注</p>
+<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span> &#123;</span></span><br><span class="line">	admission.RegisterPlugin(<span class="string">"AlwaysAdmit"</span>, <span class="function"><span class="keyword">func</span><span class="params">(client clientset.Interface, config io.Reader)</span> <span class="params">(admission.Interface, error)</span> &#123;</span></span><br><span class="line">		<span class="keyword">return</span> NewAlwaysAdmit(), nil</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注册<code>AlwaysAdmit</code>，返回值是<code>admission.Interface</code>，注意看admit函数</p>
+<h2 id="admit"><a href="#admit" class="headerlink" title="admit"></a>admit</h2><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(alwaysAdmit)</span> <span class="title">Admit</span><span class="params">(a admission.Attributes)</span> <span class="params">(err error)</span> &#123;</span></span><br><span class="line">	<span class="keyword">return</span> nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="自定义插件"><a href="#自定义插件" class="headerlink" title="自定义插件"></a>自定义插件</h1><p>也要实现一个init，用于注册及返回Interface。然后完成admit函数<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *myadmission)</span> <span class="title">Admit</span><span class="params">(a admission.Attributes)</span> <span class="params">(err error)</span> &#123;</span></span><br><span class="line">    // 加上我的判断逻辑</span><br><span class="line">    <span class="keyword">if</span> allow &#123;</span><br><span class="line">        <span class="keyword">return</span> nil</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> admission.NewForbidden()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;h2 id=&quot;quota&quot;&gt;&lt;a href=&quot;#quota&quot; class=&quot;headerlink&quot; title=&quot;quota&quot;&gt;&lt;/a&gt;quota&lt;/h2&gt;&lt;p&gt;k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。&lt;br&gt;为了实现更细粒度的quota，有必要自制一个admission插件。&lt;/p&gt;
+&lt;h2 id=&quot;ABAC&quot;&gt;&lt;a href=&quot;#ABAC&quot; class=&quot;headerlink&quot; title=&quot;ABAC&quot;&gt;&lt;/a&gt;ABAC&lt;/h2&gt;&lt;p&gt;由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="kubernetes" scheme="http://blog.decbug.com/tags/kubernetes/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>plantuml</title>
+    <link href="http://blog.decbug.com/2016/06/27/plantuml/"/>
+    <id>http://blog.decbug.com/2016/06/27/plantuml/</id>
+    <published>2016-06-26T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.101Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>架构图即代码<br>PlantUML is a open-source tool that allows to quickly write :</p>
+<ul>
+<li>Sequence diagram,</li>
+<li>Usecase diagram,</li>
+<li>Class diagram,</li>
+<li>Activity diagram, (here is the new syntax),</li>
+<li>Component diagram,</li>
+<li>State diagram,</li>
+<li>Deployment diagram,</li>
+<li>Object diagram.</li>
+<li>wireframe graphical interface</li>
+</ul>
+<a id="more"></a>
+<h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><img src="http://www.plantuml.com/plantuml/svg/NOyn3i8m34NtdEAhKplGeMC7f1w0Bi36uhQ61gLEbKI8uvEa5KX8KVBz_6t7xOcqe9iMBIt8RqgLLyy8CuFMrUYHWhPIfNHAL4h5s-5mH7aEv4Arnmbi-TmbWXyH6nXEF-O0Uz-ceCLbrXxna83VjAo6wt_hLWzqo7oCLZBUHZ8mhC3pYnqP62ti5SkKVNkN8W_8ChwZ5U4ny7IJOB-5TdX6wEiYxTStQjy9TPsYlaaYV-83">
+<img src="http://www.plantuml.com/plantuml/svg/ROyz2y8m48Rt_8eZUmVHMH2nkeX2knM7s4HRR7CnIS4Y_U_cez1IX0p7lPVdkLEiVB6d09fXA-2eiLCKlWJWbETNIA18QsqixB5LA8MqDnSLEucs4dhU7GYHo1td4f80Cf6KHb0cIfHyGLhI8Kcs_eFdbGrsF12AmuUrgX6m2YB2cMLtPfpjt6Vl9ceUs71dfdbL6t2lxSTMZBqiJgozUV0_D7CtqnHn6WcjJPpmgZ-tXXtdAytgc4sYgHoJaVy3">
+<img src="http://www.plantuml.com/plantuml/svg/JOon2iCm34HtVuNGb0Jo2u4C7JgtcybWKZaMf7AnbKBxzRM9Xsx7UtVN3JsCumHu5LPsEt-TSXGqXZtWBJu9xfGLGGE9WTgrcWvQcfnNvJVh1qy7E4iirGJkNoJUWXRR3RsXFLDba_Mkn7QaWMM3wjgJlSYZebUAA-MydDl2_0y0">
+<h1 id="在hexo博客加上plantuml插件"><a href="#在hexo博客加上plantuml插件" class="headerlink" title="在hexo博客加上plantuml插件"></a>在hexo博客加上plantuml插件</h1><h2 id="install"><a href="#install" class="headerlink" title="install"></a>install</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> hexo-tag-plantuml <span class="comment">--save</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="add-to-config-yml"><a href="#add-to-config-yml" class="headerlink" title="add to _config.yml"></a>add to _config.yml</h2><p>And add this plugin in _config.yml.<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plugin<span class="variable">s:</span></span><br><span class="line"> - hexo-<span class="keyword">tag</span>-plantuml</span><br></pre></td></tr></table></figure></p>
+<h2 id="test"><a href="#test" class="headerlink" title="test"></a>test</h2><h3 id="add-text-to-markdown-file"><a href="#add-text-to-markdown-file" class="headerlink" title="add text to markdown file"></a>add text to markdown file</h3><figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="comment">% plantuml %&#125;</span></span><br><span class="line">    <span class="variable">Bob</span><span class="arrow">-&gt;</span><span class="variable">Alice</span> : <span class="function_or_atom">hello</span></span><br><span class="line">&#123;<span class="comment">% endplantuml %&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="test-1"><a href="#test-1" class="headerlink" title="test"></a>test</h3><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo generate &amp;&amp; hexo <span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+<h3 id="效果-1"><a href="#效果-1" class="headerlink" title="效果"></a>效果</h3><img src="http://www.plantuml.com/plantuml/svg/SyfFqhLppCbCJbMmKiX8pSd91m00">
+<h1 id="公司内网搭建plantuml服务"><a href="#公司内网搭建plantuml服务" class="headerlink" title="公司内网搭建plantuml服务"></a>公司内网搭建plantuml服务</h1><p>虽然<a href="http://plantuml.com/" target="_blank" rel="external">http://plantuml.com/</a>提供了online server，但是由于信息安全问题，不能直接把代码贴到那生成图片，所以需要自己在内网建一个.</p>
+<h2 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h2><p>其实也没啥选的，由于linux机器都被回收，只有自己用的windows办公机，所以只能用windows了。<br>前端用bootstrap+angularjs，好吧，我承认我是前端小白，其实我就只会这哥俩<br>后端就用go的gin框架，原因就是之前用gin写了个玩具，基本可以复用</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
+<li>plantuml需要jdk</li>
+<li>下载plantuml.jar，进入<a href="http://plantuml.com/download.html" target="_blank" rel="external">http://plantuml.com/download.html</a>，下载last version，<a href="http://sourceforge.net/projects/plantuml/files/plantuml.jar/download" target="_blank" rel="external">http://sourceforge.net/projects/plantuml/files/plantuml.jar/download</a></li>
+<li>由于plantuml在生成图片时会用到graphviz，也需要一并下载并安装<a href="http://www.graphviz.org/Download_windows.php" target="_blank" rel="external">http://www.graphviz.org/Download_windows.php</a></li>
+<li>plantuml会调用graphviz的dot.exe，所以需要增加环境变量<strong>GRAPHVIZ_DOT</strong>，值就是dot.exe的全路径</li>
+<li><code>java -jar plantuml.jar -testdot</code>，如果返回OK，那么说明安装成功</li>
+</ul>
+<h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2><h3 id="启动plantuml"><a href="#启动plantuml" class="headerlink" title="启动plantuml"></a>启动plantuml</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">java</span> <span class="tag">-jar</span> <span class="tag">plantuml</span><span class="class">.jar</span></span><br></pre></td></tr></table></figure>
+<p>会监控当前目录，如果有<code>.txt等文件</code>的变更，就会生成同名的png</p>
+<h3 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h3><img src="http://www.plantuml.com/plantuml/svg/JOz92i9044NtEKKkq1TmaRi8WWXHH19mgI0unmGqY37EeYWE6mUCmsMwkitAArX9QtHLHV7h_V-XskJh7L70D73ACHbQbbyePjLuHjFJAk-Lg3Vbew8a14JXZiMC1NUsSEkWdBU7h69IRwxhgGHODp2R-AFbDMQNgNTyNHlquSAc2w4FlOwOEu-WKDcppKmefNymKRu1qEAxicc17Uh1Zxs7oI0oU9PNK5kA860sC44savGY026A_6iNBX49XHWcYDTV1YJZ12rR70KUOP_cWXEsGCxpqGPd83o5Ni-fI63TEvzTaEoF3xuxeUVQ6m00">
+<p>期间有个比较蛋疼的事，由于golang的string是UTF8，保存到文件也是UTF8，plantuml不识别，总提示语法错误。解决方法:</p>
+<ul>
+<li>参考<a href="http://mengqi.info/html/2015/201507071345-using-golang-to-convert-text-between-gbk-and-utf-8.html" target="_blank" rel="external">http://mengqi.info/html/2015/201507071345-using-golang-to-convert-text-between-gbk-and-utf-8.html</a></li>
+<li>将string转换成gbk的bytes，然后写入到文件</li>
+</ul>
+<h2 id="炫耀"><a href="#炫耀" class="headerlink" title="炫耀"></a>炫耀</h2><p>花了3个小时搞定，就推荐给周围同事，得到一致好评，大家都可以抛弃visio等图形化工具了。<br>通过markdown实现了<strong>设计文档即代码</strong><br>那么通过plantuml实现了<strong>架构图即代码</strong><br>文本化，可以版本管理</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot; title=&quot;概念&quot;&gt;&lt;/a&gt;概念&lt;/h1&gt;&lt;p&gt;架构图即代码&lt;br&gt;PlantUML is a open-source tool that allows to quickly write :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Sequence diagram,&lt;/li&gt;
+&lt;li&gt;Usecase diagram,&lt;/li&gt;
+&lt;li&gt;Class diagram,&lt;/li&gt;
+&lt;li&gt;Activity diagram, (here is the new syntax),&lt;/li&gt;
+&lt;li&gt;Component diagram,&lt;/li&gt;
+&lt;li&gt;State diagram,&lt;/li&gt;
+&lt;li&gt;Deployment diagram,&lt;/li&gt;
+&lt;li&gt;Object diagram.&lt;/li&gt;
+&lt;li&gt;wireframe graphical interface&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="diagram" scheme="http://blog.decbug.com/tags/diagram/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>flannel与overlay</title>
+    <link href="http://blog.decbug.com/2016/06/23/flannel/"/>
+    <id>http://blog.decbug.com/2016/06/23/flannel/</id>
+    <published>2016-06-22T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<p>正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理</p>
+<a id="more"></a>
+<h1 id="overlay"><a href="#overlay" class="headerlink" title="overlay"></a>overlay</h1><p>我的理解</p>
+<ul>
+<li>复用已有物理网络，很容易搭建</li>
+<li>有很好的开源组件，比如flannel</li>
+<li>需要转发</li>
+<li>需要对原报文进行封装和解释，因为会加上overlay的src ip和des ip</li>
+<li>性能会损耗</li>
+</ul>
+<p>阿里云的大侠们曾做过试验<a href="http://dockone.io/article/1232" target="_blank" rel="external">原文链接</a></p>
+<blockquote>
+<p>Overlay网络的最大问题是性能很不理想。我们做了Overlay网络和非Overlay网络在各种数据包大小情况下的性能对比，tcp payload 20 bytes，Overlay性能大约 75%，tcp payload 1kbytes，Overlay性能80%，对于大块数据传输，Overlay性能大约88%，这个数字可以认为是 Overlay性能的极限了。当然，不同的场景下具体测试数字不一定完全一致，但Overlay的开销还是很大的。</p>
+</blockquote>
+<h1 id="flannel"><a href="#flannel" class="headerlink" title="flannel"></a>flannel</h1><p>coreos的又一力作，docker生态常用组网方式</p>
+<p><img src="https://raw.githubusercontent.com/coreos/flannel/master/packet-01.png" alt=""></p>
+<p>对于原理，我的理解</p>
+<ul>
+<li>flannel0网桥，连接docker0和flanneld</li>
+<li>flanneld通过etcd感知到网络内所有docker IP的变化，知道如果投递到其他宿主机上的flanneld</li>
+<li>docker daemon启动参数可以限制IP范围，避免冲突</li>
+<li>从容器A到另外一台宿主机上的容器B，大概流程<ol>
+<li>报文到容器A的veth0</li>
+<li>再到docker0</li>
+<li>转到容器A所在宿主机的flanneld，简称flanneldA</li>
+<li>flanneldA，所谓的封装，src ip，des ip</li>
+<li>投递到容器B所在宿主机的flanneld，简称flanneldB</li>
+<li>flanneldB解释，获取到des ip，取出原始报文，投递到容器B</li>
+</ol>
+</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="network" scheme="http://blog.decbug.com/tags/network/"/>
+    
+      <category term="overlay" scheme="http://blog.decbug.com/tags/overlay/"/>
+    
+      <category term="virtualization" scheme="http://blog.decbug.com/tags/virtualization/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>玩openstack:1</title>
+    <link href="http://blog.decbug.com/2016/06/21/openstack_playground_1/"/>
+    <id>http://blog.decbug.com/2016/06/21/openstack_playground_1/</id>
+    <published>2016-06-21T11:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>昨天搞整了一下KVM和vlan，<a href="http://blog.decbug.com/2016/06/20/kvm/">http://blog.decbug.com/2016/06/20/kvm/</a><br>今天就要在家搞一套openstack开发环境<br><a id="more"></a></p>
+<h1 id="devstack"><a href="#devstack" class="headerlink" title="devstack"></a>devstack</h1><p>devstack是一个一键式搭建open stack环境的脚本，如官网所说<code>DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.</code><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/openstack-dev/devstack.git</span></span><br><span class="line"><span class="keyword">cd</span> devstack/</span><br><span class="line"></span><br><span class="line"># 切换到<span class="keyword">m</span>版本分支</span><br><span class="line">git co stable/mitaka</span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> tools</span><br><span class="line"></span><br><span class="line"># 创建<span class="keyword">stack</span>用户</span><br><span class="line">sudo bash create-<span class="keyword">stack</span>-user.<span class="keyword">sh</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">cd</span> ../../</span><br><span class="line">sudo mv devstack /opt/<span class="keyword">stack</span></span><br><span class="line">sudo chown -R <span class="keyword">stack</span>:<span class="keyword">stack</span> /opt/<span class="keyword">stack</span>/devstack</span><br><span class="line"></span><br><span class="line"># switch to <span class="keyword">stack</span></span><br><span class="line">sudo -<span class="literal">i</span></span><br><span class="line"><span class="keyword">su</span> <span class="keyword">stack</span></span><br></pre></td></tr></table></figure></p>
+<p>参照<a href="http://docs.openstack.org/developer/devstack/guides/neutron.html#id3" target="_blank" rel="external">官网</a>在<code>/opt/stack/devstack</code>创建local.conf，内容是<br>记得改host_ip,service_host,PUBLIC_INTERFACE</p>
+<h2 id="controller"><a href="#controller" class="headerlink" title="controller"></a>controller</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">[[local|localrc]]</span><br><span class="line">HOST_IP=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span></span><br><span class="line">SERVICE_HOST=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span></span><br><span class="line">MYSQL_HOST=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span></span><br><span class="line">RABBIT_HOST=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span></span><br><span class="line">GLANCE_HOSTPORT=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span>:<span class="number">9292</span></span><br><span class="line">PUBLIC_INTERFACE=p1p1</span><br><span class="line"></span><br><span class="line">ADMIN_PASSWORD=secret</span><br><span class="line">MYSQL_PASSWORD=secret</span><br><span class="line">RABBIT_PASSWORD=secret</span><br><span class="line">SERVICE_PASSWORD=secret</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## Neutron options</span></span><br><span class="line">Q_USE_SECGROUP=True</span><br><span class="line">ENABLE_PROJECT_VLANS=True</span><br><span class="line">PROJECT_VLAN_RANGE=<span class="number">3001</span>:<span class="number">4000</span></span><br><span class="line">PHYSICAL_NETWORK=<span class="keyword">default</span></span><br><span class="line">OVS_PHYSICAL_BRIDGE=br-ex</span><br><span class="line"></span><br><span class="line">Q_USE_PROVIDER_NETWORKING=True</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># Do not use Nova-Network</span></span><br><span class="line">disable_service n-net</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># Neutron</span></span><br><span class="line">ENABLED_SERVICES+=,q-svc,q-dhcp,q-meta,q-agt</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## Neutron Networking options used to create Neutron Subnets</span></span><br><span class="line"></span><br><span class="line">FIXED_RANGE=<span class="string">"203.0.113.0/24"</span></span><br><span class="line">NETWORK_GATEWAY=<span class="number">203.0</span><span class="number">.113</span><span class="number">.1</span></span><br><span class="line">PROVIDER_SUBNET_NAME=<span class="string">"provider_net"</span></span><br><span class="line">PROVIDER_NETWORK_TYPE=<span class="string">"vlan"</span></span><br><span class="line">SEGMENTATION_ID=<span class="number">2010</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># use TryStack git mirror</span></span><br><span class="line">GIT_BASE=http:<span class="comment">//git.trystack.cn</span></span><br><span class="line">NOVNC_REPO=http:<span class="comment">//git.trystack.cn/kanaka/noVNC.git</span></span><br><span class="line">SPICE_REPO=http:<span class="comment">//git.trystack.cn/git/spice/spice-html5.git</span></span><br></pre></td></tr></table></figure>
+<h2 id="compute-node"><a href="#compute-node" class="headerlink" title="compute node"></a>compute node</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[[local|localrc]]</span><br><span class="line">HOST_IP=<span class="number">192.168</span><span class="number">.1</span><span class="number">.148</span></span><br><span class="line">SERVICE_HOST=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span></span><br><span class="line">MYSQL_HOST=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span></span><br><span class="line">RABBIT_HOST=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span></span><br><span class="line">GLANCE_HOSTPORT=<span class="number">192.168</span><span class="number">.1</span><span class="number">.245</span>:<span class="number">9292</span></span><br><span class="line">ADMIN_PASSWORD=secret</span><br><span class="line">MYSQL_PASSWORD=secret</span><br><span class="line">RABBIT_PASSWORD=secret</span><br><span class="line">SERVICE_PASSWORD=secret</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># Services that a compute node runs</span></span><br><span class="line">ENABLED_SERVICES=n-cpu,rabbit,q-agt</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## Open vSwitch provider networking options</span></span><br><span class="line">PHYSICAL_NETWORK=<span class="keyword">default</span></span><br><span class="line">OVS_PHYSICAL_BRIDGE=br-ex</span><br><span class="line">PUBLIC_INTERFACE=p2p1</span><br><span class="line">Q_USE_PROVIDER_NETWORKING=True</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># use TryStack git mirror</span></span><br><span class="line">GIT_BASE=http:<span class="comment">//git.trystack.cn</span></span><br><span class="line">NOVNC_REPO=http:<span class="comment">//git.trystack.cn/kanaka/noVNC.git</span></span><br><span class="line">SPICE_REPO=http:<span class="comment">//git.trystack.cn/git/spice/spice-html5.git</span></span><br></pre></td></tr></table></figure>
+<p>然后运行<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash /<span class="keyword">stack</span>.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
+<p>参考<a href="http://blog.csdn.net/u011521019/article/details/51114681" target="_blank" rel="external">http://blog.csdn.net/u011521019/article/details/51114681</a><br>改成我的实际IP<br>提示<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2016</span>-<span class="number">06</span>-<span class="number">21</span> <span class="number">14</span>:<span class="number">07</span>:<span class="number">28.255</span> | ovs-ofctl: br-<span class="keyword">int</span> is not a bridge or a socket</span><br><span class="line"><span class="number">2016</span>-<span class="number">06</span>-<span class="number">21</span> <span class="number">14</span>:<span class="number">07</span>:<span class="number">28.262</span> | ovs-ofctl: br-tun is not a bridge or a socket</span><br><span class="line"><span class="number">2016</span>-<span class="number">06</span>-<span class="number">21</span> <span class="number">14</span>:<span class="number">07</span>:<span class="number">28.269</span> | ovs-ofctl: br-ex is not a bridge or a socket</span><br><span class="line"><span class="number">2016</span>-<span class="number">06</span>-<span class="number">21</span> <span class="number">14</span>:<span class="number">07</span>:<span class="number">28.277</span> | ovs-ofctl: br-<span class="keyword">int</span> is not a bridge or a socket</span><br><span class="line"><span class="number">2016</span>-<span class="number">06</span>-<span class="number">21</span> <span class="number">14</span>:<span class="number">07</span>:<span class="number">28.284</span> | ovs-ofctl: br-tun is not a bridge or a socket</span><br><span class="line"><span class="number">2016</span>-<span class="number">06</span>-<span class="number">21</span> <span class="number">14</span>:<span class="number">07</span>:<span class="number">28.292</span> | ovs-ofctl: br-ex is not a bridge or a socket</span><br><span class="line"><span class="number">2016</span>-<span class="number">06</span>-<span class="number">21</span> <span class="number">14</span>:<span class="number">07</span>:<span class="number">28.446</span> | +^[[<span class="number">3242</span>mstack.sh:exit_trap:<span class="number">498</span>                   ^[(B^[[m <span class="built_in">exit</span> <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>说要unstack.sh，然后reboot，再stack.sh，然而还是一样的错</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># minimal config</span></span><br><span class="line"><span class="preprocessor"># devstack generate-subunit fail</span></span><br><span class="line">sudo apt-<span class="keyword">get</span> install python-pip</span><br><span class="line">sudo pip install --upgrade pip</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。&lt;br&gt;昨天搞整了一下KVM和vlan，&lt;a href=&quot;http://blog.decbug.com/2016/06/20/kvm/&quot;&gt;http://blog.decbug.com/2016/06/20/kvm/&lt;/a&gt;&lt;br&gt;今天就要在家搞一套openstack开发环境&lt;br&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="devstack" scheme="http://blog.decbug.com/tags/devstack/"/>
+    
+      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在内网写的文章</title>
+    <link href="http://blog.decbug.com/2016/06/21/blog_huawei/"/>
+    <id>http://blog.decbug.com/2016/06/21/blog_huawei/</id>
+    <published>2016-06-20T18:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘<br><a id="more"></a></p>
+<h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/7.jpeg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/6.jpeg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/5.jpeg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/4.jpeg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/3.jpeg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/2.jpeg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/1.jpeg" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;说明&quot;&gt;&lt;a href=&quot;#说明&quot; class=&quot;headerlink&quot; title=&quot;说明&quot;&gt;&lt;/a&gt;说明&lt;/h1&gt;&lt;p&gt;在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘&lt;br&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="blog" scheme="http://blog.decbug.com/tags/blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2016上半年随笔</title>
+    <link href="http://blog.decbug.com/2016/06/21/essay20160620/"/>
+    <id>http://blog.decbug.com/2016/06/21/essay20160620/</id>
+    <published>2016-06-20T17:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<p>时间已经来到2016的6月底，是时候回顾这上半年的收获与教训<br><a id="more"></a></p>
+<h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><ul>
+<li>对docker的应用越发纯熟，用registry+swarm+用golang写的一些服务，搞了个持续交付容器云，从代码-&gt;持续集成-&gt;镜像-&gt;仓库-&gt;运行服务</li>
+<li>上半年在的部门是研发质量部，主要是基于一些砖家们的YY做了一些没人用的产品。我不断地反对他们的想法，因为我觉得他的方案完全是不可行的，他们都很久不写代码，而且离业务很远，根本不知道业务的情况。反对的次数多了，我们互相之间就两看两相厌。事实证明，我的意见是正确的，他们花了4个月做出来的东西，在演示阶段就被否决了。</li>
+<li>这次教训挺深刻的，让我从一个纯粹的技术人员，进化成有产品意识的程序员。技术是解决业务的问题，做出来的东西要有价值，那么什么是价值呢，好吧，其实就是能赚钱。公司是商业组织，目的就是为了盈利。唉。</li>
+<li>以前是在百人团队里当技术砖家，就是技术选型，写demo，写核心代码，还有教小朋友写代码，帮他们解决疑难杂症，只需要管技术方面的问题，其他事都不用操心，压力不怎么大。16年上半年算是自己独立带团队了，虽然人不多，但是压力不小，要定技术方案，写代码，画流程图，测试，关注小弟们的进展，把控进度，还要思考产品的价值。</li>
+</ul>
+<p>技术上进步不大，但是技术之外的能力进步很大，总体来说，收获还是挺大的。</p>
+<h1 id="学习"><a href="#学习" class="headerlink" title="学习"></a>学习</h1><ul>
+<li>看书<ol>
+<li>分布式的书</li>
+<li>看了TCP/IP，HTTP协议</li>
+<li>容器相关的书</li>
+<li>JVM的书</li>
+</ol>
+</li>
+<li>前端，学了angularjs，bootstrap，写了几个小项目练手</li>
+<li>英语，整理了计算机英语1500词</li>
+</ul>
+<h1 id="更好的工作机会"><a href="#更好的工作机会" class="headerlink" title="更好的工作机会"></a>更好的工作机会</h1><ul>
+<li>面了京东云，offer T4</li>
+<li>面了阿里云，offer P7</li>
+</ul>
+<p>一直在传统行业厮混，没有互联网经验。凭借我自己在家折腾的一些玩具，得到一线互联网公司的认可，也算是证明了我的实力<br>然而在我提了离职之后，父亲得了重病住院。此病几乎就是不治之症，只能缓解并发症，延长存活时间。母亲一人照顾不过来，我不能那么自私，抛下家里去北京。<br>本打算7月去北京工作，但由于父亲生病，暂时去不了，不得不放弃这个机会。希望以后有机会再去互联网公司干一番事业<br>悲剧的是，我提离职了却去不了北京，几乎就要失业。<br>好在我司这边还有部门愿意接收我，不然我就要失业一段时间。其实挺感激的，对我来说算是雪中送炭吧。在接下来的工作中，我要好好努力<br>另外，还要感谢我自己，一直都在学习进步，保持了足够的竞争力。只要有实力，就不用担心工作的事，一大堆职位等着我挑选</p>
+<h1 id="买房"><a href="#买房" class="headerlink" title="买房"></a>买房</h1><p>还是在西安买房了。<br>本打算买了房就去北京的，然后几年之后再回西安。然而计划总是赶不上变化，早知如此，就不买了。<br>好在买的房还可以，也算是有所收获吧</p>
+<ul>
+<li>位置比较偏，但小区门口就是地铁，也还算方便。</li>
+<li>小区里的小学已拿到政府批文，正在建造。旁边有初中和一般高中，还有某一流高中的分校，教育资源貌似还可以。</li>
+<li>附近正在建一家三甲医院</li>
+<li>小区旁边有个万象城，商业也还可以</li>
+</ul>
+<p>2011年来到西安工作，至今已经4年半，在家里负担比较重的情况下，能在5年之内搞定二套房，也还算可以。</p>
+<p>希望这次的选择是正确的</p>
+<h1 id="买车"><a href="#买车" class="headerlink" title="买车"></a>买车</h1><p>下半年把驾照搞定，到明年过年的时候整辆小车车开</p>
+<h1 id="下半年计划"><a href="#下半年计划" class="headerlink" title="下半年计划"></a>下半年计划</h1><ul>
+<li>英语必然不能落下，要继续听说读</li>
+<li>底层原理还是不够熟悉，打算把那几本神书再翻一遍</li>
+<li>接下来的工作是基于华为云做Docker相关的产品。OpenStack和Docker都是分布式系统的经典之作，我要在这个过程中，把分布式架构/网络/存储搞懂</li>
+<li>想有一个代表作，一个由我设计，架构，开发的产品</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;时间已经来到2016的6月底，是时候回顾这上半年的收获与教训&lt;br&gt;
+    
+    </summary>
+    
+      <category term="mumble" scheme="http://blog.decbug.com/categories/mumble/"/>
+    
+    
+      <category term="essay" scheme="http://blog.decbug.com/tags/essay/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>学习KVM与网络虚拟化</title>
+    <link href="http://blog.decbug.com/2016/06/20/kvm/"/>
+    <id>http://blog.decbug.com/2016/06/20/kvm/</id>
+    <published>2016-06-19T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>那么从KVM开始，是一个不错的选择。</p>
+<a id="more"></a>
+<h1 id="KVM基础概念"><a href="#KVM基础概念" class="headerlink" title="KVM基础概念"></a>KVM基础概念</h1><ul>
+<li>虚拟化的三种类型，1型，2型，进程虚拟化</li>
+<li>KVM是2型，是运行在操作系统之上的</li>
+<li>docker就是进程虚拟化，直接用host的内核</li>
+</ul>
+<h1 id="安装KVM"><a href="#安装KVM" class="headerlink" title="安装KVM"></a>安装KVM</h1><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install qemu-kvm qemu-system libvirt-bin virt-manager bridge-utils vlan</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否支持虚拟化，要返回vmx</span></span><br><span class="line">egrep -o '(vmx|svm)' /<span class="keyword">proc</span>/cpuinfo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看是否安装成功</span></span><br><span class="line">sudo service libvirt-bin status</span><br></pre></td></tr></table></figure>
+<h1 id="启动虚拟机"><a href="#启动虚拟机" class="headerlink" title="启动虚拟机"></a>启动虚拟机</h1><p>下载镜像<a href="http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img" target="_blank" rel="external">cirros-0.3.4-x86_64-disk.img</a>，拷贝到<code>cp cirros-0.3.4-x86_64-disk.img /var/lib/libvirt/images/</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">sudo</span> virt-manager</span><br><span class="line"></span><br><span class="line"><span class="comment"># 图形界面，创建虚拟机</span></span><br></pre></td></tr></table></figure>
+<h1 id="网络虚拟化"><a href="#网络虚拟化" class="headerlink" title="网络虚拟化"></a>网络虚拟化</h1><h2 id="nat和br"><a href="#nat和br" class="headerlink" title="nat和br"></a>nat和br</h2><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/network_virtualization/nat_br.jpg" alt=""></p>
+<h2 id="vlan"><a href="#vlan" class="headerlink" title="vlan"></a>vlan</h2><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/network_virtualization/vlan.jpg" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。&lt;br&gt;那么从KVM开始，是一个不错的选择。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="kvm" scheme="http://blog.decbug.com/tags/kvm/"/>
+    
+      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hexo通过travis CI自动发布</title>
+    <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
+    <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
+    <published>2016-05-30T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。<br>之前用过Travis ci，感觉不错，打算继续用它。</p>
+<a id="more"></a>
+<ol>
+<li>通过github帐号登录travis ci，把博客的repo加入到左边的My Repositories</li>
+<li>在博客repo编写.travis.yml，用于编排</li>
+<li>在github-setting-personal token-生成一个只能访问public repo的token</li>
+<li>在travis ci的Repositories添加环境变量DEPLOY_REPO， <a href="https://{token}@github.com/{你的用户名}/{你的repo名}.git" target="_blank" rel="external">https://{token}@github.com/{你的用户名}/{你的repo名}.git</a></li>
+<li><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth <span class="number">1</span> --branch gh-pages --single-branch <span class="variable">$DEPLOY</span>_REPO . || (git init &amp;&amp; git remote add -t gh-pages origin <span class="variable">$DEPLOY</span>_REPO)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>PS: travis ci的日志放在aws s3上，所以要先番茄才能看到日志哦</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.jianshu.com/p/e22c13d85659" target="_blank" rel="external">http://www.jianshu.com/p/e22c13d85659</a></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。&lt;br&gt;之前用过Travis ci，感觉不错，打算继续用它。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="blog" scheme="http://blog.decbug.com/tags/blog/"/>
+    
+      <category term="travis" scheme="http://blog.decbug.com/tags/travis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一切脱离业务的设计都是YY</title>
+    <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
+    <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
+    <published>2016-05-28T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。<br>然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。</p>
+<a id="more"></a>
+<h1 id="业务"><a href="#业务" class="headerlink" title="业务"></a>业务</h1><p>又到了一年一度组里领导和专家们YY方案的时候。在他们做4月份里程碑的时候，我就提出，这个方案不靠谱，甚至采用了不参与架构设计不参与开发来威胁，然而还是没有挡住。<br>因为这个方案，都是基于他们的YY，完全脱离了业务。<br>果然，等到验收的时候，业务完全不认可，只能推倒重来。</p>
+<h1 id="互联网公司的工具团队"><a href="#互联网公司的工具团队" class="headerlink" title="互联网公司的工具团队"></a>互联网公司的工具团队</h1><p>曾看过知乎，豆瓣，滴滴，京东的工具，他们都是属于平台部门，里边都是高手。给全公司提供监控，部署，性能优化，日志分析，以及各种牛逼中间件。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。&lt;br&gt;然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="business" scheme="http://blog.decbug.com/tags/business/"/>
+    
+      <category term="requirement" scheme="http://blog.decbug.com/tags/requirement/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>读tinyhttpd源码笔记</title>
+    <link href="http://blog.decbug.com/2016/05/09/tinyhttpd/"/>
+    <id>http://blog.decbug.com/2016/05/09/tinyhttpd/</id>
+    <published>2016-05-08T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.101Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>C语言实现的http server，代码简短，看完可以明了原理。</p>
+<a id="more"></a>
+<h1 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h1><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/tinyhttpd/flow.jpg" alt=""></p>
+<ul>
+<li>startup，创建socket，bind，listen</li>
+<li>accept request</li>
+<li>获取请求，读header</li>
+<li>是否GET 或 POST</li>
+<li>读content length</li>
+<li>写header 200</li>
+<li>GET就serve file，cat index.html 到 send</li>
+<li>POST就创建pipe执行脚本，结果send</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;C语言实现的http server，代码简短，看完可以明了原理。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="httpserver" scheme="http://blog.decbug.com/tags/httpserver/"/>
+    
+      <category term="tinyhttpd" scheme="http://blog.decbug.com/tags/tinyhttpd/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>读memcache源码笔记</title>
+    <link href="http://blog.decbug.com/2016/05/04/memcache/"/>
+    <id>http://blog.decbug.com/2016/05/04/memcache/</id>
+    <published>2016-05-03T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。</p>
+<a id="more"></a>
+<h1 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h1><p>举例子，疯狂动物城里有各种体型的动物，分别安置在不同的城区的街道上的房子里。例如小老鼠在微型动物区，朱迪在小动物区，牛局长在大动物区，大象在大型动物区。</p>
+<ul>
+<li>先划分城区</li>
+<li>再修路</li>
+<li>再盖房子</li>
+<li>分配房间</li>
+<li>盖好的房子不拆，如果拆了再盖，会浪费资源。内存释放分配的开销很大</li>
+</ul>
+<p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/memcache/mem.jpg" alt=""></p>
+<h1 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h1><p><img src="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/memcache/flow.jpg" alt=""></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="cache" scheme="http://blog.decbug.com/tags/cache/"/>
+    
+      <category term="memcache" scheme="http://blog.decbug.com/tags/memcache/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>读架构漫谈有感</title>
+    <link href="http://blog.decbug.com/2016/05/03/architectrue_kevin/"/>
+    <id>http://blog.decbug.com/2016/05/03/architectrue_kevin/</id>
+    <published>2016-05-02T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。<br>于是再读几遍，记录一下感想。</p>
+<a id="more"></a>
+<h2 id="一：什么是架构"><a href="#一：什么是架构" class="headerlink" title="一：什么是架构"></a>一：什么是架构</h2><h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><ul>
+<li>人多了，就会有分工</li>
+<li>人类社会，每个人做擅长的事，与他人进行交换</li>
+<li>很多人组成了整体</li>
+</ul>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><ul>
+<li>定界</li>
+<li>分工，分块</li>
+<li>将模块组合为整体</li>
+</ul>
+<h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
+<p>这个时候人们对建筑的需求也就慢慢的越来越多，空间的切分也会变成很多种，组合的方式也会有很多种，比如每个人住的房子，群居所产生的宗教性质的房子，集体活动的房子等等。这个时候人们就开始有意识的去设计房子，架构师就慢慢的出现了。一切都是为了满足人的越来越高的需求，提升质量，减少时间，更有效率的切分空间，并且让空间之间更加有机的进行沟通。这就是建筑的架构以及建筑的架构的演变</p>
+</blockquote>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。&lt;br&gt;于是再读几遍，记录一下感想。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="architecture" scheme="http://blog.decbug.com/categories/architecture/"/>
+    
+    
+      <category term="architecture" scheme="http://blog.decbug.com/tags/architecture/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>各种锁:自旋锁/互斥锁/读写锁/分布式锁</title>
+    <link href="http://blog.decbug.com/2016/04/29/lock/"/>
+    <id>http://blog.decbug.com/2016/04/29/lock/</id>
+    <published>2016-04-28T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。<br>举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。<br>在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。首先在业务层面进行分隔，尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。</p>
+<a id="more"></a>
+<h1 id="自旋锁vs互斥锁"><a href="#自旋锁vs互斥锁" class="headerlink" title="自旋锁vs互斥锁"></a>自旋锁vs互斥锁</h1><h2 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h2><ul>
+<li>互斥锁：假如说你想进入一个房间，但是这个房间里已经有人了。那么就进不去，这个时候你就先睡一觉，等里边的人出来把你叫醒，然后你再进去。</li>
+<li>自旋锁：还是这个房间，房间里有人，你不会睡着，只会每过一分钟就看房间里的人出来了么，如果没出来，那么就继续不停查看。如果出来了，你就进去。</li>
+</ul>
+<p>对应到系统，就是你这个线程想获取这个锁，但是这个锁被别的线程持有了，那么你这个线程就得休眠，等待锁释放后再被唤醒。要知道，休眠再唤醒的开销很大，所以就出了自旋锁。自旋锁不会休眠，会不停的尝试。</p>
+<table>
+<thead>
+<tr>
+<th>类</th>
+<th>特征</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自旋</td>
+<td>不会休眠，不停重试，直到获得锁</td>
+<td>多核，如果单核的话，就一直自旋，执行线程反而得不到时间片。锁住的代码执行时间很短。因为休眠再唤醒的开销很大。如果时间短，那么自旋的开销就很小。要多核</td>
+</tr>
+<tr>
+<td>互斥</td>
+<td>休眠，等锁被释放才会被唤醒</td>
+<td>锁住的代码要执行很久，如果是自旋锁，就会不停尝试，被锁住的代码分不到足够的时间片，但是性能下降</td>
+</tr>
+</tbody>
+</table>
+<h1 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h1><p>场景：读多写少<br>条件：</p>
+<ul>
+<li>只要没有写锁，就能获取到读锁</li>
+<li>只有没有任锁，才能获取到写锁</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;锁&quot;&gt;&lt;a href=&quot;#锁&quot; class=&quot;headerlink&quot; title=&quot;锁&quot;&gt;&lt;/a&gt;锁&lt;/h1&gt;&lt;p&gt;锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。&lt;br&gt;举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。&lt;br&gt;在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。首先在业务层面进行分隔，尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="lock" scheme="http://blog.decbug.com/tags/lock/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>阿里面试经历</title>
+    <link href="http://blog.decbug.com/2016/04/11/interview_aliyun/"/>
+    <id>http://blog.decbug.com/2016/04/11/interview_aliyun/</id>
+    <published>2016-04-10T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。<br>于是在拉勾上投了阿里云。</p>
+<a id="more"></a>
+<h1 id="阿里云面试记录"><a href="#阿里云面试记录" class="headerlink" title="阿里云面试记录"></a>阿里云面试记录</h1><p>三轮（也许可以算四轮）技术面，一轮boss面，一轮hr，据说还有一轮hr的大boss价值观面试</p>
+<h1 id="一轮"><a href="#一轮" class="headerlink" title="一轮"></a>一轮</h1><p>感觉是一位管理者，可能脱离技术一段时间，问的问题都是根据简历来的。</p>
+<ul>
+<li>先是问项目经验，期间问到几次，为啥要重复造轮子。</li>
+<li>docker run的原理，流程</li>
+<li>dockerfile，docker build原理</li>
+<li>C++虚函数，引用指针，</li>
+<li>手写HashMap</li>
+<li>AngularJS绑定的原理</li>
+<li>并发，我说锁啊，然后忽悠一大堆。后问如何提高性能，我说如果业务允许，应该让每个执行实例独立，不要共享资源，减少竞争</li>
+<li>弹性伸缩</li>
+<li>一致性</li>
+</ul>
+<h1 id="二轮"><a href="#二轮" class="headerlink" title="二轮"></a>二轮</h1><p>好像是一位P8，曾在外面看过这个名字，title是高级专家</p>
+<ul>
+<li>聊我之前的一个项目，关于我做的一个数据挖掘工具的消息推送模块的优化讨论，消息队列，锁</li>
+<li>STL remove和erase的区别</li>
+<li>vector构造析构</li>
+<li>HIVE HBASE</li>
+<li>我说给测试团队写过自动化测试框架，质疑说为啥需要自己写。我说业务啊，windows的啊，环境啊等等</li>
+<li>基于一个<code>随机读，追加写的文件系统</code>，做一个KV存储系统，有增删改查的功能。这个比较好玩。</li>
+</ul>
+<ol>
+<li>我说如果不考虑性能的话，我第一版会采用，每个K就对应一个文件，把V写到这个文件里，先实现功能，交付出去，接口调通，之后再进行优化。面试官说，快速完成的想法不错，那么后面该如何优化呢</li>
+<li>第二版，增加索引，保存K，V的长度，V到数据文件，保存K，该K对应V在数据文件中的偏移到索引文件，面试官说如果有改的请求，就需要重写整个索引文件，性能会差。我说，是的，接下来我会继续优化。</li>
+<li>第三版，如果内存够大，或者数据不会太多，那么把索引保存到内存中，省去重建索引文件的性能损耗。面试官说，内存不会太大。</li>
+<li>第四版，针对K进行hash，每个hash对应一个文件夹，文件夹里是索引文件和数据文件，通过hash可缩短搜索路径。</li>
+<li>第五版，可以把索引放到redis中，面试官说，不能用redis。我就说定时把索引文件快照到磁盘，面试官说不行，掉电就还是会丢数据。</li>
+<li>数据文件中保存K L V，只有数据文件写入成功，才更新内存中的索引。即使掉电了，也能从数据文件中重建索引。</li>
+<li>增加缓存，把热点索引保存在内存中，如内存未命中，则根据用户传入的K，从数据文件中恢复索引到内存中，冷索引则从内存中剔除。</li>
+</ol>
+<ul>
+<li>go中map中 map[a].b = 1能生效吗，我说我不记得了，但如果你这么问，那么肯定是不能，因为可能是值，不是引用，指向的不是内存。</li>
+</ul>
+<p>面完之后，让我等消息</p>
+<h1 id="三轮"><a href="#三轮" class="headerlink" title="三轮"></a>三轮</h1><p>之前两轮面试说我技术不错，能力不错，经验不错，对技术也有热情，可惜工作经验不匹配，所以把我推荐到别的组，于是需要再做一轮技术面试。</p>
+<ul>
+<li>PHP，我说我用过wordpress和phpwind，且做一个小的图片生成系统</li>
+<li>python，django和flask</li>
+<li>如何监控很多台机器，我说我看过小米open falcon的实现，在每台机器上装个agent</li>
+<li>如何控制很多台机器，我说可以参考ansible，添加到ssh的可信里，然后通过ssh来控制</li>
+<li>spring的原理</li>
+<li>linux熟不熟，问了几个命令</li>
+<li>问我会哪些脚本语言，都用来做过啥。我说shell powershell python</li>
+<li>给出一个场景，分析并解决。场景好像很简单，我一下就解决了。我在此基础上发挥了一下，提出要总结，下次遇到类似问题的时候就可以很快查到。还可以给用户提供一键式解决办法，这样可以一劳永逸。</li>
+<li>因为之前两轮技术面都太惨烈，所以这一轮似乎没问太多复杂的问题。这一轮基本上没啥问题了，后面就是BOSS和HR了</li>
+<li>后来又面了一次，主要是谈了一些产品方面的问题，还有我的技术爱好</li>
+</ul>
+<h1 id="部门BOSS"><a href="#部门BOSS" class="headerlink" title="部门BOSS"></a>部门BOSS</h1><ul>
+<li>主要是问当前工作，手下带了几个兄弟，我说之前是带100多，但我只需要管技术，不用管理。今年开始独立带人，组建团队。感觉很痛苦，要招聘，要带徒弟，要规划产品，还要写代码。</li>
+<li>在产品开发运营过程中的难题，我说最难的就是如何抓住用户的痛点，用平滑的方式解决痛点，不能让用户抵触。</li>
+<li>以及问了我对阿里云某些产品的看法，然后我就说了下对于学习aws的一些心得，顺便吐槽了阿里云。</li>
+<li>再就是介绍他的团队以及产品，还有未来的规划。说了优点也说了缺点，而不像以前接触过的一些光吹牛的面试官。</li>
+</ul>
+<h1 id="HR"><a href="#HR" class="headerlink" title="HR"></a>HR</h1><p>问工作经历，之前每次跳槽的原因。为何想来阿里之类的。</p>
+<h1 id="HR的BOSS"><a href="#HR的BOSS" class="headerlink" title="HR的BOSS"></a>HR的BOSS</h1><p>有点像背景调查，问是否统招啊之类的</p>
+<h1 id="offer"><a href="#offer" class="headerlink" title="offer"></a>offer</h1><p>拿下</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。&lt;br&gt;于是在拉勾上投了阿里云。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
+    
+      <category term="interview" scheme="http://blog.decbug.com/tags/interview/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>京东面试经历</title>
+    <link href="http://blog.decbug.com/2016/04/10/interview_jd/"/>
+    <id>http://blog.decbug.com/2016/04/10/interview_jd/</id>
+    <published>2016-04-09T16:00:00.000Z</published>
+    <updated>2016-07-22T00:20:48.097Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="京东云面试记录"><a href="#京东云面试记录" class="headerlink" title="京东云面试记录"></a>京东云面试记录</h1><p>从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。<br>于是在拉勾投了京东云。<br>面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。<br><a id="more"></a></p>
+<p>总体感觉，面试官都很友善，我平时比较不善言语，这次在面试官的引导之下，交流比较顺畅。</p>
+<h1 id="架构师"><a href="#架构师" class="headerlink" title="架构师"></a>架构师</h1><p>先开始闲聊，平时看哪些技术网站啊，我说我是面向GitHub so 谷歌编程，然后聊了聊番茄手段，我说自己弄vps ，家里的路由。之后进入正题，问的问题比较偏原理。比如</p>
+<ol>
+<li>linux的文件权限是如何实现的，</li>
+<li>一个hello world程序是如何运行起来的（我回答先把可执行文件加载到进程的代码段，之后执行，然后我讲了讲进程地址空间的一些事，感觉面试官对我的回答不太满意。经提醒，我才明白是要讲fork，我大概说了下，可惜忘了说写时复制。</li>
+<li>磁盘空间有空余，然而创建文件失败，是什么原因。我开始没答上来，然后就提示我是否知道，我说可以理解为索引。但还没答上来，后来架构师告诉我是inode space 不足。</li>
+<li>设计一个系统，restful 接口，｛num ，返回对应的斐波纳契数组。我说先实现功能，不能用递归，栈溢出就惨了。日志的话，我说可以玩elk（因为我刚在家玩了下），但面试官想听到日志轮转，我回答一般日志库都可以设置单个文件上限，达到这个值就会创建新文件。还有选型，我说最近用了gorilla mux 。经提醒，我还忘了异常保护。还忘了，可以把每次结果缓存到redis中，如果下次有同样的请求，就可以从redis中直接取值并返回，这样性能会高。</li>
+</ol>
+<p>总体来说，我没答好。但好在我在提醒之下都能跟上思路，所以勉强过关了吧。</p>
+<h1 id="部门老大"><a href="#部门老大" class="headerlink" title="部门老大"></a>部门老大</h1><p>先是简单聊了聊之前的项目经验，这个就不赘述了。之后是两个系统设计问题</p>
+<ol>
+<li>设计一个用户登录注册系统。我说先来一个最简单的，单表单应用。当用户多了，就水平扩展服务，把服务发现做好，因为服务是无状态的。如果数据库有压力，就分表。由于用户系统可能是读取多于写入，所以可以搞写库，多个读库。写库可以加主备。最好再加个用户登录行为分析，如果突然变了地理位置，可以警告。这个是我看到的常用套路，也不知道面试官是否满意。</li>
+<li>设计一个电梯系统。我说我做开发的一般喜欢先用一个简单粗暴的方法完成功能。我说记录每个电梯的运行状态，以及个楼层有坐电梯的请求，是到哪一层，可以放到请求列表。遍历列表，找到最近的电梯，然后调度过来。之后再统计电梯的运行数据，找出规律，比如上班高峰期，下班高峰期该如何调度。后来面试官问到如何让电梯的运行负载都均衡，我说暂时没有好的办法，我会给每个电梯设置一个角色，然后每天定时给电梯的角色互换。虽然某一天某个电梯会特别忙，但总体来看，负载会是均衡的。<br>偏理论的东西居多，我看过的书也发挥作用了。对了，最后还问我最近看了啥书，我说正在读第二遍性能之巅。</li>
+</ol>
+<h1 id="大boss"><a href="#大boss" class="headerlink" title="大boss"></a>大boss</h1><p>问的问题是偏团队管理，人员培养，以及产品落地的问题。<br>我说我觉得招聘很难，招到合适的人不容易，招人的标准已经降低了，只要脑子灵活，工作认真，就可以。因为一个人工作不负责，就需要周围的人给他填坑，严重影响团队。关于人员培养，我说我喜欢主动学习，独立解决问题的人，并且会分享的同学，这样团队的技术氛围好了，大家水平提高很快，刻意的培训其实价值不大。产品落地，需要抓住用户的痛点，我们的产品能给用户带来收益，大家双赢。后来问我最近工作中的困惑，我说最近对于项目进度的把控做的不好，组里小伙子干活比较慢，我前端不熟，对于这个进度不知是否合理，我不喜欢逼着小伙子们加班，说白了还是我的技术水平不够，还需要积累。如果我确定这个速度不合理，就可以硬下心肠给小伙子们压力了。</p>
+<h1 id="hr"><a href="#hr" class="headerlink" title="hr"></a>hr</h1><p>问工作经历，教育背景，离职原因，当前薪资，期望薪资等等</p>
+<h1 id="offer"><a href="#offer" class="headerlink" title="offer"></a>offer</h1><p>拿下。<br>然后之前一直都是通信行业，写C写C++，虽然号称全栈，会很多语言，做过很多领域。但和互联网产品的差异还是很大的，没有相关工作背景，被压价是不可避免的。还得继续努力啊。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;京东云面试记录&quot;&gt;&lt;a href=&quot;#京东云面试记录&quot; class=&quot;headerlink&quot; title=&quot;京东云面试记录&quot;&gt;&lt;/a&gt;京东云面试记录&lt;/h1&gt;&lt;p&gt;从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。&lt;br&gt;于是在拉勾投了京东云。&lt;br&gt;面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
+    
+      <category term="interview" scheme="http://blog.decbug.com/tags/interview/"/>
+    
+  </entry>
+  
+</feed>
