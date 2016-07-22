@@ -1,5 +1,5 @@
 ---
-title: 删除恢复docker registry中的镜像
+title: 高级docker镜像仓库之删除镜像与恢复镜像
 date: 2016-07-21 00:00:00
 categories:
 - code
