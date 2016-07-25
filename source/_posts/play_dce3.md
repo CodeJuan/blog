@@ -11,7 +11,9 @@ mathjax: true
 description: 
 ---
 # 背景
-前面分析了系统容器，接下来看看到底是如何部署的，以及网络存储是如何创建的。
+前面分析了系统容器，
+[http://blog.decbug.com/2016/07/25/play_dce2/](http://blog.decbug.com/2016/07/25/play_dce2/)
+接下来看看到底是如何部署的，以及网络存储是如何创建的。
 <!--more-->
 
 # 安装

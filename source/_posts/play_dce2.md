@@ -13,6 +13,7 @@ description:
 # 背景
 DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。
 前几天把环境弄好了，也简单试用了，大概知道DCE技术栈。
+[http://blog.decbug.com/2016/07/20/play_dce/](http://blog.decbug.com/2016/07/20/play_dce/)
 果然是把docker原生技术发挥到了很棒的境界，很值得学习。
 
 <!--more-->
