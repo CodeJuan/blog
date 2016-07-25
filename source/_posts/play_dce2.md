@@ -1,6 +1,6 @@
 ---
 title: 在家玩DaoCloud企业版--原理
-date: 2016-07-20 00:00:00
+date: 2016-07-25 00:00:00
 categories:
 - code
 tags: 
@@ -28,7 +28,7 @@ DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习
 
 接下来我一个个exec进去看看
 
-# controller
+# controller容器
 本来想用ps aux看下进程，竟然提示cmd不存在，看来DaoCloud对为了减少镜像体积，做了很深入的优化。
 
 
@@ -94,10 +94,78 @@ bash
 - 进程6、11、5309，nginx，果然是master+worker
 - 进程7和27，stream是什么么？记得首页上有个资源使用情况预测吗？
 - 进程12，redis，看来是用来做持久化了哦
-- 进程15、30、5289， dce-controller，不清楚，还需要分析，难道也是UI？
+- 进程15、30、5289， dce-controller，应该就是UI？还可能会接受各个节点上报的资源使用情况
 - 5279，5302，为啥有两个registry
     - dce-registry 可能是index，用来做权限控制的？
     - registry就仓库了
+
+## 推测代码
+nginx 配置
+```
+  upstream registry {
+    server registry:5000;
+  }
+
+  upstream ui {
+    server ui:80;
+  }
+
+  server {
+    listen 80;
+
+    location /v2/ {
+      proxy_pass http://registry/v2/;
+    }
+
+    location / {
+      proxy_pass http://ui/;
+  }
+```
+
+{% plantuml %}
+title supervisord监控全部进程
+
+interface "client" as C
+
+database "redis" {
+}
+
+folder "仓库" as hub{
+    [registry]
+    [dce_registry]
+    [registry]<-->[dce_registry]
+
+  }
+
+[nginx]
+
+[nginx] -up->[dce_controller]: `/`
+[nginx] -up->[dce_registry]: `/v2/`
+[dce_controller] -left->redis
+[stream] -left->redis
+{% endplantuml %}
+
+# etcd
+etcd没有刻意分析的必要，看下启动命令
+`/etcd --name dce-etcd-138.68.2.15 --data-dir /data`
+
+# manager
+![启动命令](https://cloud.githubusercontent.com/assets/5423628/17104503/ce03684e-52b5-11e6-965a-21697a61fede.png)
+```
+/swarm manage --replication --engine-refresh-min-interval 5s --engine-refresh-max-interval 10s --tls --tlscacert /etc/ssl/private/engine/ca.pem --tlscert /etc/ssl/private/engine/engine-cert.pem --tlskey /etc/ssl/private/engine/engine-key.pem etcd://dce_etcd_1:2379
+```
+比我之前用的swarm多了证书，etcd的地址应该是通过compose的service创建的网络来互联的
+
+# agent
+启动命令
+```
+bash /usr/local/bin/supervisord.sh
+```
+结合部署节点的命令
+```
+bash -c "$(docker run -i --rm daocloud.io/daocloud/dce join {你的控制器IP})"
+```
+应该是百控制节点的IP写入到supervisord.sh，然后调用swarm join
 
 
 
