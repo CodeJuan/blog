@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-07-25T14:41:58.910Z</updated>
+  <updated>2016-07-25T16:52:10.795Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,50 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>在家玩DaoCloud企业版--原理</title>
+    <title>在家玩DaoCloud企业版--部署/网络/存储</title>
+    <link href="http://blog.decbug.com/2016/07/25/play_dce3/"/>
+    <id>http://blog.decbug.com/2016/07/25/play_dce3/</id>
+    <published>2016-07-24T17:00:00.000Z</published>
+    <updated>2016-07-25T16:52:10.795Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前面分析了系统容器，接下来看看到底是如何部署的，以及网络存储是如何创建的。<br><a id="more"></a></p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>去掉–rm ，看看install到底做了什么<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="tag">i</span>  daocloud.io/daocloud/dce install</span><br></pre></td></tr></table></figure></p>
+<p>不加–rm竟然无法运行，DaoCloud还挺厉害，暂且不管，先弄清楚网络再来搞定他</p>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><h2 id="准备证书"><a href="#准备证书" class="headerlink" title="准备证书"></a>准备证书</h2><p>docker -H :2375 info 查看network</p>
+<p>但是提示 没有证书</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/engine-cert.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-cert.pem</span><br><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/engine-key.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-key.pem</span><br><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/ca.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>ca.pem</span><br></pre></td></tr></table></figure>
+<p>把证书从manager容器里拷贝出来</p>
+<h2 id="然后network-ls"><a href="#然后network-ls" class="headerlink" title="然后network ls"></a>然后network ls</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker -<span class="string">H :</span><span class="number">2375</span> --tls --tlscacert <span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/ca.pem --tlscert /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-cert.pem --tlskey <span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine/engine-key.pem network ls</span><br></pre></td></tr></table></figure>
+<p>结果是<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NETWORK ID          NAME                                   DRIVER</span><br><span class="line">bd796525b91c        docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>/bridge            bridge</span><br><span class="line"><span class="number">26e3</span>c48a34b9        docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>/dce_default       bridge</span><br><span class="line">b6928df6352f        docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>/host              host</span><br><span class="line"><span class="number">242e13239</span>dcb        docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>/none              null</span><br><span class="line"><span class="number">0</span>ea714042165        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/bridge            bridge</span><br><span class="line">ea7e447dbb71        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/dce_default       bridge</span><br><span class="line">e61de07d7d1f        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/docker_gwbridge   bridge</span><br><span class="line"><span class="number">38</span>af5aff9349        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/host              host</span><br><span class="line">c448a5c9ee19        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/none              null</span><br><span class="line"><span class="number">48</span>ac6678f478        tty_default                            overlay</span><br><span class="line">bd2f14e19718        ubuntusshttyjs_default                 overlay</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，自建容器都是用到了overlay，目测用的就是docker原生的overlay</p>
+<h1 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/17107783/4bda1fee-52c3-11e6-9485-d77436874107.png" alt="存储"><br>貌似只能挂本地卷</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;前面分析了系统容器，接下来看看到底是如何部署的，以及网络存储是如何创建的。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="DaoCloud" scheme="http://blog.decbug.com/tags/DaoCloud/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="swarm" scheme="http://blog.decbug.com/tags/swarm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在家玩DaoCloud企业版--分析系统容器</title>
     <link href="http://blog.decbug.com/2016/07/25/play_dce2/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce2/</id>
     <published>2016-07-24T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.910Z</updated>
+    <updated>2016-07-25T16:52:10.795Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>前几天把环境弄好了，也简单试用了，大概知道DCE技术栈。<br>果然是把docker原生技术发挥到了很棒的境界，很值得学习。</p>
 <a id="more"></a>
@@ -66,7 +105,11 @@
 <p>比我之前用的swarm多了证书，etcd的地址应该是通过compose的service创建的网络来互联的</p>
 <h1 id="agent"><a href="#agent" class="headerlink" title="agent"></a>agent</h1><p>启动命令<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>supervisord.sh</span><br></pre></td></tr></table></figure></p>
 <p>结合部署节点的命令<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bash </span>-c <span class="string">"$(docker run -i --rm daocloud.io/daocloud/dce join &#123;你的控制器IP&#125;)"</span></span><br></pre></td></tr></table></figure></p>
-<p>应该是百控制节点的IP写入到supervisord.sh，然后调用swarm join</p>
+<p>应该是把控制节点的IP写入到supervisord.sh，然后调用swarm join</p>
+<h1 id="compose"><a href="#compose" class="headerlink" title="compose"></a>compose</h1><p>仅仅是猜测，还是不够，还得找出compose来看看，看下到底是怎么写的<br>通过ps aux找到了一个daotunnel，他的启动命令是<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="class"><span class="keyword">lib</span>/<span class="title">daomonit</span>/<span class="title">daotunnel</span> -<span class="title">log</span> /<span class="title">var</span>/<span class="title">log</span>/<span class="title">daotunnel</span>.<span class="title">log</span> -<span class="title">config</span> /<span class="title">etc</span>/<span class="title">daocloud</span>/<span class="title">daotunnel</span>.<span class="title">yml</span> <span class="title">start</span> <span class="title">docker</span> <span class="title">dce</span>-<span class="title">controller</span></span></span><br></pre></td></tr></table></figure></p>
+<p>看来好货都藏在<code>/etc/daocloud/</code>里</p>
+<p>源码之下没有密码，慢慢看吧<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  agent:</span><br><span class="line">    depends_on:</span><br><span class="line">    -<span class="ruby"> etcd</span><br><span class="line"></span>    environment:</span><br><span class="line">    -<span class="ruby"> <span class="constant">SWARM_ADVERTISE</span>=<span class="number">138.68</span>.<span class="number">2.15</span><span class="symbol">:</span><span class="number">12376</span></span><br><span class="line"></span>    -<span class="ruby"> <span class="constant">SWARM_AGENT_ARGS</span>=join <span class="symbol">etcd:</span>/<span class="regexp">/138.68.2.15:12379</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> CADVISOR_ARGS=-housekeeping_interval=1m --global_housekeeping_interval=1m -max_housekeeping_interval=10m</span><br><span class="line"></span></span>    image: daocloud.io/daocloud/dce-agent:1.3.2</span><br><span class="line">    labels:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> io.daocloud.dce.version=1.3.2</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.system=build-in</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.controller-ip=138.68.2.15</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.host-address=138.68.2.15</span><br><span class="line"></span></span>    ports:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> 12376:2376</span><br><span class="line"></span></span>    restart: unless-stopped</span><br><span class="line">    volumes:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> /var</span><span class="regexp">/run/docker</span>.<span class="symbol">sock:</span>/var/run/docker.sock</span><br><span class="line"></span>    -<span class="ruby"> /<span class="symbol">sys:</span>/<span class="symbol">sys:</span>ro</span><br><span class="line"></span>    -<span class="ruby"> /<span class="symbol">root:</span>/<span class="symbol">rootdir:</span>rw</span><br><span class="line"></span>  controller:</span><br><span class="line">    depends_on:</span><br><span class="line">    -<span class="ruby"> swarm-manager</span><br><span class="line"></span>    -<span class="ruby"> etcd</span><br><span class="line"></span>    environment:</span><br><span class="line">    -<span class="ruby"> <span class="constant">ETCD_URL</span>=<span class="symbol">etcd:</span>/<span class="regexp">/138.68.2.15:12379</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> CONTROLLER_ADVERTISE=138.68.2.15:80</span><br><span class="line"></span></span>    image: daocloud.io/daocloud/dce-controller:1.3.2</span><br><span class="line">    labels:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> io.daocloud.dce.version=1.3.2</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.system=build-in</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.controller-ip=138.68.2.15</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.host-address=138.68.2.15</span><br><span class="line"></span></span>    ports:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> 80:80</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> 443:443</span><br><span class="line"></span></span>    privileged: true</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">    volumes:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> /var</span><span class="regexp">/local/dce</span><span class="regexp">/registry:/var</span><span class="regexp">/lib/registry</span></span><br><span class="line"></span>  etcd:</span><br><span class="line">    command: '--name dce-etcd-138.68.2.15 --data-dir /data '</span><br><span class="line">    environment:</span><br><span class="line">    -<span class="ruby"> <span class="constant">ETCD_ADVERTISE_CLIENT_URLS</span>=<span class="symbol">http:</span>/<span class="regexp">/138.68.2.15:12379</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> ETCD_LISTEN_CLIENT_URLS=http:/</span><span class="regexp">/0.0.0.0:2379</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> ETCD_LISTEN_PEER_URLS=http:/</span><span class="regexp">/0.0.0.0:12380</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> ETCD_INITIAL_ADVERTISE_PEER_URLS=http:/</span><span class="regexp">/138.68.2.15:12380</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> ETCD_CORS=*</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> ETCD_INITIAL_CLUSTER_STATE=new</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> ETCD_INITIAL_CLUSTER=dce-etcd-138.68.2.15=http:/</span><span class="regexp">/138.68.2.15:12380</span><br><span class="line"></span></span>    image: daocloud.io/daocloud/dce-etcd:1.3.2</span><br><span class="line">    labels:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> io.daocloud.dce.version=1.3.2</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.system=build-in</span><br><span class="line"></span></span>    ports:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> 12380:12380</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> 12379:2379</span><br><span class="line"></span></span>    restart: unless-stopped</span><br><span class="line">    volumes:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> /var</span><span class="regexp">/local/dce</span><span class="regexp">/etcd:/data</span></span><br><span class="line"></span>  swarm-manager:</span><br><span class="line">    command: manage --replication --engine-refresh-min-interval 5s --engine-refresh-max-interval</span><br><span class="line">      10s --tls --tlscacert /etc/ssl/private/engine/ca.pem --tlscert /etc/ssl/private/engine/engine-cert.pem</span><br><span class="line">      -<span class="ruby">-tlskey /etc/ssl/private/engine/engine-key.pem <span class="symbol">etcd:</span>/<span class="regexp">/dce_etcd_1:2379</span><br><span class="line"></span></span>    depends_on:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> etcd</span><br><span class="line"></span></span>    environment:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> SWARM_ADVERTISE=138.68.2.15:2375</span><br><span class="line"></span></span>    image: daocloud.io/daocloud/dce-swarm:1.3.2</span><br><span class="line">    labels:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> io.daocloud.dce.version=1.3.2</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.system=build-in</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.controller-ip=138.68.2.15</span><br><span class="line"></span></span>    -<span class="ruby"><span class="regexp"> io.daocloud.dce.host-address=138.68.2.15</span><br><span class="line"></span></span>    ports:</span><br><span class="line">    -<span class="ruby"><span class="regexp"> 2375:2375</span><br><span class="line"></span></span>    restart: unless-stopped</span><br><span class="line">version: '2'</span><br></pre></td></tr></table></figure></p>
+<p>agent比我之前猜测的多了个cadvisor</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
@@ -93,7 +136,7 @@
     <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
     <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
     <published>2016-07-20T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.723Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
 <a id="more"></a>
@@ -151,7 +194,7 @@
     <link href="http://blog.decbug.com/2016/07/20/inspect_harbor/"/>
     <id>http://blog.decbug.com/2016/07/20/inspect_harbor/</id>
     <published>2016-07-20T12:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。</p>
 <a id="more"></a>
@@ -207,7 +250,7 @@
     <link href="http://blog.decbug.com/2016/07/20/play_dce/"/>
     <id>http://blog.decbug.com/2016/07/20/play_dce/</id>
     <published>2016-07-19T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>以前只用过公有云版本，大概把持续集成持续交付那一块弄明白了。最近发现有DaoCloud企业版，简称DEC，看了下截图，感觉很不错，决定也自己搞一个玩。</p>
 <a id="more"></a>
@@ -243,7 +286,7 @@
     <link href="http://blog.decbug.com/2016/07/15/net_speeder/"/>
     <id>http://blog.decbug.com/2016/07/15/net_speeder/</id>
     <published>2016-07-14T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
 <a id="more"></a>
@@ -273,7 +316,7 @@
     <link href="http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/"/>
     <id>http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/</id>
     <published>2016-07-02T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<p>要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。<br>现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。<br>恰好业务是跑在k8s上，k8s关于pod的文档上说</p>
 <blockquote>
@@ -324,7 +367,7 @@
     <link href="http://blog.decbug.com/2016/06/28/k8s_admission/"/>
     <id>http://blog.decbug.com/2016/06/28/k8s_admission/</id>
     <published>2016-06-27T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h2><p>k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。<br>为了实现更细粒度的quota，有必要自制一个admission插件。</p>
 <h2 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h2><p>由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd</p>
@@ -359,7 +402,7 @@
     <link href="http://blog.decbug.com/2016/06/27/plantuml/"/>
     <id>http://blog.decbug.com/2016/06/27/plantuml/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>架构图即代码<br>PlantUML is a open-source tool that allows to quickly write :</p>
 <ul>
@@ -433,7 +476,7 @@
     <link href="http://blog.decbug.com/2016/06/23/flannel/"/>
     <id>http://blog.decbug.com/2016/06/23/flannel/</id>
     <published>2016-06-22T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<p>正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理</p>
 <a id="more"></a>
@@ -492,7 +535,7 @@
     <link href="http://blog.decbug.com/2016/06/21/openstack_playground_1/"/>
     <id>http://blog.decbug.com/2016/06/21/openstack_playground_1/</id>
     <published>2016-06-21T11:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>昨天搞整了一下KVM和vlan，<a href="http://blog.decbug.com/2016/06/20/kvm/">http://blog.decbug.com/2016/06/20/kvm/</a><br>今天就要在家搞一套openstack开发环境<br><a id="more"></a></p>
 <h1 id="devstack"><a href="#devstack" class="headerlink" title="devstack"></a>devstack</h1><p>devstack是一个一键式搭建open stack环境的脚本，如官网所说<code>DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.</code><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/openstack-dev/devstack.git</span></span><br><span class="line"><span class="keyword">cd</span> devstack/</span><br><span class="line"></span><br><span class="line"># 切换到<span class="keyword">m</span>版本分支</span><br><span class="line">git co stable/mitaka</span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> tools</span><br><span class="line"></span><br><span class="line"># 创建<span class="keyword">stack</span>用户</span><br><span class="line">sudo bash create-<span class="keyword">stack</span>-user.<span class="keyword">sh</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">cd</span> ../../</span><br><span class="line">sudo mv devstack /opt/<span class="keyword">stack</span></span><br><span class="line">sudo chown -R <span class="keyword">stack</span>:<span class="keyword">stack</span> /opt/<span class="keyword">stack</span>/devstack</span><br><span class="line"></span><br><span class="line"># switch to <span class="keyword">stack</span></span><br><span class="line">sudo -<span class="literal">i</span></span><br><span class="line"><span class="keyword">su</span> <span class="keyword">stack</span></span><br></pre></td></tr></table></figure></p>
@@ -527,7 +570,7 @@
     <link href="http://blog.decbug.com/2016/06/21/blog_huawei/"/>
     <id>http://blog.decbug.com/2016/06/21/blog_huawei/</id>
     <published>2016-06-20T18:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.723Z</updated>
     
     <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/7.jpeg" alt=""></p>
@@ -559,7 +602,7 @@
     <link href="http://blog.decbug.com/2016/06/21/essay20160620/"/>
     <id>http://blog.decbug.com/2016/06/21/essay20160620/</id>
     <published>2016-06-20T17:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<p>时间已经来到2016的6月底，是时候回顾这上半年的收获与教训<br><a id="more"></a></p>
 <h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><ul>
@@ -623,7 +666,7 @@
     <link href="http://blog.decbug.com/2016/06/20/kvm/"/>
     <id>http://blog.decbug.com/2016/06/20/kvm/</id>
     <published>2016-06-19T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>那么从KVM开始，是一个不错的选择。</p>
 <a id="more"></a>
@@ -661,7 +704,7 @@
     <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
     <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
     <published>2016-05-30T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。<br>之前用过Travis ci，感觉不错，打算继续用它。</p>
 <a id="more"></a>
@@ -699,7 +742,7 @@
     <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
     <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
     <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.723Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。<br>然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。</p>
 <a id="more"></a>
@@ -729,7 +772,7 @@
     <link href="http://blog.decbug.com/2016/05/09/tinyhttpd/"/>
     <id>http://blog.decbug.com/2016/05/09/tinyhttpd/</id>
     <published>2016-05-08T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.910Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>C语言实现的http server，代码简短，看完可以明了原理。</p>
 <a id="more"></a>
@@ -768,7 +811,7 @@
     <link href="http://blog.decbug.com/2016/05/04/memcache/"/>
     <id>http://blog.decbug.com/2016/05/04/memcache/</id>
     <published>2016-05-03T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。</p>
 <a id="more"></a>
@@ -806,7 +849,7 @@
     <link href="http://blog.decbug.com/2016/05/03/architectrue_kevin/"/>
     <id>http://blog.decbug.com/2016/05/03/architectrue_kevin/</id>
     <published>2016-05-02T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.723Z</updated>
     
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。<br>于是再读几遍，记录一下感想。</p>
 <a id="more"></a>
@@ -845,7 +888,7 @@
     <link href="http://blog.decbug.com/2016/04/29/lock/"/>
     <id>http://blog.decbug.com/2016/04/29/lock/</id>
     <published>2016-04-28T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
+    <updated>2016-07-25T16:52:10.727Z</updated>
     
     <content type="html"><![CDATA[<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。<br>举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。<br>在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。首先在业务层面进行分隔，尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。</p>
 <a id="more"></a>
@@ -894,91 +937,6 @@
     
     
       <category term="lock" scheme="http://blog.decbug.com/tags/lock/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>阿里面试经历</title>
-    <link href="http://blog.decbug.com/2016/04/11/interview_aliyun/"/>
-    <id>http://blog.decbug.com/2016/04/11/interview_aliyun/</id>
-    <published>2016-04-10T16:00:00.000Z</published>
-    <updated>2016-07-25T14:41:58.906Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。<br>于是在拉勾上投了阿里云。</p>
-<a id="more"></a>
-<h1 id="阿里云面试记录"><a href="#阿里云面试记录" class="headerlink" title="阿里云面试记录"></a>阿里云面试记录</h1><p>三轮（也许可以算四轮）技术面，一轮boss面，一轮hr，据说还有一轮hr的大boss价值观面试</p>
-<h1 id="一轮"><a href="#一轮" class="headerlink" title="一轮"></a>一轮</h1><p>感觉是一位管理者，可能脱离技术一段时间，问的问题都是根据简历来的。</p>
-<ul>
-<li>先是问项目经验，期间问到几次，为啥要重复造轮子。</li>
-<li>docker run的原理，流程</li>
-<li>dockerfile，docker build原理</li>
-<li>C++虚函数，引用指针，</li>
-<li>手写HashMap</li>
-<li>AngularJS绑定的原理</li>
-<li>并发，我说锁啊，然后忽悠一大堆。后问如何提高性能，我说如果业务允许，应该让每个执行实例独立，不要共享资源，减少竞争</li>
-<li>弹性伸缩</li>
-<li>一致性</li>
-</ul>
-<h1 id="二轮"><a href="#二轮" class="headerlink" title="二轮"></a>二轮</h1><p>好像是一位P8，曾在外面看过这个名字，title是高级专家</p>
-<ul>
-<li>聊我之前的一个项目，关于我做的一个数据挖掘工具的消息推送模块的优化讨论，消息队列，锁</li>
-<li>STL remove和erase的区别</li>
-<li>vector构造析构</li>
-<li>HIVE HBASE</li>
-<li>我说给测试团队写过自动化测试框架，质疑说为啥需要自己写。我说业务啊，windows的啊，环境啊等等</li>
-<li>基于一个<code>随机读，追加写的文件系统</code>，做一个KV存储系统，有增删改查的功能。这个比较好玩。</li>
-</ul>
-<ol>
-<li>我说如果不考虑性能的话，我第一版会采用，每个K就对应一个文件，把V写到这个文件里，先实现功能，交付出去，接口调通，之后再进行优化。面试官说，快速完成的想法不错，那么后面该如何优化呢</li>
-<li>第二版，增加索引，保存K，V的长度，V到数据文件，保存K，该K对应V在数据文件中的偏移到索引文件，面试官说如果有改的请求，就需要重写整个索引文件，性能会差。我说，是的，接下来我会继续优化。</li>
-<li>第三版，如果内存够大，或者数据不会太多，那么把索引保存到内存中，省去重建索引文件的性能损耗。面试官说，内存不会太大。</li>
-<li>第四版，针对K进行hash，每个hash对应一个文件夹，文件夹里是索引文件和数据文件，通过hash可缩短搜索路径。</li>
-<li>第五版，可以把索引放到redis中，面试官说，不能用redis。我就说定时把索引文件快照到磁盘，面试官说不行，掉电就还是会丢数据。</li>
-<li>数据文件中保存K L V，只有数据文件写入成功，才更新内存中的索引。即使掉电了，也能从数据文件中重建索引。</li>
-<li>增加缓存，把热点索引保存在内存中，如内存未命中，则根据用户传入的K，从数据文件中恢复索引到内存中，冷索引则从内存中剔除。</li>
-</ol>
-<ul>
-<li>go中map中 map[a].b = 1能生效吗，我说我不记得了，但如果你这么问，那么肯定是不能，因为可能是值，不是引用，指向的不是内存。</li>
-</ul>
-<p>面完之后，让我等消息</p>
-<h1 id="三轮"><a href="#三轮" class="headerlink" title="三轮"></a>三轮</h1><p>之前两轮面试说我技术不错，能力不错，经验不错，对技术也有热情，可惜工作经验不匹配，所以把我推荐到别的组，于是需要再做一轮技术面试。</p>
-<ul>
-<li>PHP，我说我用过wordpress和phpwind，且做一个小的图片生成系统</li>
-<li>python，django和flask</li>
-<li>如何监控很多台机器，我说我看过小米open falcon的实现，在每台机器上装个agent</li>
-<li>如何控制很多台机器，我说可以参考ansible，添加到ssh的可信里，然后通过ssh来控制</li>
-<li>spring的原理</li>
-<li>linux熟不熟，问了几个命令</li>
-<li>问我会哪些脚本语言，都用来做过啥。我说shell powershell python</li>
-<li>给出一个场景，分析并解决。场景好像很简单，我一下就解决了。我在此基础上发挥了一下，提出要总结，下次遇到类似问题的时候就可以很快查到。还可以给用户提供一键式解决办法，这样可以一劳永逸。</li>
-<li>因为之前两轮技术面都太惨烈，所以这一轮似乎没问太多复杂的问题。这一轮基本上没啥问题了，后面就是BOSS和HR了</li>
-<li>后来又面了一次，主要是谈了一些产品方面的问题，还有我的技术爱好</li>
-</ul>
-<h1 id="部门BOSS"><a href="#部门BOSS" class="headerlink" title="部门BOSS"></a>部门BOSS</h1><ul>
-<li>主要是问当前工作，手下带了几个兄弟，我说之前是带100多，但我只需要管技术，不用管理。今年开始独立带人，组建团队。感觉很痛苦，要招聘，要带徒弟，要规划产品，还要写代码。</li>
-<li>在产品开发运营过程中的难题，我说最难的就是如何抓住用户的痛点，用平滑的方式解决痛点，不能让用户抵触。</li>
-<li>以及问了我对阿里云某些产品的看法，然后我就说了下对于学习aws的一些心得，顺便吐槽了阿里云。</li>
-<li>再就是介绍他的团队以及产品，还有未来的规划。说了优点也说了缺点，而不像以前接触过的一些光吹牛的面试官。</li>
-</ul>
-<h1 id="HR"><a href="#HR" class="headerlink" title="HR"></a>HR</h1><p>问工作经历，之前每次跳槽的原因。为何想来阿里之类的。</p>
-<h1 id="HR的BOSS"><a href="#HR的BOSS" class="headerlink" title="HR的BOSS"></a>HR的BOSS</h1><p>有点像背景调查，问是否统招啊之类的</p>
-<h1 id="offer"><a href="#offer" class="headerlink" title="offer"></a>offer</h1><p>拿下</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。&lt;br&gt;于是在拉勾上投了阿里云。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
-    
-      <category term="interview" scheme="http://blog.decbug.com/tags/interview/"/>
     
   </entry>
   

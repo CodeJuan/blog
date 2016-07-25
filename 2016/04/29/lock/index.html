@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://blog.decbug.com/2016/04/29/lock/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="锁锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰">
-<meta property="og:updated_time" content="2016-07-25T14:41:58.906Z">
+<meta property="og:updated_time" content="2016-07-25T16:52:10.727Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="各种锁:自旋锁/互斥锁/读写锁/分布式锁">
 <meta name="twitter:description" content="锁锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰">
@@ -380,7 +380,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">83</span>
+              <span class="site-state-item-count">84</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
