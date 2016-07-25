@@ -1,5 +1,5 @@
 ---
-title: 在家玩DaoCloud企业版--原理
+title: 在家玩DaoCloud企业版--分析系统容器
 date: 2016-07-25 00:00:00
 categories:
 - code
@@ -165,7 +165,99 @@ bash /usr/local/bin/supervisord.sh
 ```
 bash -c "$(docker run -i --rm daocloud.io/daocloud/dce join {你的控制器IP})"
 ```
-应该是百控制节点的IP写入到supervisord.sh，然后调用swarm join
+应该是把控制节点的IP写入到supervisord.sh，然后调用swarm join
+
+# compose
+仅仅是猜测，还是不够，还得找出compose来看看，看下到底是怎么写的
+通过ps aux找到了一个daotunnel，他的启动命令是
+```
+/usr/lib/daomonit/daotunnel -log /var/log/daotunnel.log -config /etc/daocloud/daotunnel.yml start docker dce-controller
+```
+看来好货都藏在`/etc/daocloud/`里
+
+源码之下没有密码，慢慢看吧
+```
+services:
+  agent:
+    depends_on:
+    - etcd
+    environment:
+    - SWARM_ADVERTISE=138.68.2.15:12376
+    - SWARM_AGENT_ARGS=join etcd://138.68.2.15:12379
+    - CADVISOR_ARGS=-housekeeping_interval=1m --global_housekeeping_interval=1m -max_housekeeping_interval=10m
+    image: daocloud.io/daocloud/dce-agent:1.3.2
+    labels:
+    - io.daocloud.dce.version=1.3.2
+    - io.daocloud.dce.system=build-in
+    - io.daocloud.dce.controller-ip=138.68.2.15
+    - io.daocloud.dce.host-address=138.68.2.15
+    ports:
+    - 12376:2376
+    restart: unless-stopped
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /sys:/sys:ro
+    - /root:/rootdir:rw
+  controller:
+    depends_on:
+    - swarm-manager
+    - etcd
+    environment:
+    - ETCD_URL=etcd://138.68.2.15:12379
+    - CONTROLLER_ADVERTISE=138.68.2.15:80
+    image: daocloud.io/daocloud/dce-controller:1.3.2
+    labels:
+    - io.daocloud.dce.version=1.3.2
+    - io.daocloud.dce.system=build-in
+    - io.daocloud.dce.controller-ip=138.68.2.15
+    - io.daocloud.dce.host-address=138.68.2.15
+    ports:
+    - 80:80
+    - 443:443
+    privileged: true
+    restart: unless-stopped
+    volumes:
+    - /var/local/dce/registry:/var/lib/registry
+  etcd:
+    command: '--name dce-etcd-138.68.2.15 --data-dir /data '
+    environment:
+    - ETCD_ADVERTISE_CLIENT_URLS=http://138.68.2.15:12379
+    - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:12380
+    - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://138.68.2.15:12380
+    - ETCD_CORS=*
+    - ETCD_INITIAL_CLUSTER_STATE=new
+    - ETCD_INITIAL_CLUSTER=dce-etcd-138.68.2.15=http://138.68.2.15:12380
+    image: daocloud.io/daocloud/dce-etcd:1.3.2
+    labels:
+    - io.daocloud.dce.version=1.3.2
+    - io.daocloud.dce.system=build-in
+    ports:
+    - 12380:12380
+    - 12379:2379
+    restart: unless-stopped
+    volumes:
+    - /var/local/dce/etcd:/data
+  swarm-manager:
+    command: manage --replication --engine-refresh-min-interval 5s --engine-refresh-max-interval
+      10s --tls --tlscacert /etc/ssl/private/engine/ca.pem --tlscert /etc/ssl/private/engine/engine-cert.pem
+      --tlskey /etc/ssl/private/engine/engine-key.pem etcd://dce_etcd_1:2379
+    depends_on:
+    - etcd
+    environment:
+    - SWARM_ADVERTISE=138.68.2.15:2375
+    image: daocloud.io/daocloud/dce-swarm:1.3.2
+    labels:
+    - io.daocloud.dce.version=1.3.2
+    - io.daocloud.dce.system=build-in
+    - io.daocloud.dce.controller-ip=138.68.2.15
+    - io.daocloud.dce.host-address=138.68.2.15
+    ports:
+    - 2375:2375
+    restart: unless-stopped
+version: '2'
+```
+agent比我之前猜测的多了个cadvisor
 
 
 
