@@ -207,6 +207,95 @@
           
           
             
+              <a class="post-title-link" href="/2015/07/06/dependency_in_sln/" itemprop="url">
+                自动生成sln中各project依赖图
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-07-06T00:00:00+08:00" content="2015-07-06">
+            2015-07-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/07/06/dependency_in_sln/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/06/dependency_in_sln/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。</p>
+<p>写好的代码放在<a href="https://github.com/CodeJuan/dependency_in_sln">https://github.com/CodeJuan/dependency_in_sln</a>，使用方法也很简单。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/07/06/dependency_in_sln/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/06/22/Pelican_hexo/" itemprop="url">
                 hexo and pelican
               </a>
@@ -551,96 +640,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/03/27/gprof_sprof_perf/" itemprop="url">
-                Linux C++性能调优笔记
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-03-27T23:30:09+08:00" content="2015-03-27">
-            2015-03-27
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/03/27/gprof_sprof_perf/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/27/gprof_sprof_perf/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
-<p>此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。</p>
-<p>每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/03/27/gprof_sprof_perf/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -679,7 +678,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">82</span>
+              <span class="site-state-item-count">83</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

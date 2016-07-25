@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-07-22T00:26:36.870Z</updated>
+  <updated>2016-07-25T14:41:58.910Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,84 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>在家玩DaoCloud企业版--原理</title>
+    <link href="http://blog.decbug.com/2016/07/25/play_dce2/"/>
+    <id>http://blog.decbug.com/2016/07/25/play_dce2/</id>
+    <published>2016-07-24T16:00:00.000Z</published>
+    <updated>2016-07-25T14:41:58.910Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>前几天把环境弄好了，也简单试用了，大概知道DCE技术栈。<br>果然是把docker原生技术发挥到了很棒的境界，很值得学习。</p>
+<a id="more"></a>
+<h1 id="系统应用"><a href="#系统应用" class="headerlink" title="系统应用"></a>系统应用</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/17101264/3635ecee-52a6-11e6-82c7-308f7384b628.png" alt=""><br>有controller，agent，manager，etcd，4个容器<br>从名字上来看</p>
+<ul>
+<li>controller应该是nginx+UI+reigstry的组合</li>
+<li>agent，应该是swarm agent</li>
+<li>manager，不用说，是swarm manager吧</li>
+<li>etcd，做分布式存储</li>
+</ul>
+<p>接下来我一个个exec进去看看</p>
+<h1 id="controller容器"><a href="#controller容器" class="headerlink" title="controller容器"></a>controller容器</h1><p>本来想用ps aux看下进程，竟然提示cmd不存在，看来DaoCloud对为了减少镜像体积，做了很深入的优化。</p>
+<h2 id="初步分析"><a href="#初步分析" class="headerlink" title="初步分析"></a>初步分析</h2><p>当然，这个难不倒我，在/proc/里找到进程ID，然后cat每个进程的cmd，方法<br><code>find /proc -mindepth 2 -maxdepth 2 -name exe -exec ls -lh {} \; 2&gt;/dev/null</code><br>结果</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">1</span>/exe -&gt; /usr/bin/python2.<span class="number">7</span></span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">6</span>/exe -&gt; /usr/local/bin/dce-nginx</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">7</span>/exe -&gt; /usr/local/bin/dce-stream</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">11</span>/exe -&gt; /usr/sbin/nginx</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">12</span>/exe -&gt; /usr/local/bin/redis-server</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">15</span>/exe -&gt; /usr/local/bin/dce-controller</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">27</span>/exe -&gt; /usr/local/bin/dce-stream</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">30</span>/exe -&gt; /usr/local/bin/dce-controller</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">53</span> /<span class="keyword">proc</span>/<span class="number">5289</span>/exe -&gt; /usr/local/bin/dce-controller</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">52</span> /<span class="keyword">proc</span>/<span class="number">5297</span>/exe -&gt; /usr/local/bin/dce-registry</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">52</span> /<span class="keyword">proc</span>/<span class="number">5302</span>/exe -&gt; /usr/local/bin/registry</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">52</span> /<span class="keyword">proc</span>/<span class="number">5309</span>/exe -&gt; /usr/sbin/nginx</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">52</span> /<span class="keyword">proc</span>/<span class="number">5657</span>/exe -&gt; /bin/bash</span><br><span class="line">lrwxrwxrwx <span class="number">1</span> root root <span class="number">0</span> <span class="type">Jul</span> <span class="number">25</span> <span class="number">12</span>:<span class="number">59</span> /<span class="keyword">proc</span>/<span class="number">5707</span>/exe -&gt; /usr/bin/find</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进程1是python，可能是监控进程</li>
+<li>进程6、11、5309，nginx，目测是worker</li>
+<li>进程7和27，stream是什么么？记得首页上有个资源使用情况预测吗？</li>
+<li>进程12，redis，看来是用来做持久化了哦</li>
+<li>进程15、30、5289， dce-controller，不清楚，还需要分析，难道也是UI？</li>
+<li>5279，5302，为啥有两个registry</li>
+<li>后面两个都是我产生的进程，可以忽略。</li>
+</ul>
+<h2 id="进一步分析"><a href="#进一步分析" class="headerlink" title="进一步分析"></a>进一步分析</h2><p>把所有PID的cmdline都cat出来看看<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">files</span>=$(<span class="keyword">find</span> /proc -<span class="built_in">type</span> <span class="keyword">f</span> -name <span class="string">'cmdline'</span> | <span class="keyword">grep</span> -<span class="keyword">v</span> <span class="string">'task'</span> | <span class="keyword">grep</span> -<span class="keyword">v</span> <span class="string">"/proc/cmdline"</span>)</span><br><span class="line"><span class="keyword">for</span> <span class="keyword">file</span> in $<span class="keyword">files</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">cat</span> $<span class="keyword">file</span> &gt;&gt; aaa</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">""</span> &gt;&gt; aaa</span><br><span class="line">done</span><br></pre></td></tr></table></figure></p>
+<p>结果<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/usr/</span>bin<span class="regexp">/python/</span>usr<span class="regexp">/bin/</span>supervisord</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>dce-nginx</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>dce-stream</span><br><span class="line"><span class="string">nginx:</span> master process nginx -g daemon off;</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>redis-server *:<span class="number">6379</span></span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>dce-controller</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>dce-stream</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>dce-controller</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>dce-controller</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>dce-registry</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>registryserve<span class="regexp">/etc/</span>docker<span class="regexp">/registry/</span>conf.yml</span><br><span class="line"><span class="string">nginx:</span> worker process</span><br><span class="line">bash</span><br></pre></td></tr></table></figure></p>
+<p>通过命令行，每个进程的作用就更清晰了<br>再来分析一遍</p>
+<ul>
+<li>进程1是python，supervisord，果然是监控进程</li>
+<li>进程6、11、5309，nginx，果然是master+worker</li>
+<li>进程7和27，stream是什么么？记得首页上有个资源使用情况预测吗？</li>
+<li>进程12，redis，看来是用来做持久化了哦</li>
+<li>进程15、30、5289， dce-controller，应该就是UI？还可能会接受各个节点上报的资源使用情况</li>
+<li>5279，5302，为啥有两个registry<ul>
+<li>dce-registry 可能是index，用来做权限控制的？</li>
+<li>registry就仓库了</li>
+</ul>
+</li>
+</ul>
+<h2 id="推测代码"><a href="#推测代码" class="headerlink" title="推测代码"></a>推测代码</h2><p>nginx 配置<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">upstream</span> registry &#123;</span><br><span class="line">  <span class="title">server</span> registry:<span class="number">5000</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title">upstream</span> ui &#123;</span><br><span class="line">  <span class="title">server</span> ui:<span class="number">80</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title">server</span> &#123;</span><br><span class="line">  <span class="title">listen</span> <span class="number">80</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title">location</span> /v2/ &#123;</span><br><span class="line">    <span class="title">proxy_pass</span> <span class="url">http://registry/v2/</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title">location</span> / &#123;</span><br><span class="line">    <span class="title">proxy_pass</span> <span class="url">http://ui/</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<img src="http://www.plantuml.com/plantuml/svg/AyaioKbLA2ujI2qgoopEBqfvFdlYixxbJrjNl6nUyMB_xEShkhcuClDAKelI4fDJ5PIISp9JyqgK51AB5Povk58IInAJ4ek1uaMfAPd5IWhLNBLSN6dvEIcfHGfAJtPFVhfhCbXjHcbIDPS244GNfQPd5fSKLSP2k2d9gV5eGd2kZQwk7Pe2e0gW1T5vwPbv5R5mXe9kQG5KQN9-NabHVavEQb6ibKA2VW8M9N3JG0hAZ41gq7GgwEQaffNese4znHKDL9oQc8ig2W00">
+<h1 id="etcd"><a href="#etcd" class="headerlink" title="etcd"></a>etcd</h1><p>etcd没有刻意分析的必要，看下启动命令<br><code>/etcd --name dce-etcd-138.68.2.15 --data-dir /data</code></p>
+<h1 id="manager"><a href="#manager" class="headerlink" title="manager"></a>manager</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/17104503/ce03684e-52b5-11e6-965a-21697a61fede.png" alt="启动命令"><br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/swarm manage --replication --engine-refresh-min-interval 5s --engine-refresh-max-interval 10s --tls --tlscacert /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>ca.pem --tlscert <span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/engine-cert.pem --tlskey /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-key.pem <span class="string">etcd:</span><span class="comment">//dce_etcd_1:2379</span></span><br></pre></td></tr></table></figure></p>
+<p>比我之前用的swarm多了证书，etcd的地址应该是通过compose的service创建的网络来互联的</p>
+<h1 id="agent"><a href="#agent" class="headerlink" title="agent"></a>agent</h1><p>启动命令<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>supervisord.sh</span><br></pre></td></tr></table></figure></p>
+<p>结合部署节点的命令<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bash </span>-c <span class="string">"$(docker run -i --rm daocloud.io/daocloud/dce join &#123;你的控制器IP&#125;)"</span></span><br></pre></td></tr></table></figure></p>
+<p>应该是百控制节点的IP写入到supervisord.sh，然后调用swarm join</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。&lt;br&gt;前几天把环境弄好了，也简单试用了，大概知道DCE技术栈。&lt;br&gt;果然是把docker原生技术发挥到了很棒的境界，很值得学习。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="DaoCloud" scheme="http://blog.decbug.com/tags/DaoCloud/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="swarm" scheme="http://blog.decbug.com/tags/swarm/"/>
+    
+  </entry>
+  
+  <entry>
     <title>高级docker镜像仓库之删除镜像与恢复镜像</title>
     <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
     <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
     <published>2016-07-20T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
 <a id="more"></a>
@@ -78,7 +151,7 @@
     <link href="http://blog.decbug.com/2016/07/20/inspect_harbor/"/>
     <id>http://blog.decbug.com/2016/07/20/inspect_harbor/</id>
     <published>2016-07-20T12:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。</p>
 <a id="more"></a>
@@ -134,9 +207,9 @@
     <link href="http://blog.decbug.com/2016/07/20/play_dce/"/>
     <id>http://blog.decbug.com/2016/07/20/play_dce/</id>
     <published>2016-07-19T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.874Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。</p>
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>以前只用过公有云版本，大概把持续集成持续交付那一块弄明白了。最近发现有DaoCloud企业版，简称DEC，看了下截图，感觉很不错，决定也自己搞一个玩。</p>
 <a id="more"></a>
 <h1 id="创建机器"><a href="#创建机器" class="headerlink" title="创建机器"></a>创建机器</h1><p>在DigitalOcean创建两台最低配.</p>
 <h1 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h1><h2 id="控制节点"><a href="#控制节点" class="headerlink" title="控制节点"></a>控制节点</h2><p>也就是master<br>一条命令搞定<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bash </span>-c <span class="string">"$(docker run -i --rm daocloud.io/daocloud/dce install)"</span></span><br></pre></td></tr></table></figure></p>
@@ -150,7 +223,7 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。&lt;/p&gt;
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。&lt;br&gt;以前只用过公有云版本，大概把持续集成持续交付那一块弄明白了。最近发现有DaoCloud企业版，简称DEC，看了下截图，感觉很不错，决定也自己搞一个玩。&lt;/p&gt;
     
     </summary>
     
@@ -170,7 +243,7 @@
     <link href="http://blog.decbug.com/2016/07/15/net_speeder/"/>
     <id>http://blog.decbug.com/2016/07/15/net_speeder/</id>
     <published>2016-07-14T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
 <a id="more"></a>
@@ -200,7 +273,7 @@
     <link href="http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/"/>
     <id>http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/</id>
     <published>2016-07-02T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<p>要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。<br>现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。<br>恰好业务是跑在k8s上，k8s关于pod的文档上说</p>
 <blockquote>
@@ -251,7 +324,7 @@
     <link href="http://blog.decbug.com/2016/06/28/k8s_admission/"/>
     <id>http://blog.decbug.com/2016/06/28/k8s_admission/</id>
     <published>2016-06-27T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h2><p>k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。<br>为了实现更细粒度的quota，有必要自制一个admission插件。</p>
 <h2 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h2><p>由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd</p>
@@ -286,7 +359,7 @@
     <link href="http://blog.decbug.com/2016/06/27/plantuml/"/>
     <id>http://blog.decbug.com/2016/06/27/plantuml/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.874Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>架构图即代码<br>PlantUML is a open-source tool that allows to quickly write :</p>
 <ul>
@@ -360,7 +433,7 @@
     <link href="http://blog.decbug.com/2016/06/23/flannel/"/>
     <id>http://blog.decbug.com/2016/06/23/flannel/</id>
     <published>2016-06-22T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<p>正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理</p>
 <a id="more"></a>
@@ -419,7 +492,7 @@
     <link href="http://blog.decbug.com/2016/06/21/openstack_playground_1/"/>
     <id>http://blog.decbug.com/2016/06/21/openstack_playground_1/</id>
     <published>2016-06-21T11:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.874Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>昨天搞整了一下KVM和vlan，<a href="http://blog.decbug.com/2016/06/20/kvm/">http://blog.decbug.com/2016/06/20/kvm/</a><br>今天就要在家搞一套openstack开发环境<br><a id="more"></a></p>
 <h1 id="devstack"><a href="#devstack" class="headerlink" title="devstack"></a>devstack</h1><p>devstack是一个一键式搭建open stack环境的脚本，如官网所说<code>DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.</code><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/openstack-dev/devstack.git</span></span><br><span class="line"><span class="keyword">cd</span> devstack/</span><br><span class="line"></span><br><span class="line"># 切换到<span class="keyword">m</span>版本分支</span><br><span class="line">git co stable/mitaka</span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> tools</span><br><span class="line"></span><br><span class="line"># 创建<span class="keyword">stack</span>用户</span><br><span class="line">sudo bash create-<span class="keyword">stack</span>-user.<span class="keyword">sh</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">cd</span> ../../</span><br><span class="line">sudo mv devstack /opt/<span class="keyword">stack</span></span><br><span class="line">sudo chown -R <span class="keyword">stack</span>:<span class="keyword">stack</span> /opt/<span class="keyword">stack</span>/devstack</span><br><span class="line"></span><br><span class="line"># switch to <span class="keyword">stack</span></span><br><span class="line">sudo -<span class="literal">i</span></span><br><span class="line"><span class="keyword">su</span> <span class="keyword">stack</span></span><br></pre></td></tr></table></figure></p>
@@ -454,7 +527,7 @@
     <link href="http://blog.decbug.com/2016/06/21/blog_huawei/"/>
     <id>http://blog.decbug.com/2016/06/21/blog_huawei/</id>
     <published>2016-06-20T18:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/7.jpeg" alt=""></p>
@@ -486,7 +559,7 @@
     <link href="http://blog.decbug.com/2016/06/21/essay20160620/"/>
     <id>http://blog.decbug.com/2016/06/21/essay20160620/</id>
     <published>2016-06-20T17:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<p>时间已经来到2016的6月底，是时候回顾这上半年的收获与教训<br><a id="more"></a></p>
 <h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><ul>
@@ -550,7 +623,7 @@
     <link href="http://blog.decbug.com/2016/06/20/kvm/"/>
     <id>http://blog.decbug.com/2016/06/20/kvm/</id>
     <published>2016-06-19T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>那么从KVM开始，是一个不错的选择。</p>
 <a id="more"></a>
@@ -588,7 +661,7 @@
     <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
     <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
     <published>2016-05-30T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。<br>之前用过Travis ci，感觉不错，打算继续用它。</p>
 <a id="more"></a>
@@ -626,7 +699,7 @@
     <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
     <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
     <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。<br>然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。</p>
 <a id="more"></a>
@@ -656,7 +729,7 @@
     <link href="http://blog.decbug.com/2016/05/09/tinyhttpd/"/>
     <id>http://blog.decbug.com/2016/05/09/tinyhttpd/</id>
     <published>2016-05-08T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.874Z</updated>
+    <updated>2016-07-25T14:41:58.910Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>C语言实现的http server，代码简短，看完可以明了原理。</p>
 <a id="more"></a>
@@ -695,7 +768,7 @@
     <link href="http://blog.decbug.com/2016/05/04/memcache/"/>
     <id>http://blog.decbug.com/2016/05/04/memcache/</id>
     <published>2016-05-03T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。</p>
 <a id="more"></a>
@@ -733,7 +806,7 @@
     <link href="http://blog.decbug.com/2016/05/03/architectrue_kevin/"/>
     <id>http://blog.decbug.com/2016/05/03/architectrue_kevin/</id>
     <published>2016-05-02T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。<br>于是再读几遍，记录一下感想。</p>
 <a id="more"></a>
@@ -772,7 +845,7 @@
     <link href="http://blog.decbug.com/2016/04/29/lock/"/>
     <id>http://blog.decbug.com/2016/04/29/lock/</id>
     <published>2016-04-28T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>锁在计算机的世界里随处可见，当大家都想操作一个资源的时候，如果一窝蜂涌进来，就会出事的。<br>举个例子，加入说有2个线程都在操作一个共享资源（一个int），给他+1。我们知道+1不是原子操作，所谓原子操作，就是如果这个操作开始执行了，那么就不会被打断。看过汇编的同学都知道，+1需要先mov然后在add，如线程1mov了，然后执行线程2的mov，就会出问题。轻则数据错误，重则程序崩溃。感觉这个例子不太恰当，还是领会精神吧。为了保护我们的操作，那么就需要使得这个共享资源的操作变成原子的，这就需要锁了。<br>在并发编程中，尽量少用锁，能不用就不用，因为锁的开销很大很大。首先在业务层面进行分隔，尽量让不同的执行单元操作各自独立的数据，如果不可避免要用到锁，那么锁的范围要尽量小。</p>
 <a id="more"></a>
@@ -829,7 +902,7 @@
     <link href="http://blog.decbug.com/2016/04/11/interview_aliyun/"/>
     <id>http://blog.decbug.com/2016/04/11/interview_aliyun/</id>
     <published>2016-04-10T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
+    <updated>2016-07-25T14:41:58.906Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。<br>于是在拉勾上投了阿里云。</p>
 <a id="more"></a>
@@ -897,50 +970,6 @@
     <summary type="html">
     
       &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;之前一直都在通信行业撸代码，做的都是C/C++，感觉提升不大，所以打算往互联网转型，看看百万千万用户的产品是如何做出来的。&lt;br&gt;于是在拉勾上投了阿里云。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="career" scheme="http://blog.decbug.com/tags/career/"/>
-    
-      <category term="interview" scheme="http://blog.decbug.com/tags/interview/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>京东面试经历</title>
-    <link href="http://blog.decbug.com/2016/04/10/interview_jd/"/>
-    <id>http://blog.decbug.com/2016/04/10/interview_jd/</id>
-    <published>2016-04-09T16:00:00.000Z</published>
-    <updated>2016-07-22T00:26:36.870Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="京东云面试记录"><a href="#京东云面试记录" class="headerlink" title="京东云面试记录"></a>京东云面试记录</h1><p>从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。<br>于是在拉勾投了京东云。<br>面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。<br><a id="more"></a></p>
-<p>总体感觉，面试官都很友善，我平时比较不善言语，这次在面试官的引导之下，交流比较顺畅。</p>
-<h1 id="架构师"><a href="#架构师" class="headerlink" title="架构师"></a>架构师</h1><p>先开始闲聊，平时看哪些技术网站啊，我说我是面向GitHub so 谷歌编程，然后聊了聊番茄手段，我说自己弄vps ，家里的路由。之后进入正题，问的问题比较偏原理。比如</p>
-<ol>
-<li>linux的文件权限是如何实现的，</li>
-<li>一个hello world程序是如何运行起来的（我回答先把可执行文件加载到进程的代码段，之后执行，然后我讲了讲进程地址空间的一些事，感觉面试官对我的回答不太满意。经提醒，我才明白是要讲fork，我大概说了下，可惜忘了说写时复制。</li>
-<li>磁盘空间有空余，然而创建文件失败，是什么原因。我开始没答上来，然后就提示我是否知道，我说可以理解为索引。但还没答上来，后来架构师告诉我是inode space 不足。</li>
-<li>设计一个系统，restful 接口，｛num ，返回对应的斐波纳契数组。我说先实现功能，不能用递归，栈溢出就惨了。日志的话，我说可以玩elk（因为我刚在家玩了下），但面试官想听到日志轮转，我回答一般日志库都可以设置单个文件上限，达到这个值就会创建新文件。还有选型，我说最近用了gorilla mux 。经提醒，我还忘了异常保护。还忘了，可以把每次结果缓存到redis中，如果下次有同样的请求，就可以从redis中直接取值并返回，这样性能会高。</li>
-</ol>
-<p>总体来说，我没答好。但好在我在提醒之下都能跟上思路，所以勉强过关了吧。</p>
-<h1 id="部门老大"><a href="#部门老大" class="headerlink" title="部门老大"></a>部门老大</h1><p>先是简单聊了聊之前的项目经验，这个就不赘述了。之后是两个系统设计问题</p>
-<ol>
-<li>设计一个用户登录注册系统。我说先来一个最简单的，单表单应用。当用户多了，就水平扩展服务，把服务发现做好，因为服务是无状态的。如果数据库有压力，就分表。由于用户系统可能是读取多于写入，所以可以搞写库，多个读库。写库可以加主备。最好再加个用户登录行为分析，如果突然变了地理位置，可以警告。这个是我看到的常用套路，也不知道面试官是否满意。</li>
-<li>设计一个电梯系统。我说我做开发的一般喜欢先用一个简单粗暴的方法完成功能。我说记录每个电梯的运行状态，以及个楼层有坐电梯的请求，是到哪一层，可以放到请求列表。遍历列表，找到最近的电梯，然后调度过来。之后再统计电梯的运行数据，找出规律，比如上班高峰期，下班高峰期该如何调度。后来面试官问到如何让电梯的运行负载都均衡，我说暂时没有好的办法，我会给每个电梯设置一个角色，然后每天定时给电梯的角色互换。虽然某一天某个电梯会特别忙，但总体来看，负载会是均衡的。<br>偏理论的东西居多，我看过的书也发挥作用了。对了，最后还问我最近看了啥书，我说正在读第二遍性能之巅。</li>
-</ol>
-<h1 id="大boss"><a href="#大boss" class="headerlink" title="大boss"></a>大boss</h1><p>问的问题是偏团队管理，人员培养，以及产品落地的问题。<br>我说我觉得招聘很难，招到合适的人不容易，招人的标准已经降低了，只要脑子灵活，工作认真，就可以。因为一个人工作不负责，就需要周围的人给他填坑，严重影响团队。关于人员培养，我说我喜欢主动学习，独立解决问题的人，并且会分享的同学，这样团队的技术氛围好了，大家水平提高很快，刻意的培训其实价值不大。产品落地，需要抓住用户的痛点，我们的产品能给用户带来收益，大家双赢。后来问我最近工作中的困惑，我说最近对于项目进度的把控做的不好，组里小伙子干活比较慢，我前端不熟，对于这个进度不知是否合理，我不喜欢逼着小伙子们加班，说白了还是我的技术水平不够，还需要积累。如果我确定这个速度不合理，就可以硬下心肠给小伙子们压力了。</p>
-<h1 id="hr"><a href="#hr" class="headerlink" title="hr"></a>hr</h1><p>问工作经历，教育背景，离职原因，当前薪资，期望薪资等等</p>
-<h1 id="offer"><a href="#offer" class="headerlink" title="offer"></a>offer</h1><p>拿下。<br>然后之前一直都是通信行业，写C写C++，虽然号称全栈，会很多语言，做过很多领域。但和互联网产品的差异还是很大的，没有相关工作背景，被压价是不可避免的。还得继续努力啊。</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;京东云面试记录&quot;&gt;&lt;a href=&quot;#京东云面试记录&quot; class=&quot;headerlink&quot; title=&quot;京东云面试记录&quot;&gt;&lt;/a&gt;京东云面试记录&lt;/h1&gt;&lt;p&gt;从通信行业转型到互联网，对云，分布式，高并发感兴趣，想搞底层。&lt;br&gt;于是在拉勾投了京东云。&lt;br&gt;面试分4轮，四位面试官分别是架构师、部门老大、大boss 、hr。&lt;br&gt;
     
     </summary>
     
