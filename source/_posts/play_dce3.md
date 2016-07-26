@@ -21,7 +21,13 @@ description:
 ```
 docker run -i  daocloud.io/daocloud/dce install
 ```
-不加--rm竟然无法运行，DaoCloud还挺厉害，暂且不管，先弄清楚网络再来搞定他
+不加--rm竟然无法运行，DaoCloud还挺厉害
+
+大概推测一下部署过程吧
+- daocloud.io/daocloud/dce install 安装compose？
+- 生成/etc/daocloud/dce/docker-compose.yml
+- docker-compose up ?
+
 
 # 网络
 
