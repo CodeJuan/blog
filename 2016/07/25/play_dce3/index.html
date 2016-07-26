@@ -47,7 +47,7 @@
 <meta property="og:description" content="背景前面分析了系统容器，http://blog.decbug.com/2016/07/25/play_dce2/接下来看看到底是如何部署的，以及网络存储是如何创建的。">
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/17141722/d736523a-537f-11e6-8516-1ae20ba49f26.png">
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/17107783/4bda1fee-52c3-11e6-9485-d77436874107.png">
-<meta property="og:updated_time" content="2016-07-26T14:28:11.789Z">
+<meta property="og:updated_time" content="2016-07-26T14:41:16.020Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在家玩DaoCloud企业版--部署/网络/存储">
 <meta name="twitter:description" content="背景前面分析了系统容器，http://blog.decbug.com/2016/07/25/play_dce2/接下来看看到底是如何部署的，以及网络存储是如何创建的。">
@@ -260,7 +260,13 @@
       
         <span itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前面分析了系统容器，<br><a href="http://blog.decbug.com/2016/07/25/play_dce2/">http://blog.decbug.com/2016/07/25/play_dce2/</a><br>接下来看看到底是如何部署的，以及网络存储是如何创建的。<br><a id="more"></a></p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>去掉–rm ，看看install到底做了什么<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="tag">i</span>  daocloud.io/daocloud/dce install</span><br></pre></td></tr></table></figure></p>
-<p>不加–rm竟然无法运行，DaoCloud还挺厉害，暂且不管，先弄清楚网络再来搞定他</p>
+<p>不加–rm竟然无法运行，DaoCloud还挺厉害</p>
+<p>大概推测一下部署过程吧</p>
+<ul>
+<li>daocloud.io/daocloud/dce install 安装compose？</li>
+<li>生成/etc/daocloud/dce/docker-compose.yml</li>
+<li>docker-compose up ?</li>
+</ul>
 <h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><h2 id="准备证书"><a href="#准备证书" class="headerlink" title="准备证书"></a>准备证书</h2><p>docker -H :2375 network ls 查看network</p>
 <p>但是提示 没有证书</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/engine-cert.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-cert.pem</span><br><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/engine-key.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-key.pem</span><br><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/ca.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>ca.pem</span><br></pre></td></tr></table></figure>
