@@ -26,7 +26,7 @@ docker run -i  daocloud.io/daocloud/dce install
 # 网络
 
 ## 准备证书
-docker -H :2375 info 查看network
+docker -H :2375 network ls 查看network
 
 但是提示 没有证书
 
@@ -57,6 +57,10 @@ c448a5c9ee19        docker-512mb-sfo2-02/none              null
 bd2f14e19718        ubuntusshttyjs_default                 overlay
 ```
 可以看到，自建容器都是用到了overlay，目测用的就是docker原生的overlay
+
+![image](https://cloud.githubusercontent.com/assets/5423628/17141722/d736523a-537f-11e6-8516-1ae20ba49f26.png)
+
+从上图可以看到，果然是原生overlay
 
 # 存储
 ![存储](https://cloud.githubusercontent.com/assets/5423628/17107783/4bda1fee-52c3-11e6-9485-d77436874107.png)
