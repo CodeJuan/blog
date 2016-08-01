@@ -45,7 +45,8 @@
 <meta property="og:url" content="http://blog.decbug.com/2016/08/01/k8s_multi_tenant/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景公有云产品有个很重要的概念叫多租户，比如OpenStack的Domain/Project。提供资源隔离，权限控制，等等。kubernetes如果作为PaaS的基础，那么也需要具备此能力。">
-<meta property="og:updated_time" content="2016-08-01T12:37:20.864Z">
+<meta property="og:image" content="http://www.plantuml.com/plantuml/svg/AqXCpavCJrLGoalCJIqkI4nEDLHII2nMo2isLAZcughbuYh0K644LM44KH1Tb9-JQXYhQmVKmnLTMfnQv0ZaW4NZapBpKZBpqWrZkT3uK0KW2P0EfrW5tT82J5qmMJGP8pJpZ60AO196OESO0G00">
+<meta property="og:updated_time" content="2016-08-01T13:10:15.872Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes多租户分析">
 <meta name="twitter:description" content="背景公有云产品有个很重要的概念叫多租户，比如OpenStack的Domain/Project。提供资源隔离，权限控制，等等。kubernetes如果作为PaaS的基础，那么也需要具备此能力。">
@@ -257,9 +258,113 @@
 
       
         <span itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>公有云产品有个很重要的概念叫多租户，比如OpenStack的Domain/Project。提供资源隔离，权限控制，等等。<br>kubernetes如果作为PaaS的基础，那么也需要具备此能力。<br><a id="more"></a></p>
-<h1 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h1><p>类似于租户的概念，可以做到一定程度的资源隔离，Quota</p>
-<h1 id="AdmissionControl"><a href="#AdmissionControl" class="headerlink" title="AdmissionControl"></a>AdmissionControl</h1><p>Quota<br>Limit</p>
-<h1 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h1><h1 id="RBAC"><a href="#RBAC" class="headerlink" title="RBAC"></a>RBAC</h1><p>1.3出来的特性，目前还是Alpha</p>
+<h1 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h1><blockquote>
+<p>Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called namespaces.</p>
+</blockquote>
+<p>一组逻辑的集群，可以大概类似于租户的概念，可以做到一定程度的资源隔离，Quota。如果非要和OpenStack做个映射，那么就大概对应于Project吧。</p>
+<p>举个例子</p>
+<ul>
+<li>kubectl –namespace=abc run nginx –image=nginx</li>
+<li>kubectl  run nginx –image=nginx<br>这两条命令虽然都是run起来一个nginx，但是作用域却不一样。命令1是在一个叫abc的namespace里运行nginx，命令2则是在Default</li>
+</ul>
+<h1 id="Resource-Quota"><a href="#Resource-Quota" class="headerlink" title="Resource Quota"></a>Resource Quota</h1><blockquote>
+<p>A resource quota, defined by a ResourceQuota object, provides constraints that limit aggregate resource consumption per namespace.<br>限制某个name space的资源总数</p>
+</blockquote>
+<p>使用方法: It is enabled when the apiserver –admission-control= flag has ResourceQuota as one of its arguments</p>
+<h2 id="Compute-Resource-Quota"><a href="#Compute-Resource-Quota" class="headerlink" title="Compute Resource Quota"></a>Compute Resource Quota</h2><table>
+<thead>
+<tr>
+<th>Resource Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cpu</td>
+<td>Across all pods in a non-terminal state, the sum of CPU requests cannot exceed this value.</td>
+</tr>
+<tr>
+<td>limits.cpu</td>
+<td>Across all pods in a non-terminal state, the sum of CPU limits cannot exceed this value.</td>
+</tr>
+<tr>
+<td>limits.memory</td>
+<td>Across all pods in a non-terminal state, the sum of memory limits cannot exceed this value.</td>
+</tr>
+<tr>
+<td>memory</td>
+<td>Across all pods in a non-terminal state, the sum of memory requests cannot exceed this value.</td>
+</tr>
+<tr>
+<td>requests.cpu</td>
+<td>Across all pods in a non-terminal state, the sum of CPU requests cannot exceed this value.</td>
+</tr>
+<tr>
+<td>requests.memory</td>
+<td>Across all pods in a non-terminal state, the sum of memory requests cannot exceed this value.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Object-Count-Quota"><a href="#Object-Count-Quota" class="headerlink" title="Object Count Quota"></a>Object Count Quota</h2><table>
+<thead>
+<tr>
+<th>Resource Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>configmaps</td>
+<td>The total number of config maps that can exist in the namespace.</td>
+</tr>
+<tr>
+<td>persistentvolumeclaims</td>
+<td>The total number of persistent volume claims that can exist in the namespace.</td>
+</tr>
+<tr>
+<td>pods</td>
+<td>The total number of pods in a non-terminal state that can exist in the namespace. A pod is in a terminal state if status.phase in (Failed, Succeeded) is true.</td>
+</tr>
+<tr>
+<td>replicationcontrollers</td>
+<td>The total number of replication controllers that can exist in the namespace.</td>
+</tr>
+<tr>
+<td>resourcequotas</td>
+<td>The total number of resource quotas that can exist in the namespace.</td>
+</tr>
+<tr>
+<td>services</td>
+<td>The total number of services that can exist in the namespace.</td>
+</tr>
+<tr>
+<td>services.loadbalancers</td>
+<td>The total number of services of type load balancer that can exist in the namespace.</td>
+</tr>
+<tr>
+<td>services.nodeports</td>
+<td>The total number of services of type node port that can exist in the namespace.</td>
+</tr>
+<tr>
+<td>secrets</td>
+<td>The total number of secrets that can exist in the namespace.</td>
+</tr>
+</tbody>
+</table>
+<p>对象的总数，比如限制最多可以创建几个pod，最多几个rc</p>
+<h1 id="Limit-Range"><a href="#Limit-Range" class="headerlink" title="Limit Range"></a>Limit Range</h1><p>需要在Admission Controller启用LimitRanger插件</p>
+<p>By default, pods run with unbounded CPU and memory limits.</p>
+<p>Let’s create a simple limit in our namespace.<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl <span class="operator"><span class="keyword">create</span> -<span class="keyword">f</span> docs/<span class="keyword">admin</span>/limitrange/limits.yaml <span class="comment">--namespace=limit-example</span></span><br><span class="line"></span><br><span class="line">limitrange <span class="string">"mylimits"</span> created</span></span><br></pre></td></tr></table></figure></p>
+<p>Let’s describe the limits that we have imposed in our namespace.<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl <span class="operator"><span class="keyword">describe</span> limits mylimits <span class="comment">--namespace=limit-example</span></span><br><span class="line"><span class="keyword">Name</span>:   mylimits</span><br><span class="line">Namespace:  <span class="keyword">limit</span>-example</span><br><span class="line"><span class="keyword">Type</span>        <span class="keyword">Resource</span>      <span class="keyword">Min</span>      <span class="keyword">Max</span>      <span class="keyword">Default</span> Request      <span class="keyword">Default</span> <span class="keyword">Limit</span>      <span class="keyword">Max</span> <span class="keyword">Limit</span>/Request Ratio</span><br><span class="line"><span class="comment">----        --------      ---      ---      ---------------      -------------      -----------------------</span></span><br><span class="line">Pod         cpu           <span class="number">200</span><span class="keyword">m</span>     <span class="number">2</span>        -                    -                  -</span><br><span class="line">Pod         <span class="keyword">memory</span>        <span class="number">6</span>Mi      <span class="number">1</span>Gi      -                    -                  -</span><br><span class="line"><span class="keyword">Container</span>   cpu           <span class="number">100</span><span class="keyword">m</span>     <span class="number">2</span>        <span class="number">200</span><span class="keyword">m</span>                 <span class="number">300</span><span class="keyword">m</span>               -</span><br><span class="line"><span class="keyword">Container</span>   <span class="keyword">memory</span>        <span class="number">3</span>Mi      <span class="number">1</span>Gi      <span class="number">100</span>Mi                <span class="number">200</span>Mi              -</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h1><p>限定某个用户能做的事情，比如<br>Alice can do anything to all resources:<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">apiVersion</span>":<span class="value"><span class="string">"abac.authorization.kubernetes.io/v1beta1"</span></span>,</span><br><span class="line">    "<span class="attribute">kind</span>":<span class="value"><span class="string">"Policy"</span></span>,</span><br><span class="line">    "<span class="attribute">spec</span>":<span class="value">&#123;</span><br><span class="line">        "<span class="attribute">user</span>":<span class="value"><span class="string">"alice"</span></span>,</span><br><span class="line">        "<span class="attribute">namespace</span>":<span class="value"><span class="string">"*"</span></span>,</span><br><span class="line">        "<span class="attribute">resource</span>":<span class="value"><span class="string">"*"</span></span>,</span><br><span class="line">        "<span class="attribute">apiGroup</span>":<span class="value"><span class="string">"*"</span></span><br><span class="line">    </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Bob can just read pods in namespace “projectCaribou”<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">apiVersion</span>":<span class="value"><span class="string">"abac.authorization.kubernetes.io/v1beta1"</span></span>,</span><br><span class="line">    "<span class="attribute">kind</span>":<span class="value"><span class="string">"Policy"</span></span>,</span><br><span class="line">    "<span class="attribute">spec</span>":<span class="value">&#123;</span><br><span class="line">        "<span class="attribute">user</span>":<span class="value"><span class="string">"bob"</span></span>,</span><br><span class="line">        "<span class="attribute">namespace</span>":<span class="value"><span class="string">"projectCaribou"</span></span>,</span><br><span class="line">        "<span class="attribute">resource</span>":<span class="value"><span class="string">"pods"</span></span>,</span><br><span class="line">        "<span class="attribute">readonly</span>":<span class="value"><span class="literal">true</span></span><br><span class="line">    </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>缺点是，必须在api server启动的时候就传入文件。如果需要对权限做修改，那么必须重启api server才能生效</p>
+<h1 id="RBAC"><a href="#RBAC" class="headerlink" title="RBAC"></a>RBAC</h1><p>之前提到了ABAC比较弱，所以呢1.3出来个新特性，叫RBAC，目前还是Alpha。<br>从名字就能看出来<code>“RBAC” (Role-Based Access Control)</code>，基于角色，有点像OpenStack的角色了</p>
+<h2 id="Roles"><a href="#Roles" class="headerlink" title="Roles"></a>Roles</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">kind</span>: Role</span><br><span class="line"><span class="attribute">apiVersion</span>: rbac.authorization.k8s.io/v1alpha1</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">namespace</span>: default</span><br><span class="line">  <span class="attribute">name</span>: pod-reader</span><br><span class="line"><span class="attribute">rules</span>:</span><br><span class="line">  - <span class="attribute">apiGroups</span>: [<span class="string">""</span>] # The API group <span class="string">""</span> indicates the default API Group.</span><br><span class="line">    <span class="attribute">resources</span>: [<span class="string">"pods"</span>]</span><br><span class="line">    <span class="attribute">verbs</span>: [<span class="string">"get"</span>, <span class="string">"watch"</span>, <span class="string">"list"</span>]</span><br><span class="line">    <span class="attribute">nonResourceURLs</span>: []</span><br></pre></td></tr></table></figure>
+<h2 id="RolesBindings"><a href="#RolesBindings" class="headerlink" title="RolesBindings"></a>RolesBindings</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This role binding allows "jane" to read pods in the namespace "default"</span></span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1alpha1</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="operator">read</span>-pods</span><br><span class="line">  namespace: default</span><br><span class="line">subjects:</span><br><span class="line">  - kind: <span class="keyword">User</span> <span class="title"># May</span> be <span class="string">"User"</span>, <span class="string">"Group"</span> <span class="operator">or</span> <span class="string">"ServiceAccount"</span></span><br><span class="line">    name: jane</span><br><span class="line">roleRef:</span><br><span class="line">  kind: <span class="keyword">Role</span></span><br><span class="line">  <span class="title">namespace</span>: default</span><br><span class="line">  name: pod-reader</span><br><span class="line">  apiVersion: rbac.authorization.k8s.io/v1alpha1</span><br></pre></td></tr></table></figure>
+<h2 id="一图胜千言"><a href="#一图胜千言" class="headerlink" title="一图胜千言"></a>一图胜千言</h2><img src="http://www.plantuml.com/plantuml/svg/AqXCpavCJrLGoalCJIqkI4nEDLHII2nMo2isLAZcughbuYh0K644LM44KH1Tb9-JQXYhQmVKmnLTMfnQv0ZaW4NZapBpKZBpqWrZkT3uK0KW2P0EfrW5tT82J5qmMJGP8pJpZ60AO196OESO0G00">
+<p>userA和userB是通过<code>[role_binding1][role1]</code>连接到name space 1，得到在name space1进行操作的权限。<br>userB则是<code>[role_binding2]-&gt;[role2]</code>得到在name space2进行操作的权限。</p>
+<h1 id="webhook"><a href="#webhook" class="headerlink" title="webhook"></a>webhook</h1><p>感觉很强大，是否可以和keystone对接？把OpenStack的多租户能力借鉴过来？</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -423,7 +528,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NameSpace"><span class="nav-number">2.</span> <span class="nav-text">NameSpace</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AdmissionControl"><span class="nav-number">3.</span> <span class="nav-text">AdmissionControl</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ABAC"><span class="nav-number">4.</span> <span class="nav-text">ABAC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RBAC"><span class="nav-number">5.</span> <span class="nav-text">RBAC</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NameSpace"><span class="nav-number">2.</span> <span class="nav-text">NameSpace</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Resource-Quota"><span class="nav-number">3.</span> <span class="nav-text">Resource Quota</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Compute-Resource-Quota"><span class="nav-number">3.1.</span> <span class="nav-text">Compute Resource Quota</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object-Count-Quota"><span class="nav-number">3.2.</span> <span class="nav-text">Object Count Quota</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Limit-Range"><span class="nav-number">4.</span> <span class="nav-text">Limit Range</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ABAC"><span class="nav-number">5.</span> <span class="nav-text">ABAC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RBAC"><span class="nav-number">6.</span> <span class="nav-text">RBAC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Roles"><span class="nav-number">6.1.</span> <span class="nav-text">Roles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RolesBindings"><span class="nav-number">6.2.</span> <span class="nav-text">RolesBindings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一图胜千言"><span class="nav-number">6.3.</span> <span class="nav-text">一图胜千言</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#webhook"><span class="nav-number">7.</span> <span class="nav-text">webhook</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
