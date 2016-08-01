@@ -58,6 +58,31 @@ secrets|The total number of secrets that can exist in the namespace.
 
 对象的总数，比如限制最多可以创建几个pod，最多几个rc
 
+```
+$ kubectl describe quota compute-resources --namespace=myspace
+Name:                  compute-resources
+Namespace:             myspace
+Resource               Used Hard
+--------               ---- ----
+limits.cpu             0    2
+limits.memory          0    2Gi
+pods                   0    4
+requests.cpu           0    1
+requests.memory        0    1Gi
+
+$ kubectl describe quota object-counts --namespace=myspace
+Name:                   object-counts
+Namespace:              myspace
+Resource                Used    Hard
+--------                ----    ----
+configmaps              0       10
+persistentvolumeclaims  0       4
+replicationcontrollers  0       20
+secrets                 1       10
+services                0       10
+services.loadbalancers  0       2
+```
+
 # Limit Range
 
 需要在Admission Controller启用LimitRanger插件
@@ -166,7 +191,7 @@ package "namespace2" as ns2{
 [role_binding1]->[role1]
 [userB] -up->[role_binding1]
 
-[userB]->[role_binding2]
+[userB] -down->[role_binding2]
 [role_binding2]->[role2]
 [role2]->ns2
 {% endplantuml %}
