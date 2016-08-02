@@ -45,7 +45,9 @@
 <meta property="og:url" content="http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景docker官方也有私有云版本">
-<meta property="og:updated_time" content="2016-08-02T12:51:29.245Z">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/17329710/6027e182-58f6-11e6-99cb-8f37aef00ccf.png">
+<meta property="og:image" content="https://docs.docker.com/ucp/images/architecture-3.png">
+<meta property="og:updated_time" content="2016-08-02T13:28:45.898Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="体验docker UCP">
 <meta name="twitter:description" content="背景docker官方也有私有云版本">
@@ -262,6 +264,131 @@
 <p>提示<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Could <span class="operator">not</span> <span class="built_in">read</span> CA certificate <span class="string">"/root/.docker/ca.pem"</span>: <span class="built_in">open</span> /root/.docker/ca.pem: no such <span class="built_in">file</span> <span class="operator">or</span> <span class="built_in">directory</span></span><br></pre></td></tr></table></figure></p>
 <p>看来需要生成一个<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl req -out ca.pem -<span class="keyword">new</span> -x509</span><br><span class="line"><span class="preprocessor"># aaaa</span></span><br><span class="line"><span class="preprocessor"># <span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span></span></span><br></pre></td></tr></table></figure></p>
 <p>再次运行run<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Unable to find image 'docker/ucp:latest' locally</span><br><span class="line">latest: Pulling from docker/ucp</span><br><span class="line">e110a4a17941: Pull complete</span><br><span class="line">a1c3e1c9e147: Pull complete</span><br><span class="line">bca4748868da: Pull complete</span><br><span class="line">Digest: sha256:46154615e2429a9a8f3d019c414f69cd47f9f7dd5d5c35f54016c01fad1d99ef</span><br><span class="line">Status: Downloaded newer image for docker/ucp:latest</span><br><span class="line">INFO[0000] Verifying your system is compatible with UCP</span><br><span class="line">INFO[0000] Your engine version 1.12.0, build 8eab29e (4.4.0-31-generic) is compatible</span><br><span class="line">WARN[0000] Your system does not have enough memory.  UCP suggests a minimum of 2.00 GB, but you only have 0.97 GB.  You may have unexpected errors.</span><br><span class="line">Please choose your initial UCP admin password:</span><br><span class="line">Confirm your initial password:</span><br><span class="line">INFO[0024] Pulling required images... (this may take a while)</span><br><span class="line">WARN[0080] None of the hostnames we'll be using in the UCP certificates [ubuntu-1gb-sfo1-01 127.0.0.1 172.17.0.1 104.236.158.191] contain a domain component.  Your generated certs may fail TLS validation unless you only <span class="operator"><span class="keyword">use</span> one <span class="keyword">of</span> these shortnames <span class="keyword">or</span> IPs <span class="keyword">to</span> <span class="keyword">connect</span>.  You can <span class="keyword">use</span> the <span class="comment">--san flag to add more aliases</span></span><br><span class="line"></span><br><span class="line">You may enter additional aliases (SANs) <span class="keyword">now</span> <span class="keyword">or</span> press enter <span class="keyword">to</span> proceed <span class="keyword">with</span> the above <span class="keyword">list</span>.</span><br><span class="line">Additional aliases: abc</span><br><span class="line">INFO[<span class="number">0192</span>] Installing UCP <span class="keyword">with</span> host address <span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span> - <span class="keyword">If</span> this <span class="keyword">is</span> incorrect, please specify an alternative address <span class="keyword">with</span> the <span class="string">'--host-address'</span> flag</span><br><span class="line">INFO[<span class="number">0000</span>] Checking that <span class="keyword">required</span> ports <span class="keyword">are</span> available <span class="keyword">and</span> <span class="keyword">accessible</span></span><br><span class="line">INFO[<span class="number">0005</span>] Generating UCP Cluster Root CA</span><br><span class="line">INFO[<span class="number">0047</span>] Generating UCP <span class="keyword">Client</span> Root CA</span><br><span class="line">INFO[<span class="number">0060</span>] Deploying UCP Containers</span><br><span class="line">INFO[<span class="number">0113</span>] <span class="keyword">New</span> configuration established.  Signalling the daemon <span class="keyword">to</span> <span class="keyword">load</span> it...</span><br><span class="line">INFO[<span class="number">0114</span>] Successfully delivered signal <span class="keyword">to</span> daemon</span><br><span class="line">INFO[<span class="number">0114</span>] UCP <span class="keyword">instance</span> <span class="keyword">ID</span>: DKVU:ULUA:C3SO:O36W:<span class="number">4</span>WUE:OM4Z:<span class="number">5</span>V4X:IA46:ZLS5:L2KE:KE5J:O56D</span><br><span class="line">INFO[<span class="number">0114</span>] UCP <span class="keyword">Server</span> SSL: <span class="keyword">SHA</span>-<span class="number">256</span> Fingerprint=<span class="number">71</span>:C8:<span class="number">1</span><span class="keyword">D</span>:AB:CA:EE:E7:<span class="number">91</span>:<span class="number">07</span>:D6:<span class="number">23</span>:<span class="number">83</span>:F2:A7:<span class="number">67</span>:<span class="number">2</span>A:F8:DE:<span class="number">88</span>:<span class="number">43</span>:<span class="number">5</span><span class="keyword">C</span>:D4:<span class="number">2</span><span class="keyword">E</span>:<span class="number">76</span>:<span class="number">9</span><span class="keyword">D</span>:BA:B9:<span class="number">39</span>:B4:<span class="number">11</span>:<span class="number">64</span>:<span class="number">86</span></span><br><span class="line">INFO[<span class="number">0114</span>] Login <span class="keyword">as</span> <span class="string">"admin"</span>/(your <span class="keyword">admin</span> <span class="keyword">password</span>) <span class="keyword">to</span> UCP <span class="keyword">at</span> https://<span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span>:<span class="number">443</span></span></span><br></pre></td></tr></table></figure></p>
+<p>安装完成，效果图<br><img src="https://cloud.githubusercontent.com/assets/5423628/17329710/6027e182-58f6-11e6-99cb-8f37aef00ccf.png" alt="效果图"></p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><h2 id="系统容器"><a href="#系统容器" class="headerlink" title="系统容器"></a>系统容器</h2><table>
+<thead>
+<tr>
+<th>NODE</th>
+<th>NAME</th>
+<th>IMAGE</th>
+<th>CREATED</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-controller</td>
+<td>docker/ucp-controller:1.1.2</td>
+<td>2016-08-02 20:30:12 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-auth-worker</td>
+<td>docker/ucp-auth:1.1.2</td>
+<td>2016-08-02 20:30:09 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-auth-api</td>
+<td>docker/ucp-auth:1.1.2</td>
+<td>2016-08-02 20:30:08 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-auth-store</td>
+<td>docker/ucp-auth-store:1.1.2</td>
+<td>2016-08-02 20:30:04 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-cluster-root-ca</td>
+<td>docker/ucp-cfssl:1.1.2</td>
+<td>2016-08-02 20:30:03 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-client-root-ca</td>
+<td>docker/ucp-cfssl:1.1.2</td>
+<td>2016-08-02 20:30:02 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-swarm-manager</td>
+<td>docker/ucp-swarm:1.1.2</td>
+<td>2016-08-02 20:30:01 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-swarm-join</td>
+<td>docker/ucp-swarm:1.1.2</td>
+<td>2016-08-02 20:30:01 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-proxy</td>
+<td>docker/ucp-proxy:1.1.2</td>
+<td>2016-08-02 20:29:59 +0800</td>
+</tr>
+<tr>
+<td>ubuntu-1gb-sfo1-01</td>
+<td>ucp-kv</td>
+<td>docker/ucp-etcd:1.1.2</td>
+<td>2016-08-02 20:29:56 +0800</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://docs.docker.com/ucp/images/architecture-3.png" alt="官网的架构图"></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ucp-proxy</td>
+<td>A TLS proxy. It allows secure access to the local Docker Engine.</td>
+</tr>
+<tr>
+<td>ucp-controller</td>
+<td>The UCP application. It uses the key-value store for persisting configurations.</td>
+</tr>
+<tr>
+<td>ucp-swarm-manager</td>
+<td>Provides the clustering capabilities. It uses the key-value store for leader election, and keeping track of cluster members.</td>
+</tr>
+<tr>
+<td>ucp-swarm-join</td>
+<td>Heartbeat to record on the key-value store that this node is alive. If the node goes down, this heartbeat stops, and the node is removed from the cluster.</td>
+</tr>
+<tr>
+<td>ucp-auth-api</td>
+<td>The centralized API for identity and authentication used by UCP and DTR.</td>
+</tr>
+<tr>
+<td>ucp-auth-worker</td>
+<td>Performs scheduled LDAP synchronizations and cleans data on the ucp-auth-store.</td>
+</tr>
+<tr>
+<td>ucp-auth-store</td>
+<td>Stores authentication configurations, and data for users, organizations and teams.</td>
+</tr>
+<tr>
+<td>ucp-kv</td>
+<td>Used to store the UCP configurations. Don’t use it in your applications, since it’s for internal use only.</td>
+</tr>
+<tr>
+<td>ucp-cluster-root-ca</td>
+<td>A certificate authority to sign the certificates used when joining new nodes, and on administrator client bundles.</td>
+</tr>
+<tr>
+<td>ucp-client-root-ca</td>
+<td>A certificate authority to sign user bundles. Only used when UCP is installed without an external root CA.</td>
+</tr>
+</tbody>
+</table>
+<p>基本上明白都有什么作用了</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -423,7 +550,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#install"><span class="nav-number">2.</span> <span class="nav-text">install</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-engine"><span class="nav-number">2.1.</span> <span class="nav-text">docker engine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ucp"><span class="nav-number">2.2.</span> <span class="nav-text">ucp</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#install"><span class="nav-number">2.</span> <span class="nav-text">install</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-engine"><span class="nav-number">2.1.</span> <span class="nav-text">docker engine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ucp"><span class="nav-number">2.2.</span> <span class="nav-text">ucp</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析"><span class="nav-number">3.</span> <span class="nav-text">分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#系统容器"><span class="nav-number">3.1.</span> <span class="nav-text">系统容器</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
