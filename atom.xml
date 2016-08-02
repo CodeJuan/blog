@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-08-01T13:16:12.744Z</updated>
+  <updated>2016-08-02T12:51:29.245Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,43 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>体验docker UCP</title>
+    <link href="http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/"/>
+    <id>http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/</id>
+    <published>2016-08-01T16:00:00.000Z</published>
+    <updated>2016-08-02T12:51:29.245Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>docker官方也有私有云版本<br><a id="more"></a></p>
+<h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><h2 id="docker-engine"><a href="#docker-engine" class="headerlink" title="docker engine"></a>docker engine</h2><p>感谢Daoloud提供的一键式安装<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http<span class="variable">s:</span>//<span class="built_in">get</span>.daocloud.io/docker | <span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="ucp"><a href="#ucp" class="headerlink" title="ucp"></a>ucp</h2><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> DOCKER_TLS_VERIFY=<span class="string">"0"</span></span><br><span class="line"><span class="keyword">export</span> DOCKER_HOST=<span class="string">"tcp://104.236.158.191:2376"</span></span><br><span class="line"><span class="keyword">export</span> DOCKER_CERT_PATH=<span class="string">""</span></span><br><span class="line"><span class="keyword">export</span> DOCKER_MACHINE_NAME=<span class="string">"node1"</span></span><br><span class="line"></span><br><span class="line">docker run --rm -<span class="literal">it</span> <span class="string">\</span></span><br><span class="line">&gt; -v /<span class="keyword">var</span>/run/docker.<span class="attribute">sock</span>:/<span class="keyword">var</span>/run/docker.sock <span class="string">\</span></span><br><span class="line">&gt; --name ucp docker/ucp install -i <span class="string">\</span></span><br><span class="line">&gt; --swarm-port <span class="number">3376</span> --host-address <span class="number">104.236</span>.<span class="number">158.191</span></span><br></pre></td></tr></table></figure>
+<p>提示<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Could <span class="operator">not</span> <span class="built_in">read</span> CA certificate <span class="string">"/root/.docker/ca.pem"</span>: <span class="built_in">open</span> /root/.docker/ca.pem: no such <span class="built_in">file</span> <span class="operator">or</span> <span class="built_in">directory</span></span><br></pre></td></tr></table></figure></p>
+<p>看来需要生成一个<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl req -out ca.pem -<span class="keyword">new</span> -x509</span><br><span class="line"><span class="preprocessor"># aaaa</span></span><br><span class="line"><span class="preprocessor"># <span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span></span></span><br></pre></td></tr></table></figure></p>
+<p>再次运行run<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Unable to find image 'docker/ucp:latest' locally</span><br><span class="line">latest: Pulling from docker/ucp</span><br><span class="line">e110a4a17941: Pull complete</span><br><span class="line">a1c3e1c9e147: Pull complete</span><br><span class="line">bca4748868da: Pull complete</span><br><span class="line">Digest: sha256:46154615e2429a9a8f3d019c414f69cd47f9f7dd5d5c35f54016c01fad1d99ef</span><br><span class="line">Status: Downloaded newer image for docker/ucp:latest</span><br><span class="line">INFO[0000] Verifying your system is compatible with UCP</span><br><span class="line">INFO[0000] Your engine version 1.12.0, build 8eab29e (4.4.0-31-generic) is compatible</span><br><span class="line">WARN[0000] Your system does not have enough memory.  UCP suggests a minimum of 2.00 GB, but you only have 0.97 GB.  You may have unexpected errors.</span><br><span class="line">Please choose your initial UCP admin password:</span><br><span class="line">Confirm your initial password:</span><br><span class="line">INFO[0024] Pulling required images... (this may take a while)</span><br><span class="line">WARN[0080] None of the hostnames we'll be using in the UCP certificates [ubuntu-1gb-sfo1-01 127.0.0.1 172.17.0.1 104.236.158.191] contain a domain component.  Your generated certs may fail TLS validation unless you only <span class="operator"><span class="keyword">use</span> one <span class="keyword">of</span> these shortnames <span class="keyword">or</span> IPs <span class="keyword">to</span> <span class="keyword">connect</span>.  You can <span class="keyword">use</span> the <span class="comment">--san flag to add more aliases</span></span><br><span class="line"></span><br><span class="line">You may enter additional aliases (SANs) <span class="keyword">now</span> <span class="keyword">or</span> press enter <span class="keyword">to</span> proceed <span class="keyword">with</span> the above <span class="keyword">list</span>.</span><br><span class="line">Additional aliases: abc</span><br><span class="line">INFO[<span class="number">0192</span>] Installing UCP <span class="keyword">with</span> host address <span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span> - <span class="keyword">If</span> this <span class="keyword">is</span> incorrect, please specify an alternative address <span class="keyword">with</span> the <span class="string">'--host-address'</span> flag</span><br><span class="line">INFO[<span class="number">0000</span>] Checking that <span class="keyword">required</span> ports <span class="keyword">are</span> available <span class="keyword">and</span> <span class="keyword">accessible</span></span><br><span class="line">INFO[<span class="number">0005</span>] Generating UCP Cluster Root CA</span><br><span class="line">INFO[<span class="number">0047</span>] Generating UCP <span class="keyword">Client</span> Root CA</span><br><span class="line">INFO[<span class="number">0060</span>] Deploying UCP Containers</span><br><span class="line">INFO[<span class="number">0113</span>] <span class="keyword">New</span> configuration established.  Signalling the daemon <span class="keyword">to</span> <span class="keyword">load</span> it...</span><br><span class="line">INFO[<span class="number">0114</span>] Successfully delivered signal <span class="keyword">to</span> daemon</span><br><span class="line">INFO[<span class="number">0114</span>] UCP <span class="keyword">instance</span> <span class="keyword">ID</span>: DKVU:ULUA:C3SO:O36W:<span class="number">4</span>WUE:OM4Z:<span class="number">5</span>V4X:IA46:ZLS5:L2KE:KE5J:O56D</span><br><span class="line">INFO[<span class="number">0114</span>] UCP <span class="keyword">Server</span> SSL: <span class="keyword">SHA</span>-<span class="number">256</span> Fingerprint=<span class="number">71</span>:C8:<span class="number">1</span><span class="keyword">D</span>:AB:CA:EE:E7:<span class="number">91</span>:<span class="number">07</span>:D6:<span class="number">23</span>:<span class="number">83</span>:F2:A7:<span class="number">67</span>:<span class="number">2</span>A:F8:DE:<span class="number">88</span>:<span class="number">43</span>:<span class="number">5</span><span class="keyword">C</span>:D4:<span class="number">2</span><span class="keyword">E</span>:<span class="number">76</span>:<span class="number">9</span><span class="keyword">D</span>:BA:B9:<span class="number">39</span>:B4:<span class="number">11</span>:<span class="number">64</span>:<span class="number">86</span></span><br><span class="line">INFO[<span class="number">0114</span>] Login <span class="keyword">as</span> <span class="string">"admin"</span>/(your <span class="keyword">admin</span> <span class="keyword">password</span>) <span class="keyword">to</span> UCP <span class="keyword">at</span> https://<span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span>:<span class="number">443</span></span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;docker官方也有私有云版本&lt;br&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="UCP" scheme="http://blog.decbug.com/tags/UCP/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
     <title>kubernetes多租户分析</title>
     <link href="http://blog.decbug.com/2016/08/01/k8s_multi_tenant/"/>
     <id>http://blog.decbug.com/2016/08/01/k8s_multi_tenant/</id>
     <published>2016-07-31T17:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>公有云产品有个很重要的概念叫多租户，比如OpenStack的Domain/Project。提供资源隔离，权限控制，等等。<br>kubernetes如果作为PaaS的基础，那么也需要具备此能力。<br><a id="more"></a></p>
 <h1 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h1><blockquote>
@@ -157,7 +189,7 @@
     <link href="http://blog.decbug.com/2016/07/25/play_dce3/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce3/</id>
     <published>2016-07-24T17:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前面分析了系统容器，<br><a href="http://blog.decbug.com/2016/07/25/play_dce2/">http://blog.decbug.com/2016/07/25/play_dce2/</a><br>接下来看看到底是如何部署的，以及网络存储是如何创建的。<br><a id="more"></a></p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>去掉–rm ，看看install到底做了什么<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="tag">i</span>  daocloud.io/daocloud/dce install</span><br></pre></td></tr></table></figure></p>
@@ -204,7 +236,7 @@
     <link href="http://blog.decbug.com/2016/07/25/play_dce2/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce2/</id>
     <published>2016-07-24T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>前几天把环境弄好了，也简单试用了，大概知道DCE技术栈。<br><a href="http://blog.decbug.com/2016/07/20/play_dce/">http://blog.decbug.com/2016/07/20/play_dce/</a><br>果然是把docker原生技术发挥到了很棒的境界，很值得学习。</p>
 <a id="more"></a>
@@ -281,7 +313,7 @@
     <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
     <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
     <published>2016-07-20T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.740Z</updated>
+    <updated>2016-08-02T12:51:29.245Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
 <a id="more"></a>
@@ -339,7 +371,7 @@
     <link href="http://blog.decbug.com/2016/07/20/inspect_harbor/"/>
     <id>http://blog.decbug.com/2016/07/20/inspect_harbor/</id>
     <published>2016-07-20T12:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。</p>
 <a id="more"></a>
@@ -395,7 +427,7 @@
     <link href="http://blog.decbug.com/2016/07/20/play_dce/"/>
     <id>http://blog.decbug.com/2016/07/20/play_dce/</id>
     <published>2016-07-19T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>以前只用过公有云版本，大概把持续集成持续交付那一块弄明白了。最近发现有DaoCloud企业版，简称DEC，看了下截图，感觉很不错，决定也自己搞一个玩。</p>
 <a id="more"></a>
@@ -431,7 +463,7 @@
     <link href="http://blog.decbug.com/2016/07/15/net_speeder/"/>
     <id>http://blog.decbug.com/2016/07/15/net_speeder/</id>
     <published>2016-07-14T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
 <a id="more"></a>
@@ -461,7 +493,7 @@
     <link href="http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/"/>
     <id>http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/</id>
     <published>2016-07-02T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.740Z</updated>
+    <updated>2016-08-02T12:51:29.245Z</updated>
     
     <content type="html"><![CDATA[<p>要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。<br>现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。<br>恰好业务是跑在k8s上，k8s关于pod的文档上说</p>
 <blockquote>
@@ -512,7 +544,7 @@
     <link href="http://blog.decbug.com/2016/06/28/k8s_admission/"/>
     <id>http://blog.decbug.com/2016/06/28/k8s_admission/</id>
     <published>2016-06-27T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h2><p>k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。<br>为了实现更细粒度的quota，有必要自制一个admission插件。</p>
 <h2 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h2><p>由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd</p>
@@ -547,7 +579,7 @@
     <link href="http://blog.decbug.com/2016/06/27/plantuml/"/>
     <id>http://blog.decbug.com/2016/06/27/plantuml/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>架构图即代码<br>PlantUML is a open-source tool that allows to quickly write :</p>
 <ul>
@@ -621,7 +653,7 @@
     <link href="http://blog.decbug.com/2016/06/23/flannel/"/>
     <id>http://blog.decbug.com/2016/06/23/flannel/</id>
     <published>2016-06-22T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<p>正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理</p>
 <a id="more"></a>
@@ -680,7 +712,7 @@
     <link href="http://blog.decbug.com/2016/06/21/openstack_playground_1/"/>
     <id>http://blog.decbug.com/2016/06/21/openstack_playground_1/</id>
     <published>2016-06-21T11:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>昨天搞整了一下KVM和vlan，<a href="http://blog.decbug.com/2016/06/20/kvm/">http://blog.decbug.com/2016/06/20/kvm/</a><br>今天就要在家搞一套openstack开发环境<br><a id="more"></a></p>
 <h1 id="devstack"><a href="#devstack" class="headerlink" title="devstack"></a>devstack</h1><p>devstack是一个一键式搭建open stack环境的脚本，如官网所说<code>DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.</code><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/openstack-dev/devstack.git</span></span><br><span class="line"><span class="keyword">cd</span> devstack/</span><br><span class="line"></span><br><span class="line"># 切换到<span class="keyword">m</span>版本分支</span><br><span class="line">git co stable/mitaka</span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> tools</span><br><span class="line"></span><br><span class="line"># 创建<span class="keyword">stack</span>用户</span><br><span class="line">sudo bash create-<span class="keyword">stack</span>-user.<span class="keyword">sh</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">cd</span> ../../</span><br><span class="line">sudo mv devstack /opt/<span class="keyword">stack</span></span><br><span class="line">sudo chown -R <span class="keyword">stack</span>:<span class="keyword">stack</span> /opt/<span class="keyword">stack</span>/devstack</span><br><span class="line"></span><br><span class="line"># switch to <span class="keyword">stack</span></span><br><span class="line">sudo -<span class="literal">i</span></span><br><span class="line"><span class="keyword">su</span> <span class="keyword">stack</span></span><br></pre></td></tr></table></figure></p>
@@ -715,7 +747,7 @@
     <link href="http://blog.decbug.com/2016/06/21/blog_huawei/"/>
     <id>http://blog.decbug.com/2016/06/21/blog_huawei/</id>
     <published>2016-06-20T18:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.740Z</updated>
+    <updated>2016-08-02T12:51:29.245Z</updated>
     
     <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/7.jpeg" alt=""></p>
@@ -747,7 +779,7 @@
     <link href="http://blog.decbug.com/2016/06/21/essay20160620/"/>
     <id>http://blog.decbug.com/2016/06/21/essay20160620/</id>
     <published>2016-06-20T17:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.245Z</updated>
     
     <content type="html"><![CDATA[<p>时间已经来到2016的6月底，是时候回顾这上半年的收获与教训<br><a id="more"></a></p>
 <h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><ul>
@@ -811,7 +843,7 @@
     <link href="http://blog.decbug.com/2016/06/20/kvm/"/>
     <id>http://blog.decbug.com/2016/06/20/kvm/</id>
     <published>2016-06-19T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>那么从KVM开始，是一个不错的选择。</p>
 <a id="more"></a>
@@ -849,7 +881,7 @@
     <link href="http://blog.decbug.com/2016/05/31/hexo_travis/"/>
     <id>http://blog.decbug.com/2016/05/31/hexo_travis/</id>
     <published>2016-05-30T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>github pages支持jekyll自动发布，只要修改了post的md，就会自动生成gh-pages。但不支持hexo，所以需要通过第三方的系统来执行hexo generate并把生成的静态页面push到gh-pages。<br>之前用过Travis ci，感觉不错，打算继续用它。</p>
 <a id="more"></a>
@@ -887,7 +919,7 @@
     <link href="http://blog.decbug.com/2016/05/29/biz_and_req/"/>
     <id>http://blog.decbug.com/2016/05/29/biz_and_req/</id>
     <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.740Z</updated>
+    <updated>2016-08-02T12:51:29.245Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>现在是在工具团队，做的产品都是给业务来用的，业务就是我们的客户。那么业务又是什么呢？业务就是给公司赚钱的产品。<br>然而有时候，我们的专家们却总是脱离业务来YY方案，然后做出一些令人难以理解的产品。</p>
 <a id="more"></a>
@@ -917,7 +949,7 @@
     <link href="http://blog.decbug.com/2016/05/09/tinyhttpd/"/>
     <id>http://blog.decbug.com/2016/05/09/tinyhttpd/</id>
     <published>2016-05-08T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>C语言实现的http server，代码简短，看完可以明了原理。</p>
 <a id="more"></a>
@@ -956,7 +988,7 @@
     <link href="http://blog.decbug.com/2016/05/04/memcache/"/>
     <id>http://blog.decbug.com/2016/05/04/memcache/</id>
     <published>2016-05-03T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.744Z</updated>
+    <updated>2016-08-02T12:51:29.249Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>memcache应用很广泛，听说内存管理做的很好，以及通过事件驱动的方式效率很高，于是找来看看。</p>
 <a id="more"></a>
@@ -986,45 +1018,6 @@
       <category term="cache" scheme="http://blog.decbug.com/tags/cache/"/>
     
       <category term="memcache" scheme="http://blog.decbug.com/tags/memcache/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>读架构漫谈有感</title>
-    <link href="http://blog.decbug.com/2016/05/03/architectrue_kevin/"/>
-    <id>http://blog.decbug.com/2016/05/03/architectrue_kevin/</id>
-    <published>2016-05-02T16:00:00.000Z</published>
-    <updated>2016-08-01T13:16:12.740Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。<br>于是再读几遍，记录一下感想。</p>
-<a id="more"></a>
-<h2 id="一：什么是架构"><a href="#一：什么是架构" class="headerlink" title="一：什么是架构"></a>一：什么是架构</h2><h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><ul>
-<li>人多了，就会有分工</li>
-<li>人类社会，每个人做擅长的事，与他人进行交换</li>
-<li>很多人组成了整体</li>
-</ul>
-<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><ul>
-<li>定界</li>
-<li>分工，分块</li>
-<li>将模块组合为整体</li>
-</ul>
-<h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
-<p>这个时候人们对建筑的需求也就慢慢的越来越多，空间的切分也会变成很多种，组合的方式也会有很多种，比如每个人住的房子，群居所产生的宗教性质的房子，集体活动的房子等等。这个时候人们就开始有意识的去设计房子，架构师就慢慢的出现了。一切都是为了满足人的越来越高的需求，提升质量，减少时间，更有效率的切分空间，并且让空间之间更加有机的进行沟通。这就是建筑的架构以及建筑的架构的演变</p>
-</blockquote>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;来自聊聊架构公众号的系列文章，作者kevin老师。读过之后大开眼界，获益良多。&lt;br&gt;于是再读几遍，记录一下感想。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="architecture" scheme="http://blog.decbug.com/categories/architecture/"/>
-    
-    
-      <category term="architecture" scheme="http://blog.decbug.com/tags/architecture/"/>
     
   </entry>
   
