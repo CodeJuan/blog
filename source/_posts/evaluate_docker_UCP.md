@@ -77,6 +77,44 @@ INFO[0114] UCP Server SSL: SHA-256 Fingerprint=71:C8:1D:AB:CA:EE:E7:91:07:D6:23:
 INFO[0114] Login as "admin"/(your admin password) to UCP at https://104.236.158.191:443
 ```
 
+安装完成，效果图
+![效果图](https://cloud.githubusercontent.com/assets/5423628/17329710/6027e182-58f6-11e6-99cb-8f37aef00ccf.png)
+
+
+# 分析
+
+## 系统容器
+
+NODE|NAME|IMAGE|CREATED
+--|--|--|--
+ubuntu-1gb-sfo1-01|ucp-controller|docker/ucp-controller:1.1.2|2016-08-02 20:30:12 +0800
+ubuntu-1gb-sfo1-01|ucp-auth-worker|docker/ucp-auth:1.1.2|2016-08-02 20:30:09 +0800
+ubuntu-1gb-sfo1-01|ucp-auth-api|docker/ucp-auth:1.1.2|2016-08-02 20:30:08 +0800
+ubuntu-1gb-sfo1-01|ucp-auth-store|docker/ucp-auth-store:1.1.2|2016-08-02 20:30:04 +0800
+ubuntu-1gb-sfo1-01|ucp-cluster-root-ca|docker/ucp-cfssl:1.1.2|2016-08-02 20:30:03 +0800
+ubuntu-1gb-sfo1-01|ucp-client-root-ca|docker/ucp-cfssl:1.1.2|2016-08-02 20:30:02 +0800
+ubuntu-1gb-sfo1-01|ucp-swarm-manager|docker/ucp-swarm:1.1.2|2016-08-02 20:30:01 +0800
+ubuntu-1gb-sfo1-01|ucp-swarm-join|docker/ucp-swarm:1.1.2|2016-08-02 20:30:01 +0800
+ubuntu-1gb-sfo1-01|ucp-proxy|docker/ucp-proxy:1.1.2|2016-08-02 20:29:59 +0800
+ubuntu-1gb-sfo1-01|ucp-kv|docker/ucp-etcd:1.1.2|2016-08-02 20:29:56 +0800
+
+![官网的架构图](https://docs.docker.com/ucp/images/architecture-3.png)
+
+Name|Description
+--|--
+ucp-proxy|A TLS proxy. It allows secure access to the local Docker Engine.
+ucp-controller|The UCP application. It uses the key-value store for persisting configurations.
+ucp-swarm-manager|Provides the clustering capabilities. It uses the key-value store for leader election, and keeping track of cluster members.
+ucp-swarm-join|Heartbeat to record on the key-value store that this node is alive. If the node goes down, this heartbeat stops, and the node is removed from the cluster.
+ucp-auth-api|The centralized API for identity and authentication used by UCP and DTR.
+ucp-auth-worker|Performs scheduled LDAP synchronizations and cleans data on the ucp-auth-store.
+ucp-auth-store|Stores authentication configurations, and data for users, organizations and teams.
+ucp-kv|Used to store the UCP configurations. Don’t use it in your applications, since it’s for internal use only.
+ucp-cluster-root-ca|A certificate authority to sign the certificates used when joining new nodes, and on administrator client bundles.
+ucp-client-root-ca|A certificate authority to sign user bundles. Only used when UCP is installed without an external root CA.
+
+基本上明白都有什么作用了
+
 -----------------------
 
 `本博客欢迎转发,但请保留原作者信息`
