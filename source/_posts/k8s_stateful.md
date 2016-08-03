@@ -87,6 +87,79 @@ spec:
           storage: 1Gi
 ```
 提示
+```
+$ ./kubectl describe pvc www-web-0
+Name:		www-web-0
+Namespace:	default
+Status:		Pending
+Volume:
+Labels:		app=nginx
+Capacity:
+Access Modes:
+Events:
+  FirstSeen	LastSeen	Count	From				SubobjectPath	Type		Reason			Message
+  ---------	--------	-----	----				-------------	--------	------			-------
+  5m		10s		22	{persistentvolume-controller }			Warning		ProvisioningFailed	No provisioner plugin found for the claim!
+
+```
+
+看了下[http://kubernetes.io/docs/user-guide/persistent-volumes/#provisioning](http://kubernetes.io/docs/user-guide/persistent-volumes/#provisioning)
+原来是只有all in one才能用hostpath，所以，得搭建一个NFS，毕竟NFS最简单
+
+
+```
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  # *.nginx.default.svc.cluster.local
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1alpha1
+kind: PetSet
+metadata:
+  name: web
+spec:
+  serviceName: "nginx"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: nginx
+        image: gcr.io/google_containers/nginx-slim:0.8
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+
+```
 
 # 参考
 - [构建可伸缩的有状态服务](http://www.infoq.com/cn/news/2015/12/scaling-stateful-services)
