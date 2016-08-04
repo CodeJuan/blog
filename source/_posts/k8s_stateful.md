@@ -25,13 +25,14 @@ description:
 
 那么，作为有状态服务的基石，petset需要具备哪些特征呢：
 1. 有唯一的编号
-1. 在网络上有个不会改变的标识，k8s是通过DNS实现的。pod，则是名字后面还有随机数，所以需要有service来做转发
+1. 在网络上有个不会改变的标识，k8s是通过域名实现的。pod，则是名字后面还有随机数，所以需要有service来做转发
 1. 每个有状态服务，都需要有自己的卷，这样就能保证数据可靠存储
 
 # petset的典型场景
 MySQL
 Zookeeper
 Cassandra
+redis
 
 # 小试验
 ```
@@ -102,55 +103,127 @@ Events:
   5m		10s		22	{persistentvolume-controller }			Warning		ProvisioningFailed	No provisioner plugin found for the claim!
 
 ```
+这是因为需要设置`Persistent Volume Provisioning`
+方法是在controller manager的启动参数加上`--enable-hostpath-provisioner=true`，然后重启controller，再create就OK了。
 
-看了下[http://kubernetes.io/docs/user-guide/persistent-volumes/#provisioning](http://kubernetes.io/docs/user-guide/persistent-volumes/#provisioning)
-原来是只有all in one才能用hostpath，所以，得搭建一个NFS，毕竟NFS最简单
 
+# redis
+[https://github.com/kubernetes/kubernetes/tree/master/test/e2e/testing-manifests/petset/redis](https://github.com/kubernetes/kubernetes/tree/master/test/e2e/testing-manifests/petset/redis)
 
+## service.yml
 ```
 # A headless service to create DNS records
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: redis
   labels:
-    app: nginx
+    app: redis
 spec:
   ports:
-  - port: 80
-    name: web
-  # *.nginx.default.svc.cluster.local
+  - port: 6379
+    name: peer
+  # *.redis.default.svc.cluster.local
   clusterIP: None
   selector:
-    app: nginx
----
+    app: redis
+```
+
+## petset.yml
+```
 apiVersion: apps/v1alpha1
 kind: PetSet
 metadata:
-  name: web
+  name: rd
 spec:
-  serviceName: "nginx"
-  replicas: 2
+  serviceName: "redis"
+  replicas: 3
   template:
     metadata:
       labels:
-        app: nginx
+        app: redis
       annotations:
         pod.alpha.kubernetes.io/initialized: "true"
+        pod.alpha.kubernetes.io/init-containers: '[
+            {
+                "name": "install",
+                "image": "gcr.io/google_containers/redis-install-3.2.0:e2e",
+                "imagePullPolicy": "Always",
+                "args": ["--install-into=/opt", "--work-dir=/work-dir"],
+                "volumeMounts": [
+                    {
+                        "name": "opt",
+                        "mountPath": "/opt"
+                    },
+                    {
+                        "name": "workdir",
+                        "mountPath": "/work-dir"
+                    }
+                ]
+            },
+            {
+                "name": "bootstrap",
+                "image": "debian:jessie",
+                "command": ["/work-dir/peer-finder"],
+                "args": ["-on-start=\"/work-dir/on-start.sh\"", "-service=redis"],
+                "env": [
+                  {
+                      "name": "POD_NAMESPACE",
+                      "valueFrom": {
+                          "fieldRef": {
+                              "apiVersion": "v1",
+                              "fieldPath": "metadata.namespace"
+                          }
+                      }
+                   }
+                ],
+                "volumeMounts": [
+                    {
+                        "name": "opt",
+                        "mountPath": "/opt"
+                    },
+                    {
+                        "name": "workdir",
+                        "mountPath": "/work-dir"
+                    }
+                ]
+            }
+        ]'
     spec:
       terminationGracePeriodSeconds: 0
       containers:
-      - name: nginx
-        image: gcr.io/google_containers/nginx-slim:0.8
+      - name: redis
+        image: debian:jessie
         ports:
-        - containerPort: 80
-          name: web
+        - containerPort: 6379
+          name: peer
+        command:
+        - /opt/redis/redis-server
+        args:
+        - /opt/redis/redis.conf
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "/opt/redis/redis-cli -h $(hostname) ping"
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
         volumeMounts:
-        - name: www
-          mountPath: /usr/share/nginx/html
+        - name: datadir
+          mountPath: /data
+        - name: opt
+          mountPath: /opt
+      volumes:
+      - name: opt
+        emptyDir: {}
+      - name: workdir
+        emptyDir: {}
   volumeClaimTemplates:
   - metadata:
-      name: www
+      name: datadir
       annotations:
         volume.alpha.kubernetes.io/storage-class: anything
     spec:
@@ -158,7 +231,6 @@ spec:
       resources:
         requests:
           storage: 1Gi
-
 ```
 
 # 参考
