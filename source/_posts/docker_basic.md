@@ -1,5 +1,5 @@
 ---
-title: Docker基础知识: namespace cgroup
+title: Docker基础知识--namespace cgroup
 date: 2016-08-15 00:00:00
 categories:
 - code
@@ -66,6 +66,16 @@ int main()
     printf("Parent stop!\n");
     return 0;
 }
+```
+
+结果
+```
+i3@i3:~/code/namespace$ ./base
+Parent start!
+Parent pid:  7816
+Child pid in parent process:  7817
+Child start!
+Child pid in child process:  7817
 ```
 
 ## UTS
