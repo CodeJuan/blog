@@ -207,6 +207,99 @@
           
           
             
+              <a class="post-title-link" href="/2015/10/16/openstack_perf_tester_1/" itemprop="url">
+                openstack性能测试器(1):AMQP
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-16T00:00:00+08:00" content="2015-10-16">
+            2015-10-16
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/10/16/openstack_perf_tester_1/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/16/openstack_perf_tester_1/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>我司的公有云产品是基于OpenStack，一直以来都有做性能测试，但以前的性能测试方法比较老土。</p>
+<ul>
+<li>有一部分基于http的消息是通过自己写的测试器来测试，即模拟真实场景的消息收发，测试各组件在高并发下的性能。</li>
+<li>另外一些基于AMQP的消息则还是通过一堆虚拟机来做测试，需要耗费大量资源。</li>
+</ul>
+<p>有鉴于此，需要再把测试器完善一下，使其能模拟OpenStack的各种组件，用有限的几台虚拟机，就能完成所有组件的性能测试。<br>而作为什么都会一点的牛X人物，自然少不了被派来开荒。正好可以借此机会深入了解一下OpenStack，以前只是久闻其名，无缘深入探究，这次终于得偿所望。<br>嘎嘎嘎！！<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/10/16/openstack_perf_tester_1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/10/14/ror/" itemprop="url">
                 学习ruby on rails
               </a>
@@ -549,99 +642,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/09/07/multi_thread_rsync/" itemprop="url">
-                多线程同步镜像
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
-            2015-09-07
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/09/07/multi_thread_rsync/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/multi_thread_rsync/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>为了提高工作效率，我司的软件青年们搭建了一组内网mirror，包括apache，pip，npm，jenkins，ubuntu等等。<br>想用得爽，就得保持与官方一致，需要很频繁的同步。<br>以前的同步是单线程的，感觉没有完全发挥带宽的优势，所以想尝试一下多线程同步。</p>
-<h2 id="大概的思路"><a href="#大概的思路" class="headerlink" title="大概的思路"></a>大概的思路</h2><ul>
-<li>爬index，如hust的镜像<a href="http://mirrors.hust.edu.cn/ubuntu-releases/">http://mirrors.hust.edu.cn/ubuntu-releases/</a>，找出所有<code>href</code>。</li>
-<li>每个href就启动一个rsync或者wget，同步到对应的文件夹</li>
-<li>记录每个href的同步状态</li>
-<li>汇总全部状态，看所有href是否都同步成功
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/07/multi_thread_rsync/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -680,7 +680,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">88</span>
+              <span class="site-state-item-count">89</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -694,7 +694,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">124</span>
+              <span class="site-state-item-count">125</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

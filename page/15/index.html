@@ -207,6 +207,96 @@
           
           
             
+              <a class="post-title-link" href="/2015/04/15/auto_analyze_dump/" itemprop="url">
+                自动调用windbg分析dump
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-04-15T23:30:09+08:00" content="2015-04-15">
+            2015-04-15
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/04/15/auto_analyze_dump/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/04/15/auto_analyze_dump/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近开始整并发，项目组的年轻人对共享资源的控制不够熟悉，导致经常core dump。虽然我在文档里写了，用windbg打开dmp，然后输入<code>!analyze -v</code>就能看到挂在哪一行，但是经常有小朋友来问命令怎么用。</p>
+<p>老夫一怒之下，就开始反思。是我的文档写的不够清晰？还是操作太繁琐了？其实都不是，说白了就是现在的年轻人都太懒了。</p>
+<p>竟然都这么懒惰，那么我只好想出个更简便的方法来分析dump，一键式傻瓜操作，这样应该可以了吧。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/04/15/auto_analyze_dump/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/03/27/gprof_sprof_perf/" itemprop="url">
                 Linux C++性能调优笔记
               </a>
@@ -572,99 +662,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/01/18/debugdiag/" itemprop="url">
-                DebugDiag使用指南
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-01-18T23:30:09+08:00" content="2015-01-18">
-            2015-01-18
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/01/18/debugdiag/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/18/debugdiag/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="DebugDiag使用指南"><a href="#DebugDiag使用指南" class="headerlink" title="DebugDiag使用指南"></a>DebugDiag使用指南</h1><h2 id="Foreword"><a href="#Foreword" class="headerlink" title="Foreword"></a>Foreword</h2><p>一直都是用windbg进行调试，但是主要通过CLI操作，现在的小朋友被GUI带坏了，都说学不会用。为此，还得找个略微简单的工具。<br>恰好找到了<code>DebugDiag</code>，据说很简单，微软原文如下：</p>
-<blockquote>
-<p>The right debugging tool can dramatically simplify the isolation of these problem s and the provision of solutions. There are several types of these issues for which the Debug Diagnostic Tool  is a better choice than other debugging tools</p>
-<p>Using the Windows core debuggers (Windbg.exe or Cdb.exe) for post-mortem analysis is a time consuming process and requires many debugging skills.</p>
-</blockquote>
-<p>试用之后，果然比较简单，功能也很强大。这么个挺好用的工具，还是值得安利一下的。鉴于帮助文档大多是英文版，我就顺手把<code>How to Use the Debug Diagnostic Tool (DebugDiag) to Debug User Mode Processes</code>翻译一下。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/01/18/debugdiag/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -703,7 +700,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">88</span>
+              <span class="site-state-item-count">89</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -717,7 +714,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">124</span>
+              <span class="site-state-item-count">125</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
