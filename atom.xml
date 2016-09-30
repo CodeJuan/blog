@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-09-20T12:50:42.778Z</updated>
+  <updated>2016-09-30T00:18:51.394Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,57 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>分布式系统调度算法的公平</title>
+    <link href="http://blog.decbug.com/2016/09/30/scheduler_fair/"/>
+    <id>http://blog.decbug.com/2016/09/30/scheduler_fair/</id>
+    <published>2016-09-29T16:00:00.000Z</published>
+    <updated>2016-09-30T00:18:51.394Z</updated>
+    
+    <content type="html"><![CDATA[<p>调度，在计算机世界里随处可见，只要有资源抢占，就需要调度。</p>
+<p><img src="http://a3.att.hudong.com/78/47/01300000763638128366476399672.jpg" alt="无调度"></p>
+<p><img src="http://img.www.zyue.com/news/2011/04/06/201104060829106892011040202.jpg" alt="有调度"></p>
+<a id="more"></a>
+<h1 id="CFS"><a href="#CFS" class="headerlink" title="CFS"></a>CFS</h1><p>操作系统要调度一堆进程，也是离不开调度算法的，linux喜欢用CFS，这里可以稍微扩展记录一下，加深印象</p>
+<h1 id="分布式系统的调度"><a href="#分布式系统的调度" class="headerlink" title="分布式系统的调度"></a>分布式系统的调度</h1><p>公平与不公平<br>所谓公平，就是人人有饭吃，不能有人饿死</p>
+<h2 id="不公平"><a href="#不公平" class="headerlink" title="不公平"></a>不公平</h2><ul>
+<li>job1先来，job1有很多个task，就开始执行job1的task</li>
+<li>之后job2过来，但是job1的task还没执行完，那么job2就要一直等待，这就叫饥饿</li>
+</ul>
+<h2 id="公平"><a href="#公平" class="headerlink" title="公平"></a>公平</h2><p>公平就是，大家都有饭吃</p>
+<ul>
+<li>job1先来，job1有很多个task，开始执行job1的task</li>
+<li>然后job2过来，这时候job1的task还有一些没有执行完</li>
+<li>调度器就会block job1，也就是说，会把job1剩余的task挂起</li>
+<li>开始执行job2的task</li>
+<li>一段时间后，由于job1饥饿了，所以又把job2 block，执行job1的task</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;调度，在计算机世界里随处可见，只要有资源抢占，就需要调度。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://a3.att.hudong.com/78/47/01300000763638128366476399672.jpg&quot; alt=&quot;无调度&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://img.www.zyue.com/news/2011/04/06/201104060829106892011040202.jpg&quot; alt=&quot;有调度&quot;&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="fair" scheme="http://blog.decbug.com/tags/fair/"/>
+    
+      <category term="scheduler" scheme="http://blog.decbug.com/tags/scheduler/"/>
+    
+  </entry>
+  
+  <entry>
     <title>TCPIP ping ssh</title>
     <link href="http://blog.decbug.com/2016/09/09/ping_ssh/"/>
     <id>http://blog.decbug.com/2016/09/09/ping_ssh/</id>
     <published>2016-09-08T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<p>数据库部署在k8s上，两个pod一主一备，却无法同步，一直同步失败，提示socket 什么什么什么。据同事说，还有一个现象是ping都会报错</p>
 <a id="more"></a>
@@ -72,7 +118,7 @@
     <link href="http://blog.decbug.com/2016/08/29/dhcp/"/>
     <id>http://blog.decbug.com/2016/08/29/dhcp/</id>
     <published>2016-08-28T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.774Z</updated>
+    <updated>2016-09-30T00:18:51.390Z</updated>
     
     <content type="html"><![CDATA[<p>同事用PXE装系统，在装完最小系统后，会再次获取IP，然而DHCP却给了一个不一样的IP</p>
 <a id="more"></a>
@@ -116,7 +162,7 @@
     <link href="http://blog.decbug.com/2016/08/23/sth_about_MQ/"/>
     <id>http://blog.decbug.com/2016/08/23/sth_about_MQ/</id>
     <published>2016-08-22T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<p>通过简单的例子，讲故事的方式解释消息队列</p>
 <a id="more"></a>
@@ -155,7 +201,7 @@
     <link href="http://blog.decbug.com/2016/08/15/docker_basic/"/>
     <id>http://blog.decbug.com/2016/08/15/docker_basic/</id>
     <published>2016-08-14T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.774Z</updated>
+    <updated>2016-09-30T00:18:51.390Z</updated>
     
     <content type="html"><![CDATA[<p>记录一下docker基础知识</p>
 <p>namespace是环境隔离，cgroup是资源隔离，加起来就是docker的基础</p>
@@ -198,7 +244,7 @@
     <link href="http://blog.decbug.com/2016/08/03/k8s_stateful/"/>
     <id>http://blog.decbug.com/2016/08/03/k8s_stateful/</id>
     <published>2016-08-02T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="有状态服务的概念"><a href="#有状态服务的概念" class="headerlink" title="有状态服务的概念"></a>有状态服务的概念</h1><p>既然名叫有状态，那么就与之相对，会有我们很熟悉的无状态。无状态的概念，就是只负责运算，不负责任何数据的存储，这样就能很轻松地做到水平扩展。</p>
 <blockquote>
@@ -255,7 +301,7 @@
     <link href="http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/"/>
     <id>http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/</id>
     <published>2016-08-01T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.390Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>docker官方也有私有云版本<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><h2 id="docker-engine"><a href="#docker-engine" class="headerlink" title="docker engine"></a>docker engine</h2><p>感谢Daoloud提供的一键式安装<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http<span class="variable">s:</span>//<span class="built_in">get</span>.daocloud.io/docker | <span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
@@ -412,7 +458,7 @@
     <link href="http://blog.decbug.com/2016/08/01/k8s_multi_tenant/"/>
     <id>http://blog.decbug.com/2016/08/01/k8s_multi_tenant/</id>
     <published>2016-07-31T17:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>公有云产品有个很重要的概念叫多租户，比如OpenStack的Domain/Project。提供资源隔离，权限控制，等等。<br>kubernetes如果作为PaaS的基础，那么也需要具备此能力。<br><a id="more"></a></p>
 <h1 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h1><blockquote>
@@ -549,7 +595,7 @@
     <link href="http://blog.decbug.com/2016/07/25/play_dce3/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce3/</id>
     <published>2016-07-24T17:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前面分析了系统容器，<br><a href="http://blog.decbug.com/2016/07/25/play_dce2/">http://blog.decbug.com/2016/07/25/play_dce2/</a><br>接下来看看到底是如何部署的，以及网络存储是如何创建的。<br><a id="more"></a></p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>去掉–rm ，看看install到底做了什么<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="tag">i</span>  daocloud.io/daocloud/dce install</span><br></pre></td></tr></table></figure></p>
@@ -596,7 +642,7 @@
     <link href="http://blog.decbug.com/2016/07/25/play_dce2/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce2/</id>
     <published>2016-07-24T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>前几天把环境弄好了，也简单试用了，大概知道DCE技术栈。<br><a href="http://blog.decbug.com/2016/07/20/play_dce/">http://blog.decbug.com/2016/07/20/play_dce/</a><br>果然是把docker原生技术发挥到了很棒的境界，很值得学习。</p>
 <a id="more"></a>
@@ -673,7 +719,7 @@
     <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
     <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
     <published>2016-07-20T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.774Z</updated>
+    <updated>2016-09-30T00:18:51.390Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
 <a id="more"></a>
@@ -731,7 +777,7 @@
     <link href="http://blog.decbug.com/2016/07/20/inspect_harbor/"/>
     <id>http://blog.decbug.com/2016/07/20/inspect_harbor/</id>
     <published>2016-07-20T12:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.390Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。</p>
 <a id="more"></a>
@@ -787,7 +833,7 @@
     <link href="http://blog.decbug.com/2016/07/20/play_dce/"/>
     <id>http://blog.decbug.com/2016/07/20/play_dce/</id>
     <published>2016-07-19T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>以前只用过公有云版本，大概把持续集成持续交付那一块弄明白了。最近发现有DaoCloud企业版，简称DEC，看了下截图，感觉很不错，决定也自己搞一个玩。</p>
 <a id="more"></a>
@@ -823,7 +869,7 @@
     <link href="http://blog.decbug.com/2016/07/15/net_speeder/"/>
     <id>http://blog.decbug.com/2016/07/15/net_speeder/</id>
     <published>2016-07-14T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
 <a id="more"></a>
@@ -853,7 +899,7 @@
     <link href="http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/"/>
     <id>http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/</id>
     <published>2016-07-02T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.390Z</updated>
     
     <content type="html"><![CDATA[<p>要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。<br>现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。<br>恰好业务是跑在k8s上，k8s关于pod的文档上说</p>
 <blockquote>
@@ -904,7 +950,7 @@
     <link href="http://blog.decbug.com/2016/06/28/k8s_admission/"/>
     <id>http://blog.decbug.com/2016/06/28/k8s_admission/</id>
     <published>2016-06-27T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h2><p>k8s的resourcequota的粒度太粗，只能针对namespace级进行quota。<br>为了实现更细粒度的quota，有必要自制一个admission插件。</p>
 <h2 id="ABAC"><a href="#ABAC" class="headerlink" title="ABAC"></a>ABAC</h2><p>由于ABAC是在api server启动的时候载入，如果有修改，就必须重启api server才能生效。所以我想做个动态ABAC插件，把权限信息保存到etcd</p>
@@ -939,7 +985,7 @@
     <link href="http://blog.decbug.com/2016/06/27/plantuml/"/>
     <id>http://blog.decbug.com/2016/06/27/plantuml/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>架构图即代码<br>PlantUML is a open-source tool that allows to quickly write :</p>
 <ul>
@@ -1013,7 +1059,7 @@
     <link href="http://blog.decbug.com/2016/06/23/flannel/"/>
     <id>http://blog.decbug.com/2016/06/23/flannel/</id>
     <published>2016-06-22T16:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.390Z</updated>
     
     <content type="html"><![CDATA[<p>正在搞docker与neutron融合，所以需要储备一些网络虚拟化知识，了解下原理</p>
 <a id="more"></a>
@@ -1072,7 +1118,7 @@
     <link href="http://blog.decbug.com/2016/06/21/openstack_playground_1/"/>
     <id>http://blog.decbug.com/2016/06/21/openstack_playground_1/</id>
     <published>2016-06-21T11:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
+    <updated>2016-09-30T00:18:51.394Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>要基于公司已有的openstack结合docker搞一个好玩的东西，所以又开始撸openstack了，这就需要对虚拟化有个更深入的理解。<br>昨天搞整了一下KVM和vlan，<a href="http://blog.decbug.com/2016/06/20/kvm/">http://blog.decbug.com/2016/06/20/kvm/</a><br>今天就要在家搞一套openstack开发环境<br><a id="more"></a></p>
 <h1 id="devstack"><a href="#devstack" class="headerlink" title="devstack"></a>devstack</h1><p>devstack是一个一键式搭建open stack环境的脚本，如官网所说<code>DevStack is a series of extensible scripts used to quickly bring up a complete OpenStack environment.</code><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/openstack-dev/devstack.git</span></span><br><span class="line"><span class="keyword">cd</span> devstack/</span><br><span class="line"></span><br><span class="line"># 切换到<span class="keyword">m</span>版本分支</span><br><span class="line">git co stable/mitaka</span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> tools</span><br><span class="line"></span><br><span class="line"># 创建<span class="keyword">stack</span>用户</span><br><span class="line">sudo bash create-<span class="keyword">stack</span>-user.<span class="keyword">sh</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">cd</span> ../../</span><br><span class="line">sudo mv devstack /opt/<span class="keyword">stack</span></span><br><span class="line">sudo chown -R <span class="keyword">stack</span>:<span class="keyword">stack</span> /opt/<span class="keyword">stack</span>/devstack</span><br><span class="line"></span><br><span class="line"># switch to <span class="keyword">stack</span></span><br><span class="line">sudo -<span class="literal">i</span></span><br><span class="line"><span class="keyword">su</span> <span class="keyword">stack</span></span><br></pre></td></tr></table></figure></p>
@@ -1107,7 +1153,7 @@
     <link href="http://blog.decbug.com/2016/06/21/blog_huawei/"/>
     <id>http://blog.decbug.com/2016/06/21/blog_huawei/</id>
     <published>2016-06-20T18:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.774Z</updated>
+    <updated>2016-09-30T00:18:51.390Z</updated>
     
     <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在内网也写了不少文章，但是由于安全问题，不能搬运出来，只能把标题都记录下来，以免遗忘<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><p><img src="https://raw.githubusercontent.com/CodeJuan/codejuan.github.io/master/images/blog/huawei_blog/7.jpeg" alt=""></p>
@@ -1131,70 +1177,6 @@
     
     
       <category term="blog" scheme="http://blog.decbug.com/tags/blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>2016上半年随笔</title>
-    <link href="http://blog.decbug.com/2016/06/21/essay20160620/"/>
-    <id>http://blog.decbug.com/2016/06/21/essay20160620/</id>
-    <published>2016-06-20T17:00:00.000Z</published>
-    <updated>2016-09-20T12:50:42.778Z</updated>
-    
-    <content type="html"><![CDATA[<p>时间已经来到2016的6月底，是时候回顾这上半年的收获与教训<br><a id="more"></a></p>
-<h1 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h1><ul>
-<li>对docker的应用越发纯熟，用registry+swarm+用golang写的一些服务，搞了个持续交付容器云，从代码-&gt;持续集成-&gt;镜像-&gt;仓库-&gt;运行服务</li>
-<li>上半年在的部门是研发质量部，主要是基于一些砖家们的YY做了一些没人用的产品。我不断地反对他们的想法，因为我觉得他的方案完全是不可行的，他们都很久不写代码，而且离业务很远，根本不知道业务的情况。反对的次数多了，我们互相之间就两看两相厌。事实证明，我的意见是正确的，他们花了4个月做出来的东西，在演示阶段就被否决了。</li>
-<li>这次教训挺深刻的，让我从一个纯粹的技术人员，进化成有产品意识的程序员。技术是解决业务的问题，做出来的东西要有价值，那么什么是价值呢，好吧，其实就是能赚钱。公司是商业组织，目的就是为了盈利。唉。</li>
-<li>以前是在百人团队里当技术砖家，就是技术选型，写demo，写核心代码，还有教小朋友写代码，帮他们解决疑难杂症，只需要管技术方面的问题，其他事都不用操心，压力不怎么大。16年上半年算是自己独立带团队了，虽然人不多，但是压力不小，要定技术方案，写代码，画流程图，测试，关注小弟们的进展，把控进度，还要思考产品的价值。</li>
-</ul>
-<p>技术上进步不大，但是技术之外的能力进步很大，总体来说，收获还是挺大的。</p>
-<h1 id="学习"><a href="#学习" class="headerlink" title="学习"></a>学习</h1><ul>
-<li>看书<ol>
-<li>分布式的书</li>
-<li>看了TCP/IP，HTTP协议</li>
-<li>容器相关的书</li>
-<li>JVM的书</li>
-</ol>
-</li>
-<li>前端，学了angularjs，bootstrap，写了几个小项目练手</li>
-<li>英语，整理了计算机英语1500词</li>
-</ul>
-<h1 id="更好的工作机会"><a href="#更好的工作机会" class="headerlink" title="更好的工作机会"></a>更好的工作机会</h1><ul>
-<li>面了京东云，offer T4</li>
-<li>面了阿里云，offer P7</li>
-</ul>
-<p>一直在传统行业厮混，没有互联网经验。凭借我自己在家折腾的一些玩具，得到一线互联网公司的认可，也算是证明了我的实力<br>然而在我提了离职之后，父亲得了重病住院。此病几乎就是不治之症，只能缓解并发症，延长存活时间。母亲一人照顾不过来，我不能那么自私，抛下家里去北京。<br>本打算7月去北京工作，但由于父亲生病，暂时去不了，不得不放弃这个机会。希望以后有机会再去互联网公司干一番事业<br>悲剧的是，我提离职了却去不了北京，几乎就要失业。<br>好在我司这边还有部门愿意接收我，不然我就要失业一段时间。其实挺感激的，对我来说算是雪中送炭吧。在接下来的工作中，我要好好努力<br>另外，还要感谢我自己，一直都在学习进步，保持了足够的竞争力。只要有实力，就不用担心工作的事，一大堆职位等着我挑选</p>
-<h1 id="买房"><a href="#买房" class="headerlink" title="买房"></a>买房</h1><p>还是在西安买房了。<br>本打算买了房就去北京的，然后几年之后再回西安。然而计划总是赶不上变化，早知如此，就不买了。<br>好在买的房还可以，也算是有所收获吧</p>
-<ul>
-<li>位置比较偏，但小区门口就是地铁，也还算方便。</li>
-<li>小区里的小学已拿到政府批文，正在建造。旁边有初中和一般高中，还有某一流高中的分校，教育资源貌似还可以。</li>
-<li>附近正在建一家三甲医院</li>
-<li>小区旁边有个万象城，商业也还可以</li>
-</ul>
-<p>2011年来到西安工作，至今已经4年半，在家里负担比较重的情况下，能在5年之内搞定二套房，也还算可以。</p>
-<p>希望这次的选择是正确的</p>
-<h1 id="买车"><a href="#买车" class="headerlink" title="买车"></a>买车</h1><p>下半年把驾照搞定，到明年过年的时候整辆小车车开</p>
-<h1 id="下半年计划"><a href="#下半年计划" class="headerlink" title="下半年计划"></a>下半年计划</h1><ul>
-<li>英语必然不能落下，要继续听说读</li>
-<li>底层原理还是不够熟悉，打算把那几本神书再翻一遍</li>
-<li>接下来的工作是基于华为云做Docker相关的产品。OpenStack和Docker都是分布式系统的经典之作，我要在这个过程中，把分布式架构/网络/存储搞懂</li>
-<li>想有一个代表作，一个由我设计，架构，开发的产品</li>
-</ul>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;时间已经来到2016的6月底，是时候回顾这上半年的收获与教训&lt;br&gt;
-    
-    </summary>
-    
-      <category term="mumble" scheme="http://blog.decbug.com/categories/mumble/"/>
-    
-    
-      <category term="essay" scheme="http://blog.decbug.com/tags/essay/"/>
     
   </entry>
   
