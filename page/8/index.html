@@ -207,6 +207,104 @@
           
           
             
+              <a class="post-title-link" href="/2016/02/17/go_image_build/" itemprop="url">
+                用go写的镜像构建微服务
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-17T00:00:00+08:00" content="2016-02-17">
+            2016-02-17
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2016/02/17/go_image_build/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/02/17/go_image_build/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h1><p>前面已经把私有registry，镜像下载加速器(<a href="http://docs.alauda.cn/feature/accelerator.html">摸我</a>，其实就是基于registry官方镜像设置一个proxy，超级简单)完成了。<br>这个时候就可以提供类似Daoloud的代码构建功能啦</p>
+<ol>
+<li>用户点击构建按钮（或是其他触发方式）</li>
+<li>我的镜像构建微服务收到请求后，就从内网github Clone代码</li>
+<li>在刚Clone代码里找到Dockerfile</li>
+<li>执行docker build -t <code>私有registry域名/用户名/镜像名：tag</code> .</li>
+<li>docker push 刚build出来的镜像</li>
+<li>构建日志，构建结果，入库</li>
+<li>返回 <code>私有registry域名/用户名/镜像名：tag</code></li>
+</ol>
+<p>用户就可以 pull <code>私有registry域名/用户名/镜像名：tag</code> 啦<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/02/17/go_image_build/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2016/02/01/msg_arch/" itemprop="url">
                 分布式消息系统架构图
               </a>
@@ -548,94 +646,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/01/12/docker_distribution_build/" itemprop="url">
-                docker(3)-搭建registry,nginx,mirror
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-01-12T00:00:00+08:00" content="2016-01-12">
-            2016-01-12
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2016/01/12/docker_distribution_build/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/01/12/docker_distribution_build/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/01/12/docker_distribution_build/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -674,7 +684,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-count">95</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -688,7 +698,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">133</span>
+              <span class="site-state-item-count">134</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
