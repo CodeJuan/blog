@@ -28,7 +28,6 @@ description:
 
     --> "chisel(lua) on_init\n set_filter & set_snaplen"
 
-    --> === S1 ===
 
     --> "kernel event"
 
@@ -36,10 +35,12 @@ description:
        -->[yes] "callback c"
        -> "callback chisel"
        -> "chisel on_event"
-
-    --> === S2 ===
+       --> "kernel event"
+    else
+      ->[no] "exit"
 
     -->[Ending process] (*)
+
 
 {% endplantuml %}
 
@@ -94,6 +95,12 @@ on_event，获取参数，得到method，是get/set，以及key
 `driver/ppm_fillers.c` g_ppm_events事件的回调
 
 `userspace/libsinsp/chisel_api.cpp` lua_cbacks这个类是，lua调用c代码的接口
+
+疑问：
+1. 当事件发生，如何通过g_ppm_events里的回调函数再调用到lua里的on_event
+2. event_table里的事件是如何发送到内核的？用到哪个API？是不是和systemtap差不多？
+
+晚上回家继续看看
 
 
 ----------------------------
