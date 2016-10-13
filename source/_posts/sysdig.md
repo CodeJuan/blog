@@ -102,6 +102,13 @@ on_event，获取参数，得到method，是get/set，以及key
 
 晚上回家继续看看
 
+## event_table里的事件是如何发送到内核的
+event_table里的事件是如何发送到内核的？用到哪个API？是不是和systemtap差不多？
+翻了下源码，终于找到了
+sysdig_init->get_tracepoint_handler->g_ppm_fops->ppm_open->compat_register->TRACEPOINT_PROBE_REGISTER->内核的tracepoint_probe_register
+
+两个参数，一个是tracepoint name,另一个则是回调
+
 
 ----------------------------
 
