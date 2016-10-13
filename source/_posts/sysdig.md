@@ -109,6 +109,15 @@ sysdig_init->get_tracepoint_handler->g_ppm_fops->ppm_open->compat_register->TRAC
 
 两个参数，一个是tracepoint name,另一个则是回调
 
+# 其他内核trace
+时间|名字|主要技术
+---|---|---
+2000|Linux Trace Toolkit (LTT)|
+2005|LInux Trace Toolkit Next Generation (LTTng)|
+2008|Tracepoint|后面就用这个比较多？
+xxxx|systemTAP|貌似也是用tracepoint probe
+xxxx|ftrace|也是tracepoint
+
 
 ----------------------------
 
