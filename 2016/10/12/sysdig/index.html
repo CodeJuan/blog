@@ -52,7 +52,7 @@
 通过内核抓事件，不用侵入到容器
 可以自己写铲子，扩展起来很方便。于是就顺手看下他的实现原理">
 <meta property="og:image" content="http://www.plantuml.com/plantuml/svg/NOzB3i8m34JtFOML1MgHk0Ai4E8C1Q7G3gs5vQ8wV4zFa_8JondRyyRvjA3PR4vkhHpO2pzyu4vTbYNNxbPpGpqQje2US866zx1gsI2vd7r1dUvuIDWe6SBkm1At9qcO-fCWHevdH_GA-KJnWTorPG6j49RHN3WABJGZYjNAEsmxmBp8tbT7gbmQp7-jLEJh9nahlHXZq3yPOiZYHQdT0C2DNv-LIwrP6phrNGKRuFcqU080">
-<meta property="og:updated_time" content="2016-10-12T00:36:20.053Z">
+<meta property="og:updated_time" content="2016-10-13T00:05:55.075Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sysdig源码分析">
 <meta name="twitter:description" content="之前分析APM的时候，试用了sysdig，觉得sysdig很厉害
@@ -286,6 +286,44 @@
 <li>event_table里的事件是如何发送到内核的？用到哪个API？是不是和systemtap差不多？</li>
 </ol>
 <p>晚上回家继续看看</p>
+<h2 id="event-table里的事件是如何发送到内核的"><a href="#event-table里的事件是如何发送到内核的" class="headerlink" title="event_table里的事件是如何发送到内核的"></a>event_table里的事件是如何发送到内核的</h2><p>event_table里的事件是如何发送到内核的？用到哪个API？是不是和systemtap差不多？<br>翻了下源码，终于找到了<br>sysdig_init-&gt;get_tracepoint_handler-&gt;g_ppm_fops-&gt;ppm_open-&gt;compat_register-&gt;TRACEPOINT_PROBE_REGISTER-&gt;内核的tracepoint_probe_register</p>
+<p>两个参数，一个是tracepoint name,另一个则是回调</p>
+<h1 id="其他内核trace"><a href="#其他内核trace" class="headerlink" title="其他内核trace"></a>其他内核trace</h1><table>
+<thead>
+<tr>
+<th>时间</th>
+<th>名字</th>
+<th>主要技术</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2000</td>
+<td>Linux Trace Toolkit (LTT)</td>
+<td></td>
+</tr>
+<tr>
+<td>2005</td>
+<td>LInux Trace Toolkit Next Generation (LTTng)</td>
+<td></td>
+</tr>
+<tr>
+<td>2008</td>
+<td>Tracepoint</td>
+<td>后面就用这个比较多？</td>
+</tr>
+<tr>
+<td>xxxx</td>
+<td>systemTAP</td>
+<td>貌似也是用tracepoint probe</td>
+</tr>
+<tr>
+<td>xxxx</td>
+<td>ftrace</td>
+<td>也是tracepoint</td>
+</tr>
+</tbody>
+</table>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -445,7 +483,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源码"><span class="nav-number">1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流程"><span class="nav-number">2.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#chisels的原理"><span class="nav-number">3.</span> <span class="nav-text">chisels的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sysdig原理"><span class="nav-number">4.</span> <span class="nav-text">sysdig原理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源码"><span class="nav-number">1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流程"><span class="nav-number">2.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#chisels的原理"><span class="nav-number">3.</span> <span class="nav-text">chisels的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sysdig原理"><span class="nav-number">4.</span> <span class="nav-text">sysdig原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#event-table里的事件是如何发送到内核的"><span class="nav-number">4.1.</span> <span class="nav-text">event_table里的事件是如何发送到内核的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他内核trace"><span class="nav-number">5.</span> <span class="nav-text">其他内核trace</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
