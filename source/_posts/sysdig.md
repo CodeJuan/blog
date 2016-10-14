@@ -117,6 +117,10 @@ sysdig_init->get_tracepoint_handler->g_ppm_fops->ppm_open->compat_register->TRAC
 
 ![container](https://cloud.githubusercontent.com/assets/5423628/19371280/6b0da6be-91e4-11e6-9c9b-77b151f8428c.png)
 
+[http://www.slideshare.net/SreenivasMakam/container-monitoring-with-sysdig-58790785](http://www.slideshare.net/SreenivasMakam/container-monitoring-with-sysdig-58790785)
+
+[http://www.slideshare.net/Sysdig/sysdig-meetup-dec2014](http://www.slideshare.net/Sysdig/sysdig-meetup-dec2014)
+
 # 其他内核trace
 时间|名字|主要技术
 ---|---|---
