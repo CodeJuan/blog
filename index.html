@@ -261,7 +261,37 @@
       
         
           <p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
-<p>都源于google的dapper，常见的有三种方式<br>名称|概要|优点|缺点<br>—|—|—|—<br>自己打日志|请求进入时生成ID，每次跨节点调用都带上ID，日志也打上ID|自己实现（这个算不算优点）|麻烦<br>用开源库，如zipkin|原理都差不多，都是ID spanID parentID|简单，client和server都有例子|需要集成<br>改分布式框架，如鹰眼，京东改dubbo|不用侵入业务代码，在框架里做好埋点和日志|自己实现|稍微麻烦，需要自己改框架</p>
+<p>都源于google的dapper，常见的有三种方式</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>概要</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自己打日志</td>
+<td>请求进入时生成ID，每次跨节点调用都带上ID，日志也打上ID</td>
+<td>自己实现（这个算不算优点）</td>
+<td>麻烦</td>
+</tr>
+<tr>
+<td>用开源库，如zipkin</td>
+<td>原理都差不多，都是ID spanID parentID</td>
+<td>简单，client和server都有例子</td>
+<td>需要集成</td>
+</tr>
+<tr>
+<td>改分布式框架，如鹰眼，京东改dubbo</td>
+<td>不用侵入业务代码，在框架里做好埋点和日志</td>
+<td>自己实现</td>
+<td>稍微麻烦，需要自己改框架</td>
+</tr>
+</tbody>
+</table>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/10/14/tracing/#more" rel="contents">
               阅读全文 &raquo;
