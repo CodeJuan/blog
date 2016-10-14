@@ -109,6 +109,14 @@ sysdig_init->get_tracepoint_handler->g_ppm_fops->ppm_open->compat_register->TRAC
 
 两个参数，一个是tracepoint name,另一个则是回调
 
+# slideshare上的流程
+
+![syscall](https://cloud.githubusercontent.com/assets/5423628/19371219/091e8342-91e4-11e6-8a53-f2e597860efb.png)
+
+![event_collector](https://cloud.githubusercontent.com/assets/5423628/19371250/40b1dd72-91e4-11e6-97c8-29ac829afde8.png)
+
+![container](https://cloud.githubusercontent.com/assets/5423628/19371280/6b0da6be-91e4-11e6-9c9b-77b151f8428c.png)
+
 # 其他内核trace
 时间|名字|主要技术
 ---|---|---
