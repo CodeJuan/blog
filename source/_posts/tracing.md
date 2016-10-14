@@ -12,6 +12,7 @@ description:
 ![分布式调用](https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png)
 
 都源于google的dapper，常见的有三种方式
+
 名称|概要|优点|缺点
 ---|---|---|---
 自己打日志|请求进入时生成ID，每次跨节点调用都带上ID，日志也打上ID|自己实现（这个算不算优点）|麻烦
