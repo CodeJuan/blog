@@ -39,28 +39,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="用的是libcap抓的ip及len都不对，于是不用普罗米修斯模式，len对了，但是ip还是不对。继续分析。
-把抓到的首部都打出来，和用tcpdump抓到的进行比较，内容一致，那么说明抓包正确，只是我的解析代码不对
-由于inet_ntoa是静态buffer，所以第二次和第一次一样，改成inet_ntop就好了，因为不是静态buffer
-收获挺大，把ip和tcp首部的每个字节都搞明白了
-未完待续">
+<meta name="description" content="原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过libcap抓包">
 <meta property="og:url" content="http://blog.decbug.com/2016/10/16/libcap/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="用的是libcap抓的ip及len都不对，于是不用普罗米修斯模式，len对了，但是ip还是不对。继续分析。
-把抓到的首部都打出来，和用tcpdump抓到的进行比较，内容一致，那么说明抓包正确，只是我的解析代码不对
-由于inet_ntoa是静态buffer，所以第二次和第一次一样，改成inet_ntop就好了，因为不是静态buffer
-收获挺大，把ip和tcp首部的每个字节都搞明白了
-未完待续">
-<meta property="og:updated_time" content="2016-10-17T00:09:56.531Z">
+<meta property="og:description" content="原理">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/19422117/a283aa58-9441-11e6-9276-16e9ba0ded25.png">
+<meta property="og:updated_time" content="2016-10-17T00:15:38.500Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过libcap抓包">
-<meta name="twitter:description" content="用的是libcap抓的ip及len都不对，于是不用普罗米修斯模式，len对了，但是ip还是不对。继续分析。
-把抓到的首部都打出来，和用tcpdump抓到的进行比较，内容一致，那么说明抓包正确，只是我的解析代码不对
-由于inet_ntoa是静态buffer，所以第二次和第一次一样，改成inet_ntop就好了，因为不是静态buffer
-收获挺大，把ip和tcp首部的每个字节都搞明白了
-未完待续">
+<meta name="twitter:description" content="原理">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -268,13 +258,15 @@
       
 
       
-        <span itemprop="articleBody"><p>用的是libcap抓的ip及len都不对，于是不用普罗米修斯模式，len对了，但是ip还是不对。继续分析。</p>
+        <span itemprop="articleBody"><p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
+<p>原理</p>
+<a id="more"></a>
+<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422117/a283aa58-9441-11e6-9276-16e9ba0ded25.png" alt="image"></p>
+<p>用的是libcap抓的ip及len都不对，于是不用普罗米修斯模式，len对了，但是ip还是不对。继续分析。</p>
 <p>把抓到的首部都打出来，和用tcpdump抓到的进行比较，内容一致，那么说明抓包正确，只是我的解析代码不对</p>
 <p>由于inet_ntoa是静态buffer，所以第二次和第一次一样，改成inet_ntop就好了，因为不是静态buffer</p>
 <p>收获挺大，把ip和tcp首部的每个字节都搞明白了</p>
-<p>未完待续</p>
-<a id="more"></a>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.cnblogs.com/Seiyagoo/archive/2012/04/28/2475618.html" target="_blank" rel="external">http://www.cnblogs.com/Seiyagoo/archive/2012/04/28/2475618.html</a><br><a href="http://www.tcpdump.org/" target="_blank" rel="external">http://www.tcpdump.org/</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.cnblogs.com/Seiyagoo/archive/2012/04/28/2475618.html" target="_blank" rel="external">http://www.cnblogs.com/Seiyagoo/archive/2012/04/28/2475618.html</a><br><a href="http://www.tcpdump.org/" target="_blank" rel="external">http://www.tcpdump.org/</a><br><a href="http://recursos.aldabaknocking.com/libpcapHakin9LuisMartinGarcia.pdf" target="_blank" rel="external">http://recursos.aldabaknocking.com/libpcapHakin9LuisMartinGarcia.pdf</a></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>

@@ -260,11 +260,8 @@
 
       
         
-          <p>用的是libcap抓的ip及len都不对，于是不用普罗米修斯模式，len对了，但是ip还是不对。继续分析。</p>
-<p>把抓到的首部都打出来，和用tcpdump抓到的进行比较，内容一致，那么说明抓包正确，只是我的解析代码不对</p>
-<p>由于inet_ntoa是静态buffer，所以第二次和第一次一样，改成inet_ntop就好了，因为不是静态buffer</p>
-<p>收获挺大，把ip和tcp首部的每个字节都搞明白了</p>
-<p>未完待续</p>
+          <p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
+<p>原理</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/10/16/libcap/#more" rel="contents">
               阅读全文 &raquo;
