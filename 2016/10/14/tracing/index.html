@@ -99,7 +99,7 @@
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/19371479/05ebe2b2-91e6-11e6-9a89-9827415d9464.png">
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/19371503/288995bc-91e6-11e6-9e68-8b198725a8a8.png">
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/19371519/3f05e1e2-91e6-11e6-84cf-77c2f095ff74.png">
-<meta property="og:updated_time" content="2016-10-14T00:25:36.936Z">
+<meta property="og:updated_time" content="2016-10-17T00:03:31.866Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="调用链技术分析">
 <meta name="twitter:description" content="都源于google的dapper，常见的有三种方式
@@ -364,6 +364,12 @@
 <td>不用侵入业务代码，在框架里做好埋点和日志</td>
 <td>自己实现</td>
 <td>稍微麻烦，需要自己改框架</td>
+</tr>
+<tr>
+<td>运行环境注入</td>
+<td>例如<a href="https://newrelic.com/" target="_blank" rel="external">newrelic</a>，<a href="https://github.com/naver/pinpoint" target="_blank" rel="external">pinpoint</a>，改JVM运行时bytecode</td>
+<td>非侵入</td>
+<td>性能损耗比较大</td>
 </tr>
 </tbody>
 </table>
