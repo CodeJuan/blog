@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-10-17T00:03:31.866Z</updated>
+  <updated>2016-10-17T00:09:56.531Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,46 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>通过libcap抓包</title>
+    <link href="http://blog.decbug.com/2016/10/16/libcap/"/>
+    <id>http://blog.decbug.com/2016/10/16/libcap/</id>
+    <published>2016-10-15T16:00:00.000Z</published>
+    <updated>2016-10-17T00:09:56.531Z</updated>
+    
+    <content type="html"><![CDATA[<p>用的是libcap抓的ip及len都不对，于是不用普罗米修斯模式，len对了，但是ip还是不对。继续分析。</p>
+<p>把抓到的首部都打出来，和用tcpdump抓到的进行比较，内容一致，那么说明抓包正确，只是我的解析代码不对</p>
+<p>由于inet_ntoa是静态buffer，所以第二次和第一次一样，改成inet_ntop就好了，因为不是静态buffer</p>
+<p>收获挺大，把ip和tcp首部的每个字节都搞明白了</p>
+<p>未完待续</p>
+<a id="more"></a>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.cnblogs.com/Seiyagoo/archive/2012/04/28/2475618.html" target="_blank" rel="external">http://www.cnblogs.com/Seiyagoo/archive/2012/04/28/2475618.html</a><br><a href="http://www.tcpdump.org/" target="_blank" rel="external">http://www.tcpdump.org/</a></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;用的是libcap抓的ip及len都不对，于是不用普罗米修斯模式，len对了，但是ip还是不对。继续分析。&lt;/p&gt;
+&lt;p&gt;把抓到的首部都打出来，和用tcpdump抓到的进行比较，内容一致，那么说明抓包正确，只是我的解析代码不对&lt;/p&gt;
+&lt;p&gt;由于inet_ntoa是静态buffer，所以第二次和第一次一样，改成inet_ntop就好了，因为不是静态buffer&lt;/p&gt;
+&lt;p&gt;收获挺大，把ip和tcp首部的每个字节都搞明白了&lt;/p&gt;
+&lt;p&gt;未完待续&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="tcpdump" scheme="http://blog.decbug.com/tags/tcpdump/"/>
+    
+  </entry>
+  
+  <entry>
     <title>调用链技术分析</title>
     <link href="http://blog.decbug.com/2016/10/14/tracing/"/>
     <id>http://blog.decbug.com/2016/10/14/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -125,7 +160,7 @@
     <link href="http://blog.decbug.com/2016/10/12/sysdig/"/>
     <id>http://blog.decbug.com/2016/10/12/sysdig/</id>
     <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
@@ -216,7 +251,7 @@
     <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
     <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.862Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
 <a id="more"></a>
@@ -244,7 +279,7 @@
     <link href="http://blog.decbug.com/2016/10/10/APM/"/>
     <id>http://blog.decbug.com/2016/10/10/APM/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.862Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
 <p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
@@ -281,7 +316,7 @@
     <link href="http://blog.decbug.com/2016/10/09/VxLan/"/>
     <id>http://blog.decbug.com/2016/10/09/VxLan/</id>
     <published>2016-10-08T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.862Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<p>VxLan，网络虚拟化，应用很广泛</p>
 <p>简单记录一下原理</p>
@@ -324,7 +359,7 @@
     <link href="http://blog.decbug.com/2016/09/30/scheduler_fair/"/>
     <id>http://blog.decbug.com/2016/09/30/scheduler_fair/</id>
     <published>2016-09-29T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<p>调度，在计算机世界里随处可见，只要有资源抢占，就需要调度。</p>
 <p><img src="http://a3.att.hudong.com/78/47/01300000763638128366476399672.jpg" alt="无调度"></p>
@@ -370,7 +405,7 @@
     <link href="http://blog.decbug.com/2016/09/09/ping_ssh/"/>
     <id>http://blog.decbug.com/2016/09/09/ping_ssh/</id>
     <published>2016-09-08T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<p>数据库部署在k8s上，两个pod一主一备，却无法同步，一直同步失败，提示socket 什么什么什么。据同事说，还有一个现象是ping都会报错</p>
 <a id="more"></a>
@@ -422,7 +457,7 @@
     <link href="http://blog.decbug.com/2016/08/29/dhcp/"/>
     <id>http://blog.decbug.com/2016/08/29/dhcp/</id>
     <published>2016-08-28T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.862Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<p>同事用PXE装系统，在装完最小系统后，会再次获取IP，然而DHCP却给了一个不一样的IP</p>
 <a id="more"></a>
@@ -466,7 +501,7 @@
     <link href="http://blog.decbug.com/2016/08/23/sth_about_MQ/"/>
     <id>http://blog.decbug.com/2016/08/23/sth_about_MQ/</id>
     <published>2016-08-22T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<p>通过简单的例子，讲故事的方式解释消息队列</p>
 <a id="more"></a>
@@ -505,7 +540,7 @@
     <link href="http://blog.decbug.com/2016/08/15/docker_basic/"/>
     <id>http://blog.decbug.com/2016/08/15/docker_basic/</id>
     <published>2016-08-14T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.862Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<p>记录一下docker基础知识</p>
 <p>namespace是环境隔离，cgroup是资源隔离，加起来就是docker的基础</p>
@@ -548,7 +583,7 @@
     <link href="http://blog.decbug.com/2016/08/03/k8s_stateful/"/>
     <id>http://blog.decbug.com/2016/08/03/k8s_stateful/</id>
     <published>2016-08-02T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<h1 id="有状态服务的概念"><a href="#有状态服务的概念" class="headerlink" title="有状态服务的概念"></a>有状态服务的概念</h1><p>既然名叫有状态，那么就与之相对，会有我们很熟悉的无状态。无状态的概念，就是只负责运算，不负责任何数据的存储，这样就能很轻松地做到水平扩展。</p>
 <blockquote>
@@ -605,7 +640,7 @@
     <link href="http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/"/>
     <id>http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/</id>
     <published>2016-08-01T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.862Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>docker官方也有私有云版本<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><h2 id="docker-engine"><a href="#docker-engine" class="headerlink" title="docker engine"></a>docker engine</h2><p>感谢Daoloud提供的一键式安装<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http<span class="variable">s:</span>//<span class="built_in">get</span>.daocloud.io/docker | <span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
@@ -762,7 +797,7 @@
     <link href="http://blog.decbug.com/2016/08/01/k8s_multi_tenant/"/>
     <id>http://blog.decbug.com/2016/08/01/k8s_multi_tenant/</id>
     <published>2016-07-31T17:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>公有云产品有个很重要的概念叫多租户，比如OpenStack的Domain/Project。提供资源隔离，权限控制，等等。<br>kubernetes如果作为PaaS的基础，那么也需要具备此能力。<br><a id="more"></a></p>
 <h1 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h1><blockquote>
@@ -899,7 +934,7 @@
     <link href="http://blog.decbug.com/2016/07/25/play_dce3/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce3/</id>
     <published>2016-07-24T17:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前面分析了系统容器，<br><a href="http://blog.decbug.com/2016/07/25/play_dce2/">http://blog.decbug.com/2016/07/25/play_dce2/</a><br>接下来看看到底是如何部署的，以及网络存储是如何创建的。<br><a id="more"></a></p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>去掉–rm ，看看install到底做了什么<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="tag">i</span>  daocloud.io/daocloud/dce install</span><br></pre></td></tr></table></figure></p>
@@ -946,7 +981,7 @@
     <link href="http://blog.decbug.com/2016/07/25/play_dce2/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce2/</id>
     <published>2016-07-24T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>前几天把环境弄好了，也简单试用了，大概知道DCE技术栈。<br><a href="http://blog.decbug.com/2016/07/20/play_dce/">http://blog.decbug.com/2016/07/20/play_dce/</a><br>果然是把docker原生技术发挥到了很棒的境界，很值得学习。</p>
 <a id="more"></a>
@@ -1023,7 +1058,7 @@
     <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
     <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
     <published>2016-07-20T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.862Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
 <a id="more"></a>
@@ -1081,7 +1116,7 @@
     <link href="http://blog.decbug.com/2016/07/20/inspect_harbor/"/>
     <id>http://blog.decbug.com/2016/07/20/inspect_harbor/</id>
     <published>2016-07-20T12:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.531Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前自己搞了个玩具registry，没有权限控制，没有角色，没有统计。正好vmware开源了harbor，号称是企业级仓库，我自然是不会放过，要研究一下。</p>
 <a id="more"></a>
@@ -1137,7 +1172,7 @@
     <link href="http://blog.decbug.com/2016/07/20/play_dce/"/>
     <id>http://blog.decbug.com/2016/07/20/play_dce/</id>
     <published>2016-07-19T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>以前只用过公有云版本，大概把持续集成持续交付那一块弄明白了。最近发现有DaoCloud企业版，简称DEC，看了下截图，感觉很不错，决定也自己搞一个玩。</p>
 <a id="more"></a>
@@ -1173,7 +1208,7 @@
     <link href="http://blog.decbug.com/2016/07/15/net_speeder/"/>
     <id>http://blog.decbug.com/2016/07/15/net_speeder/</id>
     <published>2016-07-14T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.866Z</updated>
+    <updated>2016-10-17T00:09:56.535Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>由于流量不够用，又买了个廉价vps，3年只要8刀，64M内存，1G硬盘，250M流量。<br>由于配置比较差，且机房离大陆远，ping有300多ms，看youtube略卡，只好使用net-speeder</p>
 <a id="more"></a>
@@ -1195,57 +1230,6 @@
     
     
       <category term="番茄" scheme="http://blog.decbug.com/tags/%E7%95%AA%E8%8C%84/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>kubernetes:pod内IPC</title>
-    <link href="http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/"/>
-    <id>http://blog.decbug.com/2016/07/03/docker_kubernetes_IPC_pod/</id>
-    <published>2016-07-02T16:00:00.000Z</published>
-    <updated>2016-10-17T00:03:31.862Z</updated>
-    
-    <content type="html"><![CDATA[<p>要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。<br>现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。<br>恰好业务是跑在k8s上，k8s关于pod的文档上说</p>
-<blockquote>
-<p>Containers within a pod share an IP address and port space, and can find each other via localhost. They can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. Containers in different pods have distinct IP addresses and can not communicate by IPC</p>
-</blockquote>
-<p>如果同一个pod里的进程，可以互相看到对方，那么就可以不用修改，直接把现有一个容器拆成两个容器了。</p>
-<a id="more"></a>
-<p>提前剧透一下结论，是看不到的。因为</p>
-<blockquote>
-<p>The context of the pod can be defined as the conjunction of several Linux namespaces:</p>
-<ul>
-<li>PID namespace (applications within the pod can see each other’s processes)</li>
-<li>network namespace (applications within the pod have access to the same IP and port space)</li>
-<li>IPC namespace (applications within the pod can use SystemV IPC or POSIX message queues to communicate)</li>
-<li>UTS namespace (applications within the pod share a hostname)</li>
-</ul>
-<p>In terms of Docker constructs, a pod consists of a colocated group of Docker containers with shared volumes. PID namespace sharing is not yet implemented with Docker.</p>
-</blockquote>
-<h1 id="创建pod"><a href="#创建pod" class="headerlink" title="创建pod"></a>创建pod</h1><p>创建两个容器的pod<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: v1</span><br><span class="line"><span class="attribute">kind</span>: Pod</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: ipc2</span><br><span class="line">  <span class="attribute">labels</span>:</span><br><span class="line">    <span class="attribute">app</span>: web</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">containers</span>:</span><br><span class="line">    - <span class="attribute">name</span>: registry</span><br><span class="line">      <span class="attribute">image</span>: registry</span><br><span class="line">      <span class="attribute">ports</span>:</span><br><span class="line">        - <span class="attribute">containerPort</span>: <span class="number">5000</span></span><br><span class="line">    - <span class="attribute">name</span>: nginx</span><br><span class="line">      <span class="attribute">image</span>: <span class="attribute">nginx</span>:<span class="number">1.9</span></span><br><span class="line">      <span class="attribute">ports</span>:</span><br><span class="line">        - <span class="attribute">containerPort</span>: <span class="number">80</span></span><br></pre></td></tr></table></figure></p>
-<h1 id="进入其中一个ps和netstat"><a href="#进入其中一个ps和netstat" class="headerlink" title="进入其中一个ps和netstat"></a>进入其中一个ps和netstat</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">./<span class="tag">kubectl</span> <span class="tag">exec</span> <span class="tag">-it</span> <span class="tag">ipc2</span> <span class="tag">bash</span></span><br><span class="line"></span><br><span class="line"># 看进程</span><br><span class="line"><span class="tag">ps</span> <span class="tag">aux</span></span><br><span class="line"># 结果，只能看到<span class="tag">registry</span>的进程</span><br><span class="line"><span class="tag">USER</span>       <span class="tag">PID</span> %<span class="tag">CPU</span> %<span class="tag">MEM</span>    <span class="tag">VSZ</span>   <span class="tag">RSS</span> <span class="tag">TTY</span>      <span class="tag">STAT</span> <span class="tag">START</span>   <span class="tag">TIME</span> <span class="tag">COMMAND</span></span><br><span class="line"><span class="tag">root</span>         <span class="tag">1</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.4</span>  <span class="tag">53228</span> <span class="tag">15992</span> ?        <span class="tag">Ss</span>   <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:00</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">13</span>  <span class="tag">1</span><span class="class">.0</span>  <span class="tag">1</span><span class="class">.0</span> <span class="tag">110492</span> <span class="tag">39600</span> ?        <span class="tag">S</span>    <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:03</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">14</span>  <span class="tag">1</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.9</span> <span class="tag">110256</span> <span class="tag">38804</span> ?        <span class="tag">S</span>    <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:03</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">17</span>  <span class="tag">0</span><span class="class">.9</span>  <span class="tag">0</span><span class="class">.9</span> <span class="tag">110272</span> <span class="tag">38820</span> ?        <span class="tag">S</span>    <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:03</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">18</span>  <span class="tag">1</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.9</span> <span class="tag">110276</span> <span class="tag">38816</span> ?        <span class="tag">S</span>    <span class="tag">14</span><span class="pseudo">:56</span>   <span class="tag">0</span><span class="pseudo">:03</span> /<span class="tag">usr</span>/<span class="tag">bin</span>/<span class="tag">python</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">44</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">18148</span>  <span class="tag">3364</span> ?        <span class="tag">Ss</span>+  <span class="tag">15</span><span class="pseudo">:00</span>   <span class="tag">0</span><span class="pseudo">:00</span> <span class="tag">bash</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">60</span>  <span class="tag">2</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">18152</span>  <span class="tag">3192</span> ?        <span class="tag">Ss</span>   <span class="tag">15</span><span class="pseudo">:01</span>   <span class="tag">0</span><span class="pseudo">:00</span> <span class="tag">bash</span></span><br><span class="line"><span class="tag">root</span>        <span class="tag">74</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">0</span><span class="class">.0</span>  <span class="tag">15572</span>  <span class="tag">2164</span> ?        <span class="tag">R</span>+   <span class="tag">15</span><span class="pseudo">:01</span>   <span class="tag">0</span><span class="pseudo">:00</span> <span class="tag">ps</span> <span class="tag">aux</span></span><br><span class="line"></span><br><span class="line"># 看端口</span><br><span class="line"><span class="tag">root</span>@<span class="tag">ipc2</span>:/# <span class="tag">netstat</span> <span class="tag">-anplt</span></span><br><span class="line"># 结果，网络共享了</span><br><span class="line"><span class="tag">Active</span> <span class="tag">Internet</span> <span class="tag">connections</span> (servers and established)</span><br><span class="line"><span class="tag">Proto</span> <span class="tag">Recv-Q</span> <span class="tag">Send-Q</span> <span class="tag">Local</span> <span class="tag">Address</span>           <span class="tag">Foreign</span> <span class="tag">Address</span>         <span class="tag">State</span>       <span class="tag">PID</span>/<span class="tag">Program</span> <span class="tag">name</span></span><br><span class="line"><span class="tag">tcp</span>        <span class="tag">0</span>      <span class="tag">0</span> <span class="tag">0</span><span class="class">.0</span><span class="class">.0</span><span class="class">.0</span><span class="pseudo">:5000</span>            <span class="tag">0</span><span class="class">.0</span><span class="class">.0</span><span class="class">.0</span>:*               <span class="tag">LISTEN</span>      <span class="tag">-</span></span><br><span class="line"><span class="tag">tcp</span>        <span class="tag">0</span>      <span class="tag">0</span> <span class="tag">0</span><span class="class">.0</span><span class="class">.0</span><span class="class">.0</span><span class="pseudo">:80</span>              <span class="tag">0</span><span class="class">.0</span><span class="class">.0</span><span class="class">.0</span>:*               <span class="tag">LISTEN</span>      <span class="tag">-</span></span><br></pre></td></tr></table></figure>
-<h1 id="进入另一个容器"><a href="#进入另一个容器" class="headerlink" title="进入另一个容器"></a>进入另一个容器</h1><p>进入nginx容器看看进程<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it k8s_nginx.fb0f31c6_ipc2_default_82fd2fb7-<span class="number">42</span>c0-<span class="number">11e6</span>-a4f1-d43d7e2c2527_c689aa68 bash</span><br><span class="line">root@ipc2:/<span class="preprocessor"># ps axu</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 只能看到nginx的进程</span></span><br><span class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span><br><span class="line">root         <span class="number">1</span>  <span class="number">0.0</span>  <span class="number">0.1</span>  <span class="number">31684</span>  <span class="number">5100</span> ?        Ss   <span class="number">14</span>:<span class="number">57</span>   <span class="number">0</span>:<span class="number">00</span> nginx: master process nginx -g daemon off;</span><br><span class="line">nginx        <span class="number">5</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">32068</span>  <span class="number">2904</span> ?        S    <span class="number">14</span>:<span class="number">57</span>   <span class="number">0</span>:<span class="number">00</span> nginx: worker process</span><br><span class="line">root         <span class="number">6</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">20224</span>  <span class="number">3272</span> ?        Ss   <span class="number">15</span>:<span class="number">00</span>   <span class="number">0</span>:<span class="number">00</span> bash</span><br><span class="line">root        <span class="number">19</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">17500</span>  <span class="number">2096</span> ?        R+   <span class="number">15</span>:<span class="number">09</span>   <span class="number">0</span>:<span class="number">00</span> ps axu</span><br></pre></td></tr></table></figure></p>
-<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>网络、UTC、IPC都共享，但是PID不能共享。</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;要动态更新容器里某些进程的配置，例如nginx。所以需要实时获取配置更新，并同步到容器里的配置文件里，采用的方法是用confd从etcd采集数据，然后更新配置文件的方法。&lt;br&gt;现有的方案是把confd+nginx放在同一个容器里，虽然能解决问题，但是不够优雅，毕竟一个容器只跑一个进程好。&lt;br&gt;恰好业务是跑在k8s上，k8s关于pod的文档上说&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Containers within a pod share an IP address and port space, and can find each other via localhost. They can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. Containers in different pods have distinct IP addresses and can not communicate by IPC&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;如果同一个pod里的进程，可以互相看到对方，那么就可以不用修改，直接把现有一个容器拆成两个容器了。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="kubernetes" scheme="http://blog.decbug.com/tags/kubernetes/"/>
     
   </entry>
   
