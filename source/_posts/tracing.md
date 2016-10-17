@@ -18,6 +18,7 @@ description:
 自己打日志|请求进入时生成ID，每次跨节点调用都带上ID，日志也打上ID|自己实现（这个算不算优点）|麻烦
 用开源库，如zipkin|原理都差不多，都是ID spanID parentID|简单，client和server都有例子|需要集成
 改分布式框架，如鹰眼，京东改dubbo|不用侵入业务代码，在框架里做好埋点和日志|自己实现|稍微麻烦，需要自己改框架
+运行环境注入|例如[newrelic](https://newrelic.com/)，[pinpoint](https://github.com/naver/pinpoint)，改JVM运行时bytecode|非侵入|性能损耗比较大
 
 <!--more-->
 
