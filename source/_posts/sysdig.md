@@ -121,6 +121,16 @@ sysdig_init->get_tracepoint_handler->g_ppm_fops->ppm_open->compat_register->TRAC
 
 [http://www.slideshare.net/Sysdig/sysdig-meetup-dec2014](http://www.slideshare.net/Sysdig/sysdig-meetup-dec2014)
 
+# 实战
+
+```sh
+sysdig -l # 查看所有field
+sysdig -L # 进事件，出事件的参数
+```
+关注 fd.name, proc.name, fd.cip/sip/port/lip, datetime时间戳, fd.num标识唯一的一次连接, containername/ID, pid, tid
+
+还有个tracer没太搞明白，里边有span等等，有时间再研究下
+
 # 其他内核trace
 时间|名字|主要技术
 ---|---|---
