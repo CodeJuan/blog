@@ -55,7 +55,7 @@
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/19371219/091e8342-91e4-11e6-8a53-f2e597860efb.png">
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/19371250/40b1dd72-91e4-11e6-97c8-29ac829afde8.png">
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/5423628/19371280/6b0da6be-91e4-11e6-9c9b-77b151f8428c.png">
-<meta property="og:updated_time" content="2016-10-17T00:15:38.500Z">
+<meta property="og:updated_time" content="2016-10-19T00:06:17.369Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sysdig源码分析">
 <meta name="twitter:description" content="之前分析APM的时候，试用了sysdig，觉得sysdig很厉害
@@ -296,6 +296,9 @@
 <p><img src="https://cloud.githubusercontent.com/assets/5423628/19371280/6b0da6be-91e4-11e6-9c9b-77b151f8428c.png" alt="container"></p>
 <p><a href="http://www.slideshare.net/SreenivasMakam/container-monitoring-with-sysdig-58790785" target="_blank" rel="external">http://www.slideshare.net/SreenivasMakam/container-monitoring-with-sysdig-58790785</a></p>
 <p><a href="http://www.slideshare.net/Sysdig/sysdig-meetup-dec2014" target="_blank" rel="external">http://www.slideshare.net/Sysdig/sysdig-meetup-dec2014</a></p>
+<h1 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sysdig <span class="operator">-l</span> <span class="comment"># 查看所有field</span></span><br><span class="line">sysdig -L <span class="comment"># 进事件，出事件的参数</span></span><br></pre></td></tr></table></figure>
+<p>关注 fd.name, proc.name, fd.cip/sip/port/lip, datetime时间戳, fd.num标识唯一的一次连接, containername/ID, pid, tid</p>
+<p>还有个tracer没太搞明白，里边有span等等，有时间再研究下</p>
 <h1 id="其他内核trace"><a href="#其他内核trace" class="headerlink" title="其他内核trace"></a>其他内核trace</h1><table>
 <thead>
 <tr>
@@ -493,7 +496,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源码"><span class="nav-number">1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流程"><span class="nav-number">2.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#chisels的原理"><span class="nav-number">3.</span> <span class="nav-text">chisels的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sysdig原理"><span class="nav-number">4.</span> <span class="nav-text">sysdig原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#event-table里的事件是如何发送到内核的"><span class="nav-number">4.1.</span> <span class="nav-text">event_table里的事件是如何发送到内核的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#slideshare上的流程"><span class="nav-number">5.</span> <span class="nav-text">slideshare上的流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他内核trace"><span class="nav-number">6.</span> <span class="nav-text">其他内核trace</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源码"><span class="nav-number">1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流程"><span class="nav-number">2.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#chisels的原理"><span class="nav-number">3.</span> <span class="nav-text">chisels的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sysdig原理"><span class="nav-number">4.</span> <span class="nav-text">sysdig原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#event-table里的事件是如何发送到内核的"><span class="nav-number">4.1.</span> <span class="nav-text">event_table里的事件是如何发送到内核的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#slideshare上的流程"><span class="nav-number">5.</span> <span class="nav-text">slideshare上的流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实战"><span class="nav-number">6.</span> <span class="nav-text">实战</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他内核trace"><span class="nav-number">7.</span> <span class="nav-text">其他内核trace</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
