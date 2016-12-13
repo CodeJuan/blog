@@ -207,8 +207,8 @@
           
           
             
-              <a class="post-title-link" href="/2016/10/12/sysdig_knockoff/" itemprop="url">
-                山寨版sysdig cloud
+              <a class="post-title-link" href="/2016/10/12/sysdig/" itemprop="url">
+                sysdig源码分析
               </a>
             
           
@@ -244,8 +244,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2016/10/12/sysdig_knockoff/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/12/sysdig_knockoff/" itemprop="commentsCount"></span>
+            <a href="/2016/10/12/sysdig/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/12/sysdig/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -260,21 +260,13 @@
 
       
         
-          <p>调用链分析有三种模式：</p>
+          <p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
-<li>白盒，zipkin</li>
-<li>灰盒，pinpoint，往JVM里注入</li>
-<li>黑盒，优点是难度大，精度一般，优点是不用改代码</li>
+<li>通过内核抓事件，不用侵入到容器</li>
+<li>可以自己写铲子，扩展起来很方便。<br>于是就顺手看下他的实现原理</li>
 </ol>
-<p>之前分析的sysdig就算是黑盒,<a href="http://blog.decbug.com/2016/10/12/sysdig/">http://blog.decbug.com/2016/10/12/sysdig/</a>，恰好有需求说想不改代码，由容器云平台提供调用链分析。</p>
-<p>参考了几篇论文及业内快讯之后，</p>
-<ul>
-<li>IBM的<a href="http://www.spark.tc/real-time-application-performance-profiling-using-spark/">Real-time Performance Profiling &amp; Analytics for Microservices using Apache </a></li>
-<li>MIT的<a href="https://pdos.csail.mit.edu/~athicha/papers/blackboxes:sosp03.pdf">Performance Debugging for Distributed Systems of Black Boxes</a></li>
-</ul>
-<p>花了一周时间在k8s上做出来了，当然，由于缺乏算法支持，目前只做到了点对点的调用topo及http的时延。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/10/12/sysdig_knockoff/#more" rel="contents">
+            <a class="btn" href="/2016/10/12/sysdig/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
