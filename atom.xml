@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2016-12-13T00:24:23.776Z</updated>
+  <updated>2017-01-03T15:12:30.915Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,100 +16,60 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>阿里云容器服务分析</title>
-    <link href="http://blog.decbug.com/2016/12/05/aliyun_container/"/>
-    <id>http://blog.decbug.com/2016/12/05/aliyun_container/</id>
-    <published>2016-12-04T17:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.776Z</updated>
+    <title>一次容器网络问题debug</title>
+    <link href="http://blog.decbug.com/2017/01/03/container_network_debug/"/>
+    <id>http://blog.decbug.com/2017/01/03/container_network_debug/</id>
+    <published>2017-01-02T17:00:00.000Z</published>
+    <updated>2017-01-03T15:12:30.915Z</updated>
     
-    <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
+    <content type="html"><![CDATA[<p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
 <a id="more"></a>
-<h1 id="计算调度"><a href="#计算调度" class="headerlink" title="计算调度"></a>计算调度</h1><ul>
-<li>swarm</li>
-<li>用户先买几台虚拟机，之后在虚拟机上安装swarm</li>
-<li>利用阿里云已有能力，在I层就实现了租户隔离</li>
-<li>用户的集群规模不会很大，swarm的调度也能跟上</li>
-<li>疑问：资源利用率？这不算是个PaaS吧<br><img src="http://dockerone.com/uploads/article/20160420/979b0743ac5f99e1467721b4cf6a8393.png" alt=""></li>
-</ul>
-<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><ul>
-<li>阿里云vswitch, vrouter</li>
-<li>利用阿里云已有IaaS的能力，不用overlay over overlay</li>
-<li>性能好</li>
-<li>其他容器厂商没有I层的能力，果然是大树底下好乘凉<br><img src="http://dockerone.com/uploads/article/20160420/cd9e52ae1faba951eabe808d2a1ffbf3.png" alt=""></li>
-</ul>
-<h1 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h1><ul>
-<li>扩展了plugin，可以接入OSS作为卷挂载到宿主机，之后mount到容器</li>
-<li>依然是大树下好乘凉</li>
-<li>卖容器的同时，还能卖OSS</li>
-</ul>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
-<li>可以接入阿里云的各种服务，如LB，redis，mysql</li>
-<li>看来是想构建阿里云全家桶，可以卖出更多产品，很好的思路</li>
-</ul>
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>网络组好之后，跨宿主机的容器相互可以ping通，但是在用iperf测试的时候</p>
+<ol>
+<li>tcp：client端一直显示带宽为0，server端显示建立连接，但是一直显示收到0字节</li>
+<li>udp：client端显示12G的带宽，server端只显示建立连接，但没有其他响应。</li>
+</ol>
+<p>顺便说一下一直以来对于VxLan的一个疑惑，VxLan是通过udp发送，那么如何保证数据可靠传输呢？是不是udp里封了tcp的包，如果udp丢失了数据</p>
+<h1 id="定位过程"><a href="#定位过程" class="headerlink" title="定位过程"></a>定位过程</h1><ol>
+<li>在容器A里起一个python SimpleHTTPServer，在容器B里curl这个server。A容器收到请求，并且响应，但是B容器没有收到响应</li>
+<li>猜测是不是安全组的问题？于是neutron secure-group-create 端口从1到65535，ingress egress，tcp udp都加上，再次curl，还是不通</li>
+<li>用tcpdump同时在server端和client端抓包，保存起来</li>
+<li>在两个宿主机起python server，也curl一次并抓包</li>
+<li>用wireshark对比两次的包，发现容器里curl多了一个1518 length的包，于是猜测是不是MTU的问题？因为之前在看flannel的时候，需要在docker启动参数上设置MTU为1450</li>
+<li>分别在两个容器都设置mtu：ip netns 容器网络命名空间 ifconfig eth0 mtu 1400</li>
+<li>再次curl，容器B收到响应</li>
+<li>继续iperf，tcp的可以测通，性能和用neutron的虚拟机相似</li>
+<li>但是udp还是不通</li>
+<li>继续抓两个容器的docker0，可以收到数据</li>
+<li>两个veth，也可以收到</li>
+<li>但是在容器的eth0却收不到。按理说是veth pair，一端收到，另一端就肯定能收到。</li>
+</ol>
+<p>看来还有问题，需要继续定位</p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;分析一下阿里云容器服务&lt;/p&gt;
+      &lt;p&gt;基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中&lt;/p&gt;
     
     </summary>
     
       <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
     
-    
-      <category term="container" scheme="http://blog.decbug.com/tags/container/"/>
     
       <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
-  </entry>
-  
-  <entry>
-    <title>sudoers分析</title>
-    <link href="http://blog.decbug.com/2016/12/05/sudoers/"/>
-    <id>http://blog.decbug.com/2016/12/05/sudoers/</id>
-    <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
-    
-    <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
-<a id="more"></a>
-<h1 id="etc-sudoers"><a href="#etc-sudoers" class="headerlink" title="/etc/sudoers"></a>/etc/sudoers</h1><ul>
-<li>需要用visudo打开，如果有语法错误，那么在保存时会有warning</li>
-<li>行首是”%”的，表示是group，这一个group的全部用户都适用于这个sudo的定义；行首是用户名的，表示是用户。</li>
-<li>注意特殊字符需要转义<code>The following characters must be escaped with a backslash (‘\’) when used as part of a word (e.g. a user name or host name): ‘!’, ‘=’, ‘:’, ‘,’, ‘(’, ‘)’, ‘\’.</code></li>
-</ul>
-<h1 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h1><p>以前的做法，看代码，找出全部用到sudo的脚本，代码等等。汇总之后写入到sudoers，耗时费力，大家苦不堪言，却没有想过改变。这次轮到我来干这类事，我觉得是在浪费生命，于是相处了偷懒的办法</p>
-<ol>
-<li>打开sudo的log，方法：在sudoers加上一行<code>Defaults          logfile=/var/log/sudo.log</code></li>
-<li>之后运行我们的系统，一段时间后，基本上全部命令都执行到了，log里保存了全部的sudo记录</li>
-<li>分析过滤提取<code>/var/log/sudo.log</code>，就能找出我们系统用到的sudo相关命令</li>
-<li>自动汇总，写入到/etc/sudoers</li>
-</ol>
-<p>以前需要N人天才能做完的是，我花了1天写代码，之后5分钟就搞定。节省了N多人力物力，可以把时间投入到更有技术含量的工作中去。</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。&lt;br&gt;为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="sudoers" scheme="http://blog.decbug.com/tags/sudoers/"/>
+      <category term="network" scheme="http://blog.decbug.com/tags/network/"/>
     
   </entry>
   
   <entry>
     <title>山寨版sysdig cloud</title>
-    <link href="http://blog.decbug.com/2016/12/05/sysdig_knockoff/"/>
-    <id>http://blog.decbug.com/2016/12/05/sysdig_knockoff/</id>
-    <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
+    <link href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/"/>
+    <id>http://blog.decbug.com/2016/12/06/sysdig_knockoff/</id>
+    <published>2016-12-05T16:00:00.000Z</published>
+    <updated>2017-01-03T15:12:30.919Z</updated>
     
     <content type="html"><![CDATA[<p>调用链分析有三种模式：</p>
 <ol>
@@ -164,11 +124,100 @@
   </entry>
   
   <entry>
+    <title>阿里云容器服务分析</title>
+    <link href="http://blog.decbug.com/2016/12/05/aliyun_container/"/>
+    <id>http://blog.decbug.com/2016/12/05/aliyun_container/</id>
+    <published>2016-12-04T17:00:00.000Z</published>
+    <updated>2017-01-03T15:12:30.915Z</updated>
+    
+    <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
+<a id="more"></a>
+<h1 id="计算调度"><a href="#计算调度" class="headerlink" title="计算调度"></a>计算调度</h1><ul>
+<li>swarm</li>
+<li>用户先买几台虚拟机，之后在虚拟机上安装swarm</li>
+<li>利用阿里云已有能力，在I层就实现了租户隔离</li>
+<li>用户的集群规模不会很大，swarm的调度也能跟上</li>
+<li>疑问：资源利用率？这不算是个PaaS吧<br><img src="http://dockerone.com/uploads/article/20160420/979b0743ac5f99e1467721b4cf6a8393.png" alt=""></li>
+</ul>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><ul>
+<li>阿里云vswitch, vrouter</li>
+<li>利用阿里云已有IaaS的能力，不用overlay over overlay</li>
+<li>性能好</li>
+<li>其他容器厂商没有I层的能力，果然是大树底下好乘凉<br><img src="http://dockerone.com/uploads/article/20160420/cd9e52ae1faba951eabe808d2a1ffbf3.png" alt=""></li>
+</ul>
+<h1 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h1><ul>
+<li>扩展了plugin，可以接入OSS作为卷挂载到宿主机，之后mount到容器</li>
+<li>依然是大树下好乘凉</li>
+<li>卖容器的同时，还能卖OSS</li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li>可以接入阿里云的各种服务，如LB，redis，mysql</li>
+<li>看来是想构建阿里云全家桶，可以卖出更多产品，很好的思路</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;分析一下阿里云容器服务&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="container" scheme="http://blog.decbug.com/tags/container/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>sudoers分析</title>
+    <link href="http://blog.decbug.com/2016/12/05/sudoers/"/>
+    <id>http://blog.decbug.com/2016/12/05/sudoers/</id>
+    <published>2016-12-04T16:00:00.000Z</published>
+    <updated>2017-01-03T15:12:30.919Z</updated>
+    
+    <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
+<a id="more"></a>
+<h1 id="etc-sudoers"><a href="#etc-sudoers" class="headerlink" title="/etc/sudoers"></a>/etc/sudoers</h1><ul>
+<li>需要用visudo打开，如果有语法错误，那么在保存时会有warning</li>
+<li>行首是”%”的，表示是group，这一个group的全部用户都适用于这个sudo的定义；行首是用户名的，表示是用户。</li>
+<li>注意特殊字符需要转义<code>The following characters must be escaped with a backslash (‘\’) when used as part of a word (e.g. a user name or host name): ‘!’, ‘=’, ‘:’, ‘,’, ‘(’, ‘)’, ‘\’.</code></li>
+</ul>
+<h1 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h1><p>以前的做法，看代码，找出全部用到sudo的脚本，代码等等。汇总之后写入到sudoers，耗时费力，大家苦不堪言，却没有想过改变。这次轮到我来干这类事，我觉得是在浪费生命，于是相处了偷懒的办法</p>
+<ol>
+<li>打开sudo的log，方法：在sudoers加上一行<code>Defaults          logfile=/var/log/sudo.log</code></li>
+<li>之后运行我们的系统，一段时间后，基本上全部命令都执行到了，log里保存了全部的sudo记录</li>
+<li>分析过滤提取<code>/var/log/sudo.log</code>，就能找出我们系统用到的sudo相关命令</li>
+<li>自动汇总，写入到/etc/sudoers</li>
+</ol>
+<p>以前需要N人天才能做完的是，我花了1天写代码，之后5分钟就搞定。节省了N多人力物力，可以把时间投入到更有技术含量的工作中去。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。&lt;br&gt;为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="sudoers" scheme="http://blog.decbug.com/tags/sudoers/"/>
+    
+  </entry>
+  
+  <entry>
     <title>通过libcap抓包</title>
     <link href="http://blog.decbug.com/2016/10/16/libcap/"/>
     <id>http://blog.decbug.com/2016/10/16/libcap/</id>
     <published>2016-10-15T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.780Z</updated>
+    <updated>2017-01-03T15:12:30.915Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
 <p>原理</p>
@@ -202,7 +251,7 @@
     <link href="http://blog.decbug.com/2016/10/14/tracing/"/>
     <id>http://blog.decbug.com/2016/10/14/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
+    <updated>2017-01-03T15:12:30.919Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -307,7 +356,7 @@
     <link href="http://blog.decbug.com/2016/10/12/sysdig/"/>
     <id>http://blog.decbug.com/2016/10/12/sysdig/</id>
     <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
+    <updated>2017-01-03T15:12:30.919Z</updated>
     
     <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
@@ -401,7 +450,7 @@
     <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
     <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.776Z</updated>
+    <updated>2017-01-03T15:12:30.911Z</updated>
     
     <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
 <a id="more"></a>
@@ -429,7 +478,7 @@
     <link href="http://blog.decbug.com/2016/10/10/APM/"/>
     <id>http://blog.decbug.com/2016/10/10/APM/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.776Z</updated>
+    <updated>2017-01-03T15:12:30.911Z</updated>
     
     <content type="html"><![CDATA[<p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
 <p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
@@ -466,7 +515,7 @@
     <link href="http://blog.decbug.com/2016/10/09/VxLan/"/>
     <id>http://blog.decbug.com/2016/10/09/VxLan/</id>
     <published>2016-10-08T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.776Z</updated>
+    <updated>2017-01-03T15:12:30.915Z</updated>
     
     <content type="html"><![CDATA[<p>VxLan，网络虚拟化，应用很广泛</p>
 <p>简单记录一下原理</p>
@@ -509,7 +558,7 @@
     <link href="http://blog.decbug.com/2016/09/30/scheduler_fair/"/>
     <id>http://blog.decbug.com/2016/09/30/scheduler_fair/</id>
     <published>2016-09-29T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
+    <updated>2017-01-03T15:12:30.919Z</updated>
     
     <content type="html"><![CDATA[<p>调度，在计算机世界里随处可见，只要有资源抢占，就需要调度。</p>
 <p><img src="http://a3.att.hudong.com/78/47/01300000763638128366476399672.jpg" alt="无调度"></p>
@@ -555,7 +604,7 @@
     <link href="http://blog.decbug.com/2016/09/09/ping_ssh/"/>
     <id>http://blog.decbug.com/2016/09/09/ping_ssh/</id>
     <published>2016-09-08T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
+    <updated>2017-01-03T15:12:30.919Z</updated>
     
     <content type="html"><![CDATA[<p>数据库部署在k8s上，两个pod一主一备，却无法同步，一直同步失败，提示socket 什么什么什么。据同事说，还有一个现象是ping都会报错</p>
 <a id="more"></a>
@@ -607,7 +656,7 @@
     <link href="http://blog.decbug.com/2016/08/29/dhcp/"/>
     <id>http://blog.decbug.com/2016/08/29/dhcp/</id>
     <published>2016-08-28T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.780Z</updated>
+    <updated>2017-01-03T15:12:30.915Z</updated>
     
     <content type="html"><![CDATA[<p>同事用PXE装系统，在装完最小系统后，会再次获取IP，然而DHCP却给了一个不一样的IP</p>
 <a id="more"></a>
@@ -651,7 +700,7 @@
     <link href="http://blog.decbug.com/2016/08/23/sth_about_MQ/"/>
     <id>http://blog.decbug.com/2016/08/23/sth_about_MQ/</id>
     <published>2016-08-22T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
+    <updated>2017-01-03T15:12:30.919Z</updated>
     
     <content type="html"><![CDATA[<p>通过简单的例子，讲故事的方式解释消息队列</p>
 <a id="more"></a>
@@ -690,7 +739,7 @@
     <link href="http://blog.decbug.com/2016/08/15/docker_basic/"/>
     <id>http://blog.decbug.com/2016/08/15/docker_basic/</id>
     <published>2016-08-14T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.780Z</updated>
+    <updated>2017-01-03T15:12:30.915Z</updated>
     
     <content type="html"><![CDATA[<p>记录一下docker基础知识</p>
 <p>namespace是环境隔离，cgroup是资源隔离，加起来就是docker的基础</p>
@@ -733,7 +782,7 @@
     <link href="http://blog.decbug.com/2016/08/03/k8s_stateful/"/>
     <id>http://blog.decbug.com/2016/08/03/k8s_stateful/</id>
     <published>2016-08-02T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.780Z</updated>
+    <updated>2017-01-03T15:12:30.915Z</updated>
     
     <content type="html"><![CDATA[<h1 id="有状态服务的概念"><a href="#有状态服务的概念" class="headerlink" title="有状态服务的概念"></a>有状态服务的概念</h1><p>既然名叫有状态，那么就与之相对，会有我们很熟悉的无状态。无状态的概念，就是只负责运算，不负责任何数据的存储，这样就能很轻松地做到水平扩展。</p>
 <blockquote>
@@ -790,7 +839,7 @@
     <link href="http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/"/>
     <id>http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/</id>
     <published>2016-08-01T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.780Z</updated>
+    <updated>2017-01-03T15:12:30.915Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>docker官方也有私有云版本<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><h2 id="docker-engine"><a href="#docker-engine" class="headerlink" title="docker engine"></a>docker engine</h2><p>感谢Daoloud提供的一键式安装<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http<span class="variable">s:</span>//<span class="built_in">get</span>.daocloud.io/docker | <span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
@@ -947,7 +996,7 @@
     <link href="http://blog.decbug.com/2016/08/01/k8s_multi_tenant/"/>
     <id>http://blog.decbug.com/2016/08/01/k8s_multi_tenant/</id>
     <published>2016-07-31T17:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.780Z</updated>
+    <updated>2017-01-03T15:12:30.915Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>公有云产品有个很重要的概念叫多租户，比如OpenStack的Domain/Project。提供资源隔离，权限控制，等等。<br>kubernetes如果作为PaaS的基础，那么也需要具备此能力。<br><a id="more"></a></p>
 <h1 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h1><blockquote>
@@ -1084,7 +1133,7 @@
     <link href="http://blog.decbug.com/2016/07/25/play_dce3/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce3/</id>
     <published>2016-07-24T17:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
+    <updated>2017-01-03T15:12:30.919Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前面分析了系统容器，<br><a href="http://blog.decbug.com/2016/07/25/play_dce2/">http://blog.decbug.com/2016/07/25/play_dce2/</a><br>接下来看看到底是如何部署的，以及网络存储是如何创建的。<br><a id="more"></a></p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>去掉–rm ，看看install到底做了什么<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="tag">i</span>  daocloud.io/daocloud/dce install</span><br></pre></td></tr></table></figure></p>
@@ -1131,7 +1180,7 @@
     <link href="http://blog.decbug.com/2016/07/25/play_dce2/"/>
     <id>http://blog.decbug.com/2016/07/25/play_dce2/</id>
     <published>2016-07-24T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.784Z</updated>
+    <updated>2017-01-03T15:12:30.919Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DaoCloud是国内领先的容器云，我的山寨容器云需要多向他学习。<br>前几天把环境弄好了，也简单试用了，大概知道DCE技术栈。<br><a href="http://blog.decbug.com/2016/07/20/play_dce/">http://blog.decbug.com/2016/07/20/play_dce/</a><br>果然是把docker原生技术发挥到了很棒的境界，很值得学习。</p>
 <a id="more"></a>
@@ -1200,64 +1249,6 @@
       <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
       <category term="swarm" scheme="http://blog.decbug.com/tags/swarm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>高级docker镜像仓库之删除镜像与恢复镜像</title>
-    <link href="http://blog.decbug.com/2016/07/21/del_restore_docker_image/"/>
-    <id>http://blog.decbug.com/2016/07/21/del_restore_docker_image/</id>
-    <published>2016-07-20T16:00:00.000Z</published>
-    <updated>2016-12-13T00:24:23.780Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能</p>
-<a id="more"></a>
-<h1 id="抓包分析有容云"><a href="#抓包分析有容云" class="headerlink" title="抓包分析有容云"></a>抓包分析有容云</h1><h2 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h2><ol>
-<li><p>因为容器间通信肯定会经过docker0，所以抓docker0就够了</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -<span class="tag">i</span> docker0 -w del_restore.cap</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看AppHouse的registry容器的IP</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker ps | grep app</span><br><span class="line"><span class="preprocessor"># 得到registry的container ID</span></span><br><span class="line"></span><br><span class="line">docker inspect <span class="number">3</span>a9d50c216de</span><br><span class="line"><span class="preprocessor">#找到IP <span class="string">"IPAddress"</span>: <span class="string">"172.16.52.3"</span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>wireshark加上条件<code>(ip.src == 172.16.52.3) || (ip.dst == 172.16.52.3) &amp;&amp; tcp.port ==5002 &amp;&amp; http</code></p>
-</li>
-</ol>
-<h2 id="分析包"><a href="#分析包" class="headerlink" title="分析包"></a>分析包</h2><h3 id="获取镜像信息"><a href="#获取镜像信息" class="headerlink" title="获取镜像信息"></a>获取镜像信息</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get.png" alt="get"></p>
-<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/get_rsp.png" alt="get response"></p>
-<p>获取镜像信息，应该是把返回的body都保存下来了</p>
-<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del.png" alt="delete"></p>
-<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/del_rsp.png" alt="delete response"></p>
-<p>这个没啥好说</p>
-<h3 id="恢复镜像"><a href="#恢复镜像" class="headerlink" title="恢复镜像"></a>恢复镜像</h3><p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put.png" alt="put"></p>
-<p><img src="https://github.com/CodeJuan/blog/raw/master/source/image/del_image/put_rsp.png" alt="put response"></p>
-<p>应该是把之前保存的body又再put进去</p>
-<h1 id="官方不建议删除镜像"><a href="#官方不建议删除镜像" class="headerlink" title="官方不建议删除镜像"></a>官方不建议删除镜像</h1><p>因为<a href="https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes" target="_blank" rel="external">https://github.com/docker/distribution/blob/master/ROADMAP.md#deletes</a></p>
-<blockquote>
-<p>NOTE: Deletes are a much asked for feature. Before requesting this feature or participating in discussion, we ask that you read this section in full and understand the problems behind deletes.</p>
-</blockquote>
-<p>删除固然简单，删除manifest和blob就行。但是，blob是分层的，可能是多个镜像共用的，如果在删除某个blob的时候，其他人正在使用这个blob，那么就麻烦了。</p>
-<h1 id="其实是有删除接口的"><a href="#其实是有删除接口的" class="headerlink" title="其实是有删除接口的"></a>其实是有删除接口的</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DELETE /v2/<span class="tag">&lt;<span class="title">name</span>&gt;</span>/manifests/<span class="tag">&lt;<span class="title">reference</span>&gt;</span></span><br><span class="line">Host: <span class="tag">&lt;<span class="title">registry</span> <span class="attribute">host</span>&gt;</span></span><br><span class="line">Authorization: <span class="tag">&lt;<span class="title">scheme</span>&gt;</span> <span class="tag">&lt;<span class="title">token</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">version</span>: <span class="number">0.1</span></span><br><span class="line"><span class="attribute">log</span>:</span><br><span class="line">  <span class="attribute">fields</span>:</span><br><span class="line">    <span class="attribute">service</span>: registry</span><br><span class="line"><span class="attribute">storage</span>:</span><br><span class="line">    <span class="attribute">cache</span>:</span><br><span class="line">        <span class="attribute">blobdescriptor</span>: inmemory</span><br><span class="line">    <span class="attribute">filesystem</span>:</span><br><span class="line">        <span class="attribute">rootdirectory</span>: /var/lib/registry</span><br><span class="line"># 这里需要把delelte设置为true</span><br><span class="line">    <span class="attribute">delete</span>:</span><br><span class="line">        <span class="attribute">enabled</span>: true</span><br><span class="line"><span class="attribute">http</span>:</span><br><span class="line">    <span class="attribute">addr</span>: :<span class="number">5000</span></span><br><span class="line">    <span class="attribute">headers</span>:</span><br><span class="line">        <span class="attribute">X-Content-Type-Options</span>: [nosniff]</span><br><span class="line"><span class="attribute">health</span>:</span><br><span class="line">  <span class="attribute">storagedriver</span>:</span><br><span class="line">    <span class="attribute">enabled</span>: true</span><br><span class="line">    <span class="attribute">interval</span>: <span class="number">10s</span></span><br><span class="line">    <span class="attribute">threshold</span>: <span class="number">3</span></span><br></pre></td></tr></table></figure>
-<h1 id="用python写的测试代码"><a href="#用python写的测试代码" class="headerlink" title="用python写的测试代码"></a>用python写的测试代码</h1><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> simplejson <span class="keyword">as</span> json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">registry = <span class="string">"http://192.168.1.245:25678/v2/"</span></span><br><span class="line">image = <span class="string">"test/consul"</span></span><br><span class="line">tag = <span class="string">"latest"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">r = requests.get(registry + <span class="string">"_catalog/"</span>, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.text</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">headers = &#123;<span class="string">'Accept'</span>: <span class="string">'application/vnd.docker.distribution.manifest.v2+json'</span>&#125;</span><br><span class="line">r = requests.get(registry + image + <span class="string">"/manifests/"</span> + tag, headers=headers, verify=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取manifest</span></span><br><span class="line">manifest = r.headers[<span class="string">'Docker-Content-Digest'</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">"manifest: "</span> + manifest</span><br><span class="line"></span><br><span class="line">data = r.text</span><br><span class="line"><span class="keyword">print</span> data</span><br><span class="line"><span class="comment"># for blob in data['fsLayers']:</span></span><br><span class="line"><span class="comment">#     blob_digest = blob['blobSum']</span></span><br><span class="line"><span class="comment">#     print blob_digest</span></span><br><span class="line"><span class="comment">#     r = requests.delete(registry + "v2/xx/hello/blobs/" + blob_digest, verify=False)</span></span><br><span class="line"><span class="comment">#     print r</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"delete"</span></span><br><span class="line">r = requests.delete(registry + image + <span class="string">"/manifests/"</span> + manifest, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.status_code</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"restore"</span></span><br><span class="line">r = requests.put(registry + image + <span class="string">"/manifests/"</span> + tag, data=data, verify=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">print</span> r.status_code</span><br></pre></td></tr></table></figure>
-<h1 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h1><img src="http://www.plantuml.com/plantuml/svg/VP3DRW8n38JFpLDOox5QrFCASgWgSU4bdDqXHCeco77uUVkkoa8bG9mi-HjxxE6gETNHGQXPxN9IwdFCidQnmgwSfQybKMDC7mEIjjQpuiGNCzVM2dmeAfUEF9H6Jc67ekRMRkyZ7GcqIlhNt7UeSDbt55A1A8MHFIZnY4zbJvhfZx-o712XU6ScA3K-MnK-uf6rzlfaTmDcO6N71VC1nkKpDJ_V3IssmUzr8rCG7mSM3Nquy9JTLOSqq2Jz1G00">
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;看到有容云的AppHouse有删除、恢复镜像的功能，觉得很厉害，打算在我的山寨容器云的仓库上也加上这个功能&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="image" scheme="http://blog.decbug.com/tags/image/"/>
-    
-      <category term="registry" scheme="http://blog.decbug.com/tags/registry/"/>
     
   </entry>
   
