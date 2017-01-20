@@ -207,6 +207,102 @@
           
           
             
+              <a class="post-title-link" href="/2017/01/17/KVM_cache/" itemprop="url">
+                KVM的几种缓存模式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-01-17T01:00:00+08:00" content="2017-01-17">
+            2017-01-17
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2017/01/17/KVM_cache/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/17/KVM_cache/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>现象：</p>
+<ol>
+<li>虚拟机的IO性能比物理机/容器好？</li>
+<li>容器和物理机差不多，这个很好理解，如果没有做IO limit，肯定和物理机相近</li>
+<li>用的virsh disk-attach宿主机上的一个/dev/sdxxx，用的是default</li>
+<li>顺序读写完爆物理机</li>
+<li>随机读写从1K，4K，16K到1M都比物理机强，唯有64M的写比物理机差</li>
+</ol>
+<p>比较奇怪，需要分析一下</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/17/KVM_cache/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2017/01/15/container_neutron/" itemprop="url">
                 Neutron与容器网络
               </a>
@@ -568,94 +664,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/12/05/sudoers/" itemprop="url">
-                sudoers分析
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-12-05T00:00:00+08:00" content="2016-12-05">
-            2016-12-05
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2016/12/05/sudoers/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/05/sudoers/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/05/sudoers/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -694,7 +702,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">103</span>
+              <span class="site-state-item-count">104</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -708,7 +716,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">138</span>
+              <span class="site-state-item-count">139</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2017-01-16T00:32:32.987Z</updated>
+  <updated>2017-01-20T00:12:16.184Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,68 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>KVM的几种缓存模式</title>
+    <link href="http://blog.decbug.com/2017/01/17/KVM_cache/"/>
+    <id>http://blog.decbug.com/2017/01/17/KVM_cache/</id>
+    <published>2017-01-16T17:00:00.000Z</published>
+    <updated>2017-01-20T00:12:16.184Z</updated>
+    
+    <content type="html"><![CDATA[<p>现象：</p>
+<ol>
+<li>虚拟机的IO性能比物理机/容器好？</li>
+<li>容器和物理机差不多，这个很好理解，如果没有做IO limit，肯定和物理机相近</li>
+<li>用的virsh disk-attach宿主机上的一个/dev/sdxxx，用的是default</li>
+<li>顺序读写完爆物理机</li>
+<li>随机读写从1K，4K，16K到1M都比物理机强，唯有64M的写比物理机差</li>
+</ol>
+<p>比较奇怪，需要分析一下</p>
+<a id="more"></a>
+<h1 id="改cache-mode"><a href="#改cache-mode" class="headerlink" title="改cache mode"></a>改cache mode</h1><blockquote>
+<p>writethrough<br>writethrough mode is the default caching mode. With caching set to writethrough mode, the host page cache is enabled, but the disk write cache is disabled for the guest. Consequently, this caching mode ensures data integrity even if the applications and storage stack in the guest do not transfer data to permanent storage properly (either through fsync operations or file system barriers). Because the host page cache is enabled in this mode, the read performance for applications running in the guest is generally better. However, the write performance might be reduced because the disk write cache is disabled.<br>默认模式，认为host page开启，没有用disk cache，会保证数据可靠，写性能会差，读性能会好？</p>
+<p>writeback<br>With caching set to writeback mode, both the host page cache and the disk write cache are enabled for the guest. Because of this, the I/O performance for applications running in the guest is good, but the data is not protected in a power failure. As a result, this caching mode is recommended only for temporary data where potential data loss is not a concern.<br>host page和disk cache都开启，性能最好，但在掉电时会有丢数据的风险</p>
+<p>none<br>With caching mode set to none, the host page cache is disabled, but the disk write cache is enabled for the guest. In this mode, the write performance in the guest is optimal because write operations bypass the host page cache and go directly to the disk write cache. If the disk write cache is battery-backed, or if the applications or storage stack in the guest transfer data properly (either through fsync operations or file system barriers), then data integrity can be ensured. However, because the host page cache is disabled, the read performance in the guest would not be as good as in the modes where the host page cache is enabled, such as writethrough mode.<br>只开disk cache，不开host page，号称写性能最强，读一般</p>
+<p>unsafe<br>Caching mode of unsafe ignores cache transfer operations completely. As its name implies, this caching mode should be used only for temporary data where data loss is not a concern. This mode can be useful for speeding up guest installations, but you should switch to another caching mode in production environments.<br>只写到缓存，不落盘，建议只保存临时数据</p>
+</blockquote>
+<p>改成none试了下，竟然性能都变差？按理说写性能会提升啊？</p>
+<h1 id="host-page-cache对性能的影响"><a href="#host-page-cache对性能的影响" class="headerlink" title="host page cache对性能的影响"></a>host page cache对性能的影响</h1><ul>
+<li>64M性能下降是因为cache被打穿？对于大块用direct IO性能更好？即使改成direct IO，那么也是只绕过guest os的page cache啊？此时用none会更好？然而实际上，none的性能不好。</li>
+<li>只要有空闲，系统的cache buffer都会很大。物理机是128G内存，所以虚拟机的读写操作都在内存里完成？</li>
+<li>小块性能好，因为都在内存里？</li>
+</ul>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>真的是缓存的原因？大丈夫？</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;现象：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;虚拟机的IO性能比物理机/容器好？&lt;/li&gt;
+&lt;li&gt;容器和物理机差不多，这个很好理解，如果没有做IO limit，肯定和物理机相近&lt;/li&gt;
+&lt;li&gt;用的virsh disk-attach宿主机上的一个/dev/sdxxx，用的是default&lt;/li&gt;
+&lt;li&gt;顺序读写完爆物理机&lt;/li&gt;
+&lt;li&gt;随机读写从1K，4K，16K到1M都比物理机强，唯有64M的写比物理机差&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;比较奇怪，需要分析一下&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="KVM" scheme="http://blog.decbug.com/tags/KVM/"/>
+    
+      <category term="cache" scheme="http://blog.decbug.com/tags/cache/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Neutron与容器网络</title>
     <link href="http://blog.decbug.com/2017/01/15/container_neutron/"/>
     <id>http://blog.decbug.com/2017/01/15/container_neutron/</id>
     <published>2017-01-14T17:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.188Z</updated>
     
     <content type="html"><![CDATA[<p>容器用Neutron组网，比Flannel和VPC router强的地方在于</p>
 <ul>
@@ -40,6 +97,7 @@
 <li>bridge veth pair   &lt;—&gt; (port IP MAC) veth pair port的qbr上</li>
 <li>dvr add : xxxx的CIDR nexthop 是一个neutron port</li>
 </ol>
+<p>在这个图上稍作修改<br><img src="http://img.blog.csdn.net/20141208150804139?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FueGluZ2hlbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="neutron组网"></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 ]]></content>
@@ -76,7 +134,7 @@
     <link href="http://blog.decbug.com/2017/01/03/container_network_debug/"/>
     <id>http://blog.decbug.com/2017/01/03/container_network_debug/</id>
     <published>2017-01-02T17:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.188Z</updated>
     
     <content type="html"><![CDATA[<p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
 <a id="more"></a>
@@ -125,7 +183,7 @@
     <link href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/"/>
     <id>http://blog.decbug.com/2016/12/06/sysdig_knockoff/</id>
     <published>2016-12-05T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.192Z</updated>
     
     <content type="html"><![CDATA[<p>调用链分析有三种模式：</p>
 <ol>
@@ -184,7 +242,7 @@
     <link href="http://blog.decbug.com/2016/12/05/aliyun_container/"/>
     <id>http://blog.decbug.com/2016/12/05/aliyun_container/</id>
     <published>2016-12-04T17:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.184Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
 <a id="more"></a>
@@ -234,7 +292,7 @@
     <link href="http://blog.decbug.com/2016/12/05/sudoers/"/>
     <id>http://blog.decbug.com/2016/12/05/sudoers/</id>
     <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.192Z</updated>
     
     <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
 <a id="more"></a>
@@ -273,7 +331,7 @@
     <link href="http://blog.decbug.com/2016/10/16/libcap/"/>
     <id>http://blog.decbug.com/2016/10/16/libcap/</id>
     <published>2016-10-15T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.188Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
 <p>原理</p>
@@ -307,7 +365,7 @@
     <link href="http://blog.decbug.com/2016/10/14/tracing/"/>
     <id>http://blog.decbug.com/2016/10/14/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.192Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -412,7 +470,7 @@
     <link href="http://blog.decbug.com/2016/10/12/sysdig/"/>
     <id>http://blog.decbug.com/2016/10/12/sysdig/</id>
     <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.192Z</updated>
     
     <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
@@ -506,7 +564,7 @@
     <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
     <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.184Z</updated>
     
     <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
 <a id="more"></a>
@@ -534,7 +592,7 @@
     <link href="http://blog.decbug.com/2016/10/10/APM/"/>
     <id>http://blog.decbug.com/2016/10/10/APM/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.184Z</updated>
     
     <content type="html"><![CDATA[<p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
 <p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
@@ -571,7 +629,7 @@
     <link href="http://blog.decbug.com/2016/10/09/VxLan/"/>
     <id>http://blog.decbug.com/2016/10/09/VxLan/</id>
     <published>2016-10-08T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.184Z</updated>
     
     <content type="html"><![CDATA[<p>VxLan，网络虚拟化，应用很广泛</p>
 <p>简单记录一下原理</p>
@@ -614,7 +672,7 @@
     <link href="http://blog.decbug.com/2016/09/30/scheduler_fair/"/>
     <id>http://blog.decbug.com/2016/09/30/scheduler_fair/</id>
     <published>2016-09-29T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.192Z</updated>
     
     <content type="html"><![CDATA[<p>调度，在计算机世界里随处可见，只要有资源抢占，就需要调度。</p>
 <p><img src="http://a3.att.hudong.com/78/47/01300000763638128366476399672.jpg" alt="无调度"></p>
@@ -660,7 +718,7 @@
     <link href="http://blog.decbug.com/2016/09/09/ping_ssh/"/>
     <id>http://blog.decbug.com/2016/09/09/ping_ssh/</id>
     <published>2016-09-08T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.192Z</updated>
     
     <content type="html"><![CDATA[<p>数据库部署在k8s上，两个pod一主一备，却无法同步，一直同步失败，提示socket 什么什么什么。据同事说，还有一个现象是ping都会报错</p>
 <a id="more"></a>
@@ -712,7 +770,7 @@
     <link href="http://blog.decbug.com/2016/08/29/dhcp/"/>
     <id>http://blog.decbug.com/2016/08/29/dhcp/</id>
     <published>2016-08-28T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.188Z</updated>
     
     <content type="html"><![CDATA[<p>同事用PXE装系统，在装完最小系统后，会再次获取IP，然而DHCP却给了一个不一样的IP</p>
 <a id="more"></a>
@@ -756,7 +814,7 @@
     <link href="http://blog.decbug.com/2016/08/23/sth_about_MQ/"/>
     <id>http://blog.decbug.com/2016/08/23/sth_about_MQ/</id>
     <published>2016-08-22T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.192Z</updated>
     
     <content type="html"><![CDATA[<p>通过简单的例子，讲故事的方式解释消息队列</p>
 <a id="more"></a>
@@ -795,7 +853,7 @@
     <link href="http://blog.decbug.com/2016/08/15/docker_basic/"/>
     <id>http://blog.decbug.com/2016/08/15/docker_basic/</id>
     <published>2016-08-14T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.188Z</updated>
     
     <content type="html"><![CDATA[<p>记录一下docker基础知识</p>
 <p>namespace是环境隔离，cgroup是资源隔离，加起来就是docker的基础</p>
@@ -838,7 +896,7 @@
     <link href="http://blog.decbug.com/2016/08/03/k8s_stateful/"/>
     <id>http://blog.decbug.com/2016/08/03/k8s_stateful/</id>
     <published>2016-08-02T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.188Z</updated>
     
     <content type="html"><![CDATA[<h1 id="有状态服务的概念"><a href="#有状态服务的概念" class="headerlink" title="有状态服务的概念"></a>有状态服务的概念</h1><p>既然名叫有状态，那么就与之相对，会有我们很熟悉的无状态。无状态的概念，就是只负责运算，不负责任何数据的存储，这样就能很轻松地做到水平扩展。</p>
 <blockquote>
@@ -895,7 +953,7 @@
     <link href="http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/"/>
     <id>http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/</id>
     <published>2016-08-01T16:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.987Z</updated>
+    <updated>2017-01-20T00:12:16.188Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>docker官方也有私有云版本<br><a id="more"></a></p>
 <h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><h2 id="docker-engine"><a href="#docker-engine" class="headerlink" title="docker engine"></a>docker engine</h2><p>感谢Daoloud提供的一键式安装<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http<span class="variable">s:</span>//<span class="built_in">get</span>.daocloud.io/docker | <span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
@@ -1052,7 +1110,7 @@
     <link href="http://blog.decbug.com/2016/08/01/k8s_multi_tenant/"/>
     <id>http://blog.decbug.com/2016/08/01/k8s_multi_tenant/</id>
     <published>2016-07-31T17:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
+    <updated>2017-01-20T00:12:16.188Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>公有云产品有个很重要的概念叫多租户，比如OpenStack的Domain/Project。提供资源隔离，权限控制，等等。<br>kubernetes如果作为PaaS的基础，那么也需要具备此能力。<br><a id="more"></a></p>
 <h1 id="NameSpace"><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h1><blockquote>
@@ -1181,53 +1239,6 @@
       <category term="kubernetes" scheme="http://blog.decbug.com/tags/kubernetes/"/>
     
       <category term="multi-tenant" scheme="http://blog.decbug.com/tags/multi-tenant/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在家玩DaoCloud企业版--部署/网络/存储</title>
-    <link href="http://blog.decbug.com/2016/07/25/play_dce3/"/>
-    <id>http://blog.decbug.com/2016/07/25/play_dce3/</id>
-    <published>2016-07-24T17:00:00.000Z</published>
-    <updated>2017-01-16T00:32:32.991Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前面分析了系统容器，<br><a href="http://blog.decbug.com/2016/07/25/play_dce2/">http://blog.decbug.com/2016/07/25/play_dce2/</a><br>接下来看看到底是如何部署的，以及网络存储是如何创建的。<br><a id="more"></a></p>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>去掉–rm ，看看install到底做了什么<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="tag">i</span>  daocloud.io/daocloud/dce install</span><br></pre></td></tr></table></figure></p>
-<p>不加–rm竟然无法运行，DaoCloud还挺厉害</p>
-<p>大概推测一下部署过程吧</p>
-<ul>
-<li>daocloud.io/daocloud/dce install 安装compose？</li>
-<li>生成/etc/daocloud/dce/docker-compose.yml</li>
-<li>docker-compose up ?</li>
-</ul>
-<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><h2 id="准备证书"><a href="#准备证书" class="headerlink" title="准备证书"></a>准备证书</h2><p>docker -H :2375 network ls 查看network</p>
-<p>但是提示 没有证书</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/engine-cert.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-cert.pem</span><br><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/engine-key.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-key.pem</span><br><span class="line">docker cp <span class="string">c165f85044a9:</span><span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/ca.pem /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>ca.pem</span><br></pre></td></tr></table></figure>
-<p>把证书从manager容器里拷贝出来</p>
-<h2 id="然后network-ls"><a href="#然后network-ls" class="headerlink" title="然后network ls"></a>然后network ls</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker -<span class="string">H :</span><span class="number">2375</span> --tls --tlscacert <span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine<span class="regexp">/ca.pem --tlscert /</span>etc<span class="regexp">/ssl/</span><span class="keyword">private</span><span class="regexp">/engine/</span>engine-cert.pem --tlskey <span class="regexp">/etc/</span>ssl<span class="regexp">/private/</span>engine/engine-key.pem network ls</span><br></pre></td></tr></table></figure>
-<p>结果是<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NETWORK ID          NAME                                   DRIVER</span><br><span class="line">bd796525b91c        docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>/bridge            bridge</span><br><span class="line"><span class="number">26e3</span>c48a34b9        docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>/dce_default       bridge</span><br><span class="line">b6928df6352f        docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>/host              host</span><br><span class="line"><span class="number">242e13239</span>dcb        docker-<span class="number">512</span>mb-sfo2-<span class="number">01</span>/none              null</span><br><span class="line"><span class="number">0</span>ea714042165        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/bridge            bridge</span><br><span class="line">ea7e447dbb71        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/dce_default       bridge</span><br><span class="line">e61de07d7d1f        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/docker_gwbridge   bridge</span><br><span class="line"><span class="number">38</span>af5aff9349        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/host              host</span><br><span class="line">c448a5c9ee19        docker-<span class="number">512</span>mb-sfo2-<span class="number">02</span>/none              null</span><br><span class="line"><span class="number">48</span>ac6678f478        tty_default                            overlay</span><br><span class="line">bd2f14e19718        ubuntusshttyjs_default                 overlay</span><br></pre></td></tr></table></figure></p>
-<p>可以看到，自建容器都是用到了overlay，目测用的就是docker原生的overlay</p>
-<p><img src="https://cloud.githubusercontent.com/assets/5423628/17141722/d736523a-537f-11e6-8516-1ae20ba49f26.png" alt="image"></p>
-<p>从上图可以看到，果然是原生overlay</p>
-<h1 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/17107783/4bda1fee-52c3-11e6-9485-d77436874107.png" alt="存储"><br>貌似只能挂本地卷</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;前面分析了系统容器，&lt;br&gt;&lt;a href=&quot;http://blog.decbug.com/2016/07/25/play_dce2/&quot;&gt;http://blog.decbug.com/2016/07/25/play_dce2/&lt;/a&gt;&lt;br&gt;接下来看看到底是如何部署的，以及网络存储是如何创建的。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="DaoCloud" scheme="http://blog.decbug.com/tags/DaoCloud/"/>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="swarm" scheme="http://blog.decbug.com/tags/swarm/"/>
     
   </entry>
   
