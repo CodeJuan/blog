@@ -29,6 +29,9 @@ description:
 1. bridge veth pair   <---> (port IP MAC) veth pair port的qbr上
 1. dvr add : xxxx的CIDR nexthop 是一个neutron port
 
+在这个图上稍作修改
+![neutron组网](http://img.blog.csdn.net/20141208150804139?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2FueGluZ2hlbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+
 ----------------------------
 
 `本博客欢迎转发,但请保留原作者信息`
