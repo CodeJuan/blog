@@ -61,7 +61,7 @@
 随机读写从1K，4K，16K到1M都比物理机强，唯有64M的写比物理机差
 
 比较奇怪，需要分析一下">
-<meta property="og:updated_time" content="2017-01-20T00:12:16.184Z">
+<meta property="og:updated_time" content="2017-01-20T00:14:54.151Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="KVM的几种缓存模式">
 <meta name="twitter:description" content="现象：
@@ -303,6 +303,7 @@
 <li>小块性能好，因为都在内存里？</li>
 </ul>
 <h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>真的是缓存的原因？大丈夫？</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.slideshare.net/meituan/kvmopt-osforce-27669119" target="_blank" rel="external">美团技术团队 - KVM性能优化</a><br><a href="https://www.ibm.com/support/knowledgecenter/linuxonibm/liaat/liaatbpkvmguestcache.htm" target="_blank" rel="external">Best practice: KVM guest caching modes</a><br><a href="http://www.cnblogs.com/jusonalien/p/4772618.html" target="_blank" rel="external">qemu-kvm磁盘读写的缓冲(cache)的五种模式</a></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -464,7 +465,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#改cache-mode"><span class="nav-number">1.</span> <span class="nav-text">改cache mode</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#host-page-cache对性能的影响"><span class="nav-number">2.</span> <span class="nav-text">host page cache对性能的影响</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结论"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#改cache-mode"><span class="nav-number">1.</span> <span class="nav-text">改cache mode</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#host-page-cache对性能的影响"><span class="nav-number">2.</span> <span class="nav-text">host page cache对性能的影响</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结论"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
