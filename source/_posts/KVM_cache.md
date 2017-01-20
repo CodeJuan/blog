@@ -49,6 +49,11 @@ description:
 # 结论
 真的是缓存的原因？大丈夫？
 
+# 参考
+[美团技术团队 - KVM性能优化](http://www.slideshare.net/meituan/kvmopt-osforce-27669119)
+[Best practice: KVM guest caching modes](https://www.ibm.com/support/knowledgecenter/linuxonibm/liaat/liaatbpkvmguestcache.htm)
+[qemu-kvm磁盘读写的缓冲(cache)的五种模式](http://www.cnblogs.com/jusonalien/p/4772618.html)
+
 
 ----------------------------
 
