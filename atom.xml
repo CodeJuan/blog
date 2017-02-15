@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2017-02-14T08:15:44.669Z</updated>
+  <updated>2017-02-15T00:22:01.525Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,154 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>LXC,docker</title>
+    <link href="http://blog.decbug.com/2017/02/11/lxc_docker/"/>
+    <id>http://blog.decbug.com/2017/02/11/lxc_docker/</id>
+    <published>2017-02-10T16:00:00.000Z</published>
+    <updated>2017-02-15T00:22:01.525Z</updated>
+    
+    <content type="html"><![CDATA[<p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机<br><a id="more"></a></p>
+<h1 id="LXC-vs-VM"><a href="#LXC-vs-VM" class="headerlink" title="LXC vs. VM"></a>LXC vs. VM</h1><table>
+<thead>
+<tr>
+<th>对比</th>
+<th>LXC</th>
+<th>VM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hyper层</td>
+<td>用namespace,cgroup,无</td>
+<td>有，KVM/XEN</td>
+</tr>
+<tr>
+<td>内核</td>
+<td>共用host</td>
+<td>有guest</td>
+</tr>
+<tr>
+<td>启动</td>
+<td>秒</td>
+<td>分</td>
+</tr>
+</tbody>
+</table>
+<p>可以说，docker的优点，LXC都有，然而其形态却更像虚拟机</p>
+<h1 id="LXC-vs-docker"><a href="#LXC-vs-docker" class="headerlink" title="LXC vs. docker"></a>LXC vs. docker</h1><table>
+<thead>
+<tr>
+<th>对比</th>
+<th>LXC</th>
+<th>docker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>init进程</td>
+<td>有systemd作为init进程</td>
+<td>entrypoint或cmd里的进程，其实就是业务进程，如果业务进程挂了，容器也跟着消失</td>
+</tr>
+<tr>
+<td>行为</td>
+<td>可以shutdown，reboot等等</td>
+<td>业务进程的生命周期</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>也是veth peer接到网络命名空间</td>
+<td>同</td>
+</tr>
+<tr>
+<td>存储</td>
+<td>多种，默认dir后端则是直接用host上的文件夹,/var/lib/lxd/containers/xxxx/rootfs</td>
+<td>aufs,devicemapper</td>
+</tr>
+<tr>
+<td>生态</td>
+<td>与openstack比较紧密，nova-lxd,nova-libvirtdriver-libvirtlxc</td>
+<td>k8s,</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机&lt;br&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="LXC" scheme="http://blog.decbug.com/tags/LXC/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>网络笔记--docker,neutron</title>
+    <link href="http://blog.decbug.com/2017/02/10/network_intro/"/>
+    <id>http://blog.decbug.com/2017/02/10/network_intro/</id>
+    <published>2017-02-09T16:00:00.000Z</published>
+    <updated>2017-02-15T00:22:01.525Z</updated>
+    
+    <content type="html"><![CDATA[<p>简单记录之前搞容器网络用的基础知识<br><a id="more"></a></p>
+<h1 id="ip命令"><a href="#ip命令" class="headerlink" title="ip命令"></a>ip命令</h1><ul>
+<li>ip addr</li>
+<li>ip route</li>
+<li>ip a</li>
+<li>ip veth peer</li>
+<li>ip link set xxx up</li>
+</ul>
+<h1 id="brctl"><a href="#brctl" class="headerlink" title="brctl"></a>brctl</h1><p>linux bridge</p>
+<ul>
+<li>brctl add</li>
+<li>brctl addif</li>
+<li>brctl show</li>
+</ul>
+<h1 id="ovs"><a href="#ovs" class="headerlink" title="ovs"></a>ovs</h1><p>open flow</p>
+<ul>
+<li>ovs-vsctl</li>
+<li>dump file</li>
+<li>ovs-ofctl</li>
+</ul>
+<h1 id="neutron"><a href="#neutron" class="headerlink" title="neutron"></a>neutron</h1><ul>
+<li>neutron net-CRUD</li>
+<li>neutron subnet-CRUD</li>
+<li>neutron port-CRUD<br>tap-qbr(linux桥)-brint(ovs桥)</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;简单记录之前搞容器网络用的基础知识&lt;br&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+      <category term="neutron" scheme="http://blog.decbug.com/tags/neutron/"/>
+    
+      <category term="ovs" scheme="http://blog.decbug.com/tags/ovs/"/>
+    
+  </entry>
+  
+  <entry>
     <title>KVM的几种缓存模式</title>
     <link href="http://blog.decbug.com/2017/01/17/KVM_cache/"/>
     <id>http://blog.decbug.com/2017/01/17/KVM_cache/</id>
     <published>2017-01-16T17:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.669Z</updated>
+    <updated>2017-02-15T00:22:01.521Z</updated>
     
     <content type="html"><![CDATA[<p>现象：</p>
 <ol>
@@ -78,7 +221,7 @@
     <link href="http://blog.decbug.com/2017/01/15/container_neutron/"/>
     <id>http://blog.decbug.com/2017/01/15/container_neutron/</id>
     <published>2017-01-14T17:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.673Z</updated>
+    <updated>2017-02-15T00:22:01.521Z</updated>
     
     <content type="html"><![CDATA[<p>容器用Neutron组网，比Flannel和VPC router强的地方在于</p>
 <ul>
@@ -135,7 +278,7 @@
     <link href="http://blog.decbug.com/2017/01/10/socks5_http/"/>
     <id>http://blog.decbug.com/2017/01/10/socks5_http/</id>
     <published>2017-01-09T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.677Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p>go get, but connect to golang.org timeout!!!</p>
 <a id="more"></a>
@@ -163,7 +306,7 @@
     <link href="http://blog.decbug.com/2017/01/03/container_network_debug/"/>
     <id>http://blog.decbug.com/2017/01/03/container_network_debug/</id>
     <published>2017-01-02T17:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.673Z</updated>
+    <updated>2017-02-15T00:22:01.521Z</updated>
     
     <content type="html"><![CDATA[<p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
 <a id="more"></a>
@@ -212,7 +355,7 @@
     <link href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/"/>
     <id>http://blog.decbug.com/2016/12/06/sysdig_knockoff/</id>
     <published>2016-12-05T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.677Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p>调用链分析有三种模式：</p>
 <ol>
@@ -271,7 +414,7 @@
     <link href="http://blog.decbug.com/2016/12/05/aliyun_container/"/>
     <id>http://blog.decbug.com/2016/12/05/aliyun_container/</id>
     <published>2016-12-04T17:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.669Z</updated>
+    <updated>2017-02-15T00:22:01.521Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
 <a id="more"></a>
@@ -321,7 +464,7 @@
     <link href="http://blog.decbug.com/2016/12/05/sudoers/"/>
     <id>http://blog.decbug.com/2016/12/05/sudoers/</id>
     <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.677Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
 <a id="more"></a>
@@ -360,7 +503,7 @@
     <link href="http://blog.decbug.com/2016/10/16/libcap/"/>
     <id>http://blog.decbug.com/2016/10/16/libcap/</id>
     <published>2016-10-15T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.673Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
 <p>原理</p>
@@ -394,7 +537,7 @@
     <link href="http://blog.decbug.com/2016/10/14/tracing/"/>
     <id>http://blog.decbug.com/2016/10/14/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.677Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -499,7 +642,7 @@
     <link href="http://blog.decbug.com/2016/10/12/sysdig/"/>
     <id>http://blog.decbug.com/2016/10/12/sysdig/</id>
     <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.677Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
@@ -589,11 +732,39 @@
   </entry>
   
   <entry>
+    <title>容器分布式存储之Flocker</title>
+    <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
+    <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
+    <published>2016-10-09T16:00:00.000Z</published>
+    <updated>2017-02-15T00:22:01.521Z</updated>
+    
+    <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
+<a id="more"></a>
+<h1 id="flocker"><a href="#flocker" class="headerlink" title="flocker"></a>flocker</h1><p><img src="https://uploads.disquscdn.com/images/b891c982b375e67d8f6e22030c0404e86e3ea54c2f086be24e54dbd921d62e97.png" alt=""></p>
+<h1 id="手绘架构图"><a href="#手绘架构图" class="headerlink" title="手绘架构图"></a>手绘架构图</h1><p><img src="https://uploads.disquscdn.com/images/edf315d6c61c5b6ef839fbd8513ebb7969f91d36d87984062f9a779601ba0e10.jpg" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;容器的分布式存储都差不多，都是docker daemon-&amp;gt;plugin-&amp;gt;agent-&amp;gt;control，话说cinder也差不多。&lt;br&gt;正好看到了flocker，简单了解一下架构，记录下来加深印象&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="distributed storage" scheme="http://blog.decbug.com/tags/distributed-storage/"/>
+    
+  </entry>
+  
+  <entry>
     <title>APM厂商分析</title>
     <link href="http://blog.decbug.com/2016/10/10/APM/"/>
     <id>http://blog.decbug.com/2016/10/10/APM/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.669Z</updated>
+    <updated>2017-02-15T00:22:01.521Z</updated>
     
     <content type="html"><![CDATA[<p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
 <p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
@@ -626,39 +797,11 @@
   </entry>
   
   <entry>
-    <title>容器分布式存储之Flocker</title>
-    <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
-    <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
-    <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.669Z</updated>
-    
-    <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
-<a id="more"></a>
-<h1 id="flocker"><a href="#flocker" class="headerlink" title="flocker"></a>flocker</h1><p><img src="https://uploads.disquscdn.com/images/b891c982b375e67d8f6e22030c0404e86e3ea54c2f086be24e54dbd921d62e97.png" alt=""></p>
-<h1 id="手绘架构图"><a href="#手绘架构图" class="headerlink" title="手绘架构图"></a>手绘架构图</h1><p><img src="https://uploads.disquscdn.com/images/edf315d6c61c5b6ef839fbd8513ebb7969f91d36d87984062f9a779601ba0e10.jpg" alt=""></p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;容器的分布式存储都差不多，都是docker daemon-&amp;gt;plugin-&amp;gt;agent-&amp;gt;control，话说cinder也差不多。&lt;br&gt;正好看到了flocker，简单了解一下架构，记录下来加深印象&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="distributed storage" scheme="http://blog.decbug.com/tags/distributed-storage/"/>
-    
-  </entry>
-  
-  <entry>
     <title>VxLan原理</title>
     <link href="http://blog.decbug.com/2016/10/09/VxLan/"/>
     <id>http://blog.decbug.com/2016/10/09/VxLan/</id>
     <published>2016-10-08T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.669Z</updated>
+    <updated>2017-02-15T00:22:01.521Z</updated>
     
     <content type="html"><![CDATA[<p>VxLan，网络虚拟化，应用很广泛</p>
 <p>简单记录一下原理</p>
@@ -701,7 +844,7 @@
     <link href="http://blog.decbug.com/2016/09/30/scheduler_fair/"/>
     <id>http://blog.decbug.com/2016/09/30/scheduler_fair/</id>
     <published>2016-09-29T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.677Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p>调度，在计算机世界里随处可见，只要有资源抢占，就需要调度。</p>
 <p><img src="http://a3.att.hudong.com/78/47/01300000763638128366476399672.jpg" alt="无调度"></p>
@@ -747,7 +890,7 @@
     <link href="http://blog.decbug.com/2016/09/09/ping_ssh/"/>
     <id>http://blog.decbug.com/2016/09/09/ping_ssh/</id>
     <published>2016-09-08T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.677Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p>数据库部署在k8s上，两个pod一主一备，却无法同步，一直同步失败，提示socket 什么什么什么。据同事说，还有一个现象是ping都会报错</p>
 <a id="more"></a>
@@ -799,7 +942,7 @@
     <link href="http://blog.decbug.com/2016/08/29/dhcp/"/>
     <id>http://blog.decbug.com/2016/08/29/dhcp/</id>
     <published>2016-08-28T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.673Z</updated>
+    <updated>2017-02-15T00:22:01.521Z</updated>
     
     <content type="html"><![CDATA[<p>同事用PXE装系统，在装完最小系统后，会再次获取IP，然而DHCP却给了一个不一样的IP</p>
 <a id="more"></a>
@@ -843,7 +986,7 @@
     <link href="http://blog.decbug.com/2016/08/23/sth_about_MQ/"/>
     <id>http://blog.decbug.com/2016/08/23/sth_about_MQ/</id>
     <published>2016-08-22T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.677Z</updated>
+    <updated>2017-02-15T00:22:01.525Z</updated>
     
     <content type="html"><![CDATA[<p>通过简单的例子，讲故事的方式解释消息队列</p>
 <a id="more"></a>
@@ -882,7 +1025,7 @@
     <link href="http://blog.decbug.com/2016/08/15/docker_basic/"/>
     <id>http://blog.decbug.com/2016/08/15/docker_basic/</id>
     <published>2016-08-14T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.673Z</updated>
+    <updated>2017-02-15T00:22:01.521Z</updated>
     
     <content type="html"><![CDATA[<p>记录一下docker基础知识</p>
 <p>namespace是环境隔离，cgroup是资源隔离，加起来就是docker的基础</p>
@@ -917,220 +1060,6 @@
       <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
       <category term="namespace" scheme="http://blog.decbug.com/tags/namespace/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>kubernetes尝试有状态服务</title>
-    <link href="http://blog.decbug.com/2016/08/03/k8s_stateful/"/>
-    <id>http://blog.decbug.com/2016/08/03/k8s_stateful/</id>
-    <published>2016-08-02T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.673Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="有状态服务的概念"><a href="#有状态服务的概念" class="headerlink" title="有状态服务的概念"></a>有状态服务的概念</h1><p>既然名叫有状态，那么就与之相对，会有我们很熟悉的无状态。无状态的概念，就是只负责运算，不负责任何数据的存储，这样就能很轻松地做到水平扩展。</p>
-<blockquote>
-<p>之前写的关于无状态的例子</p>
-</blockquote>
-<p>那么，有状态的概念又是什么呢，简单来说，就是会有数据的存储，需要持久化。</p>
-<a id="more"></a>
-<h1 id="k8s的petset"><a href="#k8s的petset" class="headerlink" title="k8s的petset"></a>k8s的petset</h1><p>简单来说，pod是用来跑无状态服务，petset就是跑有状态服务。<br>1.3之前k8s大多是用于无状态的web应用，但是我们实际业务却有很多有状态的服务，对于谷歌来说，绝对不会放弃这一块的机会，所以petset就应运而生。</p>
-<p>那么，作为有状态服务的基石，petset需要具备哪些特征呢：</p>
-<ol>
-<li>有唯一的编号</li>
-<li>在网络上有个不会改变的标识，k8s是通过域名实现的。pod，则是名字后面还有随机数，所以需要有service来做转发</li>
-<li>每个有状态服务，都需要有自己的卷，这样就能保证数据可靠存储</li>
-</ol>
-<h1 id="petset的典型场景"><a href="#petset的典型场景" class="headerlink" title="petset的典型场景"></a>petset的典型场景</h1><p>MySQL<br>Zookeeper<br>Cassandra<br>redis</p>
-<h1 id="小试验"><a href="#小试验" class="headerlink" title="小试验"></a>小试验</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"># A headless service to <span class="operator"><span class="keyword">create</span> DNS <span class="keyword">records</span></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  <span class="keyword">name</span>: nginx</span><br><span class="line">  labels:</span><br><span class="line">    app: nginx</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - port: <span class="number">80</span></span><br><span class="line">    <span class="keyword">name</span>: web</span><br><span class="line">  # *.nginx.<span class="keyword">default</span>.svc.cluster.<span class="keyword">local</span></span><br><span class="line">  clusterIP: <span class="keyword">None</span></span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line"><span class="comment">---</span></span><br><span class="line">apiVersion: apps/v1alpha1</span><br><span class="line">kind: PetSet</span><br><span class="line">metadata:</span><br><span class="line">  <span class="keyword">name</span>: web</span><br><span class="line">spec:</span><br><span class="line">  serviceName: <span class="string">"nginx"</span></span><br><span class="line">  replicas: <span class="number">2</span></span><br><span class="line">  <span class="keyword">template</span>:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">      annotations:</span><br><span class="line">        pod.alpha.kubernetes.io/<span class="keyword">initialized</span>: <span class="string">"true"</span></span><br><span class="line">    spec:</span><br><span class="line">      terminationGracePeriodSeconds: <span class="number">0</span></span><br><span class="line">      containers:</span><br><span class="line">      - <span class="keyword">name</span>: nginx</span><br><span class="line">        image: gcr.io/google_containers/nginx-slim:<span class="number">0.8</span></span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: <span class="number">80</span></span><br><span class="line">          <span class="keyword">name</span>: web</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - <span class="keyword">name</span>: www</span><br><span class="line">          mountPath: /usr/<span class="keyword">share</span>/nginx/html</span><br><span class="line">  volumeClaimTemplates:</span><br><span class="line">  - metadata:</span><br><span class="line">      <span class="keyword">name</span>: www</span><br><span class="line">      annotations:</span><br><span class="line">        volume.alpha.kubernetes.io/<span class="keyword">storage</span>-<span class="keyword">class</span>: anything</span><br><span class="line">    spec:</span><br><span class="line">      accessModes: [ <span class="string">"ReadWriteOnce"</span> ]</span><br><span class="line">      resources:</span><br><span class="line">        requests:</span><br><span class="line">          <span class="keyword">storage</span>: <span class="number">1</span>Gi</span></span><br></pre></td></tr></table></figure>
-<p>提示<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ ./kubectl <span class="operator"><span class="keyword">describe</span> pvc www-web-<span class="number">0</span></span><br><span class="line"><span class="keyword">Name</span>:		www-web-<span class="number">0</span></span><br><span class="line">Namespace:	<span class="keyword">default</span></span><br><span class="line"><span class="keyword">Status</span>:		Pending</span><br><span class="line">Volume:</span><br><span class="line">Labels:		app=nginx</span><br><span class="line"><span class="keyword">Capacity</span>:</span><br><span class="line"><span class="keyword">Access</span> Modes:</span><br><span class="line"><span class="keyword">Events</span>:</span><br><span class="line">  FirstSeen	LastSeen	<span class="keyword">Count</span>	<span class="keyword">From</span>				SubobjectPath	<span class="keyword">Type</span>		Reason			Message</span><br><span class="line">  <span class="comment">---------	--------	-----	----				-------------	--------	------			-------</span></span><br><span class="line">  <span class="number">5</span><span class="keyword">m</span>		<span class="number">10</span>s		<span class="number">22</span>	&#123;persistentvolume-controller &#125;			<span class="keyword">Warning</span>		ProvisioningFailed	<span class="keyword">No</span> provisioner <span class="keyword">plugin</span> <span class="keyword">found</span> <span class="keyword">for</span> the claim!</span></span><br></pre></td></tr></table></figure></p>
-<p>这是因为需要设置<code>Persistent Volume Provisioning</code><br>方法是在controller manager的启动参数加上<code>--enable-hostpath-provisioner=true</code>，然后重启controller，再create就OK了。</p>
-<h1 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h1><p><a href="https://github.com/kubernetes/kubernetes/tree/master/test/e2e/testing-manifests/petset/redis" target="_blank" rel="external">https://github.com/kubernetes/kubernetes/tree/master/test/e2e/testing-manifests/petset/redis</a></p>
-<h2 id="service-yml"><a href="#service-yml" class="headerlink" title="service.yml"></a>service.yml</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># A headless service to <span class="operator"><span class="keyword">create</span> DNS <span class="keyword">records</span></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    service.alpha.kubernetes.io/tolerate-unready-endpoints: <span class="string">"true"</span></span><br><span class="line">  <span class="keyword">name</span>: redis</span><br><span class="line">  labels:</span><br><span class="line">    app: redis</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - port: <span class="number">6379</span></span><br><span class="line">    <span class="keyword">name</span>: peer</span><br><span class="line">  # *.redis.<span class="keyword">default</span>.svc.cluster.<span class="keyword">local</span></span><br><span class="line">  clusterIP: <span class="keyword">None</span></span><br><span class="line">  selector:</span><br><span class="line">    app: redis</span></span><br></pre></td></tr></table></figure>
-<h2 id="petset-yml"><a href="#petset-yml" class="headerlink" title="petset.yml"></a>petset.yml</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1alpha1</span><br><span class="line">kind: PetSet</span><br><span class="line">metadata:</span><br><span class="line">  name: rd</span><br><span class="line">spec:</span><br><span class="line">  serviceName: <span class="string">"redis"</span></span><br><span class="line">  replicas: 3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        <span class="keyword">app</span>: redis</span><br><span class="line">      annotations:</span><br><span class="line">        pod.<span class="keyword">alpha</span>.kubernetes.io/initialized: <span class="string">"true"</span></span><br><span class="line">        pod.<span class="keyword">alpha</span>.kubernetes.io/init-containers: '[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"name"</span>: <span class="string">"install"</span>,</span><br><span class="line">                <span class="string">"image"</span>: <span class="string">"gcr.io/google_containers/redis-install-3.2.0:e2e"</span>,</span><br><span class="line">                <span class="string">"imagePullPolicy"</span>: <span class="string">"Always"</span>,</span><br><span class="line">                <span class="string">"args"</span>: [<span class="string">"--install-into=/opt"</span>, <span class="string">"--work-dir=/work-dir"</span>],</span><br><span class="line">                <span class="string">"volumeMounts"</span>: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="string">"name"</span>: <span class="string">"opt"</span>,</span><br><span class="line">                        <span class="string">"mountPath"</span>: <span class="string">"/opt"</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="string">"name"</span>: <span class="string">"workdir"</span>,</span><br><span class="line">                        <span class="string">"mountPath"</span>: <span class="string">"/work-dir"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"name"</span>: <span class="string">"bootstrap"</span>,</span><br><span class="line">                <span class="string">"image"</span>: <span class="string">"debian:jessie"</span>,</span><br><span class="line">                <span class="string">"command"</span>: [<span class="string">"/work-dir/peer-finder"</span>],</span><br><span class="line">                <span class="string">"args"</span>: [<span class="string">"-on-start=\"</span>/work-<span class="keyword">dir</span>/<span class="keyword">on</span>-start.<span class="keyword">sh</span>\<span class="string">""</span>, <span class="string">"-service=redis"</span>],</span><br><span class="line">                <span class="string">"env"</span>: [</span><br><span class="line">                  &#123;</span><br><span class="line">                      <span class="string">"name"</span>: <span class="string">"POD_NAMESPACE"</span>,</span><br><span class="line">                      <span class="string">"valueFrom"</span>: &#123;</span><br><span class="line">                          <span class="string">"fieldRef"</span>: &#123;</span><br><span class="line">                              <span class="string">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">                              <span class="string">"fieldPath"</span>: <span class="string">"metadata.namespace"</span></span><br><span class="line">                          &#125;</span><br><span class="line">                      &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">                ],</span><br><span class="line">                <span class="string">"volumeMounts"</span>: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="string">"name"</span>: <span class="string">"opt"</span>,</span><br><span class="line">                        <span class="string">"mountPath"</span>: <span class="string">"/opt"</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="string">"name"</span>: <span class="string">"workdir"</span>,</span><br><span class="line">                        <span class="string">"mountPath"</span>: <span class="string">"/work-dir"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        ]'</span><br><span class="line">    spec:</span><br><span class="line">      terminationGracePeriodSeconds: 0</span><br><span class="line">      containers:</span><br><span class="line">      - name: redis</span><br><span class="line">        image: debian:jessie</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 6379</span><br><span class="line">          name: peer</span><br><span class="line">        command:</span><br><span class="line">        - /opt/redis/redis-server</span><br><span class="line">        <span class="keyword">args</span>:</span><br><span class="line">        - /opt/redis/redis.<span class="keyword">conf</span></span><br><span class="line">        readinessProbe:</span><br><span class="line">          exec:</span><br><span class="line">            command:</span><br><span class="line">            - <span class="keyword">sh</span></span><br><span class="line">            - -c</span><br><span class="line">            - <span class="string">"/opt/redis/redis-cli -h $(hostname) ping"</span></span><br><span class="line">          initialDelaySeconds: 15</span><br><span class="line">          timeoutSeconds: 5</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: datadir</span><br><span class="line">          mountPath: /data</span><br><span class="line">        - name: opt</span><br><span class="line">          mountPath: /opt</span><br><span class="line">      volumes:</span><br><span class="line">      - name: opt</span><br><span class="line">        emptyDir: &#123;&#125;</span><br><span class="line">      - name: workdir</span><br><span class="line">        emptyDir: &#123;&#125;</span><br><span class="line">  volumeClaimTemplates:</span><br><span class="line">  - metadata:</span><br><span class="line">      name: datadir</span><br><span class="line">      annotations:</span><br><span class="line">        volume.<span class="keyword">alpha</span>.kubernetes.io/storage-<span class="keyword">class</span>: anything</span><br><span class="line">    spec:</span><br><span class="line">      accessModes: [ <span class="string">"ReadWriteOnce"</span> ]</span><br><span class="line">      resources:</span><br><span class="line">        requests:</span><br><span class="line">          storage: 1Gi</span><br></pre></td></tr></table></figure>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="http://www.infoq.com/cn/news/2015/12/scaling-stateful-services" target="_blank" rel="external">构建可伸缩的有状态服务</a></li>
-<li><a href="http://docs.alauda.cn/feature/service/stateless-service-and-stateful-service.html" target="_blank" rel="external">无状态服务 vs 有状态服务</a></li>
-<li><a href="http://kubernetes.io/docs/user-guide/petset/" target="_blank" rel="external">Pet Sets</a></li>
-</ul>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;有状态服务的概念&quot;&gt;&lt;a href=&quot;#有状态服务的概念&quot; class=&quot;headerlink&quot; title=&quot;有状态服务的概念&quot;&gt;&lt;/a&gt;有状态服务的概念&lt;/h1&gt;&lt;p&gt;既然名叫有状态，那么就与之相对，会有我们很熟悉的无状态。无状态的概念，就是只负责运算，不负责任何数据的存储，这样就能很轻松地做到水平扩展。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;之前写的关于无状态的例子&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;那么，有状态的概念又是什么呢，简单来说，就是会有数据的存储，需要持久化。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
-    
-      <category term="kubernetes" scheme="http://blog.decbug.com/tags/kubernetes/"/>
-    
-      <category term="stateful" scheme="http://blog.decbug.com/tags/stateful/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>体验docker UCP</title>
-    <link href="http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/"/>
-    <id>http://blog.decbug.com/2016/08/02/evaluate_docker_UCP/</id>
-    <published>2016-08-01T16:00:00.000Z</published>
-    <updated>2017-02-14T08:15:44.673Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>docker官方也有私有云版本<br><a id="more"></a></p>
-<h1 id="install"><a href="#install" class="headerlink" title="install"></a>install</h1><h2 id="docker-engine"><a href="#docker-engine" class="headerlink" title="docker engine"></a>docker engine</h2><p>感谢Daoloud提供的一键式安装<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http<span class="variable">s:</span>//<span class="built_in">get</span>.daocloud.io/docker | <span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="ucp"><a href="#ucp" class="headerlink" title="ucp"></a>ucp</h2><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> DOCKER_TLS_VERIFY=<span class="string">"0"</span></span><br><span class="line"><span class="keyword">export</span> DOCKER_HOST=<span class="string">"tcp://104.236.158.191:2376"</span></span><br><span class="line"><span class="keyword">export</span> DOCKER_CERT_PATH=<span class="string">""</span></span><br><span class="line"><span class="keyword">export</span> DOCKER_MACHINE_NAME=<span class="string">"node1"</span></span><br><span class="line"></span><br><span class="line">docker run --rm -<span class="literal">it</span> <span class="string">\</span></span><br><span class="line">&gt; -v /<span class="keyword">var</span>/run/docker.<span class="attribute">sock</span>:/<span class="keyword">var</span>/run/docker.sock <span class="string">\</span></span><br><span class="line">&gt; --name ucp docker/ucp install -i <span class="string">\</span></span><br><span class="line">&gt; --swarm-port <span class="number">3376</span> --host-address <span class="number">104.236</span>.<span class="number">158.191</span></span><br></pre></td></tr></table></figure>
-<p>提示<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Could <span class="operator">not</span> <span class="built_in">read</span> CA certificate <span class="string">"/root/.docker/ca.pem"</span>: <span class="built_in">open</span> /root/.docker/ca.pem: no such <span class="built_in">file</span> <span class="operator">or</span> <span class="built_in">directory</span></span><br></pre></td></tr></table></figure></p>
-<p>看来需要生成一个<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl req -out ca.pem -<span class="keyword">new</span> -x509</span><br><span class="line"><span class="preprocessor"># aaaa</span></span><br><span class="line"><span class="preprocessor"># <span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span></span></span><br></pre></td></tr></table></figure></p>
-<p>再次运行run<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Unable to find image 'docker/ucp:latest' locally</span><br><span class="line">latest: Pulling from docker/ucp</span><br><span class="line">e110a4a17941: Pull complete</span><br><span class="line">a1c3e1c9e147: Pull complete</span><br><span class="line">bca4748868da: Pull complete</span><br><span class="line">Digest: sha256:46154615e2429a9a8f3d019c414f69cd47f9f7dd5d5c35f54016c01fad1d99ef</span><br><span class="line">Status: Downloaded newer image for docker/ucp:latest</span><br><span class="line">INFO[0000] Verifying your system is compatible with UCP</span><br><span class="line">INFO[0000] Your engine version 1.12.0, build 8eab29e (4.4.0-31-generic) is compatible</span><br><span class="line">WARN[0000] Your system does not have enough memory.  UCP suggests a minimum of 2.00 GB, but you only have 0.97 GB.  You may have unexpected errors.</span><br><span class="line">Please choose your initial UCP admin password:</span><br><span class="line">Confirm your initial password:</span><br><span class="line">INFO[0024] Pulling required images... (this may take a while)</span><br><span class="line">WARN[0080] None of the hostnames we'll be using in the UCP certificates [ubuntu-1gb-sfo1-01 127.0.0.1 172.17.0.1 104.236.158.191] contain a domain component.  Your generated certs may fail TLS validation unless you only <span class="operator"><span class="keyword">use</span> one <span class="keyword">of</span> these shortnames <span class="keyword">or</span> IPs <span class="keyword">to</span> <span class="keyword">connect</span>.  You can <span class="keyword">use</span> the <span class="comment">--san flag to add more aliases</span></span><br><span class="line"></span><br><span class="line">You may enter additional aliases (SANs) <span class="keyword">now</span> <span class="keyword">or</span> press enter <span class="keyword">to</span> proceed <span class="keyword">with</span> the above <span class="keyword">list</span>.</span><br><span class="line">Additional aliases: abc</span><br><span class="line">INFO[<span class="number">0192</span>] Installing UCP <span class="keyword">with</span> host address <span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span> - <span class="keyword">If</span> this <span class="keyword">is</span> incorrect, please specify an alternative address <span class="keyword">with</span> the <span class="string">'--host-address'</span> flag</span><br><span class="line">INFO[<span class="number">0000</span>] Checking that <span class="keyword">required</span> ports <span class="keyword">are</span> available <span class="keyword">and</span> <span class="keyword">accessible</span></span><br><span class="line">INFO[<span class="number">0005</span>] Generating UCP Cluster Root CA</span><br><span class="line">INFO[<span class="number">0047</span>] Generating UCP <span class="keyword">Client</span> Root CA</span><br><span class="line">INFO[<span class="number">0060</span>] Deploying UCP Containers</span><br><span class="line">INFO[<span class="number">0113</span>] <span class="keyword">New</span> configuration established.  Signalling the daemon <span class="keyword">to</span> <span class="keyword">load</span> it...</span><br><span class="line">INFO[<span class="number">0114</span>] Successfully delivered signal <span class="keyword">to</span> daemon</span><br><span class="line">INFO[<span class="number">0114</span>] UCP <span class="keyword">instance</span> <span class="keyword">ID</span>: DKVU:ULUA:C3SO:O36W:<span class="number">4</span>WUE:OM4Z:<span class="number">5</span>V4X:IA46:ZLS5:L2KE:KE5J:O56D</span><br><span class="line">INFO[<span class="number">0114</span>] UCP <span class="keyword">Server</span> SSL: <span class="keyword">SHA</span>-<span class="number">256</span> Fingerprint=<span class="number">71</span>:C8:<span class="number">1</span><span class="keyword">D</span>:AB:CA:EE:E7:<span class="number">91</span>:<span class="number">07</span>:D6:<span class="number">23</span>:<span class="number">83</span>:F2:A7:<span class="number">67</span>:<span class="number">2</span>A:F8:DE:<span class="number">88</span>:<span class="number">43</span>:<span class="number">5</span><span class="keyword">C</span>:D4:<span class="number">2</span><span class="keyword">E</span>:<span class="number">76</span>:<span class="number">9</span><span class="keyword">D</span>:BA:B9:<span class="number">39</span>:B4:<span class="number">11</span>:<span class="number">64</span>:<span class="number">86</span></span><br><span class="line">INFO[<span class="number">0114</span>] Login <span class="keyword">as</span> <span class="string">"admin"</span>/(your <span class="keyword">admin</span> <span class="keyword">password</span>) <span class="keyword">to</span> UCP <span class="keyword">at</span> https://<span class="number">104.236</span><span class="number">.158</span><span class="number">.191</span>:<span class="number">443</span></span></span><br></pre></td></tr></table></figure></p>
-<p>安装完成，效果图<br><img src="https://cloud.githubusercontent.com/assets/5423628/17329710/6027e182-58f6-11e6-99cb-8f37aef00ccf.png" alt="效果图"></p>
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><h2 id="系统容器"><a href="#系统容器" class="headerlink" title="系统容器"></a>系统容器</h2><table>
-<thead>
-<tr>
-<th>NODE</th>
-<th>NAME</th>
-<th>IMAGE</th>
-<th>CREATED</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-controller</td>
-<td>docker/ucp-controller:1.1.2</td>
-<td>2016-08-02 20:30:12 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-auth-worker</td>
-<td>docker/ucp-auth:1.1.2</td>
-<td>2016-08-02 20:30:09 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-auth-api</td>
-<td>docker/ucp-auth:1.1.2</td>
-<td>2016-08-02 20:30:08 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-auth-store</td>
-<td>docker/ucp-auth-store:1.1.2</td>
-<td>2016-08-02 20:30:04 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-cluster-root-ca</td>
-<td>docker/ucp-cfssl:1.1.2</td>
-<td>2016-08-02 20:30:03 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-client-root-ca</td>
-<td>docker/ucp-cfssl:1.1.2</td>
-<td>2016-08-02 20:30:02 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-swarm-manager</td>
-<td>docker/ucp-swarm:1.1.2</td>
-<td>2016-08-02 20:30:01 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-swarm-join</td>
-<td>docker/ucp-swarm:1.1.2</td>
-<td>2016-08-02 20:30:01 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-proxy</td>
-<td>docker/ucp-proxy:1.1.2</td>
-<td>2016-08-02 20:29:59 +0800</td>
-</tr>
-<tr>
-<td>ubuntu-1gb-sfo1-01</td>
-<td>ucp-kv</td>
-<td>docker/ucp-etcd:1.1.2</td>
-<td>2016-08-02 20:29:56 +0800</td>
-</tr>
-</tbody>
-</table>
-<p><img src="https://docs.docker.com/ucp/images/architecture-3.png" alt="官网的架构图"></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ucp-proxy</td>
-<td>A TLS proxy. It allows secure access to the local Docker Engine.</td>
-</tr>
-<tr>
-<td>ucp-controller</td>
-<td>The UCP application. It uses the key-value store for persisting configurations.</td>
-</tr>
-<tr>
-<td>ucp-swarm-manager</td>
-<td>Provides the clustering capabilities. It uses the key-value store for leader election, and keeping track of cluster members.</td>
-</tr>
-<tr>
-<td>ucp-swarm-join</td>
-<td>Heartbeat to record on the key-value store that this node is alive. If the node goes down, this heartbeat stops, and the node is removed from the cluster.</td>
-</tr>
-<tr>
-<td>ucp-auth-api</td>
-<td>The centralized API for identity and authentication used by UCP and DTR.</td>
-</tr>
-<tr>
-<td>ucp-auth-worker</td>
-<td>Performs scheduled LDAP synchronizations and cleans data on the ucp-auth-store.</td>
-</tr>
-<tr>
-<td>ucp-auth-store</td>
-<td>Stores authentication configurations, and data for users, organizations and teams.</td>
-</tr>
-<tr>
-<td>ucp-kv</td>
-<td>Used to store the UCP configurations. Don’t use it in your applications, since it’s for internal use only.</td>
-</tr>
-<tr>
-<td>ucp-cluster-root-ca</td>
-<td>A certificate authority to sign the certificates used when joining new nodes, and on administrator client bundles.</td>
-</tr>
-<tr>
-<td>ucp-client-root-ca</td>
-<td>A certificate authority to sign user bundles. Only used when UCP is installed without an external root CA.</td>
-</tr>
-</tbody>
-</table>
-<p>基本上明白都有什么作用了</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;docker官方也有私有云版本&lt;br&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="UCP" scheme="http://blog.decbug.com/tags/UCP/"/>
-    
-      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
     
   </entry>
   

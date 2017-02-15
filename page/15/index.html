@@ -207,6 +207,192 @@
           
           
             
+              <a class="post-title-link" href="/2015/11/01/ansible4ci_distributed/" itemprop="url">
+                絮叨ansible做持续交付,闲扯分布式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-01T00:00:00+08:00" content="2015-11-01">
+            2015-11-01
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/11/01/ansible4ci_distributed/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/11/01/ansible4ci_distributed/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="随手记录"><a href="#随手记录" class="headerlink" title="随手记录"></a>随手记录</h1><p>杂记而已，随便记录</p>
+<hr>
+<h1 id="ansbile做持续交付"><a href="#ansbile做持续交付" class="headerlink" title="ansbile做持续交付"></a>ansbile做持续交付</h1><p>突然想到，ansible可以控制一大堆机器，那么是否可以像jenkins的master/slave那样，做分布式构建呢。<br>应该是可以的吧</p>
+<ul>
+<li>把代码同步到各个agent上，可以用git/svn都行</li>
+<li>通过一堆参数，控制各个agent做不同的事情，并行构建。比如编译，静态检测，单元测试，自动化测试等等</li>
+<li>artifact收集</li>
+<li>部署</li>
+</ul>
+<p>无缝接入呀，有时间可以试试。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/11/01/ansible4ci_distributed/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/10/26/openstack_perf_tester_3/" itemprop="url">
+                openstack性能测试器(3):移植rabbitmq-c
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-26T00:00:00+08:00" content="2015-10-26">
+            2015-10-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/10/26/openstack_perf_tester_3/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/26/openstack_perf_tester_3/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="rabbitmq"><a href="#rabbitmq" class="headerlink" title="rabbitmq"></a>rabbitmq</h1><p>rabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是<a href="http://www.rabbitmq.com/">http://www.rabbitmq.com/</a></p>
+<p>我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，下载链接是<a href="http://www.rabbitmq.com/devtools.html">http://www.rabbitmq.com/devtools.html</a>，C版本的链接是<a href="https://github.com/alanxz/rabbitmq-c">https://github.com/alanxz/rabbitmq-c</a></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/10/26/openstack_perf_tester_3/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/10/16/openstack_perf_tester_2/" itemprop="url">
                 openstack性能测试器(2):消息调用过程oslo.messaging
               </a>
@@ -465,187 +651,11 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/10/11/ansible/" itemprop="url">
-                学习ansible
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-10-11T00:00:00+08:00" content="2015-10-11">
-            2015-10-11
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/10/11/ansible/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/11/ansible/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="入门文档"><a href="#入门文档" class="headerlink" title="入门文档"></a>入门文档</h1><p>开始get ops技能，自动部署应该算是基础的基础了吧，而ansible美名远扬，自然不能错过。<br>先从入门文档开始<a href="http://docs.ansible.com/">http://docs.ansible.com/</a><br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/11/ansible/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/10/10/dept/" itemprop="url">
-                换部门
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-10-10T00:00:00+08:00" content="2015-10-10">
-            2015-10-10
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/mumble/" itemprop="url" rel="index">
-                  <span itemprop="name">mumble</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/10/10/dept/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/10/dept/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>换了个好玩的部门<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/10/dept/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/16/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/14/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/16/">&raquo;</a>
   </nav>
 
  </div>
@@ -679,7 +689,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">105</span>
+              <span class="site-state-item-count">107</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -693,7 +703,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">140</span>
+              <span class="site-state-item-count">142</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

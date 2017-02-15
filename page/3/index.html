@@ -207,8 +207,8 @@
           
           
             
-              <a class="post-title-link" href="/2016/10/10/APM/" itemprop="url">
-                APM厂商分析
+              <a class="post-title-link" href="/2016/10/14/tracing/" itemprop="url">
+                调用链技术分析
               </a>
             
           
@@ -218,8 +218,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-10-10T00:00:00+08:00" content="2016-10-10">
-            2016-10-10
+          <time itemprop="dateCreated" datetime="2016-10-14T00:00:00+08:00" content="2016-10-14">
+            2016-10-14
           </time>
         </span>
 
@@ -244,8 +244,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2016/10/10/APM/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/10/APM/" itemprop="commentsCount"></span>
+            <a href="/2016/10/14/tracing/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/14/tracing/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -260,10 +260,138 @@
 
       
         
-          <p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
-<p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
+          <p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
+<p>都源于google的dapper，常见的有三种方式</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>概要</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自己打日志</td>
+<td>请求进入时生成ID，每次跨节点调用都带上ID，日志也打上ID</td>
+<td>自己实现（这个算不算优点）</td>
+<td>麻烦</td>
+</tr>
+<tr>
+<td>用开源库，如zipkin</td>
+<td>原理都差不多，都是ID spanID parentID</td>
+<td>简单，client和server都有例子</td>
+<td>需要集成</td>
+</tr>
+<tr>
+<td>改分布式框架，如鹰眼，京东改dubbo</td>
+<td>不用侵入业务代码，在框架里做好埋点和日志</td>
+<td>自己实现</td>
+<td>稍微麻烦，需要自己改框架</td>
+</tr>
+<tr>
+<td>运行环境注入</td>
+<td>例如<a href="https://newrelic.com/">newrelic</a>，<a href="https://github.com/naver/pinpoint">pinpoint</a>，改JVM运行时bytecode</td>
+<td>非侵入</td>
+<td>性能损耗比较大</td>
+</tr>
+</tbody>
+</table>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/10/10/APM/#more" rel="contents">
+            <a class="btn" href="/2016/10/14/tracing/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2016/10/12/sysdig/" itemprop="url">
+                sysdig源码分析
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-10-12T00:00:00+08:00" content="2016-10-12">
+            2016-10-12
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2016/10/12/sysdig/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/12/sysdig/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
+<ol>
+<li>通过内核抓事件，不用侵入到容器</li>
+<li>可以自己写铲子，扩展起来很方便。<br>于是就顺手看下他的实现原理</li>
+</ol>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/10/12/sysdig/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -384,6 +512,95 @@
           
           
             
+              <a class="post-title-link" href="/2016/10/10/APM/" itemprop="url">
+                APM厂商分析
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-10-10T00:00:00+08:00" content="2016-10-10">
+            2016-10-10
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2016/10/10/APM/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/10/APM/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
+<p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/10/10/APM/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2016/10/09/VxLan/" itemprop="url">
                 VxLan原理
               </a>
@@ -462,189 +679,11 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/09/30/scheduler_fair/" itemprop="url">
-                分布式系统调度算法的公平
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-09-30T00:00:00+08:00" content="2016-09-30">
-            2016-09-30
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2016/09/30/scheduler_fair/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/09/30/scheduler_fair/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>调度，在计算机世界里随处可见，只要有资源抢占，就需要调度。</p>
-<p><img src="http://a3.att.hudong.com/78/47/01300000763638128366476399672.jpg" alt="无调度"></p>
-<p><img src="http://img.www.zyue.com/news/2011/04/06/201104060829106892011040202.jpg" alt="有调度"></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/09/30/scheduler_fair/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/09/09/ping_ssh/" itemprop="url">
-                TCPIP ping ssh
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-09-09T00:00:00+08:00" content="2016-09-09">
-            2016-09-09
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2016/09/09/ping_ssh/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/09/09/ping_ssh/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>数据库部署在k8s上，两个pod一主一备，却无法同步，一直同步失败，提示socket 什么什么什么。据同事说，还有一个现象是ping都会报错</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/09/09/ping_ssh/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/4/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/4/">&raquo;</a>
   </nav>
 
  </div>
@@ -678,7 +717,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">105</span>
+              <span class="site-state-item-count">107</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -692,7 +731,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">140</span>
+              <span class="site-state-item-count">142</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

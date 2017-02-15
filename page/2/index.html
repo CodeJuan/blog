@@ -207,6 +207,194 @@
           
           
             
+              <a class="post-title-link" href="/2017/01/03/container_network_debug/" itemprop="url">
+                一次容器网络问题debug
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-01-03T01:00:00+08:00" content="2017-01-03">
+            2017-01-03
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2017/01/03/container_network_debug/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/03/container_network_debug/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/03/container_network_debug/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2016/12/06/sysdig_knockoff/" itemprop="url">
+                山寨版sysdig cloud
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-12-06T00:00:00+08:00" content="2016-12-06">
+            2016-12-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2016/12/06/sysdig_knockoff/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/06/sysdig_knockoff/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>调用链分析有三种模式：</p>
+<ol>
+<li>白盒，zipkin</li>
+<li>灰盒，pinpoint，往JVM里注入</li>
+<li>黑盒，优点是难度大，精度一般，优点是不用改代码</li>
+</ol>
+<p>之前分析的sysdig就算是黑盒,<a href="http://blog.decbug.com/2016/10/12/sysdig/">http://blog.decbug.com/2016/10/12/sysdig/</a>，恰好有需求说想不改代码，由容器云平台提供调用链分析。</p>
+<p>参考了几篇论文及业内快讯之后，</p>
+<ul>
+<li>IBM的<a href="http://www.spark.tc/real-time-application-performance-profiling-using-spark/">Real-time Performance Profiling &amp; Analytics for Microservices using Apache </a></li>
+<li>MIT的<a href="https://pdos.csail.mit.edu/~athicha/papers/blackboxes:sosp03.pdf">Performance Debugging for Distributed Systems of Black Boxes</a></li>
+</ul>
+<p>花了一周时间在k8s上做出来了，当然，由于缺乏算法支持，目前只做到了点对点的调用topo及http的时延。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/12/06/sysdig_knockoff/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2016/12/05/aliyun_container/" itemprop="url">
                 阿里云容器服务分析
               </a>
@@ -461,228 +649,11 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/10/14/tracing/" itemprop="url">
-                调用链技术分析
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-10-14T00:00:00+08:00" content="2016-10-14">
-            2016-10-14
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2016/10/14/tracing/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/14/tracing/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
-<p>都源于google的dapper，常见的有三种方式</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>概要</th>
-<th>优点</th>
-<th>缺点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>自己打日志</td>
-<td>请求进入时生成ID，每次跨节点调用都带上ID，日志也打上ID</td>
-<td>自己实现（这个算不算优点）</td>
-<td>麻烦</td>
-</tr>
-<tr>
-<td>用开源库，如zipkin</td>
-<td>原理都差不多，都是ID spanID parentID</td>
-<td>简单，client和server都有例子</td>
-<td>需要集成</td>
-</tr>
-<tr>
-<td>改分布式框架，如鹰眼，京东改dubbo</td>
-<td>不用侵入业务代码，在框架里做好埋点和日志</td>
-<td>自己实现</td>
-<td>稍微麻烦，需要自己改框架</td>
-</tr>
-<tr>
-<td>运行环境注入</td>
-<td>例如<a href="https://newrelic.com/">newrelic</a>，<a href="https://github.com/naver/pinpoint">pinpoint</a>，改JVM运行时bytecode</td>
-<td>非侵入</td>
-<td>性能损耗比较大</td>
-</tr>
-</tbody>
-</table>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/10/14/tracing/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/10/12/sysdig/" itemprop="url">
-                sysdig源码分析
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-10-12T00:00:00+08:00" content="2016-10-12">
-            2016-10-12
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2016/10/12/sysdig/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/12/sysdig/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
-<ol>
-<li>通过内核抓事件，不用侵入到容器</li>
-<li>可以自己写铲子，扩展起来很方便。<br>于是就顺手看下他的实现原理</li>
-</ol>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/10/12/sysdig/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/">&laquo;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/3/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/3/">&raquo;</a>
   </nav>
 
  </div>
@@ -716,7 +687,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">105</span>
+              <span class="site-state-item-count">107</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -730,7 +701,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">140</span>
+              <span class="site-state-item-count">142</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
