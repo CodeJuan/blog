@@ -92,7 +92,7 @@ nova-compute的一个driver，类似以前看过的nova-docker
 
 ## 基本功能及流程
 ### 创容器
-```python
+```py
 # Check to see if LXD already has a copy of the image. If not,
 # fetch it.
 _sync_glance_image_to_lxd
@@ -112,7 +112,7 @@ container.start(wait=True)
 
 ### 镜像
 
-```python
+```py
 image = IMAGE_API.get(context, image_ref)
 IMAGE_API.download(context, image_ref, dest_path=image_file)
 
