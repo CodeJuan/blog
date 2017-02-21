@@ -143,6 +143,8 @@ image = client.images.create(
 [https://github.com/openstack/nova-lxd/blob/master/nova/virt/lxd/vif.py](https://github.com/openstack/nova-lxd/blob/master/nova/virt/lxd/vif.py)
 - plug
 - unplug
+- brctl创建linux桥，以及addif
+- ovs-vsctl创建ovs桥，以及add port(pvo pvi)
 
 
 ----------------------------
