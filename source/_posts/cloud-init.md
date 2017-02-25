@@ -10,7 +10,8 @@ description:
 ---
 
 刚创出来的虚拟机，要如何设置初始密码？如何添加环境变量？如何进行一系列的预置操作？
-答案就是cloud-init
+答案就是cloud-init。
+当前正在搞openstack+lxc，也需要在创容器的时候注入一些信息，比如初始密码，开启SSH密码登录，允许root等等，就顺手记录cloud-init一下。
 
 <!--more-->
 
