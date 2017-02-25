@@ -39,16 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机">
+<meta name="description" content="docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LXC,docker">
 <meta property="og:url" content="http://blog.decbug.com/2017/02/11/lxc_docker/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机">
-<meta property="og:updated_time" content="2017-02-24T14:20:19.066Z">
+<meta property="og:description" content="docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？">
+<meta property="og:updated_time" content="2017-02-25T00:08:18.102Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LXC,docker">
-<meta name="twitter:description" content="docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机">
+<meta name="twitter:description" content="docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -256,7 +256,8 @@
       
 
       
-        <span itemprop="articleBody"><p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机<br><a id="more"></a></p>
+        <span itemprop="articleBody"><p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。<br>然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？</p>
+<a id="more"></a>
 <h1 id="LXC-vs-VM"><a href="#LXC-vs-VM" class="headerlink" title="LXC vs. VM"></a>LXC vs. VM</h1><table>
 <thead>
 <tr>
@@ -320,6 +321,17 @@
 </tr>
 </tbody>
 </table>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>轻应用，新应用都是微服务化，做docker化改造不算难</li>
+<li>传统重应用，已然在虚机/物理机上跑得好好的，如果没有足够的收益，不足以说服去迁移到lxc</li>
+<li>现实的问题，由于docker太火，很多应用都已经docker化了</li>
+<li>lxc主要的场景，就在于虚拟机和docker的夹缝之中<ol>
+<li>需要用到物理机设备的重型应用，比如GPU？虚拟机的虚拟化层需要做适配，docker则对此类重型应用水土不服。</li>
+<li>经过测试LXC的IO，网络性能与物理机基本一致，性能比虚拟机要好。</li>
+<li>比docker更像虚拟机，比虚拟机更轻量性能更好？</li>
+</ol>
+</li>
+</ul>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -483,7 +495,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LXC-vs-VM"><span class="nav-number">1.</span> <span class="nav-text">LXC vs. VM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LXC-vs-docker"><span class="nav-number">2.</span> <span class="nav-text">LXC vs. docker</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LXC-vs-VM"><span class="nav-number">1.</span> <span class="nav-text">LXC vs. VM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LXC-vs-docker"><span class="nav-number">2.</span> <span class="nav-text">LXC vs. docker</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
