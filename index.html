@@ -207,6 +207,95 @@
           
           
             
+              <a class="post-title-link" href="/2017/02/26/openstack_in_lxc/" itemprop="url">
+                Run a full OpenStack in a LXD container
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-26T00:00:00+08:00" content="2017-02-26">
+            2017-02-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2017/02/26/openstack_in_lxc/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/02/26/openstack_in_lxc/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>鉴于lxc容器特别像虚拟机的特点，rackspace，都有把openstack部署到lxc容器里的实践，恰好lxc也有类似教程，打算自己跑一遍，看看是怎样一种体验</p>
+<p>how to run a full OpenStack, using LXD containers instead of VMs and running all of this inside a LXD container (nesting!).</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/26/openstack_in_lxc/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2017/02/24/cloud-init/" itemprop="url">
                 cloud-init
               </a>
@@ -554,102 +643,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2017/01/17/KVM_cache/" itemprop="url">
-                KVM的几种缓存模式
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2017-01-17T01:00:00+08:00" content="2017-01-17">
-            2017-01-17
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2017/01/17/KVM_cache/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/17/KVM_cache/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>现象：</p>
-<ol>
-<li>虚拟机的IO性能比物理机/容器好？</li>
-<li>容器和物理机差不多，这个很好理解，如果没有做IO limit，肯定和物理机相近</li>
-<li>用的virsh disk-attach宿主机上的一个/dev/sdxxx，用的是default</li>
-<li>顺序读写完爆物理机</li>
-<li>随机读写从1K，4K，16K到1M都比物理机强，唯有64M的写比物理机差</li>
-</ol>
-<p>比较奇怪，需要分析一下</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/17/KVM_cache/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -688,7 +681,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">109</span>
+              <span class="site-state-item-count">110</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
