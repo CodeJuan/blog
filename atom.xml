@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2017-02-26T01:40:49.710Z</updated>
+  <updated>2017-02-26T04:51:00.682Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.decbug.com/2017/02/26/openstack_in_lxc/"/>
     <id>http://blog.decbug.com/2017/02/26/openstack_in_lxc/</id>
     <published>2017-02-25T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>鉴于lxc容器特别像虚拟机的特点，rackspace，都有把openstack部署到lxc容器里的实践，恰好lxc也有类似教程，打算自己跑一遍，看看是怎样一种体验</p>
 <p>how to run a full OpenStack, using LXD containers instead of VMs and running all of this inside a LXD container (nesting!).</p>
@@ -28,6 +28,110 @@
 <h1 id="安装lxd"><a href="#安装lxd" class="headerlink" title="安装lxd"></a>安装lxd</h1><p>还是ubuntu好，直接apt就行了，不像在centos上，需要从头开始编译liblxc,lxd<a href="https://github.com/CodeJuan/lxc_lxd" target="_blank" rel="external">试验记录</a>。更可怕的是，AppArmor/SeLinux/Seccomp/user namespace/都需要另外安装，如果不安装，就需要在编译liblxc时disable掉</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt -t trusty-backports install lxd</span><br></pre></td></tr></table></figure>
 <p>安装完成后，查看版本<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i3<span class="variable">@i3</span><span class="symbol">:~</span><span class="variable">$ </span>lxc --version</span><br><span class="line"><span class="number">2.0</span>.<span class="number">8</span></span><br><span class="line">i3<span class="variable">@i3</span><span class="symbol">:~</span><span class="variable">$ </span>lxd --version</span><br><span class="line"><span class="number">2.0</span>.<span class="number">8</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="安装ZFS"><a href="#安装ZFS" class="headerlink" title="安装ZFS"></a>安装ZFS</h2><table>
+<thead>
+<tr>
+<th style="text-align:left">Feature</th>
+<th style="text-align:left">Directory</th>
+<th style="text-align:left">Btrfs</th>
+<th style="text-align:left">LVM</th>
+<th style="text-align:left">ZFS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Optimized image storage</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Optimized container creation</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Optimized snapshot creation</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Optimized image transfer</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Optimized container transfer</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Copy on write</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Block based</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">no</td>
+</tr>
+<tr>
+<td style="text-align:left">Instant cloning</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Nesting support</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">no</td>
+</tr>
+<tr>
+<td style="text-align:left">Restore from older snapshots (not latest)</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">no</td>
+</tr>
+<tr>
+<td style="text-align:left">Storage quotas</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+<td style="text-align:left">no</td>
+<td style="text-align:left">yes</td>
+</tr>
+</tbody>
+</table>
+<p>lxc支持的存储后端，看来ZFS不错，打算用他</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">add</span>-repository <span class="keyword">pp</span><span class="variable">a:zfs</span>-native/stable</span><br><span class="line">sudo apt <span class="keyword">update</span></span><br><span class="line">sudo apt install ubuntu-zfs</span><br></pre></td></tr></table></figure>
+<h2 id="init-lxd"><a href="#init-lxd" class="headerlink" title="init lxd"></a>init lxd</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">sudo</span> lxd init</span><br></pre></td></tr></table></figure>
+<p>需要注意：如果是想在嵌套容器里跑openstack，那么网络只选择IPV4和存储后端用DIR</p>
+<p>完成后<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$brctl</span> show</span><br><span class="line">lxdbr<span class="number">0</span>		<span class="number">8000.000000000000</span>	no</span><br></pre></td></tr></table></figure></p>
+<p>多了一个linux桥</p>
+<h2 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sudo lxc launch ubuntu:16.04 first</span><br><span class="line"></span><br><span class="line"># 进入到容器</span><br><span class="line">sudo lxc exec first -- bash</span><br><span class="line"></span><br><span class="line">root@first:~# curl aliyun.com</span><br><span class="line"><span class="doctype">&lt;!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span><span class="tag">&lt;<span class="title">title</span>&gt;</span>301 Moved Permanently<span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span> <span class="attribute">bgcolor</span>=<span class="value">"white"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">h1</span>&gt;</span>301 Moved Permanently<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span>The requested resource has been assigned a new permanent URI.<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">hr</span>/&gt;</span>Powered by Tengine/Aserver<span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="resource-control"><a href="#resource-control" class="headerlink" title="resource control"></a>resource control</h2><p><a href="https://stgraber.org/2016/03/26/lxd-2-0-resource-control-412/" target="_blank" rel="external">https://stgraber.org/2016/03/26/lxd-2-0-resource-control-412/</a></p>
+<h3 id="cpu"><a href="#cpu" class="headerlink" title="cpu"></a>cpu</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">i3<span class="variable">@i3</span><span class="symbol">:~</span><span class="variable">$ </span>sudo lxc config set first limits.cpu <span class="number">1</span></span><br><span class="line">i3<span class="variable">@i3</span><span class="symbol">:~</span><span class="variable">$ </span>sudo lxc exec first -- bash</span><br><span class="line">root<span class="variable">@first</span><span class="symbol">:~</span><span class="comment"># cat /proc/cpuinfo</span></span><br><span class="line">processor	<span class="symbol">:</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">只能看到一个核</span><br></pre></td></tr></table></figure>
+<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@first:~# cat /<span class="keyword">proc</span>/meminfo<span class="symbol"></span><br><span class="line">MemTotal:</span>       16095260<span class="symbol"> kB</span></span><br><span class="line"><span class="symbol"></span><br><span class="line">i3@i3:~$</span> sudo<span class="symbol"> lxc</span> config<span class="symbol"> set</span> first<span class="symbol"> limits.memory</span> 512MB<span class="symbol"></span><br><span class="line">i3@i3:~$</span> sudo<span class="symbol"> lxc</span> exec<span class="symbol"> first</span> --<span class="symbol"> bash</span></span><br><span class="line">root@first:~#<span class="symbol"> cat</span> /<span class="keyword">proc</span>/meminfo<span class="symbol"></span><br><span class="line">MemTotal:</span>         524288<span class="symbol"> kB</span></span><br></pre></td></tr></table></figure>
+<h1 id="openstack"><a href="#openstack" class="headerlink" title="openstack"></a>openstack</h1><h2 id="容器已经成功创建，开始尝试openstack"><a href="#容器已经成功创建，开始尝试openstack" class="headerlink" title="容器已经成功创建，开始尝试openstack"></a>容器已经成功创建，开始尝试openstack</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo lxc <span class="keyword">init</span> ubuntu:<span class="number">16.04</span> openstack -<span class="built_in">c</span> security.privileged=<span class="literal">true</span> -<span class="built_in">c</span> security.nesting=<span class="literal">true</span> -<span class="built_in">c</span> <span class="string">"linux.kernel_modules=iptable_nat, ip6table_nat, ebtables, openvswitch, nbd"</span></span><br><span class="line">printf <span class="string">"lxc.cap.drop=\nlxc.aa_profile=unconfined\n"</span> | sudo lxc config <span class="keyword">set</span> openstack raw.lxc -</span><br><span class="line">sudo lxc config device add openstack mem unix-char path=/dev/mem</span><br><span class="line">sudo lxc start openstack</span><br></pre></td></tr></table></figure>
+<h2 id="可以看到openstack容器已经运行"><a href="#可以看到openstack容器已经运行" class="headerlink" title="可以看到openstack容器已经运行"></a>可以看到openstack容器已经运行</h2><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="header">i3@i3:~$ sudo lxc list</span><br><span class="line">+-----------+---------+----------------------+------+------------+-----------+</span></span><br><span class="line"><span class="header">|   NAME    |  STATE  |         IPV4         | IPV6 |    TYPE    | SNAPSHOTS |</span><br><span class="line">+-----------+---------+----------------------+------+------------+-----------+</span></span><br><span class="line"><span class="header">| openstack | RUNNING | 10.84.103.125 (eth0) |      | PERSISTENT | 0         |</span><br><span class="line">+-----------+---------+----------------------+------+------------+-----------+</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装juju"><a href="#安装juju" class="headerlink" title="安装juju"></a>安装juju</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo lxc <span class="built_in">exec</span> openstack -- apt update</span><br><span class="line">sudo lxc <span class="built_in">exec</span> openstack -- apt dist-upgrade -y</span><br><span class="line">sudo lxc <span class="built_in">exec</span> openstack -- apt install squashfuse -y</span><br><span class="line">sudo lxc <span class="built_in">exec</span> openstack -- ln <span class="operator">-s</span> /bin/<span class="literal">true</span> /usr/<span class="built_in">local</span>/bin/udevadm</span><br><span class="line">sudo lxc <span class="built_in">exec</span> openstack -- snap install conjure-up --classic</span><br></pre></td></tr></table></figure>
+<p>初始化容器里的lxd<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo lxc exec openstack <span class="comment">-- lxd init</span></span><br></pre></td></tr></table></figure></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://stgraber.org/2016/10/26/lxd-2-0-lxd-and-openstack-1112/" target="_blank" rel="external">https://stgraber.org/2016/10/26/lxd-2-0-lxd-and-openstack-1112/</a><br><a href="https://stgraber.org/2016/03/15/lxd-2-0-installing-and-configuring-lxd-212/" target="_blank" rel="external">https://stgraber.org/2016/03/15/lxd-2-0-installing-and-configuring-lxd-212/</a></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
@@ -52,7 +156,7 @@
     <link href="http://blog.decbug.com/2017/02/24/cloud-init/"/>
     <id>http://blog.decbug.com/2017/02/24/cloud-init/</id>
     <published>2017-02-23T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.706Z</updated>
+    <updated>2017-02-26T04:51:00.678Z</updated>
     
     <content type="html"><![CDATA[<p>刚创出来的虚拟机，要如何设置初始密码？如何添加环境变量？如何进行一系列的预置操作？<br>答案就是cloud-init。<br>当前正在搞openstack+lxc，也需要在创容器的时候注入一些信息，比如初始密码，开启SSH密码登录，允许root等等，就顺手记录cloud-init一下。</p>
 <a id="more"></a>
@@ -101,7 +205,7 @@
     <link href="http://blog.decbug.com/2017/02/11/lxc_docker/"/>
     <id>http://blog.decbug.com/2017/02/11/lxc_docker/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。<br>然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？</p>
 <a id="more"></a>
@@ -203,7 +307,7 @@
     <link href="http://blog.decbug.com/2017/02/11/nova-lxd-lxc/"/>
     <id>http://blog.decbug.com/2017/02/11/nova-lxd-lxc/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下lxc, lxd, nova-lxd的关系以及源码</p>
 <ul>
@@ -267,7 +371,7 @@
     <link href="http://blog.decbug.com/2017/02/10/network_intro/"/>
     <id>http://blog.decbug.com/2017/02/10/network_intro/</id>
     <published>2017-02-09T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>简单记录之前搞容器网络用的基础知识<br><a id="more"></a></p>
 <h1 id="ip命令"><a href="#ip命令" class="headerlink" title="ip命令"></a>ip命令</h1><ul>
@@ -320,7 +424,7 @@
     <link href="http://blog.decbug.com/2017/01/17/KVM_cache/"/>
     <id>http://blog.decbug.com/2017/01/17/KVM_cache/</id>
     <published>2017-01-16T17:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.706Z</updated>
+    <updated>2017-02-26T04:51:00.678Z</updated>
     
     <content type="html"><![CDATA[<p>现象：</p>
 <ol>
@@ -378,7 +482,7 @@
     <link href="http://blog.decbug.com/2017/01/15/container_neutron/"/>
     <id>http://blog.decbug.com/2017/01/15/container_neutron/</id>
     <published>2017-01-14T17:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.706Z</updated>
+    <updated>2017-02-26T04:51:00.678Z</updated>
     
     <content type="html"><![CDATA[<p>容器用Neutron组网，比Flannel和VPC router强的地方在于</p>
 <ul>
@@ -435,7 +539,7 @@
     <link href="http://blog.decbug.com/2017/01/10/socks5_http/"/>
     <id>http://blog.decbug.com/2017/01/10/socks5_http/</id>
     <published>2017-01-09T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>go get, but connect to golang.org timeout!!!</p>
 <a id="more"></a>
@@ -463,7 +567,7 @@
     <link href="http://blog.decbug.com/2017/01/03/container_network_debug/"/>
     <id>http://blog.decbug.com/2017/01/03/container_network_debug/</id>
     <published>2017-01-02T17:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.706Z</updated>
+    <updated>2017-02-26T04:51:00.678Z</updated>
     
     <content type="html"><![CDATA[<p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
 <a id="more"></a>
@@ -512,7 +616,7 @@
     <link href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/"/>
     <id>http://blog.decbug.com/2016/12/06/sysdig_knockoff/</id>
     <published>2016-12-05T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.686Z</updated>
     
     <content type="html"><![CDATA[<p>调用链分析有三种模式：</p>
 <ol>
@@ -571,7 +675,7 @@
     <link href="http://blog.decbug.com/2016/12/05/aliyun_container/"/>
     <id>http://blog.decbug.com/2016/12/05/aliyun_container/</id>
     <published>2016-12-04T17:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.706Z</updated>
+    <updated>2017-02-26T04:51:00.678Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
 <a id="more"></a>
@@ -621,7 +725,7 @@
     <link href="http://blog.decbug.com/2016/12/05/sudoers/"/>
     <id>http://blog.decbug.com/2016/12/05/sudoers/</id>
     <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
 <a id="more"></a>
@@ -660,7 +764,7 @@
     <link href="http://blog.decbug.com/2016/10/16/libcap/"/>
     <id>http://blog.decbug.com/2016/10/16/libcap/</id>
     <published>2016-10-15T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
 <p>原理</p>
@@ -694,7 +798,7 @@
     <link href="http://blog.decbug.com/2016/10/14/tracing/"/>
     <id>http://blog.decbug.com/2016/10/14/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.714Z</updated>
+    <updated>2017-02-26T04:51:00.686Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -799,7 +903,7 @@
     <link href="http://blog.decbug.com/2016/10/12/sysdig/"/>
     <id>http://blog.decbug.com/2016/10/12/sysdig/</id>
     <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
@@ -893,7 +997,7 @@
     <link href="http://blog.decbug.com/2016/10/10/APM/"/>
     <id>http://blog.decbug.com/2016/10/10/APM/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.706Z</updated>
+    <updated>2017-02-26T04:51:00.678Z</updated>
     
     <content type="html"><![CDATA[<p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
 <p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
@@ -930,7 +1034,7 @@
     <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
     <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.706Z</updated>
+    <updated>2017-02-26T04:51:00.678Z</updated>
     
     <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
 <a id="more"></a>
@@ -958,7 +1062,7 @@
     <link href="http://blog.decbug.com/2016/10/09/VxLan/"/>
     <id>http://blog.decbug.com/2016/10/09/VxLan/</id>
     <published>2016-10-08T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.706Z</updated>
+    <updated>2017-02-26T04:51:00.678Z</updated>
     
     <content type="html"><![CDATA[<p>VxLan，网络虚拟化，应用很广泛</p>
 <p>简单记录一下原理</p>
@@ -1001,7 +1105,7 @@
     <link href="http://blog.decbug.com/2016/09/30/scheduler_fair/"/>
     <id>http://blog.decbug.com/2016/09/30/scheduler_fair/</id>
     <published>2016-09-29T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>调度，在计算机世界里随处可见，只要有资源抢占，就需要调度。</p>
 <p><img src="http://a3.att.hudong.com/78/47/01300000763638128366476399672.jpg" alt="无调度"></p>
@@ -1047,7 +1151,7 @@
     <link href="http://blog.decbug.com/2016/09/09/ping_ssh/"/>
     <id>http://blog.decbug.com/2016/09/09/ping_ssh/</id>
     <published>2016-09-08T16:00:00.000Z</published>
-    <updated>2017-02-26T01:40:49.710Z</updated>
+    <updated>2017-02-26T04:51:00.682Z</updated>
     
     <content type="html"><![CDATA[<p>数据库部署在k8s上，两个pod一主一备，却无法同步，一直同步失败，提示socket 什么什么什么。据同事说，还有一个现象是ping都会报错</p>
 <a id="more"></a>
