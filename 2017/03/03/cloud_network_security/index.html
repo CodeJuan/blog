@@ -41,13 +41,13 @@
 
 <meta name="description" content="近日关于云计算安全的问题，闹的沸沸扬扬。某不才，也算是云计算入门人士，便结合自身经历分析一番。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="云安全">
+<meta property="og:title" content="云计算网络安全">
 <meta property="og:url" content="http://blog.decbug.com/2017/03/03/cloud_network_security/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="近日关于云计算安全的问题，闹的沸沸扬扬。某不才，也算是云计算入门人士，便结合自身经历分析一番。">
-<meta property="og:updated_time" content="2017-03-03T00:43:04.524Z">
+<meta property="og:updated_time" content="2017-03-03T05:06:53.534Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="云安全">
+<meta name="twitter:title" content="云计算网络安全">
 <meta name="twitter:description" content="近日关于云计算安全的问题，闹的沸沸扬扬。某不才，也算是云计算入门人士，便结合自身经历分析一番。">
 
 
@@ -58,7 +58,7 @@
   };
 </script>
 
-  <title> 云安全 | Continuous Learning </title>
+  <title> 云计算网络安全 | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -206,7 +206,7 @@
           
           
             
-              云安全
+              云计算网络安全
             
           
         </h1>
@@ -259,7 +259,7 @@
         <span itemprop="articleBody"><p>近日关于云计算安全的问题，闹的沸沸扬扬。某不才，也算是云计算入门人士，便结合自身经历分析一番。</p>
 <a id="more"></a>
 <h1 id="也曾被黑过"><a href="#也曾被黑过" class="headerlink" title="也曾被黑过"></a>也曾被黑过</h1><p>当时用的阿里云华北1，只有经典网络。那时候很天真，以为即使是经典网络，那么也是租户隔离的。为了便于几台机器互相调用，于是把安全组设置为内网入，所有协议，所有IP，所有端口都允许。</p>
-<p>然而今天以后，某个机器无法SSH上去，通过vnc一看，不得了，竟然内核都被人改了。当时百思不得其解，我这个机器完全没有连外网啊，怎么会被黑呢？怎么会呢？</p>
+<p>然而几天以后，某个机器无法SSH上去，通过vnc一看，不得了，竟然内核都被人改了。当时百思不得其解，我这个机器完全没有连外网啊，怎么会被黑呢？怎么会呢？</p>
 <p>后来才知道经典网络是互通的，相互之间的隔离是通过安全组。默认的安全组是全部拒绝的，如果不是我手贱，就不会那么容易被黑。</p>
 <h1 id="也谈VPC"><a href="#也谈VPC" class="headerlink" title="也谈VPC"></a>也谈VPC</h1><p>具体细节不谈了，之前也看过VxLan的原理。如果想深入，看看neurtron的组网就明白了，net，subnet，port</p>
 <p>所谓VPC，就是隔离隔离隔离，简单来说，就是对于虚拟机所看到的网络，和别人的网络是不通的。如果当时用的VPC，就已经和其他租户隔离了，被黑的概率大为降低。</p>
@@ -292,6 +292,7 @@
 <p>竟然是全部允许。后来联系阿里云容器服务的易立大侠，报告这个安全问题，得知这个问题早已修复。</p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>能用VPC就用VPC，虽然会稍微复杂一点，但安全性大为提高。</p>
 <p>另外再问一句，为啥阿里云华北1只有经典网络？就因为比其他region便宜10%？</p>
+<h1 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h1><p><a href="https://www.v2ex.com/t/343762?from=groupmessage&amp;isappinstalled=0" target="_blank" rel="external">云舒：给小白的租户隔离科普文</a><br><a href="http://weibo.com/ttarticle/p/show?id=2309404079443999097225" target="_blank" rel="external">左耳朵耗子：科普一下公有云的网络</a></p>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -453,7 +454,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#也曾被黑过"><span class="nav-number">1.</span> <span class="nav-text">也曾被黑过</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#也谈VPC"><span class="nav-number">2.</span> <span class="nav-text">也谈VPC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#阿里云容器服务"><span class="nav-number">3.</span> <span class="nav-text">阿里云容器服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#也曾被黑过"><span class="nav-number">1.</span> <span class="nav-text">也曾被黑过</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#也谈VPC"><span class="nav-number">2.</span> <span class="nav-text">也谈VPC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#阿里云容器服务"><span class="nav-number">3.</span> <span class="nav-text">阿里云容器服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#备份"><span class="nav-number">5.</span> <span class="nav-text">备份</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -508,7 +509,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
       var disqus_identifier = '2017/03/03/cloud_network_security/';
-      var disqus_title = '云安全';
+      var disqus_title = '云计算网络安全';
       var disqus_url = 'http://blog.decbug.com/2017/03/03/cloud_network_security/';
 
       function run_disqus_script(disqus_script){
