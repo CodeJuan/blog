@@ -21,7 +21,7 @@ description:
 - IBM的[Real-time Performance Profiling & Analytics for Microservices using Apache ](http://www.spark.tc/real-time-application-performance-profiling-using-spark/)
 - MIT的[Performance Debugging for Distributed Systems of Black Boxes](https://pdos.csail.mit.edu/~athicha/papers/blackboxes:sosp03.pdf)
 
-花了一周时间在k8s上做出来了，当然，由于缺乏算法支持，目前只做到了点对点的调用topo及http的时延。
+花了一周时间在k8s上做出来了，当然，由于缺乏算法支持，目前只做到了点对点的调用topo及http,memcached的时延，后面有空再补齐MySQL等等。
 
 <!--more-->
 
