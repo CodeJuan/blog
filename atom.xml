@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2017-04-01T14:11:35.413Z</updated>
+  <updated>2017-04-01T14:29:08.945Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,48 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>CloudInsightAgent源码分析</title>
+    <link href="http://blog.decbug.com/2017/04/01/cloudinght_agent_src/"/>
+    <id>http://blog.decbug.com/2017/04/01/cloudinght_agent_src/</id>
+    <published>2017-03-31T16:00:00.000Z</published>
+    <updated>2017-04-01T14:29:08.945Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前模仿sysdig做了个容器性能监控平台，<a href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/">链接在此</a>，虽然有一些基础的功能，但是还不完善，</p>
+<p>恰好看到cloud insight开源了他的agent，看过之后，和我的思路差不多，就简单记录一下，避免遗忘。</p>
+<a id="more"></a>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p><a href="https://github.com/cloudinsight/cloudinsight-agent" target="_blank" rel="external">https://github.com/cloudinsight/cloudinsight-agent</a></p>
+<p>据说之前是python，后来切换到go</p>
+<h1 id="整体结构"><a href="#整体结构" class="headerlink" title="整体结构"></a>整体结构</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">├── agent</span><br><span class="line">├── collector</span><br><span class="line">│   ├── conf.d          <span class="comment"># plugins的配置文件，比如MySQL的连接串</span></span><br><span class="line">│   └── plugins         <span class="comment"># plugin的代码，有docker，MySQL等</span></span><br><span class="line">├── common              <span class="comment"># 公共包</span></span><br><span class="line">├── forwarder           <span class="comment"># 发到cloud insight服务器</span></span><br><span class="line">├── statsd</span><br><span class="line">└── vendor              <span class="comment"># 三方包</span></span><br></pre></td></tr></table></figure>
+<h1 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h1><p>init的时候会加载cloudinsight-agent/collector/plugins的插件</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">+------------------------------------------+</span><br><span class="line">|<span class="string"> main                                     </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">config.NewConfig   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">                   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">startAgent         </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">                   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">startForwarder     </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">                   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">startStatsd        </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">                   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">+------------------------------------------+</span><br></pre></td></tr></table></figure>
+<h1 id="agent"><a href="#agent" class="headerlink" title="agent"></a>agent</h1><p>collector</p>
+<h2 id="plugins"><a href="#plugins" class="headerlink" title="plugins"></a>plugins</h2><h2 id="config"><a href="#config" class="headerlink" title="config"></a>config</h2><h2 id="以docker为例"><a href="#以docker为例" class="headerlink" title="以docker为例"></a>以docker为例</h2><p>Check接口，调用docker daemon的rest api采集</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;之前模仿sysdig做了个容器性能监控平台，&lt;a href=&quot;http://blog.decbug.com/2016/12/06/sysdig_knockoff/&quot;&gt;链接在此&lt;/a&gt;，虽然有一些基础的功能，但是还不完善，&lt;/p&gt;
+&lt;p&gt;恰好看到cloud insight开源了他的agent，看过之后，和我的思路差不多，就简单记录一下，避免遗忘。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="APM" scheme="http://blog.decbug.com/tags/APM/"/>
+    
+      <category term="monitoring" scheme="http://blog.decbug.com/tags/monitoring/"/>
+    
+  </entry>
+  
+  <entry>
     <title>云计算网络安全</title>
     <link href="http://blog.decbug.com/2017/03/03/cloud_network_security/"/>
     <id>http://blog.decbug.com/2017/03/03/cloud_network_security/</id>
     <published>2017-03-02T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
+    <updated>2017-04-01T14:29:08.945Z</updated>
     
     <content type="html"><![CDATA[<p>近日关于云计算安全的问题，闹的沸沸扬扬。某不才，也算是云计算入门人士，便结合自身经历分析一番。</p>
 <a id="more"></a>
@@ -83,7 +120,7 @@
     <link href="http://blog.decbug.com/2017/02/26/openstack_in_lxc/"/>
     <id>http://blog.decbug.com/2017/02/26/openstack_in_lxc/</id>
     <published>2017-02-25T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.417Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p>鉴于lxc容器特别像虚拟机的特点，rackspace，都有把openstack部署到lxc容器里的实践，恰好lxc也有类似教程，打算自己跑一遍，看看是怎样一种体验</p>
 <p>how to run a full OpenStack, using LXD containers instead of VMs and running all of this inside a LXD container (nesting!).</p>
@@ -219,7 +256,7 @@
     <link href="http://blog.decbug.com/2017/02/24/cloud-init/"/>
     <id>http://blog.decbug.com/2017/02/24/cloud-init/</id>
     <published>2017-02-23T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
+    <updated>2017-04-01T14:29:08.945Z</updated>
     
     <content type="html"><![CDATA[<p>刚创出来的虚拟机，要如何设置初始密码？如何添加环境变量？如何进行一系列的预置操作？<br>答案就是cloud-init。<br>当前正在搞openstack+lxc，也需要在创容器的时候注入一些信息，比如初始密码，开启SSH密码登录，允许root等等，就顺手记录cloud-init一下。</p>
 <a id="more"></a>
@@ -268,7 +305,7 @@
     <link href="http://blog.decbug.com/2017/02/11/nova-lxd-lxc/"/>
     <id>http://blog.decbug.com/2017/02/11/nova-lxd-lxc/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.417Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下lxc, lxd, nova-lxd的关系以及源码</p>
 <ul>
@@ -332,7 +369,7 @@
     <link href="http://blog.decbug.com/2017/02/11/lxc_docker/"/>
     <id>http://blog.decbug.com/2017/02/11/lxc_docker/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.417Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。<br>然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？</p>
 <a id="more"></a>
@@ -434,7 +471,7 @@
     <link href="http://blog.decbug.com/2017/02/10/network_intro/"/>
     <id>http://blog.decbug.com/2017/02/10/network_intro/</id>
     <published>2017-02-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.417Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p>简单记录之前搞容器网络用的基础知识<br><a id="more"></a></p>
 <h1 id="ip命令"><a href="#ip命令" class="headerlink" title="ip命令"></a>ip命令</h1><ul>
@@ -487,7 +524,7 @@
     <link href="http://blog.decbug.com/2017/01/17/KVM_cache/"/>
     <id>http://blog.decbug.com/2017/01/17/KVM_cache/</id>
     <published>2017-01-16T17:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
+    <updated>2017-04-01T14:29:08.945Z</updated>
     
     <content type="html"><![CDATA[<p>现象：</p>
 <ol>
@@ -545,7 +582,7 @@
     <link href="http://blog.decbug.com/2017/01/15/container_neutron/"/>
     <id>http://blog.decbug.com/2017/01/15/container_neutron/</id>
     <published>2017-01-14T17:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
+    <updated>2017-04-01T14:29:08.945Z</updated>
     
     <content type="html"><![CDATA[<p>容器用Neutron组网，比Flannel和VPC router强的地方在于</p>
 <ul>
@@ -602,7 +639,7 @@
     <link href="http://blog.decbug.com/2017/01/10/socks5_http/"/>
     <id>http://blog.decbug.com/2017/01/10/socks5_http/</id>
     <published>2017-01-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.421Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p>go get, but connect to golang.org timeout!!!</p>
 <a id="more"></a>
@@ -630,7 +667,7 @@
     <link href="http://blog.decbug.com/2017/01/03/container_network_debug/"/>
     <id>http://blog.decbug.com/2017/01/03/container_network_debug/</id>
     <published>2017-01-02T17:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
+    <updated>2017-04-01T14:29:08.945Z</updated>
     
     <content type="html"><![CDATA[<p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
 <a id="more"></a>
@@ -679,7 +716,7 @@
     <link href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/"/>
     <id>http://blog.decbug.com/2016/12/06/sysdig_knockoff/</id>
     <published>2016-12-05T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.421Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p>调用链分析有三种模式：</p>
 <ol>
@@ -738,7 +775,7 @@
     <link href="http://blog.decbug.com/2016/12/05/aliyun_container/"/>
     <id>http://blog.decbug.com/2016/12/05/aliyun_container/</id>
     <published>2016-12-04T17:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
+    <updated>2017-04-01T14:29:08.945Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
 <a id="more"></a>
@@ -788,7 +825,7 @@
     <link href="http://blog.decbug.com/2016/12/05/sudoers/"/>
     <id>http://blog.decbug.com/2016/12/05/sudoers/</id>
     <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.421Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
 <a id="more"></a>
@@ -827,7 +864,7 @@
     <link href="http://blog.decbug.com/2016/10/16/libcap/"/>
     <id>http://blog.decbug.com/2016/10/16/libcap/</id>
     <published>2016-10-15T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.417Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
 <p>原理</p>
@@ -861,7 +898,7 @@
     <link href="http://blog.decbug.com/2016/10/14/tracing/"/>
     <id>http://blog.decbug.com/2016/10/14/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.421Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -966,7 +1003,7 @@
     <link href="http://blog.decbug.com/2016/10/12/sysdig/"/>
     <id>http://blog.decbug.com/2016/10/12/sysdig/</id>
     <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.421Z</updated>
+    <updated>2017-04-01T14:29:08.949Z</updated>
     
     <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
@@ -1056,11 +1093,39 @@
   </entry>
   
   <entry>
+    <title>容器分布式存储之Flocker</title>
+    <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
+    <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
+    <published>2016-10-09T16:00:00.000Z</published>
+    <updated>2017-04-01T14:29:08.945Z</updated>
+    
+    <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
+<a id="more"></a>
+<h1 id="flocker"><a href="#flocker" class="headerlink" title="flocker"></a>flocker</h1><p><img src="https://uploads.disquscdn.com/images/b891c982b375e67d8f6e22030c0404e86e3ea54c2f086be24e54dbd921d62e97.png" alt=""></p>
+<h1 id="手绘架构图"><a href="#手绘架构图" class="headerlink" title="手绘架构图"></a>手绘架构图</h1><p><img src="https://uploads.disquscdn.com/images/edf315d6c61c5b6ef839fbd8513ebb7969f91d36d87984062f9a779601ba0e10.jpg" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;容器的分布式存储都差不多，都是docker daemon-&amp;gt;plugin-&amp;gt;agent-&amp;gt;control，话说cinder也差不多。&lt;br&gt;正好看到了flocker，简单了解一下架构，记录下来加深印象&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="distributed storage" scheme="http://blog.decbug.com/tags/distributed-storage/"/>
+    
+  </entry>
+  
+  <entry>
     <title>APM厂商分析</title>
     <link href="http://blog.decbug.com/2016/10/10/APM/"/>
     <id>http://blog.decbug.com/2016/10/10/APM/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
+    <updated>2017-04-01T14:29:08.945Z</updated>
     
     <content type="html"><![CDATA[<p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
 <p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
@@ -1093,76 +1158,11 @@
   </entry>
   
   <entry>
-    <title>CloudInsightAgent源码分析</title>
-    <link href="http://blog.decbug.com/2016/10/10/cloudinght_agent_src/"/>
-    <id>http://blog.decbug.com/2016/10/10/cloudinght_agent_src/</id>
-    <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
-    
-    <content type="html"><![CDATA[<p>之前模仿sysdig做了个容器性能监控平台，<a href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/">链接在此</a>，虽然有一些基础的功能，但是还不完善，</p>
-<p>恰好看到cloud insight开源了他的agent，看过之后，和我的思路差不多，就简单记录一下，避免遗忘。</p>
-<a id="more"></a>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p><a href="https://github.com/cloudinsight/cloudinsight-agent" target="_blank" rel="external">https://github.com/cloudinsight/cloudinsight-agent</a></p>
-<p>据说之前是python，后来切换到go</p>
-<h1 id="整体结构"><a href="#整体结构" class="headerlink" title="整体结构"></a>整体结构</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">├── agent</span><br><span class="line">├── collector</span><br><span class="line">│   ├── conf.d          <span class="comment"># plugins的配置文件，比如MySQL的连接串</span></span><br><span class="line">│   └── plugins         <span class="comment"># plugin的代码，有docker，MySQL等</span></span><br><span class="line">├── common              <span class="comment"># 公共包</span></span><br><span class="line">├── forwarder           <span class="comment"># 发到cloud insight服务器</span></span><br><span class="line">├── statsd</span><br><span class="line">└── vendor              <span class="comment"># 三方包</span></span><br></pre></td></tr></table></figure>
-<h1 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h1><p>init的时候会加载cloudinsight-agent/collector/plugins的插件</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">+------------------------------------------+</span><br><span class="line">|<span class="string"> main                                     </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">config.NewConfig   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">                   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">startAgent         </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">                   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">startForwarder     </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">                   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">startStatsd        </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      </span>|<span class="string">                   </span>|<span class="string">               </span>|</span><br><span class="line">|<span class="string">      +-------------------+               </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">|<span class="string">                                          </span>|</span><br><span class="line">+------------------------------------------+</span><br></pre></td></tr></table></figure>
-<h1 id="agent"><a href="#agent" class="headerlink" title="agent"></a>agent</h1><p>collector</p>
-<h2 id="plugins"><a href="#plugins" class="headerlink" title="plugins"></a>plugins</h2><h2 id="config"><a href="#config" class="headerlink" title="config"></a>config</h2><h2 id="以docker为例"><a href="#以docker为例" class="headerlink" title="以docker为例"></a>以docker为例</h2><p>Check接口，调用docker daemon的rest api采集</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;之前模仿sysdig做了个容器性能监控平台，&lt;a href=&quot;http://blog.decbug.com/2016/12/06/sysdig_knockoff/&quot;&gt;链接在此&lt;/a&gt;，虽然有一些基础的功能，但是还不完善，&lt;/p&gt;
-&lt;p&gt;恰好看到cloud insight开源了他的agent，看过之后，和我的思路差不多，就简单记录一下，避免遗忘。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="APM" scheme="http://blog.decbug.com/tags/APM/"/>
-    
-      <category term="monitoring" scheme="http://blog.decbug.com/tags/monitoring/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>容器分布式存储之Flocker</title>
-    <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
-    <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
-    <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
-    
-    <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
-<a id="more"></a>
-<h1 id="flocker"><a href="#flocker" class="headerlink" title="flocker"></a>flocker</h1><p><img src="https://uploads.disquscdn.com/images/b891c982b375e67d8f6e22030c0404e86e3ea54c2f086be24e54dbd921d62e97.png" alt=""></p>
-<h1 id="手绘架构图"><a href="#手绘架构图" class="headerlink" title="手绘架构图"></a>手绘架构图</h1><p><img src="https://uploads.disquscdn.com/images/edf315d6c61c5b6ef839fbd8513ebb7969f91d36d87984062f9a779601ba0e10.jpg" alt=""></p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;容器的分布式存储都差不多，都是docker daemon-&amp;gt;plugin-&amp;gt;agent-&amp;gt;control，话说cinder也差不多。&lt;br&gt;正好看到了flocker，简单了解一下架构，记录下来加深印象&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="distributed storage" scheme="http://blog.decbug.com/tags/distributed-storage/"/>
-    
-  </entry>
-  
-  <entry>
     <title>VxLan原理</title>
     <link href="http://blog.decbug.com/2016/10/09/VxLan/"/>
     <id>http://blog.decbug.com/2016/10/09/VxLan/</id>
     <published>2016-10-08T16:00:00.000Z</published>
-    <updated>2017-04-01T14:11:35.413Z</updated>
+    <updated>2017-04-01T14:29:08.945Z</updated>
     
     <content type="html"><![CDATA[<p>VxLan，网络虚拟化，应用很广泛</p>
 <p>简单记录一下原理</p>
