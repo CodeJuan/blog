@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2017-04-01T14:29:08.945Z</updated>
+  <updated>2017-04-28T00:06:04.141Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,73 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>docker源码分析--create,update</title>
+    <link href="http://blog.decbug.com/2017/04/28/dockerd-containerd-runc/"/>
+    <id>http://blog.decbug.com/2017/04/28/dockerd-containerd-runc/</id>
+    <published>2017-04-27T17:00:00.000Z</published>
+    <updated>2017-04-28T00:06:04.141Z</updated>
+    
+    <content type="html"><![CDATA[<p>1.11大重构之后，和1.6不一样了，简单看下流程，记个笔记</p>
+<a id="more"></a>
+<h1 id="docker-create"><a href="#docker-create" class="headerlink" title="docker create"></a>docker create</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/25509115/2d5fe742-2be9-11e7-8afa-833f4a5e1f4f.png" alt="image"></p>
+<p><img src="https://cloud.githubusercontent.com/assets/5423628/25509046/aa1979b6-2be8-11e7-9c2a-8406a1012687.png" alt="image"></p>
+<p><img src="https://cloud.githubusercontent.com/assets/5423628/25509038/962cdb82-2be8-11e7-8805-c26317e2776b.png" alt="image"></p>
+<p><img src="https://cloud.githubusercontent.com/assets/5423628/25509071/e8495f3a-2be8-11e7-8699-d4a501191b15.png" alt="image"></p>
+<h1 id="docker-update"><a href="#docker-update" class="headerlink" title="docker update"></a>docker update</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/25508941/e683a26a-2be7-11e7-84eb-3710d7872f05.png" alt="image"></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;1.11大重构之后，和1.6不一样了，简单看下流程，记个笔记&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="container" scheme="http://blog.decbug.com/tags/container/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>向运行的容器加设备</title>
+    <link href="http://blog.decbug.com/2017/04/27/attach_device_to_running_container/"/>
+    <id>http://blog.decbug.com/2017/04/27/attach_device_to_running_container/</id>
+    <published>2017-04-26T17:00:00.000Z</published>
+    <updated>2017-04-28T00:06:04.141Z</updated>
+    
+    <content type="html"><![CDATA[<p>创建容器的时候，可以通过-device，-v来加设备加path，也可以加网卡，但是缺乏向运行时的容器加设备的方法</p>
+<a id="more"></a>
+<p><img src="https://cloud.githubusercontent.com/assets/5423628/25509049/b7c78df0-2be8-11e7-8149-3182dacf6d03.png" alt=""></p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;创建容器的时候，可以通过-device，-v来加设备加path，也可以加网卡，但是缺乏向运行时的容器加设备的方法&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="container" scheme="http://blog.decbug.com/tags/container/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
     <title>CloudInsightAgent源码分析</title>
     <link href="http://blog.decbug.com/2017/04/01/cloudinght_agent_src/"/>
     <id>http://blog.decbug.com/2017/04/01/cloudinght_agent_src/</id>
     <published>2017-03-31T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
+    <updated>2017-04-28T00:06:04.141Z</updated>
     
     <content type="html"><![CDATA[<p>之前模仿sysdig做了个容器性能监控平台，<a href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/">链接在此</a>，虽然有一些基础的功能，但是还不完善，</p>
 <p>恰好看到cloud insight开源了他的agent，看过之后，和我的思路差不多，就简单记录一下，避免遗忘。</p>
@@ -57,7 +119,7 @@
     <link href="http://blog.decbug.com/2017/03/03/cloud_network_security/"/>
     <id>http://blog.decbug.com/2017/03/03/cloud_network_security/</id>
     <published>2017-03-02T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
+    <updated>2017-04-28T00:06:04.141Z</updated>
     
     <content type="html"><![CDATA[<p>近日关于云计算安全的问题，闹的沸沸扬扬。某不才，也算是云计算入门人士，便结合自身经历分析一番。</p>
 <a id="more"></a>
@@ -120,7 +182,7 @@
     <link href="http://blog.decbug.com/2017/02/26/openstack_in_lxc/"/>
     <id>http://blog.decbug.com/2017/02/26/openstack_in_lxc/</id>
     <published>2017-02-25T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.145Z</updated>
     
     <content type="html"><![CDATA[<p>鉴于lxc容器特别像虚拟机的特点，rackspace，都有把openstack部署到lxc容器里的实践，恰好lxc也有类似教程，打算自己跑一遍，看看是怎样一种体验</p>
 <p>how to run a full OpenStack, using LXD containers instead of VMs and running all of this inside a LXD container (nesting!).</p>
@@ -256,7 +318,7 @@
     <link href="http://blog.decbug.com/2017/02/24/cloud-init/"/>
     <id>http://blog.decbug.com/2017/02/24/cloud-init/</id>
     <published>2017-02-23T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
+    <updated>2017-04-28T00:06:04.141Z</updated>
     
     <content type="html"><![CDATA[<p>刚创出来的虚拟机，要如何设置初始密码？如何添加环境变量？如何进行一系列的预置操作？<br>答案就是cloud-init。<br>当前正在搞openstack+lxc，也需要在创容器的时候注入一些信息，比如初始密码，开启SSH密码登录，允许root等等，就顺手记录cloud-init一下。</p>
 <a id="more"></a>
@@ -305,7 +367,7 @@
     <link href="http://blog.decbug.com/2017/02/11/nova-lxd-lxc/"/>
     <id>http://blog.decbug.com/2017/02/11/nova-lxd-lxc/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.145Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下lxc, lxd, nova-lxd的关系以及源码</p>
 <ul>
@@ -369,7 +431,7 @@
     <link href="http://blog.decbug.com/2017/02/11/lxc_docker/"/>
     <id>http://blog.decbug.com/2017/02/11/lxc_docker/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.141Z</updated>
     
     <content type="html"><![CDATA[<p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。<br>然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？</p>
 <a id="more"></a>
@@ -471,7 +533,7 @@
     <link href="http://blog.decbug.com/2017/02/10/network_intro/"/>
     <id>http://blog.decbug.com/2017/02/10/network_intro/</id>
     <published>2017-02-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.145Z</updated>
     
     <content type="html"><![CDATA[<p>简单记录之前搞容器网络用的基础知识<br><a id="more"></a></p>
 <h1 id="ip命令"><a href="#ip命令" class="headerlink" title="ip命令"></a>ip命令</h1><ul>
@@ -524,7 +586,7 @@
     <link href="http://blog.decbug.com/2017/01/17/KVM_cache/"/>
     <id>http://blog.decbug.com/2017/01/17/KVM_cache/</id>
     <published>2017-01-16T17:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
+    <updated>2017-04-28T00:06:04.137Z</updated>
     
     <content type="html"><![CDATA[<p>现象：</p>
 <ol>
@@ -582,7 +644,7 @@
     <link href="http://blog.decbug.com/2017/01/15/container_neutron/"/>
     <id>http://blog.decbug.com/2017/01/15/container_neutron/</id>
     <published>2017-01-14T17:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
+    <updated>2017-04-28T00:06:04.141Z</updated>
     
     <content type="html"><![CDATA[<p>容器用Neutron组网，比Flannel和VPC router强的地方在于</p>
 <ul>
@@ -639,7 +701,7 @@
     <link href="http://blog.decbug.com/2017/01/10/socks5_http/"/>
     <id>http://blog.decbug.com/2017/01/10/socks5_http/</id>
     <published>2017-01-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.145Z</updated>
     
     <content type="html"><![CDATA[<p>go get, but connect to golang.org timeout!!!</p>
 <a id="more"></a>
@@ -667,7 +729,7 @@
     <link href="http://blog.decbug.com/2017/01/03/container_network_debug/"/>
     <id>http://blog.decbug.com/2017/01/03/container_network_debug/</id>
     <published>2017-01-02T17:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
+    <updated>2017-04-28T00:06:04.141Z</updated>
     
     <content type="html"><![CDATA[<p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
 <a id="more"></a>
@@ -716,7 +778,7 @@
     <link href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/"/>
     <id>http://blog.decbug.com/2016/12/06/sysdig_knockoff/</id>
     <published>2016-12-05T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.145Z</updated>
     
     <content type="html"><![CDATA[<p>调用链分析有三种模式：</p>
 <ol>
@@ -775,7 +837,7 @@
     <link href="http://blog.decbug.com/2016/12/05/aliyun_container/"/>
     <id>http://blog.decbug.com/2016/12/05/aliyun_container/</id>
     <published>2016-12-04T17:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
+    <updated>2017-04-28T00:06:04.137Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
 <a id="more"></a>
@@ -825,7 +887,7 @@
     <link href="http://blog.decbug.com/2016/12/05/sudoers/"/>
     <id>http://blog.decbug.com/2016/12/05/sudoers/</id>
     <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.145Z</updated>
     
     <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
 <a id="more"></a>
@@ -864,7 +926,7 @@
     <link href="http://blog.decbug.com/2016/10/16/libcap/"/>
     <id>http://blog.decbug.com/2016/10/16/libcap/</id>
     <published>2016-10-15T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.141Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
 <p>原理</p>
@@ -898,7 +960,7 @@
     <link href="http://blog.decbug.com/2016/10/14/tracing/"/>
     <id>http://blog.decbug.com/2016/10/14/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.145Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -1003,7 +1065,7 @@
     <link href="http://blog.decbug.com/2016/10/12/sysdig/"/>
     <id>http://blog.decbug.com/2016/10/12/sysdig/</id>
     <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.949Z</updated>
+    <updated>2017-04-28T00:06:04.145Z</updated>
     
     <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
@@ -1093,39 +1155,11 @@
   </entry>
   
   <entry>
-    <title>容器分布式存储之Flocker</title>
-    <link href="http://blog.decbug.com/2016/10/10/Flocker/"/>
-    <id>http://blog.decbug.com/2016/10/10/Flocker/</id>
-    <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
-    
-    <content type="html"><![CDATA[<p>容器的分布式存储都差不多，都是docker daemon-&gt;plugin-&gt;agent-&gt;control，话说cinder也差不多。<br>正好看到了flocker，简单了解一下架构，记录下来加深印象</p>
-<a id="more"></a>
-<h1 id="flocker"><a href="#flocker" class="headerlink" title="flocker"></a>flocker</h1><p><img src="https://uploads.disquscdn.com/images/b891c982b375e67d8f6e22030c0404e86e3ea54c2f086be24e54dbd921d62e97.png" alt=""></p>
-<h1 id="手绘架构图"><a href="#手绘架构图" class="headerlink" title="手绘架构图"></a>手绘架构图</h1><p><img src="https://uploads.disquscdn.com/images/edf315d6c61c5b6ef839fbd8513ebb7969f91d36d87984062f9a779601ba0e10.jpg" alt=""></p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;容器的分布式存储都差不多，都是docker daemon-&amp;gt;plugin-&amp;gt;agent-&amp;gt;control，话说cinder也差不多。&lt;br&gt;正好看到了flocker，简单了解一下架构，记录下来加深印象&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="distributed storage" scheme="http://blog.decbug.com/tags/distributed-storage/"/>
-    
-  </entry>
-  
-  <entry>
     <title>APM厂商分析</title>
     <link href="http://blog.decbug.com/2016/10/10/APM/"/>
     <id>http://blog.decbug.com/2016/10/10/APM/</id>
     <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
+    <updated>2017-04-28T00:06:04.137Z</updated>
     
     <content type="html"><![CDATA[<p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
 <p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
@@ -1154,49 +1188,6 @@
     
     
       <category term="APM" scheme="http://blog.decbug.com/tags/APM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>VxLan原理</title>
-    <link href="http://blog.decbug.com/2016/10/09/VxLan/"/>
-    <id>http://blog.decbug.com/2016/10/09/VxLan/</id>
-    <published>2016-10-08T16:00:00.000Z</published>
-    <updated>2017-04-01T14:29:08.945Z</updated>
-    
-    <content type="html"><![CDATA[<p>VxLan，网络虚拟化，应用很广泛</p>
-<p>简单记录一下原理</p>
-<a id="more"></a>
-<p><img src="http://www.aboutyun.com/data/attachment/forum/201501/12/200932g95t3x5zlllv0cn3.jpg" alt="Frame Format"></p>
-<p><img src="http://www.aboutyun.com/data/attachment/forum/201501/12/201142n2mmll72er7pldlp.jpg" alt=""></p>
-<ol>
-<li>VM1发送IP数据包到VM2，即192.168.0.100 到 192.168.0.101；</li>
-<li>VTEP1查找自己的VXLAN表知道要发给VTEP2，然后依次封装以下数据包头；<ul>
-<li>VXLAN包头</li>
-<li>标准UDP包头，校验和checksum为0x0000；</li>
-<li>标准IP包头，目标地址为VTEP2的IP地址，协议号设为0x11表面为UDP包。</li>
-<li>标准MAC数据包，目标地址为下一跳设备的MAC地址00:10:11:FE:D8:D2，可路由到目标隧道端VTEP2。</li>
-</ul>
-</li>
-<li>VTEP2接收数据包，根据UDP的destination端口找到VXLAN数据包。接着查找所有所在VXLAN的VNI为864的端口组，找到VM2的</li>
-<li>VM2接收并处理数据包，拿到Payload数据。</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.aboutyun.com/thread-11189-1-1.html" target="_blank" rel="external">http://www.aboutyun.com/thread-11189-1-1.html</a></p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;VxLan，网络虚拟化，应用很广泛&lt;/p&gt;
-&lt;p&gt;简单记录一下原理&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="VxLan" scheme="http://blog.decbug.com/tags/VxLan/"/>
     
   </entry>
   
