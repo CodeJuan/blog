@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2017-04-28T00:06:04.141Z</updated>
+  <updated>2017-05-06T05:44:22.313Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,65 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>pinpoint分析</title>
+    <link href="http://blog.decbug.com/pinpoint/"/>
+    <id>http://blog.decbug.com/pinpoint/</id>
+    <published>2017-05-05T17:00:00.000Z</published>
+    <updated>2017-05-06T05:44:22.313Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://github.com/naver/pinpoint/raw/master/doc/img/ss_server-map.png" alt=""></p>
+<p>pinpoint，不用侵入到用户代码，在JVM插入agent实现调用链。与鹰眼，zipkin等白盒方式不同的是，pinpoint不要侵入代码，可以称之为灰盒（论文将调用链分为三种，白盒灰盒，黑盒）。</p>
+<a id="more"></a>
+<p><img src="https://github.com/naver/pinpoint/raw/master/doc/img/ss_call-stack.png" alt=""></p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><p><img src="https://github.com/naver/pinpoint/raw/master/doc/img/pinpoint-architecture.png" alt=""><br>分为三个组件，agent（最重要，核心功能），collector（收集，大家的做法都差不多），UI</p>
+<h1 id="agent说明"><a href="#agent说明" class="headerlink" title="agent说明"></a>agent说明</h1><blockquote>
+<p>Pinpoint Agent attaches itself to a host application (such as Tomcat) as a java agent to instrument various classes for tracing. When a class marked for tracing is loaded into the JVM, the Agent injects code around pre-defined methods to collect and send trace data to the Collector.<br>  In addition to trace data, the agent also collects various information about the host application such as JVM arguments, loaded libraries, CPU usage, Memory Usage and Garbage Collection.</p>
+</blockquote>
+<p>在JVM层插入agent，在指定方法外包一层自定义代码，加上trace data和JVM usage等信息</p>
+<p><img src="https://cloud.githubusercontent.com/assets/8037461/13870778/0073df06-ed22-11e5-97a3-ebe116186947.jpg" alt=""><br>如图所示</p>
+<ul>
+<li>从FrountEnd出来的原始message之外被agent加上了transaction ID, span ID等等trace data，关于这些ID的作用，可以查看dapper的定义</li>
+<li>BackEnd收到消息后，先由agent把trace data解析出来，然后再把原始message交给BackEnd的方法</li>
+</ul>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>在<a href="https://github.com/naver/pinpoint/blob/master/doc/installation.md#installation-3" target="_blank" rel="external">安装文档</a>上可以看到</p>
+<blockquote>
+<p>To wire up the agent, pass $AGENT_PATH/pinpoint-bootstrap-$VERSION.jar to the -javaagent JVM argument when running the application:</p>
+<ul>
+<li>-javaagent:$AGENT_PATH/pinpoint-bootstrap-$VERSION.jar<br>Additionally, Pinpoint Agent requires 2 command-line arguments in order to identify itself in the distributed system:</li>
+<li>-Dpinpoint.agentId - uniquely identifies the application instance in which the agent is running on</li>
+<li>-Dpinpoint.applicationName - groups a number of identical application instances as a single service</li>
+</ul>
+</blockquote>
+<p>说明用的是JVM agent的方式,你假笨的<a href="http://www.infoq.com/cn/articles/javaagent-illustrated" target="_blank" rel="external">JVM源码分析之javaagent原理完全解读</a>对此有过分析。<br>大概就是，采用类似hook的机制，修改指定类某些方法，使之执行我的附加代码。在pinpoint则是，进行trace相关的操作</p>
+<h2 id="插件示例"><a href="#插件示例" class="headerlink" title="插件示例"></a>插件示例</h2><p><a href="https://github.com/naver/pinpoint-plugin-sample/blob/master/plugin/src/main/java/com/navercorp/pinpoint/plugin/sample/_13_RPC_Client/Sample_13_RPC_Client.java#L38" target="_blank" rel="external">Sample_13_RPC_Client.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] doInTransform(Instrumentor instrumentor, ClassLoader classLoader, String className, Class&lt;?&gt; classBeingRedefined, ProtectionDomain protectionDomain, <span class="keyword">byte</span>[] classfileBuffer) <span class="keyword">throws</span> InstrumentException &#123;</span><br><span class="line">    InstrumentClass target = instrumentor.getInstrumentClass(classLoader, className, classfileBuffer);</span><br><span class="line"></span><br><span class="line">    target.addGetter(<span class="string">"com.navercorp.pinpoint.plugin.sample._13_RPC_Client.ServerAddressGetter"</span>, <span class="string">"serverAddress"</span>);</span><br><span class="line">    target.addGetter(<span class="string">"com.navercorp.pinpoint.plugin.sample._13_RPC_Client.ServerPortGetter"</span>, <span class="string">"serverPort"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里在com.navercorp.plugin.sample.target.TargetClass13_Request的sendRequest增加了Interceptor</span></span><br><span class="line">    target.getDeclaredMethod(<span class="string">"sendRequest"</span>, <span class="string">"com.navercorp.plugin.sample.target.TargetClass13_Request"</span>).addInterceptor(<span class="string">"com.navercorp.pinpoint.plugin.sample._13_RPC_Client.SendRequestInterceptor"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> target.toBytecode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Interceptor有两个方法before和after<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">(Object target, Object arg0)</span> </span>&#123;</span><br><span class="line">    Trace trace = traceContext.currentTraceObject();</span><br><span class="line">    <span class="keyword">if</span> (trace == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    TargetClass13_Request request = (TargetClass13_Request) arg0;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (trace.canSampled()) &#123;</span><br><span class="line">        SpanEventRecorder recorder = trace.traceBlockBegin();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// RPC call trace have to be recorded with a service code in RPC client code range.</span></span><br><span class="line">        recorder.recordServiceType(SamplePluginConstants.MY_RPC_CLIENT_SERVICE_TYPE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// You have to issue a TraceId the receiver of this request will use.</span></span><br><span class="line">        TraceId nextId = trace.getTraceId().getNextTraceId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Then record it as next span id.</span></span><br><span class="line">        recorder.recordNextSpanId(nextId.getSpanId());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Finally, pass some tracing data to the server.</span></span><br><span class="line">        <span class="comment">// How to put them in a message is protocol specific.</span></span><br><span class="line">        <span class="comment">// This example assumes that the target protocol message can include any metadata (like HTTP headers).</span></span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_TRANSACTION_ID, nextId.getTransactionId());</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_SPAN_ID, Long.toString(nextId.getSpanId()));</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_PARENT_SPAN_ID, Long.toString(nextId.getParentSpanId()));</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_PARENT_APPLICATION_TYPE, Short.toString(traceContext.getServerTypeCode()));</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_PARENT_APPLICATION_NAME, traceContext.getApplicationName());</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_FLAGS, Short.toString(nextId.getFlags()));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// If sampling this transaction is disabled, pass only that infomation to the server.</span></span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_DO_NOT_TRACE, <span class="string">"1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">(Object target, Object arg0, Object result, Throwable throwable)</span> </span>&#123;</span><br><span class="line">    Trace trace = traceContext.currentTraceObject();</span><br><span class="line">    <span class="keyword">if</span> (trace == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        SpanEventRecorder recorder = trace.currentSpanEventRecorder();</span><br><span class="line"></span><br><span class="line">        recorder.recordApi(descriptor);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (throwable == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// RPC client have to record end point (server address)</span></span><br><span class="line">            String serverAddress = ((ServerAddressGetter) target)._$PREFIX$_getServerAddress();</span><br><span class="line">            <span class="keyword">int</span> port = ((ServerPortGetter) target)._$PREFIX$_getServerPort();</span><br><span class="line">            recorder.recordEndPoint(serverAddress + <span class="string">":"</span> + port);</span><br><span class="line"></span><br><span class="line">            TargetClass13_Request request = (TargetClass13_Request) arg0;</span><br><span class="line">            <span class="comment">// Optionally, record the destination id (logical name of server. e.g. DB name)</span></span><br><span class="line">            recorder.recordDestinationId(request.getNamespace());</span><br><span class="line">            recorder.recordAttribute(SamplePluginConstants.MY_RPC_PROCEDURE_ANNOTATION_KEY, request.getProcedure());</span><br><span class="line">            recorder.recordAttribute(SamplePluginConstants.MY_RPC_ARGUMENT_ANNOTATION_KEY, request.getArgument());</span><br><span class="line">            recorder.recordAttribute(SamplePluginConstants.MY_RPC_RESULT_ANNOTATION_KEY, result);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            recorder.recordException(throwable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        trace.traceBlockEnd();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分别会在sendRequest的前后执行，完成生成trace data和record</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://github.com/naver/pinpoint/raw/master/doc/img/ss_server-map.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;pinpoint，不用侵入到用户代码，在JVM插入agent实现调用链。与鹰眼，zipkin等白盒方式不同的是，pinpoint不要侵入代码，可以称之为灰盒（论文将调用链分为三种，白盒灰盒，黑盒）。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="tracing" scheme="http://blog.decbug.com/tags/tracing/"/>
+    
+  </entry>
+  
+  <entry>
     <title>docker源码分析--create,update</title>
-    <link href="http://blog.decbug.com/2017/04/28/dockerd-containerd-runc/"/>
-    <id>http://blog.decbug.com/2017/04/28/dockerd-containerd-runc/</id>
+    <link href="http://blog.decbug.com/dockerd-containerd-runc/"/>
+    <id>http://blog.decbug.com/dockerd-containerd-runc/</id>
     <published>2017-04-27T17:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>1.11大重构之后，和1.6不一样了，简单看下流程，记个笔记</p>
 <a id="more"></a>
@@ -50,10 +104,10 @@
   
   <entry>
     <title>向运行的容器加设备</title>
-    <link href="http://blog.decbug.com/2017/04/27/attach_device_to_running_container/"/>
-    <id>http://blog.decbug.com/2017/04/27/attach_device_to_running_container/</id>
+    <link href="http://blog.decbug.com/attach_device_to_running_container/"/>
+    <id>http://blog.decbug.com/attach_device_to_running_container/</id>
     <published>2017-04-26T17:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.305Z</updated>
     
     <content type="html"><![CDATA[<p>创建容器的时候，可以通过-device，-v来加设备加path，也可以加网卡，但是缺乏向运行时的容器加设备的方法</p>
 <a id="more"></a>
@@ -79,10 +133,10 @@
   
   <entry>
     <title>CloudInsightAgent源码分析</title>
-    <link href="http://blog.decbug.com/2017/04/01/cloudinght_agent_src/"/>
-    <id>http://blog.decbug.com/2017/04/01/cloudinght_agent_src/</id>
+    <link href="http://blog.decbug.com/cloudinght_agent_src/"/>
+    <id>http://blog.decbug.com/cloudinght_agent_src/</id>
     <published>2017-03-31T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>之前模仿sysdig做了个容器性能监控平台，<a href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/">链接在此</a>，虽然有一些基础的功能，但是还不完善，</p>
 <p>恰好看到cloud insight开源了他的agent，看过之后，和我的思路差不多，就简单记录一下，避免遗忘。</p>
@@ -116,10 +170,10 @@
   
   <entry>
     <title>云计算网络安全</title>
-    <link href="http://blog.decbug.com/2017/03/03/cloud_network_security/"/>
-    <id>http://blog.decbug.com/2017/03/03/cloud_network_security/</id>
+    <link href="http://blog.decbug.com/cloud_network_security/"/>
+    <id>http://blog.decbug.com/cloud_network_security/</id>
     <published>2017-03-02T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>近日关于云计算安全的问题，闹的沸沸扬扬。某不才，也算是云计算入门人士，便结合自身经历分析一番。</p>
 <a id="more"></a>
@@ -179,10 +233,10 @@
   
   <entry>
     <title>Run a full OpenStack in a LXD container</title>
-    <link href="http://blog.decbug.com/2017/02/26/openstack_in_lxc/"/>
-    <id>http://blog.decbug.com/2017/02/26/openstack_in_lxc/</id>
+    <link href="http://blog.decbug.com/openstack_in_lxc/"/>
+    <id>http://blog.decbug.com/openstack_in_lxc/</id>
     <published>2017-02-25T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.145Z</updated>
+    <updated>2017-05-06T05:44:22.313Z</updated>
     
     <content type="html"><![CDATA[<p>鉴于lxc容器特别像虚拟机的特点，rackspace，都有把openstack部署到lxc容器里的实践，恰好lxc也有类似教程，打算自己跑一遍，看看是怎样一种体验</p>
 <p>how to run a full OpenStack, using LXD containers instead of VMs and running all of this inside a LXD container (nesting!).</p>
@@ -315,10 +369,10 @@
   
   <entry>
     <title>cloud-init</title>
-    <link href="http://blog.decbug.com/2017/02/24/cloud-init/"/>
-    <id>http://blog.decbug.com/2017/02/24/cloud-init/</id>
+    <link href="http://blog.decbug.com/cloud-init/"/>
+    <id>http://blog.decbug.com/cloud-init/</id>
     <published>2017-02-23T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>刚创出来的虚拟机，要如何设置初始密码？如何添加环境变量？如何进行一系列的预置操作？<br>答案就是cloud-init。<br>当前正在搞openstack+lxc，也需要在创容器的时候注入一些信息，比如初始密码，开启SSH密码登录，允许root等等，就顺手记录cloud-init一下。</p>
 <a id="more"></a>
@@ -364,10 +418,10 @@
   
   <entry>
     <title>lxd,lxc,nova-lxd</title>
-    <link href="http://blog.decbug.com/2017/02/11/nova-lxd-lxc/"/>
-    <id>http://blog.decbug.com/2017/02/11/nova-lxd-lxc/</id>
+    <link href="http://blog.decbug.com/nova-lxd-lxc/"/>
+    <id>http://blog.decbug.com/nova-lxd-lxc/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.145Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下lxc, lxd, nova-lxd的关系以及源码</p>
 <ul>
@@ -428,10 +482,10 @@
   
   <entry>
     <title>LXC,docker</title>
-    <link href="http://blog.decbug.com/2017/02/11/lxc_docker/"/>
-    <id>http://blog.decbug.com/2017/02/11/lxc_docker/</id>
+    <link href="http://blog.decbug.com/lxc_docker/"/>
+    <id>http://blog.decbug.com/lxc_docker/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。<br>然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？</p>
 <a id="more"></a>
@@ -530,10 +584,10 @@
   
   <entry>
     <title>网络笔记--docker,neutron</title>
-    <link href="http://blog.decbug.com/2017/02/10/network_intro/"/>
-    <id>http://blog.decbug.com/2017/02/10/network_intro/</id>
+    <link href="http://blog.decbug.com/network_intro/"/>
+    <id>http://blog.decbug.com/network_intro/</id>
     <published>2017-02-09T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.145Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>简单记录之前搞容器网络用的基础知识<br><a id="more"></a></p>
 <h1 id="ip命令"><a href="#ip命令" class="headerlink" title="ip命令"></a>ip命令</h1><ul>
@@ -583,10 +637,10 @@
   
   <entry>
     <title>KVM的几种缓存模式</title>
-    <link href="http://blog.decbug.com/2017/01/17/KVM_cache/"/>
-    <id>http://blog.decbug.com/2017/01/17/KVM_cache/</id>
+    <link href="http://blog.decbug.com/KVM_cache/"/>
+    <id>http://blog.decbug.com/KVM_cache/</id>
     <published>2017-01-16T17:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.137Z</updated>
+    <updated>2017-05-06T05:44:22.305Z</updated>
     
     <content type="html"><![CDATA[<p>现象：</p>
 <ol>
@@ -641,10 +695,10 @@
   
   <entry>
     <title>Neutron与容器网络</title>
-    <link href="http://blog.decbug.com/2017/01/15/container_neutron/"/>
-    <id>http://blog.decbug.com/2017/01/15/container_neutron/</id>
+    <link href="http://blog.decbug.com/container_neutron/"/>
+    <id>http://blog.decbug.com/container_neutron/</id>
     <published>2017-01-14T17:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>容器用Neutron组网，比Flannel和VPC router强的地方在于</p>
 <ul>
@@ -698,10 +752,10 @@
   
   <entry>
     <title>conver socks5 to http proxy</title>
-    <link href="http://blog.decbug.com/2017/01/10/socks5_http/"/>
-    <id>http://blog.decbug.com/2017/01/10/socks5_http/</id>
+    <link href="http://blog.decbug.com/socks5_http/"/>
+    <id>http://blog.decbug.com/socks5_http/</id>
     <published>2017-01-09T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.145Z</updated>
+    <updated>2017-05-06T05:44:22.313Z</updated>
     
     <content type="html"><![CDATA[<p>go get, but connect to golang.org timeout!!!</p>
 <a id="more"></a>
@@ -726,10 +780,10 @@
   
   <entry>
     <title>一次容器网络问题debug</title>
-    <link href="http://blog.decbug.com/2017/01/03/container_network_debug/"/>
-    <id>http://blog.decbug.com/2017/01/03/container_network_debug/</id>
+    <link href="http://blog.decbug.com/container_network_debug/"/>
+    <id>http://blog.decbug.com/container_network_debug/</id>
     <published>2017-01-02T17:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
 <a id="more"></a>
@@ -775,10 +829,10 @@
   
   <entry>
     <title>山寨版sysdig cloud</title>
-    <link href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/"/>
-    <id>http://blog.decbug.com/2016/12/06/sysdig_knockoff/</id>
+    <link href="http://blog.decbug.com/sysdig_knockoff/"/>
+    <id>http://blog.decbug.com/sysdig_knockoff/</id>
     <published>2016-12-05T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.145Z</updated>
+    <updated>2017-05-06T05:44:22.313Z</updated>
     
     <content type="html"><![CDATA[<p>调用链分析有三种模式：</p>
 <ol>
@@ -834,10 +888,10 @@
   
   <entry>
     <title>阿里云容器服务分析</title>
-    <link href="http://blog.decbug.com/2016/12/05/aliyun_container/"/>
-    <id>http://blog.decbug.com/2016/12/05/aliyun_container/</id>
+    <link href="http://blog.decbug.com/aliyun_container/"/>
+    <id>http://blog.decbug.com/aliyun_container/</id>
     <published>2016-12-04T17:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.137Z</updated>
+    <updated>2017-05-06T05:44:22.305Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
 <a id="more"></a>
@@ -884,10 +938,10 @@
   
   <entry>
     <title>sudoers分析</title>
-    <link href="http://blog.decbug.com/2016/12/05/sudoers/"/>
-    <id>http://blog.decbug.com/2016/12/05/sudoers/</id>
+    <link href="http://blog.decbug.com/sudoers/"/>
+    <id>http://blog.decbug.com/sudoers/</id>
     <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.145Z</updated>
+    <updated>2017-05-06T05:44:22.313Z</updated>
     
     <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
 <a id="more"></a>
@@ -923,10 +977,10 @@
   
   <entry>
     <title>通过libcap抓包</title>
-    <link href="http://blog.decbug.com/2016/10/16/libcap/"/>
-    <id>http://blog.decbug.com/2016/10/16/libcap/</id>
+    <link href="http://blog.decbug.com/libcap/"/>
+    <id>http://blog.decbug.com/libcap/</id>
     <published>2016-10-15T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.141Z</updated>
+    <updated>2017-05-06T05:44:22.309Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
 <p>原理</p>
@@ -957,10 +1011,10 @@
   
   <entry>
     <title>调用链技术分析</title>
-    <link href="http://blog.decbug.com/2016/10/14/tracing/"/>
-    <id>http://blog.decbug.com/2016/10/14/tracing/</id>
+    <link href="http://blog.decbug.com/tracing/"/>
+    <id>http://blog.decbug.com/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.145Z</updated>
+    <updated>2017-05-06T05:44:22.313Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -1062,10 +1116,10 @@
   
   <entry>
     <title>sysdig源码分析</title>
-    <link href="http://blog.decbug.com/2016/10/12/sysdig/"/>
-    <id>http://blog.decbug.com/2016/10/12/sysdig/</id>
+    <link href="http://blog.decbug.com/sysdig/"/>
+    <id>http://blog.decbug.com/sysdig/</id>
     <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.145Z</updated>
+    <updated>2017-05-06T05:44:22.313Z</updated>
     
     <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
 <ol>
@@ -1144,43 +1198,6 @@
 &lt;li&gt;通过内核抓事件，不用侵入到容器&lt;/li&gt;
 &lt;li&gt;可以自己写铲子，扩展起来很方便。&lt;br&gt;于是就顺手看下他的实现原理&lt;/li&gt;
 &lt;/ol&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="APM" scheme="http://blog.decbug.com/tags/APM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>APM厂商分析</title>
-    <link href="http://blog.decbug.com/2016/10/10/APM/"/>
-    <id>http://blog.decbug.com/2016/10/10/APM/</id>
-    <published>2016-10-09T16:00:00.000Z</published>
-    <updated>2017-04-28T00:06:04.137Z</updated>
-    
-    <content type="html"><![CDATA[<p>在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。</p>
-<p>在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆</p>
-<a id="more"></a>
-<h1 id="sysdig"><a href="#sysdig" class="headerlink" title="sysdig"></a>sysdig</h1><p>分为<a href="https://github.com/draios/sysdig" target="_blank" rel="external">开源版sysdig.org</a>和<a href="https://sysdig.com/" target="_blank" rel="external">商业版sysdig cloud</a></p>
-<h2 id="开源"><a href="#开源" class="headerlink" title="开源"></a>开源</h2><p>原理：抓内核级别的调用，比如read，write，网络也是read，write，只不过描述符不一样，然后形成事件，记录下来<br>还有个强大的功能Chisel，很好玩，可以自己扩展功能，用lua写<br><a href="https://github.com/draios/sysdig/wiki/Writing-a-Sysdig-Chisel,-a-Tutorial" target="_blank" rel="external">Writing a Sysdig Chisel, a Tutorial</a></p>
-<h2 id="sysdig-cloud"><a href="#sysdig-cloud" class="headerlink" title="sysdig cloud"></a>sysdig cloud</h2><p>装一个agent，用的是开源的sysdig采集数据，然后上报到sysdig cloud的服务器。</p>
-<ul>
-<li>可以展示topo，调用耗时等等</li>
-<li>分析http，可以精确到url</li>
-<li>通过分析开源代码，分析出具体的调用，原理应该和chisel中的memcache差不多</li>
-</ul>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>dynatrace &amp; apptrace<br>都差不多</p>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在微服务大行其道的今天，系统的实例越来越多，出现性能问题时要调试就很困难。于是乎，就出现了许多APM厂商，只需要装一个agent，就能通过监控系统调用，网络传输，性能指标，辅助调试定位性能问题。&lt;/p&gt;
-&lt;p&gt;在公司分析了很多，也抓包了，详细内容带不出来。就简单记个笔记，供以后回忆&lt;/p&gt;
     
     </summary>
     

@@ -1,0 +1,754 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="tracing," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Continuous Learning" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="pinpoint，不用侵入到用户代码，在JVM插入agent实现调用链。与鹰眼，zipkin等白盒方式不同的是，pinpoint不要侵入代码，可以称之为灰盒（论文将调用链分为三种，白盒灰盒，黑盒）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pinpoint分析">
+<meta property="og:url" content="http://blog.decbug.com/pinpoint/index.html">
+<meta property="og:site_name" content="Continuous Learning">
+<meta property="og:description" content="pinpoint，不用侵入到用户代码，在JVM插入agent实现调用链。与鹰眼，zipkin等白盒方式不同的是，pinpoint不要侵入代码，可以称之为灰盒（论文将调用链分为三种，白盒灰盒，黑盒）。">
+<meta property="og:image" content="https://github.com/naver/pinpoint/raw/master/doc/img/ss_server-map.png">
+<meta property="og:image" content="https://github.com/naver/pinpoint/raw/master/doc/img/ss_call-stack.png">
+<meta property="og:image" content="https://github.com/naver/pinpoint/raw/master/doc/img/pinpoint-architecture.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/8037461/13870778/0073df06-ed22-11e5-97a3-ebe116186947.jpg">
+<meta property="og:updated_time" content="2017-05-06T05:44:22.313Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pinpoint分析">
+<meta name="twitter:description" content="pinpoint，不用侵入到用户代码，在JVM插入agent实现调用链。与鹰眼，zipkin等白盒方式不同的是，pinpoint不要侵入代码，可以称之为灰盒（论文将调用链分为三种，白盒灰盒，黑盒）。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+  <title> pinpoint分析 | Continuous Learning </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-57346409-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Continuous Learning</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-twitter">
+          <a href="/twitter" rel="section">
+            <i class="menu-item-icon icon-next-twitter"></i> <br />
+            碎念
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            <i class="menu-item-icon icon-next-book"></i> <br />
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            <i class="menu-item-icon icon-next-commonweal"></i> <br />
+            404
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              pinpoint分析
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-05-06T01:00:00+08:00" content="2017-05-06">
+            2017-05-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/pinpoint/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="pinpoint/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><img src="https://github.com/naver/pinpoint/raw/master/doc/img/ss_server-map.png" alt=""></p>
+<p>pinpoint，不用侵入到用户代码，在JVM插入agent实现调用链。与鹰眼，zipkin等白盒方式不同的是，pinpoint不要侵入代码，可以称之为灰盒（论文将调用链分为三种，白盒灰盒，黑盒）。</p>
+<a id="more"></a>
+<p><img src="https://github.com/naver/pinpoint/raw/master/doc/img/ss_call-stack.png" alt=""></p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><p><img src="https://github.com/naver/pinpoint/raw/master/doc/img/pinpoint-architecture.png" alt=""><br>分为三个组件，agent（最重要，核心功能），collector（收集，大家的做法都差不多），UI</p>
+<h1 id="agent说明"><a href="#agent说明" class="headerlink" title="agent说明"></a>agent说明</h1><blockquote>
+<p>Pinpoint Agent attaches itself to a host application (such as Tomcat) as a java agent to instrument various classes for tracing. When a class marked for tracing is loaded into the JVM, the Agent injects code around pre-defined methods to collect and send trace data to the Collector.<br>  In addition to trace data, the agent also collects various information about the host application such as JVM arguments, loaded libraries, CPU usage, Memory Usage and Garbage Collection.</p>
+</blockquote>
+<p>在JVM层插入agent，在指定方法外包一层自定义代码，加上trace data和JVM usage等信息</p>
+<p><img src="https://cloud.githubusercontent.com/assets/8037461/13870778/0073df06-ed22-11e5-97a3-ebe116186947.jpg" alt=""><br>如图所示</p>
+<ul>
+<li>从FrountEnd出来的原始message之外被agent加上了transaction ID, span ID等等trace data，关于这些ID的作用，可以查看dapper的定义</li>
+<li>BackEnd收到消息后，先由agent把trace data解析出来，然后再把原始message交给BackEnd的方法</li>
+</ul>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>在<a href="https://github.com/naver/pinpoint/blob/master/doc/installation.md#installation-3" target="_blank" rel="external">安装文档</a>上可以看到</p>
+<blockquote>
+<p>To wire up the agent, pass $AGENT_PATH/pinpoint-bootstrap-$VERSION.jar to the -javaagent JVM argument when running the application:</p>
+<ul>
+<li>-javaagent:$AGENT_PATH/pinpoint-bootstrap-$VERSION.jar<br>Additionally, Pinpoint Agent requires 2 command-line arguments in order to identify itself in the distributed system:</li>
+<li>-Dpinpoint.agentId - uniquely identifies the application instance in which the agent is running on</li>
+<li>-Dpinpoint.applicationName - groups a number of identical application instances as a single service</li>
+</ul>
+</blockquote>
+<p>说明用的是JVM agent的方式,你假笨的<a href="http://www.infoq.com/cn/articles/javaagent-illustrated" target="_blank" rel="external">JVM源码分析之javaagent原理完全解读</a>对此有过分析。<br>大概就是，采用类似hook的机制，修改指定类某些方法，使之执行我的附加代码。在pinpoint则是，进行trace相关的操作</p>
+<h2 id="插件示例"><a href="#插件示例" class="headerlink" title="插件示例"></a>插件示例</h2><p><a href="https://github.com/naver/pinpoint-plugin-sample/blob/master/plugin/src/main/java/com/navercorp/pinpoint/plugin/sample/_13_RPC_Client/Sample_13_RPC_Client.java#L38" target="_blank" rel="external">Sample_13_RPC_Client.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] doInTransform(Instrumentor instrumentor, ClassLoader classLoader, String className, Class&lt;?&gt; classBeingRedefined, ProtectionDomain protectionDomain, <span class="keyword">byte</span>[] classfileBuffer) <span class="keyword">throws</span> InstrumentException &#123;</span><br><span class="line">    InstrumentClass target = instrumentor.getInstrumentClass(classLoader, className, classfileBuffer);</span><br><span class="line"></span><br><span class="line">    target.addGetter(<span class="string">"com.navercorp.pinpoint.plugin.sample._13_RPC_Client.ServerAddressGetter"</span>, <span class="string">"serverAddress"</span>);</span><br><span class="line">    target.addGetter(<span class="string">"com.navercorp.pinpoint.plugin.sample._13_RPC_Client.ServerPortGetter"</span>, <span class="string">"serverPort"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里在com.navercorp.plugin.sample.target.TargetClass13_Request的sendRequest增加了Interceptor</span></span><br><span class="line">    target.getDeclaredMethod(<span class="string">"sendRequest"</span>, <span class="string">"com.navercorp.plugin.sample.target.TargetClass13_Request"</span>).addInterceptor(<span class="string">"com.navercorp.pinpoint.plugin.sample._13_RPC_Client.SendRequestInterceptor"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> target.toBytecode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Interceptor有两个方法before和after<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">(Object target, Object arg0)</span> </span>&#123;</span><br><span class="line">    Trace trace = traceContext.currentTraceObject();</span><br><span class="line">    <span class="keyword">if</span> (trace == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    TargetClass13_Request request = (TargetClass13_Request) arg0;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (trace.canSampled()) &#123;</span><br><span class="line">        SpanEventRecorder recorder = trace.traceBlockBegin();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// RPC call trace have to be recorded with a service code in RPC client code range.</span></span><br><span class="line">        recorder.recordServiceType(SamplePluginConstants.MY_RPC_CLIENT_SERVICE_TYPE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// You have to issue a TraceId the receiver of this request will use.</span></span><br><span class="line">        TraceId nextId = trace.getTraceId().getNextTraceId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Then record it as next span id.</span></span><br><span class="line">        recorder.recordNextSpanId(nextId.getSpanId());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Finally, pass some tracing data to the server.</span></span><br><span class="line">        <span class="comment">// How to put them in a message is protocol specific.</span></span><br><span class="line">        <span class="comment">// This example assumes that the target protocol message can include any metadata (like HTTP headers).</span></span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_TRANSACTION_ID, nextId.getTransactionId());</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_SPAN_ID, Long.toString(nextId.getSpanId()));</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_PARENT_SPAN_ID, Long.toString(nextId.getParentSpanId()));</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_PARENT_APPLICATION_TYPE, Short.toString(traceContext.getServerTypeCode()));</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_PARENT_APPLICATION_NAME, traceContext.getApplicationName());</span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_FLAGS, Short.toString(nextId.getFlags()));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// If sampling this transaction is disabled, pass only that infomation to the server.</span></span><br><span class="line">        request.addMetadata(SamplePluginConstants.META_DO_NOT_TRACE, <span class="string">"1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">(Object target, Object arg0, Object result, Throwable throwable)</span> </span>&#123;</span><br><span class="line">    Trace trace = traceContext.currentTraceObject();</span><br><span class="line">    <span class="keyword">if</span> (trace == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        SpanEventRecorder recorder = trace.currentSpanEventRecorder();</span><br><span class="line"></span><br><span class="line">        recorder.recordApi(descriptor);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (throwable == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// RPC client have to record end point (server address)</span></span><br><span class="line">            String serverAddress = ((ServerAddressGetter) target)._$PREFIX$_getServerAddress();</span><br><span class="line">            <span class="keyword">int</span> port = ((ServerPortGetter) target)._$PREFIX$_getServerPort();</span><br><span class="line">            recorder.recordEndPoint(serverAddress + <span class="string">":"</span> + port);</span><br><span class="line"></span><br><span class="line">            TargetClass13_Request request = (TargetClass13_Request) arg0;</span><br><span class="line">            <span class="comment">// Optionally, record the destination id (logical name of server. e.g. DB name)</span></span><br><span class="line">            recorder.recordDestinationId(request.getNamespace());</span><br><span class="line">            recorder.recordAttribute(SamplePluginConstants.MY_RPC_PROCEDURE_ANNOTATION_KEY, request.getProcedure());</span><br><span class="line">            recorder.recordAttribute(SamplePluginConstants.MY_RPC_ARGUMENT_ANNOTATION_KEY, request.getArgument());</span><br><span class="line">            recorder.recordAttribute(SamplePluginConstants.MY_RPC_RESULT_ANNOTATION_KEY, result);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            recorder.recordException(throwable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        trace.traceBlockEnd();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分别会在sendRequest的前后执行，完成生成trace data和record</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tracing/" rel="tag">#tracing</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/dockerd-containerd-runc/" rel="next">docker源码分析--create,update</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/5423628?v=3&s=460" alt="CodeJuan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">CodeJuan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">115</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">145</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/codejuan" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/decbug" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://stackoverflow.com/users/2763396/codejuan" target="_blank">stackoverflow</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://blog.decbug.com/" target="_blank">decbug</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#架构"><span class="nav-number">1.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#agent说明"><span class="nav-number">2.</span> <span class="nav-text">agent说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">2.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插件示例"><span class="nav-number">2.2.</span> <span class="nav-text">插件示例</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CodeJuan</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'codejuan';
+      var disqus_identifier = 'pinpoint/';
+      var disqus_title = 'pinpoint分析';
+      var disqus_url = 'http://blog.decbug.com/pinpoint/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -207,7 +207,101 @@
           
           
             
-              <a class="post-title-link" href="/2015/07/25/install_centos/" itemprop="url">
+              <a class="post-title-link" href="/pe_depen/" itemprop="url">
+                自动生成软件中模块依赖图
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-07-26T00:00:00+08:00" content="2015-07-26">
+            2015-07-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/pe_depen/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="pe_depen/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上回实现了<a href="http://blog.decbug.com/2015/07/06/dependency_in_sln/">自动生成sln中各project依赖图</a>，可以分析一个VS solution里面每个project的依赖关系，但是这个太弱了。我需要exe、dll之间依赖图，所以只能继续想办法了。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><ol>
+<li>获取该软件目录下所有模块(exe和dll)</li>
+<li>通过vs自带的dumpbin命令得到每个模块文件的依赖</li>
+<li>画出graphviz的dot脚本</li>
+<li>graphviz绘图</li>
+</ol>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/pe_depen/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/install_centos/" itemprop="url">
                 在家里玩分布式(1)install centos
               </a>
             
@@ -244,8 +338,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/07/25/install_centos/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/25/install_centos/" itemprop="commentsCount"></span>
+            <a href="/install_centos/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="install_centos/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -268,7 +362,7 @@
 - 最后用PHP展示
 </code></pre><p>也勉强算是跟大数据沾点边，几台机器都自动化起来，也get以下运维技能吧。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/07/25/install_centos/#more" rel="contents">
+            <a class="btn" href="/install_centos/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -301,7 +395,7 @@
           
           
             
-              <a class="post-title-link" href="/2015/07/06/dependency_in_sln/" itemprop="url">
+              <a class="post-title-link" href="/dependency_in_sln/" itemprop="url">
                 自动生成sln中各project依赖图
               </a>
             
@@ -338,8 +432,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/07/06/dependency_in_sln/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/06/dependency_in_sln/" itemprop="commentsCount"></span>
+            <a href="/dependency_in_sln/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="dependency_in_sln/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -357,7 +451,7 @@
           <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>为了提高构建效率，需要分析sln中各project的依赖关系，将相互独立的project分配到不同机器并行构建。如果是一个个打开工程并查看dependency，然后画出依赖图，实在是太繁琐了。这就需要将这一些工作用脚本来实现。</p>
 <p>写好的代码放在<a href="https://github.com/CodeJuan/dependency_in_sln">https://github.com/CodeJuan/dependency_in_sln</a>，使用方法也很简单。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/07/06/dependency_in_sln/#more" rel="contents">
+            <a class="btn" href="/dependency_in_sln/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -390,7 +484,7 @@
           
           
             
-              <a class="post-title-link" href="/2015/06/22/Pelican_hexo/" itemprop="url">
+              <a class="post-title-link" href="/Pelican_hexo/" itemprop="url">
                 hexo and pelican
               </a>
             
@@ -427,8 +521,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/06/22/Pelican_hexo/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/22/Pelican_hexo/" itemprop="commentsCount"></span>
+            <a href="/Pelican_hexo/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Pelican_hexo/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -445,7 +539,7 @@
         
           <span itemprop="description">用pelican或hexo建一个漂亮的博客</span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/06/22/Pelican_hexo/">
+            <a class="btn" href="/Pelican_hexo/">
               阅读全文 &raquo;
             </a>
           </div>
@@ -478,7 +572,7 @@
           
           
             
-              <a class="post-title-link" href="/2015/06/13/Premature_Optimization/" itemprop="url">
+              <a class="post-title-link" href="/Premature_Optimization/" itemprop="url">
                 身边的过早优化事件
               </a>
             
@@ -515,8 +609,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/06/13/Premature_Optimization/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/13/Premature_Optimization/" itemprop="commentsCount"></span>
+            <a href="/Premature_Optimization/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Premature_Optimization/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -533,96 +627,7 @@
         
           <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>组里小伙要对他们的代码进行优化，分析之后，觉得没有什么拖慢性能的代码，于是决定多开几个线程。我得知之后，与他进行了一番对话，终于说服了他在动手优化之前进行充分测量，找出瓶颈再有针对性的优化。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/06/13/Premature_Optimization/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/06/11/career_of_programmer/" itemprop="url">
-                读程序员职业规划书有感
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-06-11T23:30:09+08:00" content="2015-06-11">
-            2015-06-11
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/06/11/career_of_programmer/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/11/career_of_programmer/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><img src="http://img4.douban.com/lpic/s28065947.jpg" alt=""></p>
-<p>最近被挖猎几次，虽说心动不已，但我年事已高，不复当年之热血，故对未来的职业规划愈发迷茫，愈发谨慎。<br>恰巧得到<a href="http://weibo.com/easy">@Easy</a>兄惠赠的《程序员必读的职业规划书》，拜读之下有所收获。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/06/11/career_of_programmer/#more" rel="contents">
+            <a class="btn" href="/Premature_Optimization/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -682,7 +687,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">114</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -207,7 +207,103 @@
           
           
             
-              <a class="post-title-link" href="/2017/01/15/container_neutron/" itemprop="url">
+              <a class="post-title-link" href="/KVM_cache/" itemprop="url">
+                KVM的几种缓存模式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-01-17T01:00:00+08:00" content="2017-01-17">
+            2017-01-17
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/KVM_cache/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="KVM_cache/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>现象：</p>
+<ol>
+<li>虚拟机的IO性能比物理机/容器好？</li>
+<li>容器和物理机差不多，这个很好理解，如果没有做IO limit，肯定和物理机相近</li>
+<li>用的virsh disk-attach宿主机上的一个/dev/sdxxx，用的是default</li>
+<li>顺序读写完爆物理机</li>
+<li>随机读写从1K，4K，16K到1M都比物理机强，唯有64M的写比物理机差</li>
+</ol>
+<p>比较奇怪，需要分析一下</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/KVM_cache/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/container_neutron/" itemprop="url">
                 Neutron与容器网络
               </a>
             
@@ -244,8 +340,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2017/01/15/container_neutron/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/15/container_neutron/" itemprop="commentsCount"></span>
+            <a href="/container_neutron/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="container_neutron/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -270,7 +366,7 @@
 <li>性能，如果是部署在openstack发放的虚拟机上，则不用在overlay一层</li>
 </ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/15/container_neutron/#more" rel="contents">
+            <a class="btn" href="/container_neutron/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -303,7 +399,7 @@
           
           
             
-              <a class="post-title-link" href="/2017/01/10/socks5_http/" itemprop="url">
+              <a class="post-title-link" href="/socks5_http/" itemprop="url">
                 conver socks5 to http proxy
               </a>
             
@@ -340,8 +436,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2017/01/10/socks5_http/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/10/socks5_http/" itemprop="commentsCount"></span>
+            <a href="/socks5_http/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="socks5_http/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -358,7 +454,7 @@
         
           <p>go get, but connect to golang.org timeout!!!</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/10/socks5_http/#more" rel="contents">
+            <a class="btn" href="/socks5_http/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -391,7 +487,7 @@
           
           
             
-              <a class="post-title-link" href="/2017/01/03/container_network_debug/" itemprop="url">
+              <a class="post-title-link" href="/container_network_debug/" itemprop="url">
                 一次容器网络问题debug
               </a>
             
@@ -428,8 +524,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2017/01/03/container_network_debug/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/03/container_network_debug/" itemprop="commentsCount"></span>
+            <a href="/container_network_debug/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="container_network_debug/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -446,7 +542,7 @@
         
           <p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/03/container_network_debug/#more" rel="contents">
+            <a class="btn" href="/container_network_debug/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -479,7 +575,7 @@
           
           
             
-              <a class="post-title-link" href="/2016/12/06/sysdig_knockoff/" itemprop="url">
+              <a class="post-title-link" href="/sysdig_knockoff/" itemprop="url">
                 山寨版sysdig cloud
               </a>
             
@@ -516,8 +612,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2016/12/06/sysdig_knockoff/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/06/sysdig_knockoff/" itemprop="commentsCount"></span>
+            <a href="/sysdig_knockoff/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="sysdig_knockoff/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -546,95 +642,7 @@
 </ul>
 <p>花了一周时间在k8s上做出来了，当然，由于缺乏算法支持，目前只做到了点对点的调用topo及http,memcached的时延，后面有空再补齐MySQL等等。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/06/sysdig_knockoff/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/12/05/aliyun_container/" itemprop="url">
-                阿里云容器服务分析
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-12-05T01:00:00+08:00" content="2016-12-05">
-            2016-12-05
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2016/12/05/aliyun_container/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/05/aliyun_container/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>分析一下阿里云容器服务</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/05/aliyun_container/#more" rel="contents">
+            <a class="btn" href="/sysdig_knockoff/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -694,7 +702,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">114</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

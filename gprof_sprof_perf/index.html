@@ -1,0 +1,787 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="C++,linux,optimization," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Continuous Learning" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="前言上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。
+此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。
+每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux C++性能调优笔记">
+<meta property="og:url" content="http://blog.decbug.com/gprof_sprof_perf/index.html">
+<meta property="og:site_name" content="Continuous Learning">
+<meta property="og:description" content="前言上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。
+此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。
+每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。">
+<meta property="og:updated_time" content="2017-05-06T05:44:22.309Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux C++性能调优笔记">
+<meta name="twitter:description" content="前言上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。
+此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。
+每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+  <title> Linux C++性能调优笔记 | Continuous Learning </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-57346409-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Continuous Learning</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-twitter">
+          <a href="/twitter" rel="section">
+            <i class="menu-item-icon icon-next-twitter"></i> <br />
+            碎念
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            <i class="menu-item-icon icon-next-book"></i> <br />
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            <i class="menu-item-icon icon-next-commonweal"></i> <br />
+            404
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Linux C++性能调优笔记
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-03-27T23:30:09+08:00" content="2015-03-27">
+            2015-03-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/gprof_sprof_perf/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="gprof_sprof_perf/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上周领导在群里问谁会linux C开发，我曾在业余时间自己捣鼓过，于是回答略懂。这周就被派到别的项目组紧急支援开发。大体工作是开发一个so供前台调用，开发过程中对makefile、跨平台的理解越发深刻了。相比于自娱自乐，正规开发更能涨知识。</p>
+<p>此后数据量较大，很快就出现性能问题，作为折腾砖家，我当仁不让地接下性能调优的活。</p>
+<p>每当遇到难题，都是我比较开心的时候，因为又是一次get新技能的好机会。</p>
+<a id="more"></a>
+<h2 id="profiler"><a href="#profiler" class="headerlink" title="profiler"></a>profiler</h2><p>当系统的性能不能满足要求的时候，便要对其进行调优。方法有千千万万种，但无论如何，我们都要想办法精确识别到瓶颈，然后有的放矢进行优化。如何精确识别呢？这个时候profiler就闪亮登场了。</p>
+<p><em>尝试了很多profiler之后，最终还是决定使用google perf tools</em></p>
+<h3 id="linux常用profiler"><a href="#linux常用profiler" class="headerlink" title="linux常用profiler"></a>linux常用profiler</h3><p>gprofile &amp; perf &amp; sprof</p>
+<h4 id="gprofile"><a href="#gprofile" class="headerlink" title="gprofile"></a>gprofile</h4><p>老牌劲旅，长久不衰，很多人用，功能也比较强大，使用简单。</p>
+<ul>
+<li>在编译时加入参数 -pg就可以打开GProfile的开关</li>
+<li>运行你的可执行文件，结束后会生成一个gmon.out</li>
+<li>分析结果：gprof -b ‘你的可执行文件名’ gmon.out</li>
+<li>会按函数热度进行排序，百分比越大的函数就越热，可以针对TOPN函数进行分析。</li>
+</ul>
+<p>但是由于我开发的是一个so，被其他进程调用。虽然在so的编译时加上了-pg，并且通过标志位将进程用exit退出，但是还是没有生成gmon.out，不知道怎么回事，姑且先放下，有机会再研究。</p>
+<h4 id="perf"><a href="#perf" class="headerlink" title="perf"></a>perf</h4><p>perf功能很强大，而且被收录到内核(2.6.31)，可以记录page fault， cache miss，看起来真的很不错。</p>
+<p>可惜我们的目标机内核版本太老，2.6.17，stackoverflow上有人回答说无法安装，</p>
+<blockquote>
+<p>Q: Does the old linux kernel support perf.</p>
+<p>A: No, it does not. The performance counters subsystem has undergone significant recent changes, and you are exceedingly unlikely to get perf working on any kernel below 2.6.31.</p>
+</blockquote>
+<p>只好就此作罢。以后有机会再尝试。</p>
+<h4 id="sprof"><a href="#sprof" class="headerlink" title="sprof"></a>sprof</h4><p>继续搜索’Profiling shared library’，找到sprof。看了下简介，大概能满足需求，先拿来用用。</p>
+<p>首先创建一个so，里边写一段比较耗时的代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"lib.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> A::work(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">	<span class="keyword">while</span>(a &lt; <span class="number">10</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		b += a;</span><br><span class="line">		++a;</span><br><span class="line">		v.push_back(a);</span><br><span class="line">		sleep(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"work"</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ll : libso</span><br><span class="line">	g++ -L ./ -Wall -o test main.cpp -llib</span><br><span class="line"></span><br><span class="line">libso : libo</span><br><span class="line">	g++ -shared -o liblib.so liblib.o</span><br><span class="line"></span><br><span class="line">libo : lib.cpp</span><br><span class="line">	g++ -Wall -Werror -fpic -c lib.cpp -o liblib.o</span><br><span class="line"></span><br><span class="line"><span class="title">clean:</span></span><br><span class="line">	rm -f test</span><br><span class="line"></span><br><span class="line"><span class="comment"># export LD_LIBRARY_PATH=/home/username/foo:$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#set the environment variable LD_PROFILE to the name of the shared obj</span></span><br><span class="line"><span class="built_in">export</span> LD_PROFILE=my_obj</span><br><span class="line"><span class="comment">#run your application</span></span><br><span class="line">my_app</span><br><span class="line"><span class="comment">#this should create a file /var/tmp/my_sobj.profile</span></span><br><span class="line"><span class="comment">#now run sprof</span></span><br><span class="line">sprof my_sobj my_sobj.profile</span><br></pre></td></tr></table></figure>
+<p>查了一下，sprof只能采集可执行文件的性能，无法采集so的，还是需要放弃。</p>
+<h3 id="gperf-tools"><a href="#gperf-tools" class="headerlink" title="gperf-tools"></a>gperf-tools</h3><p>内网的文章带不出来，只能简单回忆，记录一下。<br>继续折腾之下，找到了google-perf-tools，功能很强大，可以采集so的性能，还能采集内存。</p>
+<p>决定结合gtest，用采用单元测试来测性能内存。</p>
+<h4 id="为什么要用单元测试呢？"><a href="#为什么要用单元测试呢？" class="headerlink" title="为什么要用单元测试呢？"></a>为什么要用单元测试呢？</h4><ol>
+<li><p>以前的做法比较麻烦。需要运行服务，然后kill平台进程等一系列操作。</p>
+</li>
+<li><p>方便。项目已有单元测试框架，可以根据我们的需要自由组合场景，对外部环境依赖较小。</p>
+</li>
+<li><p>运行快，几分钟就能看到结果。及时反馈，人脑在不断反馈的刺激下，会更专注。</p>
+</li>
+<li><p>如果使用得当，可能做到自动化。</p>
+</li>
+</ol>
+<h4 id="安装libunwind"><a href="#安装libunwind" class="headerlink" title="安装libunwind"></a>安装libunwind</h4><h4 id="安装gperftools"><a href="#安装gperftools" class="headerlink" title="安装gperftools"></a>安装gperftools</h4><h4 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h4><p>CPUPROFILE; exprot</p>
+<h4 id="enable单元测试"><a href="#enable单元测试" class="headerlink" title="enable单元测试"></a>enable单元测试</h4><h4 id="改makefile"><a href="#改makefile" class="headerlink" title="改makefile"></a>改makefile</h4><p>在单元测试可执行文件tester的makefile和我们so的makefile加上</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="constant">CXXFLAGS</span> += -g</span><br><span class="line"></span><br><span class="line"><span class="constant">LIBRARY</span> += profiler</span><br></pre></td></tr></table></figure>
+<p>然后make</p>
+<h4 id="写测试代码"><a href="#写测试代码" class="headerlink" title="写测试代码"></a>写测试代码</h4><ol>
+<li><p>增加一个TEST，执行需要测性能的代码</p>
+</li>
+<li><p>在setup里加上profilerStart</p>
+</li>
+<li><p>在teardown加上profilerstop</p>
+</li>
+</ol>
+<h4 id="运行，然后分析结果"><a href="#运行，然后分析结果" class="headerlink" title="运行，然后分析结果"></a>运行，然后分析结果</h4><p>用 pprof –text (PATH OF TESTER) (CPUPROFILER执行的log)，得到文本格式的分析，包括每个函数的时间占有比例</p>
+<p>用 pprof –callgrind可以生成图形化，很炫目。</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag">#C++</a>
+          
+            <a href="/tags/linux/" rel="tag">#linux</a>
+          
+            <a href="/tags/optimization/" rel="tag">#optimization</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/auto_analyze_dump/" rel="prev">自动调用windbg分析dump</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/mark2html/" rel="next">pandoc---markdown转换利器</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars3.githubusercontent.com/u/5423628?v=3&s=460" alt="CodeJuan" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">CodeJuan</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">115</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">145</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/codejuan" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/decbug" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://stackoverflow.com/users/2763396/codejuan" target="_blank">stackoverflow</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://blog.decbug.com/" target="_blank">decbug</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#profiler"><span class="nav-number">2.</span> <span class="nav-text">profiler</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux常用profiler"><span class="nav-number">2.1.</span> <span class="nav-text">linux常用profiler</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#gprofile"><span class="nav-number">2.1.1.</span> <span class="nav-text">gprofile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#perf"><span class="nav-number">2.1.2.</span> <span class="nav-text">perf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sprof"><span class="nav-number">2.1.3.</span> <span class="nav-text">sprof</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gperf-tools"><span class="nav-number">2.2.</span> <span class="nav-text">gperf-tools</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么要用单元测试呢？"><span class="nav-number">2.2.1.</span> <span class="nav-text">为什么要用单元测试呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装libunwind"><span class="nav-number">2.2.2.</span> <span class="nav-text">安装libunwind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装gperftools"><span class="nav-number">2.2.3.</span> <span class="nav-text">安装gperftools</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置环境变量"><span class="nav-number">2.2.4.</span> <span class="nav-text">设置环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#enable单元测试"><span class="nav-number">2.2.5.</span> <span class="nav-text">enable单元测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改makefile"><span class="nav-number">2.2.6.</span> <span class="nav-text">改makefile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#写测试代码"><span class="nav-number">2.2.7.</span> <span class="nav-text">写测试代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行，然后分析结果"><span class="nav-number">2.2.8.</span> <span class="nav-text">运行，然后分析结果</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CodeJuan</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'codejuan';
+      var disqus_identifier = 'gprof_sprof_perf/';
+      var disqus_title = 'Linux C++性能调优笔记';
+      var disqus_url = 'http://blog.decbug.com/gprof_sprof_perf/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

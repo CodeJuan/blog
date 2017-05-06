@@ -207,7 +207,96 @@
           
           
             
-              <a class="post-title-link" href="/2017/02/24/cloud-init/" itemprop="url">
+              <a class="post-title-link" href="/openstack_in_lxc/" itemprop="url">
+                Run a full OpenStack in a LXD container
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-26T00:00:00+08:00" content="2017-02-26">
+            2017-02-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/openstack_in_lxc/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="openstack_in_lxc/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>鉴于lxc容器特别像虚拟机的特点，rackspace，都有把openstack部署到lxc容器里的实践，恰好lxc也有类似教程，打算自己跑一遍，看看是怎样一种体验</p>
+<p>how to run a full OpenStack, using LXD containers instead of VMs and running all of this inside a LXD container (nesting!).</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/openstack_in_lxc/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/cloud-init/" itemprop="url">
                 cloud-init
               </a>
             
@@ -244,8 +333,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2017/02/24/cloud-init/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/02/24/cloud-init/" itemprop="commentsCount"></span>
+            <a href="/cloud-init/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="cloud-init/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -262,7 +351,7 @@
         
           <p>刚创出来的虚拟机，要如何设置初始密码？如何添加环境变量？如何进行一系列的预置操作？<br>答案就是cloud-init。<br>当前正在搞openstack+lxc，也需要在创容器的时候注入一些信息，比如初始密码，开启SSH密码登录，允许root等等，就顺手记录cloud-init一下。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/24/cloud-init/#more" rel="contents">
+            <a class="btn" href="/cloud-init/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -295,7 +384,7 @@
           
           
             
-              <a class="post-title-link" href="/2017/02/11/nova-lxd-lxc/" itemprop="url">
+              <a class="post-title-link" href="/nova-lxd-lxc/" itemprop="url">
                 lxd,lxc,nova-lxd
               </a>
             
@@ -332,8 +421,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2017/02/11/nova-lxd-lxc/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/02/11/nova-lxd-lxc/" itemprop="commentsCount"></span>
+            <a href="/nova-lxd-lxc/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="nova-lxd-lxc/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -356,7 +445,7 @@
 </ul>
 <h1 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">                              +---------------+</span><br><span class="line">+----------+                  |               |</span><br><span class="line">| lxc      |                  |   nova-lxd    |</span><br><span class="line">| lxd-client+---+      +------+               |</span><br><span class="line">+----------+    |      |      |               |</span><br><span class="line">                |      |      +---------------+</span><br><span class="line">                |      |</span><br><span class="line">                |      |</span><br><span class="line">             +--v------v---------+</span><br><span class="line">             |     lxd           |</span><br><span class="line">             |                   |</span><br><span class="line">             |Daemon based on    |</span><br><span class="line">             |liblxc offering    |</span><br><span class="line">             |a REST API         |                  +-------------------------+</span><br><span class="line">             |to manage containers                  |                         |</span><br><span class="line">             +--------+----------+                  |   lxc/lxc               |</span><br><span class="line">                      |                             |   tools to              |</span><br><span class="line">                      |                             |   manage containers     |</span><br><span class="line">                      |                             |                         |</span><br><span class="line">             +--------v----------+                  |                         |</span><br><span class="line">             |                   |                  |                         |</span><br><span class="line">             |      go-lxc./v2   |                  +--------+----------------+</span><br><span class="line">             |                   |                           |</span><br><span class="line">             |                   |                           |</span><br><span class="line">             |                   |                           |</span><br><span class="line">             +----------+--------+                           |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">              +---------v------------------------------------v---------+</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                    liblxc.so                           |</span><br><span class="line">              |                                                        |</span><br><span class="line">              +-------------------------+------------------------------+</span><br><span class="line">                                        |</span><br><span class="line">                                        |</span><br><span class="line">                                        |</span><br><span class="line">              +-------------------------v------------------------------+</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                kernel                                  |</span><br><span class="line">              |                namespace, cgroups                      |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              +--------------------------------------------------------+</span><br></pre></td></tr></table></figure>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/11/nova-lxd-lxc/#more" rel="contents">
+            <a class="btn" href="/nova-lxd-lxc/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -389,7 +478,7 @@
           
           
             
-              <a class="post-title-link" href="/2017/02/11/lxc_docker/" itemprop="url">
+              <a class="post-title-link" href="/lxc_docker/" itemprop="url">
                 LXC,docker
               </a>
             
@@ -426,8 +515,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2017/02/11/lxc_docker/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/02/11/lxc_docker/" itemprop="commentsCount"></span>
+            <a href="/lxc_docker/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="lxc_docker/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -444,7 +533,7 @@
         
           <p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。<br>然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/11/lxc_docker/#more" rel="contents">
+            <a class="btn" href="/lxc_docker/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -477,7 +566,7 @@
           
           
             
-              <a class="post-title-link" href="/2017/02/10/network_intro/" itemprop="url">
+              <a class="post-title-link" href="/network_intro/" itemprop="url">
                 网络笔记--docker,neutron
               </a>
             
@@ -514,8 +603,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2017/02/10/network_intro/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/02/10/network_intro/" itemprop="commentsCount"></span>
+            <a href="/network_intro/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="network_intro/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -532,103 +621,7 @@
         
           <p>简单记录之前搞容器网络用的基础知识<br>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/10/network_intro/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2017/01/17/KVM_cache/" itemprop="url">
-                KVM的几种缓存模式
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2017-01-17T01:00:00+08:00" content="2017-01-17">
-            2017-01-17
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2017/01/17/KVM_cache/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/17/KVM_cache/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>现象：</p>
-<ol>
-<li>虚拟机的IO性能比物理机/容器好？</li>
-<li>容器和物理机差不多，这个很好理解，如果没有做IO limit，肯定和物理机相近</li>
-<li>用的virsh disk-attach宿主机上的一个/dev/sdxxx，用的是default</li>
-<li>顺序读写完爆物理机</li>
-<li>随机读写从1K，4K，16K到1M都比物理机强，唯有64M的写比物理机差</li>
-</ol>
-<p>比较奇怪，需要分析一下</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/17/KVM_cache/#more" rel="contents">
+            <a class="btn" href="/network_intro/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -688,7 +681,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">114</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
