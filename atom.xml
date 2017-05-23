@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.decbug.com/"/>
-  <updated>2017-05-20T02:58:19.838Z</updated>
+  <updated>2017-05-23T00:33:42.850Z</updated>
   <id>http://blog.decbug.com/</id>
   
   <author>
@@ -16,11 +16,66 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>docker daemon调试套路</title>
+    <link href="http://blog.decbug.com/docker_debug/"/>
+    <id>http://blog.decbug.com/docker_debug/</id>
+    <published>2017-05-22T16:00:00.000Z</published>
+    <updated>2017-05-23T00:33:42.850Z</updated>
+    
+    <content type="html"><![CDATA[<p>容器突然退出？shim进程却还在？runc也在？daemon有句柄没释放？mount还在？这个该如何定位？<br>简单记录下常用方法<br><a id="more"></a></p>
+<h1 id="daemon的调用过程"><a href="#daemon的调用过程" class="headerlink" title="daemon的调用过程"></a>daemon的调用过程</h1><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker daemon -&gt; containerd -&gt; shim -&gt; runc</span><br></pre></td></tr></table></figure>
+<h1 id="套路"><a href="#套路" class="headerlink" title="套路"></a>套路</h1><h2 id="看docker-daemon-log"><a href="#看docker-daemon-log" class="headerlink" title="看docker daemon log"></a>看docker daemon log</h2><ul>
+<li>centos系是systemd启动的，location is <code>`/var/log/message</code></li>
+<li>ubuntu是upstart， 在 <code>/var/log/upstart/docker</code></li>
+</ul>
+<p>如果需要更详细的log，在启动daemon的时候加上-D，即调试模式</p>
+<h2 id="containerd-event"><a href="#containerd-event" class="headerlink" title="containerd event"></a>containerd event</h2><ul>
+<li>/var/run/docker/libcontainerd/containerd/event</li>
+</ul>
+<h2 id="看shim进程"><a href="#看shim进程" class="headerlink" title="看shim进程"></a>看shim进程</h2><ul>
+<li>ps，注意container ID</li>
+</ul>
+<h2 id="看句柄"><a href="#看句柄" class="headerlink" title="看句柄"></a>看句柄</h2><ul>
+<li>打开的句柄，lsof -p $(cat /var/run/docker.pid)</li>
+<li>泄漏, ls /proc/<pid>/fd -l</pid></li>
+</ul>
+<h2 id="看runc"><a href="#看runc" class="headerlink" title="看runc"></a>看runc</h2><ul>
+<li>docker-ruc list</li>
+</ul>
+<h2 id="看stack"><a href="#看stack" class="headerlink" title="看stack"></a>看stack</h2><p>cat /proc/<pid>/stack</pid></p>
+<h2 id="看容器的mount点"><a href="#看容器的mount点" class="headerlink" title="看容器的mount点"></a>看容器的mount点</h2><ul>
+<li>mount</li>
+<li>/proc/pid/mount</li>
+</ul>
+<h2 id="pprof"><a href="#pprof" class="headerlink" title="pprof"></a>pprof</h2><ul>
+<li>daemon提供了pprof接口</li>
+</ul>
+<h2 id="实在不行，就只能fmt-print调试了"><a href="#实在不行，就只能fmt-print调试了" class="headerlink" title="实在不行，就只能fmt.print调试了"></a>实在不行，就只能fmt.print调试了</h2><p>还可以strace</p>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;容器突然退出？shim进程却还在？runc也在？daemon有句柄没释放？mount还在？这个该如何定位？&lt;br&gt;简单记录下常用方法&lt;br&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="debug" scheme="http://blog.decbug.com/tags/debug/"/>
+    
+      <category term="docker" scheme="http://blog.decbug.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
     <title>pinpoint分析</title>
     <link href="http://blog.decbug.com/pinpoint/"/>
     <id>http://blog.decbug.com/pinpoint/</id>
     <published>2017-05-05T17:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
+    <updated>2017-05-23T00:33:42.854Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://github.com/naver/pinpoint/raw/master/doc/img/ss_server-map.png" alt=""></p>
 <p>pinpoint，不用侵入到用户代码，在JVM插入agent实现调用链。与鹰眼，zipkin等白盒方式不同的是，pinpoint不要侵入代码，可以称之为灰盒（论文将调用链分为三种，白盒灰盒，黑盒）。</p>
@@ -74,7 +129,7 @@
     <link href="http://blog.decbug.com/dockerd-containerd-runc/"/>
     <id>http://blog.decbug.com/dockerd-containerd-runc/</id>
     <published>2017-04-27T17:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
+    <updated>2017-05-23T00:33:42.850Z</updated>
     
     <content type="html"><![CDATA[<p>1.11大重构之后，和1.6不一样了，简单看下流程，记个笔记</p>
 <a id="more"></a>
@@ -107,7 +162,7 @@
     <link href="http://blog.decbug.com/attach_device_to_running_container/"/>
     <id>http://blog.decbug.com/attach_device_to_running_container/</id>
     <published>2017-04-26T17:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.834Z</updated>
+    <updated>2017-05-23T00:33:42.850Z</updated>
     
     <content type="html"><![CDATA[<p>创建容器的时候，可以通过-device，-v来加设备加path，也可以加网卡，但是缺乏向运行时的容器加设备的方法</p>
 <a id="more"></a>
@@ -136,7 +191,7 @@
     <link href="http://blog.decbug.com/cloudinght_agent_src/"/>
     <id>http://blog.decbug.com/cloudinght_agent_src/</id>
     <published>2017-03-31T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.834Z</updated>
+    <updated>2017-05-23T00:33:42.850Z</updated>
     
     <content type="html"><![CDATA[<p>之前模仿sysdig做了个容器性能监控平台，<a href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/">链接在此</a>，虽然有一些基础的功能，但是还不完善，</p>
 <p>恰好看到cloud insight开源了他的agent，看过之后，和我的思路差不多，就简单记录一下，避免遗忘。</p>
@@ -173,7 +228,7 @@
     <link href="http://blog.decbug.com/cloud_network_security/"/>
     <id>http://blog.decbug.com/cloud_network_security/</id>
     <published>2017-03-02T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.834Z</updated>
+    <updated>2017-05-23T00:33:42.850Z</updated>
     
     <content type="html"><![CDATA[<p>近日关于云计算安全的问题，闹的沸沸扬扬。某不才，也算是云计算入门人士，便结合自身经历分析一番。</p>
 <a id="more"></a>
@@ -236,7 +291,7 @@
     <link href="http://blog.decbug.com/openstack_in_lxc/"/>
     <id>http://blog.decbug.com/openstack_in_lxc/</id>
     <published>2017-02-25T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
+    <updated>2017-05-23T00:33:42.854Z</updated>
     
     <content type="html"><![CDATA[<p>鉴于lxc容器特别像虚拟机的特点，rackspace，都有把openstack部署到lxc容器里的实践，恰好lxc也有类似教程，打算自己跑一遍，看看是怎样一种体验</p>
 <p>how to run a full OpenStack, using LXD containers instead of VMs and running all of this inside a LXD container (nesting!).</p>
@@ -372,7 +427,7 @@
     <link href="http://blog.decbug.com/cloud-init/"/>
     <id>http://blog.decbug.com/cloud-init/</id>
     <published>2017-02-23T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.834Z</updated>
+    <updated>2017-05-23T00:33:42.850Z</updated>
     
     <content type="html"><![CDATA[<p>刚创出来的虚拟机，要如何设置初始密码？如何添加环境变量？如何进行一系列的预置操作？<br>答案就是cloud-init。<br>当前正在搞openstack+lxc，也需要在创容器的时候注入一些信息，比如初始密码，开启SSH密码登录，允许root等等，就顺手记录cloud-init一下。</p>
 <a id="more"></a>
@@ -417,75 +472,11 @@
   </entry>
   
   <entry>
-    <title>lxd,lxc,nova-lxd</title>
-    <link href="http://blog.decbug.com/nova-lxd-lxc/"/>
-    <id>http://blog.decbug.com/nova-lxd-lxc/</id>
-    <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
-    
-    <content type="html"><![CDATA[<p>分析一下lxc, lxd, nova-lxd的关系以及源码</p>
-<ul>
-<li><a href="https://github.com/openstack/nova-lxd" target="_blank" rel="external">nova-lxd</a>,An OpenStack Compute driver for LXD</li>
-<li><a href="https://github.com/lxc/lxd" target="_blank" rel="external">lxd</a>，lxd daemon和lxd client</li>
-<li><a href="https://github.com/lxc/lxc" target="_blank" rel="external">lxc</a>，liblxc和lxc-tools</li>
-</ul>
-<h1 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">                              +---------------+</span><br><span class="line">+----------+                  |               |</span><br><span class="line">| lxc      |                  |   nova-lxd    |</span><br><span class="line">| lxd-client+---+      +------+               |</span><br><span class="line">+----------+    |      |      |               |</span><br><span class="line">                |      |      +---------------+</span><br><span class="line">                |      |</span><br><span class="line">                |      |</span><br><span class="line">             +--v------v---------+</span><br><span class="line">             |     lxd           |</span><br><span class="line">             |                   |</span><br><span class="line">             |Daemon based on    |</span><br><span class="line">             |liblxc offering    |</span><br><span class="line">             |a REST API         |                  +-------------------------+</span><br><span class="line">             |to manage containers                  |                         |</span><br><span class="line">             +--------+----------+                  |   lxc/lxc               |</span><br><span class="line">                      |                             |   tools to              |</span><br><span class="line">                      |                             |   manage containers     |</span><br><span class="line">                      |                             |                         |</span><br><span class="line">             +--------v----------+                  |                         |</span><br><span class="line">             |                   |                  |                         |</span><br><span class="line">             |      go-lxc./v2   |                  +--------+----------------+</span><br><span class="line">             |                   |                           |</span><br><span class="line">             |                   |                           |</span><br><span class="line">             |                   |                           |</span><br><span class="line">             +----------+--------+                           |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">              +---------v------------------------------------v---------+</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                    liblxc.so                           |</span><br><span class="line">              |                                                        |</span><br><span class="line">              +-------------------------+------------------------------+</span><br><span class="line">                                        |</span><br><span class="line">                                        |</span><br><span class="line">                                        |</span><br><span class="line">              +-------------------------v------------------------------+</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                kernel                                  |</span><br><span class="line">              |                namespace, cgroups                      |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              +--------------------------------------------------------+</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h1 id="lxd分析"><a href="#lxd分析" class="headerlink" title="lxd分析"></a>lxd分析</h1><p>包含两部分</p>
-<ul>
-<li>lxd, 类似docker daemon，对外提供restful api</li>
-<li>lxc, lxd daemon的客户端</li>
-</ul>
-<p>lxd daemon通过<code>go lxc v2</code>来调用<code>liblxc.so</code>，其中用到了cgo以及lxc的头文件，所以要先编译liblxc</p>
-<h1 id="lxc-tools"><a href="#lxc-tools" class="headerlink" title="lxc-tools"></a>lxc-tools</h1><p><a href="(https://github.com/lxc/lxc/tree/master/src/lxc/tools">lxc-tools</a>)只是<a href="https://github.com/lxc/lxc" target="_blank" rel="external">lxc/lxc</a>的一部分，提供可执行文件用于管理lxc容器。<br>lxc/lxc最重要的部分还是liblxc.so</p>
-<h1 id="nova-lxd"><a href="#nova-lxd" class="headerlink" title="nova-lxd"></a>nova-lxd</h1><p>nova-compute的一个driver，类似以前看过的nova-docker</p>
-<ul>
-<li>相比docker，lxc的行为上更像虚拟机，所以更适合用来和openstack一起玩<a href="http://blog.decbug.com/2017/02/11/lxc_docker/">http://blog.decbug.com/2017/02/11/lxc_docker/</a></li>
-<li>北向: 提供spawn, plug-network等接口给nova-compute</li>
-<li>南向: 调用lxd daemon管理容器</li>
-</ul>
-<h2 id="基本功能及流程"><a href="#基本功能及流程" class="headerlink" title="基本功能及流程"></a>基本功能及流程</h2><h3 id="创容器"><a href="#创容器" class="headerlink" title="创容器"></a>创容器</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check to see if LXD already has a copy of the image. If not,</span></span><br><span class="line"><span class="comment"># fetch it.</span></span><br><span class="line">_sync_glance_image_to_lxd</span><br><span class="line"></span><br><span class="line"><span class="comment"># Plug in the network</span></span><br><span class="line">plug_vifs(instance, network_info)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create the profile(including devices, flavor, )</span></span><br><span class="line">container = self.client.containers.create(</span><br><span class="line">                container_config, wait=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># start</span></span><br><span class="line">container.start(wait=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">image = IMAGE_API.get(context, image_ref)</span><br><span class="line">IMAGE_API.download(context, image_ref, dest_path=image_file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># generate metadata.yaml</span></span><br><span class="line">            metadata = &#123;</span><br><span class="line">                <span class="string">'architecture'</span>: image.get(</span><br><span class="line">                    <span class="string">'hw_architecture'</span>, obj_fields.Architecture.from_host()),</span><br><span class="line">                <span class="string">'creation_date'</span>: int(os.stat(image_file).st_ctime)&#125;</span><br><span class="line">            metadata_yaml = json.dumps(</span><br><span class="line">                metadata, sort_keys=<span class="keyword">True</span>, indent=<span class="number">4</span>,</span><br><span class="line">                separators=(<span class="string">','</span>, <span class="string">': '</span>),</span><br><span class="line"></span><br><span class="line"><span class="comment"># add metadata.yaml to tar.gz</span></span><br><span class="line">            tarball = tarfile.open(manifest_file, <span class="string">"w:gz"</span>)</span><br><span class="line">            tarinfo = tarfile.TarInfo(name=<span class="string">'metadata.yaml'</span>)</span><br><span class="line">            tarinfo.size = len(metadata_yaml)</span><br><span class="line">            tarball.addfile(tarinfo, io.BytesIO(metadata_yaml))</span><br><span class="line">            tarball.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># upload tar.gz to local lxd image registry</span></span><br><span class="line">image = client.images.create(</span><br><span class="line">                        image.read(), metadata=manifest.read(),</span><br><span class="line">                        wait=<span class="keyword">True</span>)</span><br><span class="line">            image.add_alias(image_ref, <span class="string">''</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p><a href="https://github.com/openstack/nova-lxd/blob/master/nova/virt/lxd/vif.py" target="_blank" rel="external">https://github.com/openstack/nova-lxd/blob/master/nova/virt/lxd/vif.py</a></p>
-<ul>
-<li>plug</li>
-<li>unplug</li>
-<li>brctl创建linux桥，以及addif</li>
-<li>ovs-vsctl创建ovs桥，以及add port(pvo pvi)</li>
-</ul>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;分析一下lxc, lxd, nova-lxd的关系以及源码&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/openstack/nova-lxd&quot;&gt;nova-lxd&lt;/a&gt;,An OpenStack Compute driver for LXD&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/lxc/lxd&quot;&gt;lxd&lt;/a&gt;，lxd daemon和lxd client&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/lxc/lxc&quot;&gt;lxc&lt;/a&gt;，liblxc和lxc-tools&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;关系&quot;&gt;&lt;a href=&quot;#关系&quot; class=&quot;headerlink&quot; title=&quot;关系&quot;&gt;&lt;/a&gt;关系&lt;/h1&gt;&lt;figure class=&quot;highlight sh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;48&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;                              +---------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+----------+                  |               |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;| lxc      |                  |   nova-lxd    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;| lxd-client+---+      +------+               |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+----------+    |      |      |               |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                |      |      +---------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                |      |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                |      |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             +--v------v---------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |     lxd           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |Daemon based on    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |liblxc offering    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |a REST API         |                  +-------------------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |to manage containers                  |                         |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             +--------+----------+                  |   lxc/lxc               |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      |                             |   tools to              |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      |                             |   manage containers     |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      |                             |                         |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             +--------v----------+                  |                         |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |                  |                         |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |      go-lxc./v2   |                  +--------+----------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             +----------+--------+                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        |                                    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        |                                    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        |                                    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        |                                    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              +---------v------------------------------------v---------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                    liblxc.so                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              +-------------------------+------------------------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              +-------------------------v------------------------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                kernel                                  |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                namespace, cgroups                      |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              +--------------------------------------------------------+&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="container" scheme="http://blog.decbug.com/tags/container/"/>
-    
-      <category term="lxc" scheme="http://blog.decbug.com/tags/lxc/"/>
-    
-      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
-    
-  </entry>
-  
-  <entry>
     <title>LXC,docker</title>
     <link href="http://blog.decbug.com/lxc_docker/"/>
     <id>http://blog.decbug.com/lxc_docker/</id>
     <published>2017-02-10T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
+    <updated>2017-05-23T00:33:42.854Z</updated>
     
     <content type="html"><![CDATA[<p>docker偏向于应用，LXC偏向于资源，其产品形态更像是一台虚拟机，所以其有个名字叫系统容器/机器容器。<br>然而，在当前docker大势已成，虚拟机经久不衰的形势下，lxc的优势和劣势都有哪些？</p>
 <a id="more"></a>
@@ -583,11 +574,75 @@
   </entry>
   
   <entry>
+    <title>lxd,lxc,nova-lxd</title>
+    <link href="http://blog.decbug.com/nova-lxd-lxc/"/>
+    <id>http://blog.decbug.com/nova-lxd-lxc/</id>
+    <published>2017-02-10T16:00:00.000Z</published>
+    <updated>2017-05-23T00:33:42.854Z</updated>
+    
+    <content type="html"><![CDATA[<p>分析一下lxc, lxd, nova-lxd的关系以及源码</p>
+<ul>
+<li><a href="https://github.com/openstack/nova-lxd" target="_blank" rel="external">nova-lxd</a>,An OpenStack Compute driver for LXD</li>
+<li><a href="https://github.com/lxc/lxd" target="_blank" rel="external">lxd</a>，lxd daemon和lxd client</li>
+<li><a href="https://github.com/lxc/lxc" target="_blank" rel="external">lxc</a>，liblxc和lxc-tools</li>
+</ul>
+<h1 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">                              +---------------+</span><br><span class="line">+----------+                  |               |</span><br><span class="line">| lxc      |                  |   nova-lxd    |</span><br><span class="line">| lxd-client+---+      +------+               |</span><br><span class="line">+----------+    |      |      |               |</span><br><span class="line">                |      |      +---------------+</span><br><span class="line">                |      |</span><br><span class="line">                |      |</span><br><span class="line">             +--v------v---------+</span><br><span class="line">             |     lxd           |</span><br><span class="line">             |                   |</span><br><span class="line">             |Daemon based on    |</span><br><span class="line">             |liblxc offering    |</span><br><span class="line">             |a REST API         |                  +-------------------------+</span><br><span class="line">             |to manage containers                  |                         |</span><br><span class="line">             +--------+----------+                  |   lxc/lxc               |</span><br><span class="line">                      |                             |   tools to              |</span><br><span class="line">                      |                             |   manage containers     |</span><br><span class="line">                      |                             |                         |</span><br><span class="line">             +--------v----------+                  |                         |</span><br><span class="line">             |                   |                  |                         |</span><br><span class="line">             |      go-lxc./v2   |                  +--------+----------------+</span><br><span class="line">             |                   |                           |</span><br><span class="line">             |                   |                           |</span><br><span class="line">             |                   |                           |</span><br><span class="line">             +----------+--------+                           |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">                        |                                    |</span><br><span class="line">              +---------v------------------------------------v---------+</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                    liblxc.so                           |</span><br><span class="line">              |                                                        |</span><br><span class="line">              +-------------------------+------------------------------+</span><br><span class="line">                                        |</span><br><span class="line">                                        |</span><br><span class="line">                                        |</span><br><span class="line">              +-------------------------v------------------------------+</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                kernel                                  |</span><br><span class="line">              |                namespace, cgroups                      |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              |                                                        |</span><br><span class="line">              +--------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="lxd分析"><a href="#lxd分析" class="headerlink" title="lxd分析"></a>lxd分析</h1><p>包含两部分</p>
+<ul>
+<li>lxd, 类似docker daemon，对外提供restful api</li>
+<li>lxc, lxd daemon的客户端</li>
+</ul>
+<p>lxd daemon通过<code>go lxc v2</code>来调用<code>liblxc.so</code>，其中用到了cgo以及lxc的头文件，所以要先编译liblxc</p>
+<h1 id="lxc-tools"><a href="#lxc-tools" class="headerlink" title="lxc-tools"></a>lxc-tools</h1><p><a href="(https://github.com/lxc/lxc/tree/master/src/lxc/tools">lxc-tools</a>)只是<a href="https://github.com/lxc/lxc" target="_blank" rel="external">lxc/lxc</a>的一部分，提供可执行文件用于管理lxc容器。<br>lxc/lxc最重要的部分还是liblxc.so</p>
+<h1 id="nova-lxd"><a href="#nova-lxd" class="headerlink" title="nova-lxd"></a>nova-lxd</h1><p>nova-compute的一个driver，类似以前看过的nova-docker</p>
+<ul>
+<li>相比docker，lxc的行为上更像虚拟机，所以更适合用来和openstack一起玩<a href="http://blog.decbug.com/2017/02/11/lxc_docker/">http://blog.decbug.com/2017/02/11/lxc_docker/</a></li>
+<li>北向: 提供spawn, plug-network等接口给nova-compute</li>
+<li>南向: 调用lxd daemon管理容器</li>
+</ul>
+<h2 id="基本功能及流程"><a href="#基本功能及流程" class="headerlink" title="基本功能及流程"></a>基本功能及流程</h2><h3 id="创容器"><a href="#创容器" class="headerlink" title="创容器"></a>创容器</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check to see if LXD already has a copy of the image. If not,</span></span><br><span class="line"><span class="comment"># fetch it.</span></span><br><span class="line">_sync_glance_image_to_lxd</span><br><span class="line"></span><br><span class="line"><span class="comment"># Plug in the network</span></span><br><span class="line">plug_vifs(instance, network_info)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create the profile(including devices, flavor, )</span></span><br><span class="line">container = self.client.containers.create(</span><br><span class="line">                container_config, wait=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># start</span></span><br><span class="line">container.start(wait=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">image = IMAGE_API.get(context, image_ref)</span><br><span class="line">IMAGE_API.download(context, image_ref, dest_path=image_file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># generate metadata.yaml</span></span><br><span class="line">            metadata = &#123;</span><br><span class="line">                <span class="string">'architecture'</span>: image.get(</span><br><span class="line">                    <span class="string">'hw_architecture'</span>, obj_fields.Architecture.from_host()),</span><br><span class="line">                <span class="string">'creation_date'</span>: int(os.stat(image_file).st_ctime)&#125;</span><br><span class="line">            metadata_yaml = json.dumps(</span><br><span class="line">                metadata, sort_keys=<span class="keyword">True</span>, indent=<span class="number">4</span>,</span><br><span class="line">                separators=(<span class="string">','</span>, <span class="string">': '</span>),</span><br><span class="line"></span><br><span class="line"><span class="comment"># add metadata.yaml to tar.gz</span></span><br><span class="line">            tarball = tarfile.open(manifest_file, <span class="string">"w:gz"</span>)</span><br><span class="line">            tarinfo = tarfile.TarInfo(name=<span class="string">'metadata.yaml'</span>)</span><br><span class="line">            tarinfo.size = len(metadata_yaml)</span><br><span class="line">            tarball.addfile(tarinfo, io.BytesIO(metadata_yaml))</span><br><span class="line">            tarball.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># upload tar.gz to local lxd image registry</span></span><br><span class="line">image = client.images.create(</span><br><span class="line">                        image.read(), metadata=manifest.read(),</span><br><span class="line">                        wait=<span class="keyword">True</span>)</span><br><span class="line">            image.add_alias(image_ref, <span class="string">''</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p><a href="https://github.com/openstack/nova-lxd/blob/master/nova/virt/lxd/vif.py" target="_blank" rel="external">https://github.com/openstack/nova-lxd/blob/master/nova/virt/lxd/vif.py</a></p>
+<ul>
+<li>plug</li>
+<li>unplug</li>
+<li>brctl创建linux桥，以及addif</li>
+<li>ovs-vsctl创建ovs桥，以及add port(pvo pvi)</li>
+</ul>
+<hr>
+<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;分析一下lxc, lxd, nova-lxd的关系以及源码&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/openstack/nova-lxd&quot;&gt;nova-lxd&lt;/a&gt;,An OpenStack Compute driver for LXD&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/lxc/lxd&quot;&gt;lxd&lt;/a&gt;，lxd daemon和lxd client&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/lxc/lxc&quot;&gt;lxc&lt;/a&gt;，liblxc和lxc-tools&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;关系&quot;&gt;&lt;a href=&quot;#关系&quot; class=&quot;headerlink&quot; title=&quot;关系&quot;&gt;&lt;/a&gt;关系&lt;/h1&gt;&lt;figure class=&quot;highlight sh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;48&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;                              +---------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+----------+                  |               |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;| lxc      |                  |   nova-lxd    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;| lxd-client+---+      +------+               |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+----------+    |      |      |               |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                |      |      +---------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                |      |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                |      |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             +--v------v---------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |     lxd           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |Daemon based on    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |liblxc offering    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |a REST API         |                  +-------------------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |to manage containers                  |                         |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             +--------+----------+                  |   lxc/lxc               |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      |                             |   tools to              |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      |                             |   manage containers     |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      |                             |                         |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             +--------v----------+                  |                         |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |                  |                         |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |      go-lxc./v2   |                  +--------+----------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             |                   |                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;             +----------+--------+                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        |                                    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        |                                    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        |                                    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                        |                                    |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              +---------v------------------------------------v---------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                    liblxc.so                           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              +-------------------------+------------------------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              +-------------------------v------------------------------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                kernel                                  |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                namespace, cgroups                      |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              |                                                        |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;              +--------------------------------------------------------+&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
+    
+    
+      <category term="container" scheme="http://blog.decbug.com/tags/container/"/>
+    
+      <category term="lxc" scheme="http://blog.decbug.com/tags/lxc/"/>
+    
+      <category term="openstack" scheme="http://blog.decbug.com/tags/openstack/"/>
+    
+  </entry>
+  
+  <entry>
     <title>网络笔记--docker,neutron</title>
     <link href="http://blog.decbug.com/network_intro/"/>
     <id>http://blog.decbug.com/network_intro/</id>
     <published>2017-02-09T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
+    <updated>2017-05-23T00:33:42.854Z</updated>
     
     <content type="html"><![CDATA[<p>简单记录之前搞容器网络用的基础知识<br><a id="more"></a></p>
 <h1 id="ip命令"><a href="#ip命令" class="headerlink" title="ip命令"></a>ip命令</h1><ul>
@@ -640,7 +695,7 @@
     <link href="http://blog.decbug.com/KVM_cache/"/>
     <id>http://blog.decbug.com/KVM_cache/</id>
     <published>2017-01-16T17:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.834Z</updated>
+    <updated>2017-05-23T00:33:42.846Z</updated>
     
     <content type="html"><![CDATA[<p>现象：</p>
 <ol>
@@ -698,7 +753,7 @@
     <link href="http://blog.decbug.com/container_neutron/"/>
     <id>http://blog.decbug.com/container_neutron/</id>
     <published>2017-01-14T17:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.834Z</updated>
+    <updated>2017-05-23T00:33:42.850Z</updated>
     
     <content type="html"><![CDATA[<p>容器用Neutron组网，比Flannel和VPC router强的地方在于</p>
 <ul>
@@ -755,7 +810,7 @@
     <link href="http://blog.decbug.com/socks5_http/"/>
     <id>http://blog.decbug.com/socks5_http/</id>
     <published>2017-01-09T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
+    <updated>2017-05-23T00:33:42.854Z</updated>
     
     <content type="html"><![CDATA[<p>go get, but connect to golang.org timeout!!!</p>
 <a id="more"></a>
@@ -783,7 +838,7 @@
     <link href="http://blog.decbug.com/container_network_debug/"/>
     <id>http://blog.decbug.com/container_network_debug/</id>
     <published>2017-01-02T17:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.834Z</updated>
+    <updated>2017-05-23T00:33:42.850Z</updated>
     
     <content type="html"><![CDATA[<p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
 <a id="more"></a>
@@ -832,7 +887,7 @@
     <link href="http://blog.decbug.com/sysdig_knockoff/"/>
     <id>http://blog.decbug.com/sysdig_knockoff/</id>
     <published>2016-12-05T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.842Z</updated>
+    <updated>2017-05-23T00:33:42.858Z</updated>
     
     <content type="html"><![CDATA[<p>调用链分析有三种模式：</p>
 <ol>
@@ -891,7 +946,7 @@
     <link href="http://blog.decbug.com/aliyun_container/"/>
     <id>http://blog.decbug.com/aliyun_container/</id>
     <published>2016-12-04T17:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.834Z</updated>
+    <updated>2017-05-23T00:33:42.850Z</updated>
     
     <content type="html"><![CDATA[<p>分析一下阿里云容器服务</p>
 <a id="more"></a>
@@ -941,7 +996,7 @@
     <link href="http://blog.decbug.com/sudoers/"/>
     <id>http://blog.decbug.com/sudoers/</id>
     <published>2016-12-04T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
+    <updated>2017-05-23T00:33:42.854Z</updated>
     
     <content type="html"><![CDATA[<p>对于敏感命令，需要限制其使用范围，防止被攻击提权。至于如何提权，一搜就一大片例子，故不赘述。<br>为了解决此问题，需要找出系统用到了sudo的地方，然后把命令的具体参数都记录下来，写入到sudoers，避免使用其他参数。</p>
 <a id="more"></a>
@@ -980,7 +1035,7 @@
     <link href="http://blog.decbug.com/libcap/"/>
     <id>http://blog.decbug.com/libcap/</id>
     <published>2016-10-15T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.838Z</updated>
+    <updated>2017-05-23T00:33:42.854Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19422110/910d9144-9441-11e6-87e8-a5919a41d8b1.png" alt="image"></p>
 <p>原理</p>
@@ -1014,7 +1069,7 @@
     <link href="http://blog.decbug.com/tracing/"/>
     <id>http://blog.decbug.com/tracing/</id>
     <published>2016-10-13T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.842Z</updated>
+    <updated>2017-05-23T00:33:42.858Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371598/083f6f56-91e7-11e6-8964-63f4780885f1.png" alt="分布式调用"></p>
 <p>都源于google的dapper，常见的有三种方式</p>
@@ -1104,100 +1159,6 @@
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-    
-    </summary>
-    
-      <category term="code" scheme="http://blog.decbug.com/categories/code/"/>
-    
-    
-      <category term="APM" scheme="http://blog.decbug.com/tags/APM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>sysdig源码分析</title>
-    <link href="http://blog.decbug.com/sysdig/"/>
-    <id>http://blog.decbug.com/sysdig/</id>
-    <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2017-05-20T02:58:19.842Z</updated>
-    
-    <content type="html"><![CDATA[<p>之前分析APM的时候，试用了sysdig，觉得sysdig很厉害</p>
-<ol>
-<li>通过内核抓事件，不用侵入到容器</li>
-<li>可以自己写铲子，扩展起来很方便。<br>于是就顺手看下他的实现原理</li>
-</ol>
-<a id="more"></a>
-<h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><p><a href="https://github.com/draios/sysdig" target="_blank" rel="external">https://github.com/draios/sysdig</a></p>
-<h1 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h1><img src="http://www.plantuml.com/plantuml/svg/NOzB3i8m34JtFOML1MgHk0Ai4E8C1Q7G3gs5vQ8wV4zFa_8JondRyyRvjA3PR4vkhHpO2pzyu4vTbYNNxbPpGpqQje2US866zx1gsI2vd7r1dUvuIDWe6SBkm1At9qcO-fCWHevdH_GA-KJnWTorPG6j49RHN3WABJGZYjNAEsmxmBp8tbT7gbmQp7-jLEJh9nahlHXZq3yPOiZYHQdT0C2DNv-LIwrP6phrNGKRuFcqU080">
-<h1 id="chisels的原理"><a href="#chisels的原理" class="headerlink" title="chisels的原理"></a>chisels的原理</h1><p>安装之后会在/usr/share/sysdig/chisels，看下memcachelog这个铲子的代码<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Initialization callback</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">on_init</span><span class="params">()</span></span></span><br><span class="line">    util = &#123;&#125;</span><br><span class="line">    start_time = <span class="built_in">os</span>.time()</span><br><span class="line">    sysdig.set_filter(<span class="string">"(fd.sport=11211 or proc.name=memcached) and evt.is_io=true"</span>)</span><br><span class="line">    sysdig.set_snaplen(<span class="number">4096</span>)</span><br><span class="line">    data = chisel.request_field(<span class="string">"evt.arg[1]"</span>)</span><br><span class="line">    datetime = chisel.request_field(<span class="string">"evt.datetime"</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- Event callback</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">on_event</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">local</span> data = evt.field(data)</span><br><span class="line">  <span class="keyword">local</span> line = split(data, <span class="string">" "</span>)</span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">string</span>.match(line[<span class="number">1</span>], <span class="string">'^[gs]et'</span>) ~= <span class="keyword">nil</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">local</span> method = line[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">local</span> key = line[<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">local</span> size = <span class="built_in">tonumber</span>(line[<span class="number">5</span>]) <span class="keyword">or</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> key ~= <span class="keyword">nil</span> <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">if</span> opt_method ~= <span class="keyword">nil</span> <span class="keyword">and</span> opt_method ~= method <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      <span class="keyword">if</span> opt_method == <span class="string">'set'</span> <span class="keyword">and</span> size &lt; opt_size <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      <span class="built_in">print</span>(<span class="built_in">string</span>.format(<span class="string">"%s method=%s size=%dB key=%s"</span>,</span><br><span class="line">              evt.field(datetime),</span><br><span class="line">              method,</span><br><span class="line">              size,</span><br><span class="line">              key</span><br><span class="line">      ))</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">true</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
-<p>on_init 设置filter，以及需要哪些data field</p>
-<p>on_event，获取参数，得到method，是get/set，以及key</p>
-<h1 id="sysdig原理"><a href="#sysdig原理" class="headerlink" title="sysdig原理"></a>sysdig原理</h1><p><code>driver/event_table.c</code> 事件都在这里g_event_info</p>
-<p><code>driver/ppm_fillers.c</code> g_ppm_events事件的回调</p>
-<p><code>userspace/libsinsp/chisel_api.cpp</code> lua_cbacks这个类是，lua调用c代码的接口</p>
-<p>疑问：</p>
-<ol>
-<li>当事件发生，如何通过g_ppm_events里的回调函数再调用到lua里的on_event</li>
-<li>event_table里的事件是如何发送到内核的？用到哪个API？是不是和systemtap差不多？</li>
-</ol>
-<p>晚上回家继续看看</p>
-<h2 id="event-table里的事件是如何发送到内核的"><a href="#event-table里的事件是如何发送到内核的" class="headerlink" title="event_table里的事件是如何发送到内核的"></a>event_table里的事件是如何发送到内核的</h2><p>event_table里的事件是如何发送到内核的？用到哪个API？是不是和systemtap差不多？<br>翻了下源码，终于找到了<br>sysdig_init-&gt;get_tracepoint_handler-&gt;g_ppm_fops-&gt;ppm_open-&gt;compat_register-&gt;TRACEPOINT_PROBE_REGISTER-&gt;内核的tracepoint_probe_register</p>
-<p>两个参数，一个是tracepoint name,另一个则是回调</p>
-<h1 id="slideshare上的流程"><a href="#slideshare上的流程" class="headerlink" title="slideshare上的流程"></a>slideshare上的流程</h1><p><img src="https://cloud.githubusercontent.com/assets/5423628/19371219/091e8342-91e4-11e6-8a53-f2e597860efb.png" alt="syscall"></p>
-<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371250/40b1dd72-91e4-11e6-97c8-29ac829afde8.png" alt="event_collector"></p>
-<p><img src="https://cloud.githubusercontent.com/assets/5423628/19371280/6b0da6be-91e4-11e6-9c9b-77b151f8428c.png" alt="container"></p>
-<p><a href="http://www.slideshare.net/SreenivasMakam/container-monitoring-with-sysdig-58790785" target="_blank" rel="external">http://www.slideshare.net/SreenivasMakam/container-monitoring-with-sysdig-58790785</a></p>
-<p><a href="http://www.slideshare.net/Sysdig/sysdig-meetup-dec2014" target="_blank" rel="external">http://www.slideshare.net/Sysdig/sysdig-meetup-dec2014</a></p>
-<h1 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sysdig <span class="operator">-l</span> <span class="comment"># 查看所有field</span></span><br><span class="line">sysdig -L <span class="comment"># 进事件，出事件的参数</span></span><br></pre></td></tr></table></figure>
-<p>关注 fd.name, proc.name, fd.cip/sip/port/lip, datetime时间戳, fd.num标识唯一的一次连接, containername/ID, pid, tid</p>
-<p>还有个tracer没太搞明白，里边有span等等，有时间再研究下</p>
-<h1 id="其他内核trace"><a href="#其他内核trace" class="headerlink" title="其他内核trace"></a>其他内核trace</h1><table>
-<thead>
-<tr>
-<th>时间</th>
-<th>名字</th>
-<th>主要技术</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2000</td>
-<td>Linux Trace Toolkit (LTT)</td>
-<td></td>
-</tr>
-<tr>
-<td>2005</td>
-<td>LInux Trace Toolkit Next Generation (LTTng)</td>
-<td></td>
-</tr>
-<tr>
-<td>2008</td>
-<td>Tracepoint</td>
-<td>后面就用这个比较多？</td>
-</tr>
-<tr>
-<td>xxxx</td>
-<td>systemTAP</td>
-<td>貌似也是用tracepoint probe</td>
-</tr>
-<tr>
-<td>xxxx</td>
-<td>ftrace</td>
-<td>也是tracepoint</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;之前分析APM的时候，试用了sysdig，觉得sysdig很厉害&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;通过内核抓事件，不用侵入到容器&lt;/li&gt;
-&lt;li&gt;可以自己写铲子，扩展起来很方便。&lt;br&gt;于是就顺手看下他的实现原理&lt;/li&gt;
-&lt;/ol&gt;
     
     </summary>
     
