@@ -80,10 +80,11 @@ description:
 - ip netns exec xxx ip route add default via <docker0 IP>
 - 在docker0上的另一个容器里ping这个tap，不通
 
- ## 参考lxc的做法
- > lxc在lxc.conf，保存了veth的Mac，IP，名字以及接到哪个qbr上
+## 参考lxc的做法
 
- 我们在挂网卡的时候，也保存类似的配置，在容器start的时候，会检测是否有网卡，如果没有则挂上。
+> lxc在lxc.conf，保存了veth的Mac，IP，名字以及接到哪个qbr上
+
+我们在挂网卡的时候，也保存类似的配置，在容器start的时候，会检测是否有网卡，如果没有则挂上。
 
 
 
