@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="fragment,memory," />
+  <meta name="keywords" content="container,network," />
 
 
 
@@ -39,82 +39,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="背景
-
-
-配置
-参数
-
-
-
-
-系统
-win32
-
-
-CPU
-E5505
-
-
-内存
-4G
-
-
-
-某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（打开3G开关后就会是3G，但是不建议打开）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？真的是内存碎片造">
+<meta name="description" content="问题描述在搞docker和lxc的结合体，也叫system container或machine containerhttp://blog.decbug.com/lxc_docker/
+其实阿里在16年就已经做了类似的工作，结合lxc和docker完成了alidocker，有时候真心觉得互联网公司好厉害啊，技术领先了我等很多年。
+闲话休提，言归正传。话说在改造之后，可以在容器内执行reboot。但是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="真的是内存碎片吗">
-<meta property="og:url" content="http://blog.decbug.com/fragment/index.html">
+<meta property="og:title" content="容器内reboot导致网卡丢失">
+<meta property="og:url" content="http://blog.decbug.com/container_nic_losted/index.html">
 <meta property="og:site_name" content="Continuous Learning">
-<meta property="og:description" content="背景
-
-
-配置
-参数
-
-
-
-
-系统
-win32
-
-
-CPU
-E5505
-
-
-内存
-4G
-
-
-
-某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（打开3G开关后就会是3G，但是不建议打开）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？真的是内存碎片造">
-<meta property="og:updated_time" content="2017-05-28T05:57:45.775Z">
+<meta property="og:description" content="问题描述在搞docker和lxc的结合体，也叫system container或machine containerhttp://blog.decbug.com/lxc_docker/
+其实阿里在16年就已经做了类似的工作，结合lxc和docker完成了alidocker，有时候真心觉得互联网公司好厉害啊，技术领先了我等很多年。
+闲话休提，言归正传。话说在改造之后，可以在容器内执行reboot。但是">
+<meta property="og:updated_time" content="2017-05-28T05:57:45.771Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="真的是内存碎片吗">
-<meta name="twitter:description" content="背景
-
-
-配置
-参数
-
-
-
-
-系统
-win32
-
-
-CPU
-E5505
-
-
-内存
-4G
-
-
-
-某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（打开3G开关后就会是3G，但是不建议打开）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？真的是内存碎片造">
+<meta name="twitter:title" content="容器内reboot导致网卡丢失">
+<meta name="twitter:description" content="问题描述在搞docker和lxc的结合体，也叫system container或machine containerhttp://blog.decbug.com/lxc_docker/
+其实阿里在16年就已经做了类似的工作，结合lxc和docker完成了alidocker，有时候真心觉得互联网公司好厉害啊，技术领先了我等很多年。
+闲话休提，言归正传。话说在改造之后，可以在容器内执行reboot。但是">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -124,7 +64,7 @@ E5505
   };
 </script>
 
-  <title> 真的是内存碎片吗 | Continuous Learning </title>
+  <title> 容器内reboot导致网卡丢失 | Continuous Learning </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -272,7 +212,7 @@ E5505
           
           
             
-              真的是内存碎片吗
+              容器内reboot导致网卡丢失
             
           
         </h1>
@@ -281,8 +221,8 @@ E5505
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-01-15T23:30:09+08:00" content="2015-01-15">
-            2015-01-15
+          <time itemprop="dateCreated" datetime="2016-12-05T01:00:00+08:00" content="2016-12-05">
+            2016-12-05
           </time>
         </span>
 
@@ -307,8 +247,8 @@ E5505
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/fragment/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="fragment/" itemprop="commentsCount"></span>
+            <a href="/container_nic_losted/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="container_nic_losted/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -322,47 +262,35 @@ E5505
       
 
       
-        <span itemprop="articleBody"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><table>
-<thead>
-<tr>
-<th>配置</th>
-<th>参数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>系统</td>
-<td>win32</td>
-</tr>
-<tr>
-<td>CPU</td>
-<td>E5505</td>
-</tr>
-<tr>
-<td>内存</td>
-<td>4G</td>
-</tr>
-</tbody>
-</table>
-<p>某程序在运行过程中峰值达到1.8G，此后在申请小块内存时出现异常，此时进程只使用了900M内存。<br>如你所知，windows 32bit的每个进程可用虚拟内存是4G，其中内核态2G，用户态2G（<code>打开3G开关后就会是3G，但是不建议打开</code>）。异常时，进程尚有近1G的内存可用，但为什么会抛出异常呢？<br>真的是内存碎片造成的吗？</p>
+        <span itemprop="articleBody"><h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在搞docker和lxc的结合体，也叫system container或machine container<a href="http://blog.decbug.com/lxc_docker/">http://blog.decbug.com/lxc_docker/</a></p>
+<p>其实阿里在16年就已经做了类似的工作，结合lxc和docker完成了alidocker，有时候真心觉得互联网公司好厉害啊，技术领先了我等很多年。</p>
+<p>闲话休提，言归正传。话说在改造之后，可以在容器内执行reboot。但是，在reboot之后，发现网卡丢了。</p>
 <a id="more"></a>
-<h2 id="调查"><a href="#调查" class="headerlink" title="调查"></a>调查</h2><p>运行两次，在不同的地方crash，抓到两个dump，用windbg简单分析一下。</p>
-<h3 id="Crash-1-vector-push-back"><a href="#Crash-1-vector-push-back" class="headerlink" title="Crash 1 : vector.push_back"></a>Crash 1 : vector.push_back</h3><p>异常链:  <code>push_back -&gt; allovator -&gt; new -&gt; MemoryException</code>。说明是在<code>push_back</code>申请内存时抛出的内存异常。简单回忆一下vector的内存分配机制，vector是连续存储的容器，它在新插入一个元素的时候，如果发现当前持有的<em>内存</em>放不下，那么就会再申请一块更大的内存（内存分配策略有差异，可以简单视为两倍），然后将旧内存中的元素复制到新内存中，并释放旧内存中的元素，再插入新的元素。<br>由此猜测，push_back时vector里是不是有很多元素，使得此次会申请很大的一块连续内存，而系统没有合适的内存空间，然后申请失败抛出异常呢？<br>查看代码，并询问开发小伙，得知crash时vector中元素个数不多，push_back时申请的不会是一块很大的连续内存，难道是真的是传说中的碎片？</p>
-<h3 id="Crash-12-CString-AppendFormat"><a href="#Crash-12-CString-AppendFormat" class="headerlink" title="Crash 12: CString.AppendFormat"></a>Crash 12: CString.AppendFormat</h3><p>异常链:  <code>AppendFormat -&gt; PrepareWrite -&gt; Reallocate -&gt; MemoryException</code>。<br>有<code>allocate</code>的字样，看起来又像是在申请内存。查看一下微软CString的源码，在preparewrite函数中实现了这么一个内存算法：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//凭印象写的，领会精神</span></span><br><span class="line">PrepareWrite()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (current_len &lt; <span class="number">1</span>G)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//小于1G，每次都是申请1.5倍</span></span><br><span class="line">		new_len = current_len * <span class="number">1.5</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//大于1G，每次加1M</span></span><br><span class="line">		new_len = current_len + <span class="number">1</span>M;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PrepareWrite()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (current_len &lt; <span class="number">1</span>G)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//小于1G，每次都是申请1.5倍</span></span><br><span class="line">		new_len = current_len * <span class="number">1.5</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//大于1G，每次加1M</span></span><br><span class="line">		new_len = current_len + <span class="number">1</span>M;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>查看了当前string的长度，几百几千个字符而已，也就只申请几K内存。只是申请这么小的内存，怎么也申请失败了？</p>
-<h2 id="简单分析"><a href="#简单分析" class="headerlink" title="简单分析"></a>简单分析</h2><p>查了下微软的一些文档</p>
-<blockquote>
-<p>.Net application, 32-bit process, 32-bit OS, 800-1200 MB</p>
+<h1 id="先讲一下挂网卡的方案"><a href="#先讲一下挂网卡的方案" class="headerlink" title="先讲一下挂网卡的方案"></a>先讲一下挂网卡的方案</h1><p>我是基于openstack来发放容器，网络方案自然是用neutron了<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">+----------------------------------+</span><br><span class="line">|<span class="string">         container                </span>|</span><br><span class="line">|<span class="string">                                  </span>|</span><br><span class="line">|<span class="string">                                  </span>|</span><br><span class="line">|<span class="string">                                  </span>|</span><br><span class="line">|<span class="string">                                  </span>|</span><br><span class="line">|<span class="string">                                  </span>|</span><br><span class="line">|<span class="string">       +---------------+          </span>|</span><br><span class="line">|<span class="string">       </span>|<span class="string">  veth pair    </span>|<span class="string">          </span>|</span><br><span class="line">|<span class="string">       </span>|<span class="string">  ns-xxxxxxx   </span>|<span class="string">          </span>|</span><br><span class="line">+-------+------+--------+----------+</span><br><span class="line">               |<span class="string"></span><br><span class="line">               </span>|</span><br><span class="line">               |<span class="string"></span><br><span class="line">               </span>|</span><br><span class="line">        +------+--------+</span><br><span class="line">        |<span class="string"> veth pair     </span>|</span><br><span class="line">        |<span class="string"> tap-xxxxx     </span>|</span><br><span class="line">     +--+---------------+---+</span><br><span class="line">     |<span class="string">                      </span>|</span><br><span class="line">     |<span class="string">      qbr-xxxxx       </span>|</span><br><span class="line">     +----------+-----------+</span><br><span class="line">                |<span class="string"></span><br><span class="line">                </span>|</span><br><span class="line">     +----------+----------+</span><br><span class="line">     |<span class="string">  qvo,qvb,ply,plm    </span>|</span><br><span class="line">     |<span class="string">  与本文无关不细说      </span>|</span><br><span class="line">     +----------+----------+</span><br><span class="line">                |<span class="string"></span><br><span class="line">                </span>|</span><br><span class="line">                |<span class="string"></span><br><span class="line">      +---------+----------+</span><br><span class="line">      </span>|<span class="string">                    </span>|</span><br><span class="line">      |<span class="string">    br-tun          </span>|</span><br><span class="line">      +--------------------+</span><br></pre></td></tr></table></figure></p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>用十万个为什么来探究答案</p>
+<ul>
+<li>为何ns-xxxxx网卡会丢？那么对应的tap-xxxx是不是也丢了？</li>
+<li>通过ip a查看宿主机上的设备，tap不见了。原因在于veth pair是成对出现的，丢一个就等于丢一对。那么qbr还在不在呢？</li>
+<li>brctl show，qbr还在</li>
+<li>在容器内执行reboot引起网卡丢失，reboot会停止init进程，使得容器的网络命名空间消失</li>
+<li>When a IPC namespace is destroyed(i.e., When the last process that is a member of the namespace terminates), all IPC objects In the namespace are automatical destroyed.</li>
+<li>When a network namespace is freed, its physical network devices are moved back to the initial network namespace. But how about the virtual network device?经过试验，虚拟设备会消失</li>
+<li>这样就可以解释为何veth pair丢失的原因了</li>
+</ul>
+<h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><h2 id="失败的尝试"><a href="#失败的尝试" class="headerlink" title="失败的尝试"></a>失败的尝试</h2><p>有同事提到，可以参考虚拟机的做法，只创一个tap在qbr上，然后把tap挂到容器的namespace。据我看来，这个是不可行的，当tap设备从宿主机namespace挂到容器namespace，此tap与qbr的连接就会断开，网络就中断了。<br>虽然我有理论依据，但还是需要实际验证一下，方法如下：</p>
+<ul>
+<li>创一个tap,挂到docker0，ip addr add设置IP并up</li>
+<li>在docker0上的另一个容器里ping这个tap，可以通</li>
+<li>ip link set dev tap netns xxx，挂到netns xxx</li>
+<li>ip netns exec xxx ip addr add 设置同样的IP</li>
+<li>ip netns exec xxx ip route add default via <docker0 ip=""></docker0></li>
+<li><p>在docker0上的另一个容器里ping这个tap，不通</p>
+<h2 id="参考lxc的做法"><a href="#参考lxc的做法" class="headerlink" title="参考lxc的做法"></a>参考lxc的做法</h2><blockquote>
+<p>lxc在lxc.conf，保存了veth的Mac，IP，名字以及接到哪个qbr上</p>
 </blockquote>
-<p>微软说32位.Net程序内存在800M-1200M的时候，可能会出现out of memory的异常。</p>
-<blockquote>
-<p>High memory usage or memory leak can cause virtual memory usage in a process to keep growing over time and prevent it from ever returning to normal usage levels. The process can then run out of memory and this can cause it to terminate unexpectedly. During these out-of-memory instances, the virtual memory may fall below 1 Gb, instead of the 2 Gb allowed to Win 32 processes. This problem is sometimes caused by high memory fragmentation.</p>
-</blockquote>
-<p>微软建议虽然win32进程可以用2G，但最好是低于1G，否则可能会许多奇怪问题，有时就是内存碎片引起的。</p>
-<p>如此，可能真的是碎片引起的。</p>
-<h2 id="初步解决方法"><a href="#初步解决方法" class="headerlink" title="初步解决方法"></a>初步解决方法</h2><p>将前面的内存降下去，就能顺利申请到内存，正常运行。但还是不能确定真的是内存碎片引起的。<br>As a modern OS, the strategy of memory allocation so sucks? I don’t think so. The  failure of memory allocattion caused by fragment. And The fragment should be caused by memory leak..</p>
+<p>我们在挂网卡的时候，也保存类似的配置，在容器start的时候，会检测是否有网卡，如果没有则挂上。</p>
+</li>
+</ul>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
@@ -373,9 +301,9 @@ E5505
       
         <div class="post-tags">
           
-            <a href="/tags/fragment/" rel="tag">#fragment</a>
+            <a href="/tags/container/" rel="tag">#container</a>
           
-            <a href="/tags/memory/" rel="tag">#memory</a>
+            <a href="/tags/network/" rel="tag">#network</a>
           
         </div>
       
@@ -384,13 +312,13 @@ E5505
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/debugdiag/" rel="prev">DebugDiag使用指南</a>
+              <a href="/sysdig_knockoff/" rel="prev">山寨版sysdig cloud</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/jenkins/" rel="next">用jenkins监控程序内存CPU</a>
+              <a href="/aliyun_container/" rel="next">阿里云容器服务分析</a>
             
           </div>
         </div>
@@ -526,7 +454,7 @@ E5505
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调查"><span class="nav-number">2.</span> <span class="nav-text">调查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Crash-1-vector-push-back"><span class="nav-number">2.1.</span> <span class="nav-text">Crash 1 : vector.push_back</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crash-12-CString-AppendFormat"><span class="nav-number">2.2.</span> <span class="nav-text">Crash 12: CString.AppendFormat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单分析"><span class="nav-number">3.</span> <span class="nav-text">简单分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初步解决方法"><span class="nav-number">4.</span> <span class="nav-text">初步解决方法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#先讲一下挂网卡的方案"><span class="nav-number">2.</span> <span class="nav-text">先讲一下挂网卡的方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析"><span class="nav-number">3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决办法"><span class="nav-number">4.</span> <span class="nav-text">解决办法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#失败的尝试"><span class="nav-number">4.1.</span> <span class="nav-text">失败的尝试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考lxc的做法"><span class="nav-number">4.2.</span> <span class="nav-text">参考lxc的做法</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -580,9 +508,9 @@ E5505
 
     <script type="text/javascript">
       var disqus_shortname = 'codejuan';
-      var disqus_identifier = 'fragment/';
-      var disqus_title = '真的是内存碎片吗';
-      var disqus_url = 'http://blog.decbug.com/fragment/';
+      var disqus_identifier = 'container_nic_losted/';
+      var disqus_title = '容器内reboot导致网卡丢失';
+      var disqus_url = 'http://blog.decbug.com/container_nic_losted/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
