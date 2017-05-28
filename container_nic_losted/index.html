@@ -49,7 +49,7 @@
 <meta property="og:description" content="问题描述在搞docker和lxc的结合体，也叫system container或machine containerhttp://blog.decbug.com/lxc_docker/
 其实阿里在16年就已经做了类似的工作，结合lxc和docker完成了alidocker，有时候真心觉得互联网公司好厉害啊，技术领先了我等很多年。
 闲话休提，言归正传。话说在改造之后，可以在容器内执行reboot。但是">
-<meta property="og:updated_time" content="2017-05-28T06:00:37.957Z">
+<meta property="og:updated_time" content="2017-05-28T06:04:22.505Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="容器内reboot导致网卡丢失">
 <meta name="twitter:description" content="问题描述在搞docker和lxc的结合体，也叫system container或machine containerhttp://blog.decbug.com/lxc_docker/
@@ -284,13 +284,12 @@
 <li>ip link set dev tap netns xxx，挂到netns xxx</li>
 <li>ip netns exec xxx ip addr add 设置同样的IP</li>
 <li>ip netns exec xxx ip route add default via <docker0 ip=""></docker0></li>
-<li><p>在docker0上的另一个容器里ping这个tap，不通</p>
+<li>在docker0上的另一个容器里ping这个tap，不通</li>
+</ul>
 <h2 id="参考lxc的做法"><a href="#参考lxc的做法" class="headerlink" title="参考lxc的做法"></a>参考lxc的做法</h2><blockquote>
 <p>lxc在lxc.conf，保存了veth的Mac，IP，名字以及接到哪个qbr上</p>
 </blockquote>
 <p>我们在挂网卡的时候，也保存类似的配置，在容器start的时候，会检测是否有网卡，如果没有则挂上。</p>
-</li>
-</ul>
 <hr>
 <p><code>本博客欢迎转发,但请保留原作者信息</code><br>github:<a href="https://github.com/CodeJuan" target="_blank" rel="external">codejuan</a><br>博客地址:<a href="http://blog.decbug.com/">http://blog.decbug.com/</a></p>
 </span>
