@@ -207,6 +207,94 @@
           
           
             
+              <a class="post-title-link" href="/container_network_debug/" itemprop="url">
+                一次容器网络问题debug
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-01-03T01:00:00+08:00" content="2017-01-03">
+            2017-01-03
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/container_network_debug/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="container_network_debug/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>基于neutron做了一个容器网络方案，需要测试性能，用的iperf，但是在测试过程中，tcp/udp无法抵达跨节点的容器中</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/container_network_debug/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/sysdig_knockoff/" itemprop="url">
                 山寨版sysdig cloud
               </a>
@@ -275,96 +363,6 @@
 <p>花了一周时间在k8s上做出来了，当然，由于缺乏算法支持，目前只做到了点对点的调用topo及http,memcached的时延，后面有空再补齐MySQL等等。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/sysdig_knockoff/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/container_nic_losted/" itemprop="url">
-                容器内reboot导致网卡丢失
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-12-05T01:00:00+08:00" content="2016-12-05">
-            2016-12-05
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/container_nic_losted/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="container_nic_losted/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在搞docker和lxc的结合体，也叫system container或machine container<a href="http://blog.decbug.com/lxc_docker/">http://blog.decbug.com/lxc_docker/</a></p>
-<p>其实阿里在16年就已经做了类似的工作，结合lxc和docker完成了alidocker，有时候真心觉得互联网公司好厉害啊，技术领先了我等很多年。</p>
-<p>闲话休提，言归正传。话说在改造之后，可以在容器内执行reboot。但是，在reboot之后，发现网卡丢了。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/container_nic_losted/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

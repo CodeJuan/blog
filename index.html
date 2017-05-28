@@ -207,6 +207,96 @@
           
           
             
+              <a class="post-title-link" href="/container_nic_losted/" itemprop="url">
+                容器内reboot导致网卡丢失
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-05-28T01:00:00+08:00" content="2017-05-28">
+            2017-05-28
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/code/" itemprop="url" rel="index">
+                  <span itemprop="name">code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/container_nic_losted/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="container_nic_losted/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在搞docker和lxc的结合体，也叫system container或machine container<a href="http://blog.decbug.com/lxc_docker/">http://blog.decbug.com/lxc_docker/</a></p>
+<p>其实阿里在16年就已经做了类似的工作，结合lxc和docker完成了alidocker，有时候真心觉得互联网公司好厉害啊，技术领先了我等很多年。</p>
+<p>闲话休提，言归正传。话说在改造之后，可以在容器内执行reboot。但是，在reboot之后，发现网卡丢了。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/container_nic_losted/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/docker_debug/" itemprop="url">
                 docker daemon调试套路
               </a>
@@ -528,95 +618,6 @@
           <p>创建容器的时候，可以通过-device，-v来加设备加path，也可以加网卡，但是缺乏向运行时的容器加设备的方法</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/attach_device_to_running_container/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/cloudinght_agent_src/" itemprop="url">
-                CloudInsightAgent源码分析
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2017-04-01T00:00:00+08:00" content="2017-04-01">
-            2017-04-01
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/code/" itemprop="url" rel="index">
-                  <span itemprop="name">code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/cloudinght_agent_src/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="cloudinght_agent_src/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>之前模仿sysdig做了个容器性能监控平台，<a href="http://blog.decbug.com/2016/12/06/sysdig_knockoff/">链接在此</a>，虽然有一些基础的功能，但是还不完善，</p>
-<p>恰好看到cloud insight开源了他的agent，看过之后，和我的思路差不多，就简单记录一下，避免遗忘。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/cloudinght_agent_src/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
