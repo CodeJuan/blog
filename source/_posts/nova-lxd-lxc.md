@@ -6,7 +6,7 @@ categories:
 tags: 
 - container
 - openstack
-- lxc
+- LXC
 mathjax: true
 description: 
 ---
