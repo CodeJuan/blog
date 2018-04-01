@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://blog.decbug.com/docker_debug/index.html">
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="容器突然退出？shim进程却还在？runc也在？daemon有句柄没释放？mount还在？这个该如何定位？简单记录下常用方法">
-<meta property="og:updated_time" content="2017-06-19T00:23:12.638Z">
+<meta property="og:updated_time" content="2018-04-01T13:35:09.543Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker daemon调试套路">
 <meta name="twitter:description" content="容器突然退出？shim进程却还在？runc也在？daemon有句柄没释放？mount还在？这个该如何定位？简单记录下常用方法">
@@ -259,7 +259,7 @@
         <span itemprop="articleBody"><p>容器突然退出？shim进程却还在？runc也在？daemon有句柄没释放？mount还在？这个该如何定位？<br>简单记录下常用方法<br><a id="more"></a></p>
 <h1 id="daemon的调用过程"><a href="#daemon的调用过程" class="headerlink" title="daemon的调用过程"></a>daemon的调用过程</h1><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker daemon -&gt; containerd -&gt; shim -&gt; runc</span><br></pre></td></tr></table></figure>
 <h1 id="套路"><a href="#套路" class="headerlink" title="套路"></a>套路</h1><h2 id="看docker-daemon-log"><a href="#看docker-daemon-log" class="headerlink" title="看docker daemon log"></a>看docker daemon log</h2><ul>
-<li>centos系是systemd启动的，location is <code>`/var/log/message</code></li>
+<li>centos系是systemd启动的，location is <code></code>/var/log/message`</li>
 <li>ubuntu是upstart， 在 <code>/var/log/upstart/docker</code></li>
 </ul>
 <p>如果需要更详细的log，在启动daemon的时候加上-D，即调试模式</p>
@@ -378,7 +378,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">118</span>
+              <span class="site-state-item-count">119</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -465,7 +465,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

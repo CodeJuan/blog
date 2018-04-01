@@ -59,7 +59,7 @@ Cobbler is a Linux installation server that allows for rapid setup of network in
 <meta property="og:image" content="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cobbler/2.jpg">
 <meta property="og:image" content="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cobbler/3.jpg">
 <meta property="og:image" content="https://github.com/CodeJuan/codejuan.github.io/raw/master/images/blog/cobbler/MicroStar.jpg">
-<meta property="og:updated_time" content="2017-06-19T00:23:12.634Z">
+<meta property="og:updated_time" content="2018-04-01T13:35:09.543Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cobbler自动部署系统">
 <meta name="twitter:description" content="背景我司竟然还是人肉装系统，太TMD老土了。于是找到了cobbler，官网在http://cobbler.github.io/
@@ -321,16 +321,16 @@ Cobbler is a Linux installation server that allows for rapid setup of network in
 <li>新建/etc/xinetd.d/rsync，增加disable = no,修改 rsync 和 tftp 这两个服务的 xinetd 配置</li>
 </ol>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/xinetd.d/rsync</span></span><br><span class="line"><span class="title">service</span> rsync</span><br><span class="line">&#123;</span><br><span class="line">        <span class="title">disable</span> = <span class="built_in">no</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># vi /etc/xinetd.d/tftp</span></span><br><span class="line">service tftp</span><br><span class="line">&#123;</span><br><span class="line">        <span class="title">disable</span> = <span class="built_in">no</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
+<ol start="5">
 <li>不支持debian系，cobbler服务器能同时部署CentOS/Fedora/Debian/Ubuntu系统，所以需要安装debmirror，安装debmirror-20090807-1.el5.noarch.rpm，在此之前，需要先安装一些其他的依赖包：<br>暂时不管，我这里只测试centos<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget ftp://rpmfind.net/linux/epel/<span class="number">6</span>/x86_64/debmirror-<span class="number">2.14</span>-<span class="number">2</span>.el6.noarch.rpm</span><br><span class="line">sudo rpm -ivh debmirror-<span class="number">2.14</span>-<span class="number">2</span>.el6.noarch.rpm</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># yum install ed patch perl perl-Compress-Zlib perl-Cwd perl-Digest-MD5 perl-Digest-SHA1 perl-LockFile-Simple perl-libwww-perl</span></span><br><span class="line"><span class="preprocessor"># wget ftp://fr2.rpmfind.net/linux/epel/5/ppc/debmirror-20090807-1.el5.noarch.rpm</span></span><br><span class="line"><span class="preprocessor"># rpm –ivh debmirror-20090807-1.el5.noarch.rpm</span></span><br><span class="line"><span class="preprocessor"># 修改/etc/debmirror.conf 配置文件，注释掉 @dists 和 @arches 两行</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># vim /etc/debmirror.conf</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#@dists=”sid”;</span></span><br><span class="line">@sections=”main,main/debian-installer,contrib,non-free”;</span><br><span class="line"><span class="preprocessor">#@arches=”i386″;</span></span><br></pre></td></tr></table></figure>
-<ol>
+<ol start="6">
 <li>生成密码。修改默认系统密码用 openssl 生成一串密码后加入到 cobbler 的配置文件（/etc/cobbler/settings）里，替换 default_password_crypted 字段：</li>
 </ol>
 <figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># openssl passwd -1 -salt ‘bihan’ ‘Abcd1234′</span></span><br><span class="line"><span class="variable">$1</span><span class="variable">$‘</span>bihan<span class="variable">$bndMeAmxTpT0ldGYQoRSw0</span></span><br><span class="line"><span class="comment"># vi /etc/cobbler/settings</span></span><br><span class="line">修改内容如下：</span><br><span class="line"><span class="symbol">default_password_crypted:</span> “<span class="variable">$1</span><span class="variable">$‘</span>bihan<span class="variable">$bndMeAmxTpT0ldGYQoRSw0</span>″</span><br></pre></td></tr></table></figure>
-<ol>
+<ol start="7">
 <li>yum install cman或者fence-agents，我装的是fence-agents</li>
 </ol>
 <p>改完之后运行</p>
@@ -442,7 +442,7 @@ Cobbler is a Linux installation server that allows for rapid setup of network in
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">118</span>
+              <span class="site-state-item-count">119</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -529,7 +529,7 @@ Cobbler is a Linux installation server that allows for rapid setup of network in
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

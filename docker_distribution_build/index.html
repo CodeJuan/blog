@@ -46,7 +46,7 @@
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="背景关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry">
 <meta property="og:image" content="http://dockerone.com/uploads/article/20150512/1e111941614512fcc0bdeb2e80ee9384.png">
-<meta property="og:updated_time" content="2017-06-19T00:23:12.638Z">
+<meta property="og:updated_time" content="2018-04-01T13:35:09.543Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker(3)-搭建registry,nginx,mirror">
 <meta name="twitter:description" content="背景关于registry的基本知识已经了解差不多了，现在开始搭建一个可用的私有registry">
@@ -282,7 +282,7 @@
 </li>
 </ol>
 <p>the <code>Docker-Content-Digest</code> is response.Header[“Docker-Content-Digest”]<br>the <code>layerDigests</code> is response.body[“fsLayers”][“blobSum”]</p>
-<ol>
+<ol start="2">
 <li><p>delete layerDigests</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete v2/<span class="tag">&lt;<span class="title">repoName</span>&gt;</span>/blobs/<span class="tag">&lt;<span class="title">layerDigests</span>&gt;</span></span><br></pre></td></tr></table></figure>
 </li>
@@ -317,13 +317,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/docker_distribution_nexus/" rel="prev">docker(4)-nexus3</a>
+              <a href="/docker_distribution/" rel="prev">docker(3)-distribution分析</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/docker_distribution/" rel="next">docker(3)-distribution分析</a>
+              <a href="/docker_compose/" rel="next">docker(2)-compose</a>
             
           </div>
         </div>
@@ -389,7 +389,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">118</span>
+              <span class="site-state-item-count">119</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -476,7 +476,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

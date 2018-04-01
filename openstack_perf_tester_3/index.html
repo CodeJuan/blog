@@ -47,7 +47,7 @@
 <meta property="og:site_name" content="Continuous Learning">
 <meta property="og:description" content="rabbitmqrabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是http://www.rabbitmq.com/
 我要做的是一个收发消息的模拟器，那么就用client就可以了。rabbitmq提供了各种语言的client版本，其中JAVA、C#、ErLang是官方维护的亲儿子版本。至于C语言的版本，则被归类到了other languages，">
-<meta property="og:updated_time" content="2017-06-19T00:23:12.646Z">
+<meta property="og:updated_time" content="2018-04-01T13:35:09.547Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openstack性能测试器(3):移植rabbitmq-c">
 <meta name="twitter:description" content="rabbitmqrabbitmq是AMQP的一个具体实现。与之类似的还有apache的qpid。rabbitmq的官网是http://www.rabbitmq.com/
@@ -277,7 +277,7 @@
 <li>拷贝<code>librabbitmq</code>到原有代码中</li>
 <li>在makefile里加上<code>librabbitmq</code>的路径</li>
 <li>make，提示说找不到<code>amqp_framing.h</code>，原因是include用的是<code>&lt;&gt;</code>，而amqp_framing.h就在同一个目录。</li>
-<li>sed -i s/<amqp_framing.h>/\”amqp_framing.h\”/g改成相对路径，再次make，不报这个错了。</amqp_framing.h></li>
+<li>sed -i s/&lt;amqp_framing.h&gt;/\”amqp_framing.h\”/g改成相对路径，再次make，不报这个错了。</li>
 <li>找不到<code>threads.h</code>，原因是没有把<code>librabbitmq/unix</code>-I，所以需要改以下路径为<code>unix/threads.h</code></li>
 <li><p>找不到<code>AMQP_PLATFORM</code>,这个是在config.h里定义的。看了下报错的c文件，确实有include了config.h，但为什么还报这个错呢？</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">ifdef</span> HAVE_CONFIG_H</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"config.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
@@ -381,7 +381,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">118</span>
+              <span class="site-state-item-count">119</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -468,7 +468,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>
